@@ -20,7 +20,7 @@ const app = new Vue({
 	data: {
 		tasks: [],
 
-		job_type:'in-person',
+		job_type:null,
 
 		newTask: {
 			id: -1,
@@ -55,13 +55,13 @@ const app = new Vue({
 		taskValidated(){
 			if(this.job_type!='-'){
 				if (this.newTask.activity!='-' && this.newTask.time_slots!=0 && this.newTask.comments!='') {
-					if(this.newTask.activity=='Project' && this.newTask.project_id!='-' && this.newTask.group_id!='-' ){
+					if(this.newTask.activity=='project' && this.newTask.project_id!='-' && this.newTask.group_id!='-' ){
 						return true;
 					}
-					if(this.newTask.activity=='Absence' && this.newTask.absence_id!='-'){
+					if(this.newTask.activity=='absence' && this.newTask.absence_id!='-'){
 						return true;
 					}
-					if(this.newTask.activity=='Training' && this.newTask.training_type!='-'){
+					if(this.newTask.activity=='training' && this.newTask.training_type!='-'){
 						return true;
 					}
 				}
@@ -101,6 +101,7 @@ const app = new Vue({
 		console.log("A")
 		this.fetchData();
 	},
+
 	methods: {
 		addTask() {
 			this.tasks.push(this.newTask);
@@ -118,7 +119,6 @@ const app = new Vue({
 				admin_validation: false,
 			};
 		},
-
 
 		editTask() {
 			console.log("Editado el indice "+ this.editIndex);
@@ -168,9 +168,6 @@ const app = new Vue({
 				pm_validation: false,
 				admin_validation: false,
 			};
-
-			console.log("A")
-			this.fetchData();
 			
 		},
 		

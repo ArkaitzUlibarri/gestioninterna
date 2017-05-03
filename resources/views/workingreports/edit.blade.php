@@ -11,7 +11,7 @@
 
 		<div class="form-group col-xs-12 col-sm-2 pull-right">
 			<label>Type</label>
-			<select class="form-control" v-model="newTask.jobType" >
+			<select class="form-control" v-model="newTask.job_type" >
 					<option value="-">-</option>
 					<option value="in-person">In-person</option>
 					<option value="remote">Remote</option>
@@ -36,15 +36,15 @@
 				<label>Activity</label>
 				<select class="form-control" v-model="newTask.activity" v-on:change="refreshForm" >
 					<option value="-">-</option>
-					<option value="Absence">Absence</option>
-					<option value="Project">Project</option>
-					<option value="Training">Training</option>
+					<option value="absence">Absence</option>
+					<option value="project">Project</option>
+					<option value="training">Training</option>
 				</select>
 			</div>
 
 			<div class="form-group col-xs-12 col-sm-4 ">
 				<label>Project</label>
-				<select class="form-control" :disabled="newTask.activity != 'Project'" v-model="newTask.project">
+				<select class="form-control" :disabled="newTask.activity != 'project'" v-model="newTask.project">
 					<option value="-">-</option>
 					<option value="VFE">VFE</option>
 					<option value="ANE">ANE</option>
@@ -53,7 +53,7 @@
 
 			<div class="form-group col-xs-12 col-sm-4">
 				<label>Group</label>
-				<select class="form-control" :disabled="newTask.activity != 'Project'" v-model="newTask.group">
+				<select class="form-control" :disabled="newTask.activity != 'project'" v-model="newTask.group">
 					<option value="-">-</option>
 					<option value="Diseno">Diseno</option>
 					<option value="OPT">OPT</option>
@@ -65,7 +65,7 @@
 
 			<div class="form-group col-xs-12 col-sm-4">
 				<label>Absence</label>
-				<select class="form-control" :disabled="newTask.activity != 'Absence'" v-model="newTask.absence">
+				<select class="form-control" :disabled="newTask.activity != 'absence'" v-model="newTask.absence">
 					<option value="-">-</option>
 					<option value="Medico">Medico</option>
 					<option value="Boda">Boda</option>
@@ -76,7 +76,7 @@
 
 			<div class="form-group col-xs-12 col-sm-4">
 				<label>Training</label>
-				<select class="form-control" :disabled="newTask.activity != 'Training'" v-model="newTask.training">
+				<select class="form-control" :disabled="newTask.activity != 'training'" v-model="newTask.training">
 					<option value="-">-</option>
 					<option value="Curso">Curso</option>
 					<option value="Puesto">Puesto</option>
@@ -118,11 +118,7 @@
 	<hr>
 
 	<template v-for="(task, index) in tasks">
-
-		<template>
 			<task-template :task="task" :index="index"></task-template>
-		</template>
-
 	</template>
 
 	<hr>
@@ -134,6 +130,7 @@
 	<button title="Save" class="btn btn-success"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
 
 	@include('layouts.errors')
+
 </div>
 
 

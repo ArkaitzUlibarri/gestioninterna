@@ -2473,7 +2473,7 @@ var app = new Vue({
 	data: {
 		tasks: [],
 
-		job_type: 'in-person',
+		job_type: null,
 
 		newTask: {
 			id: -1,
@@ -2508,13 +2508,13 @@ var app = new Vue({
 		taskValidated: function taskValidated() {
 			if (this.job_type != '-') {
 				if (this.newTask.activity != '-' && this.newTask.time_slots != 0 && this.newTask.comments != '') {
-					if (this.newTask.activity == 'Project' && this.newTask.project_id != '-' && this.newTask.group_id != '-') {
+					if (this.newTask.activity == 'project' && this.newTask.project_id != '-' && this.newTask.group_id != '-') {
 						return true;
 					}
-					if (this.newTask.activity == 'Absence' && this.newTask.absence_id != '-') {
+					if (this.newTask.activity == 'absence' && this.newTask.absence_id != '-') {
 						return true;
 					}
-					if (this.newTask.activity == 'Training' && this.newTask.training_type != '-') {
+					if (this.newTask.activity == 'training' && this.newTask.training_type != '-') {
 						return true;
 					}
 				}
@@ -2554,6 +2554,7 @@ var app = new Vue({
 		console.log("A");
 		this.fetchData();
 	},
+
 
 	methods: {
 		addTask: function addTask() {
@@ -2619,9 +2620,6 @@ var app = new Vue({
 				pm_validation: false,
 				admin_validation: false
 			};
-
-			console.log("A");
-			this.fetchData();
 		},
 		refreshForm: function refreshForm() {
 			this.newTask = {
@@ -2728,7 +2726,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     computed: {
         time: function time() {
-            return parseInt(this.task.time) * 0.25;
+            return parseInt(this.task.time_slots) * 0.25;
         }
     },
 
@@ -2905,25 +2903,25 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return _c('div', {
     staticClass: "task-panel",
     class: {
-      'validated-task': _vm.task.validatedByPM
+      'validated-task': _vm.task.pm_validation
     }
   }, [_c('div', {
     staticClass: "panel-right-corner"
-  }, [(_vm.task.validatedByPM) ? _c('div', {
+  }, [(_vm.task.pm_validation) ? _c('div', {
     staticClass: "task-action-icon validated-pm-text"
   }, [_c('span', {
     staticClass: "glyphicon glyphicon-ok",
     attrs: {
       "aria-hidden": "true"
     }
-  })]) : _vm._e(), _vm._v(" "), (_vm.task.validatedByAdmin) ? _c('div', {
+  })]) : _vm._e(), _vm._v(" "), (_vm.task.admin_validation) ? _c('div', {
     staticClass: "task-action-icon validated-admin-text"
   }, [_c('span', {
     staticClass: "glyphicon glyphicon-ok",
     attrs: {
       "aria-hidden": "true"
     }
-  })]) : _vm._e(), _vm._v(" "), (!_vm.task.validatedByPM) ? _c('div', {
+  })]) : _vm._e(), _vm._v(" "), (!_vm.task.pm_validation) ? _c('div', {
     staticClass: "task-action-icon task-panel-close",
     on: {
       "click": _vm.deleteTask
@@ -2933,7 +2931,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "aria-hidden": "true"
     }
-  })]) : _vm._e(), _vm._v(" "), (!_vm.task.validatedByPM) ? _c('div', {
+  })]) : _vm._e(), _vm._v(" "), (!_vm.task.pm_validation) ? _c('div', {
     staticClass: "task-action-icon task-panel-close",
     on: {
       "click": _vm.editTask
@@ -2943,7 +2941,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "aria-hidden": "true"
     }
-  })]) : _vm._e()]), _vm._v(" "), (_vm.task.activity == 'Absence') ? _c('span', [_c('h4', [_c('b', [_vm._v(" " + _vm._s(_vm.time))]), _vm._v(" " + _vm._s(_vm.task.absence) + "  ")]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.task.comments))])]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'Project') ? _c('span', [_c('h4', [_c('b', [_vm._v(" " + _vm._s(_vm.time))]), _vm._v(" " + _vm._s(_vm.task.project + ' \\ ' + _vm.task.group) + "  ")]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.task.comments))])]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'Training') ? _c('span', [_c('h4', [_c('b', [_vm._v(" " + _vm._s(_vm.time) + " ")]), _vm._v(" " + _vm._s(_vm.task.training) + "  ")]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.task.comments))])]) : _vm._e()])
+  })]) : _vm._e()]), _vm._v(" "), (_vm.task.activity == 'absence') ? _c('span', [_c('h4', [_c('b', [_vm._v(" " + _vm._s(_vm.time))]), _vm._v(" " + _vm._s(_vm.task.absence_id) + "  ")]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.task.comments))])]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'project') ? _c('span', [_c('h4', [_c('b', [_vm._v(" " + _vm._s(_vm.time))]), _vm._v(" " + _vm._s(_vm.task.project_id + ' \\ ' + _vm.task.group_id) + "  ")]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.task.comments))])]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'training') ? _c('span', [_c('h4', [_c('b', [_vm._v(" " + _vm._s(_vm.time) + " ")]), _vm._v(" " + _vm._s(_vm.task.training_type) + "  ")]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.task.comments))])]) : _vm._e()])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
