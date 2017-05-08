@@ -45,7 +45,7 @@
 
 			<div class="form-group col-xs-12 col-sm-4 ">
 				<label>Project</label>
-				<select class="form-control" :disabled="newTask.activity != 'project'" v-on:change="groupsRefresh" v-model="newTaskNames.project">
+				<select class="form-control" :disabled="newTask.activity != 'project'" v-on:change="groupsRefresh" v-model="newTask.project">
 					<option value="-">-</option>
 					<template v-for="(element, index) in projectList">
 						<option :project="element" :index="index">@{{element}}</option>
@@ -55,10 +55,10 @@
 
 			<div class="form-group col-xs-12 col-sm-4">
 				<label>Group</label>
-				<select class="form-control" :disabled="newTask.activity != 'project'" v-model="newTaskNames.group">
+				<select class="form-control" :disabled="newTask.activity != 'project'" v-model="newTask.group">
 					<option value="-">-</option>
-					<template v-for="(element, index) in groupList">
-						<option :group="element" :index="index">@{{element}}</option>
+					<template v-for="(group, index) in groupList">
+						<option :group="group" :index="index">@{{group}}</option>
 					</template>	
 				</select>
 			</div>
@@ -69,7 +69,7 @@
 
 			<div class="form-group col-xs-12 col-sm-4">
 				<label>Absence</label>
-				<select class="form-control" :disabled="newTask.activity != 'absence'" v-model="newTaskNames.absence">
+				<select class="form-control" :disabled="newTask.activity != 'absence'" v-model="newTask.absence">
 					<option value="-">-</option>
 					@foreach($absences as $absence)				
 					<option value="{{$absence->name}}">{{ucfirst($absence->name)}}</option>

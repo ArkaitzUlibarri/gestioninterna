@@ -28,24 +28,22 @@ const app = new Vue({
 
 		job_type:null,
 		editIndex: -1,
+
 		newTask: {
 			id: -1,
 			activity: null,
 			project_id: null,
+			project: null,
 			group_id: null,
+			group: null,
 			absence_id: null,
+			absence: null,
 			training_type:null,
 			time_slots: 0,
 			job_type:null,
 			comments: null,
 			pm_validation: 0,
 			admin_validation: 0,
-		},
-
-		newTaskNames: {
-			project: null,
-			group: null,
-			absence: null,
 		},
 
 		tasks: []
@@ -67,10 +65,10 @@ const app = new Vue({
 
 		taskValidated(){
 			if (this.newTask.activity != null && this.newTask.time_slots != 0 && this.newTask.comments != null) {
-				if(this.newTask.activity == 'project' && this.newTaskNames.project != null && this.newTaskNames.group != null ){
+				if(this.newTask.activity == 'project' && this.newTask.project != null && this.newTask.group != null ){
 					return true;
 				}
-				if(this.newTask.activity == 'absence' && this.newTaskNames.absence != null){
+				if(this.newTask.activity == 'absence' && this.newTask.absence != null){
 					return true;
 				}
 				if(this.newTask.activity == 'training' && this.newTask.training_type != null){
@@ -95,8 +93,11 @@ const app = new Vue({
 				id: task.id,
 				activity:task.activity,
 				project_id:task.project_id,
+				project:task.project,
 				group_id:task.group_id,
+				group:task.group,
 				absence_id:task.absence_id,
+				absence:task.absence,
 				training_type:task.training_type,
 				time_slots: task.time_slots,
 				job_type:task.job_type,
@@ -106,6 +107,7 @@ const app = new Vue({
 			};
 
 			this.idTraduction();
+			this.groupsRefresh();
 
 			this.editIndex = index;
 
@@ -122,25 +124,8 @@ const app = new Vue({
 		addTask() {
 			this.nameTraduction();
 			this.tasks.push(this.newTask);
-			this.newTask = {
-				id: -1,
-				activity: null,
-				project_id: null,
-				group_id: null,
-				absence_id: null,
-				training_type:null,
-				time_slots: 0,
-				job_type:null,
-				comments: null,
-				pm_validation: 0,
-				admin_validation: 0,
-			};
-
-			this.newTaskNames= {
-			project: null,
-			group: null,
-			absence: null,
-			};
+			this.initializeTask();
+			
 		},
 
 		editTask() {
@@ -152,12 +137,21 @@ const app = new Vue({
 				this.tasks[this.editIndex][properties[i]] = this.newTask[properties[i]];
 			}
 
+			this.initializeTask();
+
+			this.editIndex = -1;
+		},
+		
+		initializeTask(){
 			this.newTask = {
 				id: -1,
 				activity: null,
 				project_id: null,
+				project: null,
 				group_id: null,
+				group: null,
 				absence_id: null,
+				absence: null,
 				training_type:null,
 				time_slots: 0,
 				job_type:null,
@@ -166,9 +160,8 @@ const app = new Vue({
 				admin_validation: 0,
 			};
 
-			this.editIndex = -1;
 		},
-		
+
 		validateTask(){
 
 			if(confirm("¿Estás seguro de que quieres validar el día?")){
@@ -179,25 +172,7 @@ const app = new Vue({
 					item.admin_validation = 1;
 				});
 
-				this.newTask = {
-					id: -1,
-					activity: null,
-					project_id: null,
-					group_id: null,
-					absence_id: null,
-					training_type:null,
-					time_slots: 0,
-					job_type:null,
-					comments: null,
-					pm_validation: 0,
-					admin_validation: 0,
-				};
-
-				this.newTaskNames= {
-					project: null,
-					group: null,
-					absence: null,
-				};
+				this.initializeTask();
 
 			}
 
@@ -208,20 +183,17 @@ const app = new Vue({
 				id: this.newTask.id,
 				activity:this.newTask.activity,
 				project_id: null,
+				project: null,
 				group_id: null,
+				group: null,
 				absence_id:null,
+				absence:null,
 				training_type: null,
 				time_slots: 0,
 				job_type:null,
 				comments: null,
 				pm_validation: 0,
 				admin_validation: 0,
-			};
-
-			this.newTaskNames= {
-				project: null,
-				group: null,
-				absence: null,
 			};
 
 		},
@@ -238,7 +210,7 @@ const app = new Vue({
 			})
 			.then(function (response) {
 				vm.tasks = response.data;
-				//console.log(response.data);
+				console.log(response.data);
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -254,6 +226,7 @@ const app = new Vue({
 			});
 
 			this.projectList = [...setList];			
+		
 		},
 
 		groupsRefresh(){
@@ -261,7 +234,7 @@ const app = new Vue({
 			let setList = new Set();
 			
 			vm.groupProjects.forEach(function(item) {						
-				if( vm.newTaskNames.project == item.project){
+				if( vm.newTask.project == item.project){
 					 setList.add(item.group);
 				}				
 			});
@@ -279,7 +252,7 @@ const app = new Vue({
 			//Ausencia
 			if(this.newTask.activity =='absence') {		
 				for (let i = this.absences.length - 1; i >= 0; i--) {
-					if(this.absences[i].name==this.newTaskNames.absence){
+					if(this.absences[i].name==this.newTask.absence){
 						this.newTask.absence_id=this.absences[i].id;
 					}
 				}
@@ -288,7 +261,7 @@ const app = new Vue({
 			//GrupoProyecto
 			if(this.newTask.activity =='project') {		
 				for (var key = this.groupProjects.length - 1; key >= 0; key--) {
-					if(this.groupProjects[key].group==this.newTaskNames.group){
+					if(this.groupProjects[key].group==this.newTask.group){
 						this.newTask.group_id=this.groupProjects[key].group_id;
 						this.newTask.project_id=this.groupProjects[key].project_id;
 					}
@@ -299,15 +272,15 @@ const app = new Vue({
 
 		idTraduction(){
 
-			this.newTaskNames.project= null;
-			this.newTaskNames.group= null;
-			this.newTaskNames.absence= null;
+			this.newTask.project= null;
+			this.newTask.group= null;
+			this.newTask.absence= null;
 
 			//Ausencia
 			if(this.newTask.activity =='absence') {		
 				for (let i = this.absences.length - 1; i >= 0; i--) {
 					if(this.newTask.absence_id==this.absences[i].id){
-						this.newTaskNames.absence=this.absences[i].name;
+						this.newTask.absence=this.absences[i].name;
 						break;
 					}
 				}
@@ -317,8 +290,8 @@ const app = new Vue({
 			if(this.newTask.activity =='project') {		
 				for (let key = this.groupProjects.length - 1; key >= 0; key--) {
 					if(this.newTask.group_id == this.groupProjects[key].group_id ) {	
-						this.newTaskNames.group = this.groupProjects[key].group;
-						this.newTaskNames.project = this.groupProjects[key].project;
+						this.newTask.group = this.groupProjects[key].group;
+						this.newTask.project = this.groupProjects[key].project;
 						break;
 					}
 				}
@@ -327,7 +300,7 @@ const app = new Vue({
 		},
 
 		save(){
-			//TODO
+		//TODO
 		}
 
 	}

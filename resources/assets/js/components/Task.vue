@@ -16,17 +16,17 @@
         </div>
 
         <span v-if="task.activity == 'absence'">
-            <h4> <b> {{  time  }}</b> {{ task.absence_id }}  </h4> 
+            <h4> <b> {{  time  }} </b> {{ task.absence }}  </h4> 
             <p>{{ task.comments }}</p>
         </span>
 
         <span v-if="task.activity == 'project'">
-            <h4> <b> {{  time  }}</b> {{ task.project_id  + ' \\ ' + task.group_id }}  </h4>      
+            <h4> <b> {{  time  }} </b> {{ task.project + ' \\ ' + task.group }}  </h4>      
             <p>{{ task.comments }}</p>
         </span>
 
         <span v-if="task.activity == 'training'">
-            <h4> <b> {{ time }} </b> {{ task.training_type }}  </h4> 
+            <h4> <b> {{ time }} </b>  {{ 'TRAINING \\ ' + task.training_type }}  </h4> 
             <p>{{ task.comments }}</p>
         </span>
       
