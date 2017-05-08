@@ -7,17 +7,17 @@
 			{{ csrf_field() }}
 			<div class ="form-group" >
 				<label>Name:</label>
-				<input name="name" type ="text" class="form-control" placeholder="Nombre" value="{{ old('name') }}" >
+				<input name="name" type ="text" class="form-control" placeholder="Name" value="{{ old('name') }}" >
 			</div>
 
 			<div class ="form-group">
 				<label>Lastname 1:</label>
-				<input name="lastname_1" type ="text" class="form-control" placeholder="Apellido 1" value="{{ old('lastname_1') }}" >
+				<input name="lastname_1" type ="text" class="form-control" placeholder="Lastname 1" value="{{ old('lastname_1') }}" >
 			</div>
 
 			<div class ="form-group">
 				<label>Lastname 2:</label>
-				<input name="lastname_2" type ="text" class="form-control" placeholder="Apellido 2" value="{{ old('lastname_2') }}">
+				<input name="lastname_2" type ="text" class="form-control" placeholder="Lastname 2" value="{{ old('lastname_2') }}">
 			</div>
 
 			<div class ="form-group">

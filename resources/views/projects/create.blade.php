@@ -9,12 +9,12 @@
 
 			<div class  ="form-group">
 				<label>Project name:</label>
-				<input name="name" type ="text" class="form-control" placeholder="Proyecto" value="{{ old('name') }}" >
+				<input name="name" type ="text" class="form-control" placeholder="Project" value="{{ old('name') }}" >
 			</div>
 
 			<div class  ="form-group">
 				<label>Description:</label>
-				<textarea name="description" class="form-control" placeholder="Descripción" rows=5 >{{ old('description') }}</textarea>
+				<textarea name="description" class="form-control" placeholder="Description" rows=5 >{{ old('description') }}</textarea>
 			</div>
 
 			<div class  ="form-group">

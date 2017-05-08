@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div id="report" class="container">
 
 	<div class="row">
@@ -13,9 +14,9 @@
 			<label>Type</label>
 			<select class="form-control" v-model="newTask.job_type" >
 					<option value="-">-</option>
-					<option value="in-person">In-person</option>
-					<option value="remote">Remote</option>
-					<option value="teleworking">Teleworking</option>
+					@foreach(config('options.typeOfJob') as $type)				
+						<option value="{{$type}}">{{ucfirst($type)}}</option>
+					@endforeach
 			</select>
 		</div>
 		
@@ -36,57 +37,59 @@
 				<label>Activity</label>
 				<select class="form-control" v-model="newTask.activity" v-on:change="refreshForm" >
 					<option value="-">-</option>
-					<option value="absence">Absence</option>
-					<option value="project">Project</option>
-					<option value="training">Training</option>
+					@foreach(config('options.activities') as $activity)				
+						<option value="{{$activity}}">{{ucfirst($activity)}}</option>
+					@endforeach
 				</select>
 			</div>
 
 			<div class="form-group col-xs-12 col-sm-4 ">
 				<label>Project</label>
-				<select class="form-control" :disabled="newTask.activity != 'project'" v-model="newTask.project">
+				<select class="form-control" :disabled="newTask.activity != 'project'" v-on:change="groupsRefresh" v-model="newTaskNames.project">
 					<option value="-">-</option>
-					<option value="VFE">VFE</option>
-					<option value="ANE">ANE</option>
+					<template v-for="(element, index) in projectList">
+						<option :project="element" :index="index">@{{element}}</option>
+					</template>
 				</select>
 			</div>
 
 			<div class="form-group col-xs-12 col-sm-4">
 				<label>Group</label>
-				<select class="form-control" :disabled="newTask.activity != 'project'" v-model="newTask.group">
+				<select class="form-control" :disabled="newTask.activity != 'project'" v-model="newTaskNames.group">
 					<option value="-">-</option>
-					<option value="Diseno">Diseno</option>
-					<option value="OPT">OPT</option>
+					<template v-for="(element, index) in groupList">
+						<option :group="element" :index="index">@{{element}}</option>
+					</template>	
 				</select>
 			</div>
+
 		</div>
 
 		<div class="row">
 
 			<div class="form-group col-xs-12 col-sm-4">
 				<label>Absence</label>
-				<select class="form-control" :disabled="newTask.activity != 'absence'" v-model="newTask.absence">
+				<select class="form-control" :disabled="newTask.activity != 'absence'" v-model="newTaskNames.absence">
 					<option value="-">-</option>
-					<option value="Medico">Medico</option>
-					<option value="Boda">Boda</option>
-					<option value="Examen">Examen</option>
-					<option value="Vacaciones">Vacaciones</option>
+					@foreach($absences as $absence)				
+					<option value="{{$absence->name}}">{{ucfirst($absence->name)}}</option>
+					@endforeach
 				</select>
 			</div>	
 
 			<div class="form-group col-xs-12 col-sm-4">
 				<label>Training</label>
-				<select class="form-control" :disabled="newTask.activity != 'training'" v-model="newTask.training">
+				<select class="form-control" :disabled="newTask.activity != 'training'" v-model="newTask.training_type">
 					<option value="-">-</option>
-					<option value="Curso">Curso</option>
-					<option value="Puesto">Puesto</option>
-					<option value="Desarrollo">Desarrollo</option>
+					@foreach(config('options.training') as $training)				
+					<option value="{{$training}}">{{ucfirst($training)}}</option>
+					@endforeach
 				</select>
 			</div>
 
 			<div class="form-group col-xs-12 col-sm-4 pull-right">
 				<label>Time (15 mins)</label>
-				<input type="number" min=0 max=33 class="form-control" placeholder="Time" v-model="newTask.time">
+				<input type="number" min=0 max=33 class="form-control" placeholder="Time" v-model="newTask.time_slots">
 			</div>
 		</div>
 
@@ -107,6 +110,7 @@
 	</div>
 
 	<hr>
+
 		<h3 class="dl-horizontal">			
 			<label>Total Hours:</label>
 			<label>@{{totalTime}}</label>
@@ -130,6 +134,7 @@
 	<button title="Save" class="btn btn-success"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
 
 	@include('layouts.errors')
+	<pre>@{{$data}}</pre>
 
 </div>
 
@@ -139,7 +144,9 @@
 @push('script-bottom')
 	<script type="text/javascript">
 		var reportdate= '{{ $date }}';
-		var user= '{{ $id }}';
+		var user= '{{ $user_id }}';
+		var absences=<?php echo json_encode($absences);?>;
+		var groupProjects=<?php echo json_encode($groupProjects);?>;
 	</script>
 	
     <script src="{{ asset('js/reports.js') }}"></script>

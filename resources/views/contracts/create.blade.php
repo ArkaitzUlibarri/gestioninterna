@@ -29,7 +29,7 @@
 
 			<div class ="form-group">
 				<label>Weekly working hours:</label>
-				<input name="week_hours" type ="number" min="0" max="40" class="form-control" placeholder="Horas semanales" value="{{old('week_hours')}}">
+				<input name="week_hours" type ="number" min="0" max="40" class="form-control" placeholder="Weekly working hours" value="{{old('week_hours')}}">
 			</div>	
 					
 			<div class ="form-group">

@@ -10,7 +10,7 @@
                     <thead>
                         <th>Employee</th>
                         <th>Date</th>
-                        <th>Horas reportadas</th>
+                        <th>Stated Hours</th>
                         <th>Validado (PM)</th>
                         <th>Validado (ADMIN)</th>
                         <th>Actions</th>

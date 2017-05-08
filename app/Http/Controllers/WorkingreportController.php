@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Absence;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+
 
 class WorkingReportController extends Controller
 {
@@ -22,17 +24,19 @@ class WorkingReportController extends Controller
     public function index()
     {
         $today=Carbon::now();
-
     	$user_id = Auth::user()->id;
         $workingreports = $this->getReportsPerUserPerDay($user_id);
     
     	return view('workingreports.index', compact('workingreports','today'));
     }
 
-    public function edit($id,$date)
+    public function edit($user_id,$date)
     {
-        $workingreports=$this->getReportsPerDay($id,$date);
-        return view('workingreports.edit',compact('workingreports','date','id'));
+        $workingreports=$this->getReportsPerDay($user_id,$date);
+        $absences=Absence::all();
+        $groupProjects=$this->getGroupsProjectsByUser(7);
+
+        return view('workingreports.edit',compact('workingreports','date','user_id','absences','groupProjects'));
     }
 
     private function getReportsPerUserPerDay($user_id)
@@ -67,6 +71,22 @@ class WorkingReportController extends Controller
             ->where('working_report.created_at',$created)
             ->groupBy('user_id','created_at')
             ->orderBy('created_at','asc')
+            ->get();
+    }
+    private function getGroupsProjectsByUser($user_id)
+    {
+        return DB::table('group_user')
+            ->select(
+                'group_user.group_id',
+                'groups.name as group',
+                'groups.project_id',
+                'projects.name as project'
+            )
+            ->join('users','group_user.user_id','=','users.id')
+            ->join('groups','group_user.group_id','=','groups.id')
+            ->join('projects','groups.project_id','=','projects.id')
+            ->where('user_id',$user_id)
+            ->orderBy('group_id','asc')
             ->get();
     }
 }

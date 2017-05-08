@@ -2452,6 +2452,7 @@ if (typeof jQuery === 'undefined') {
 /* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 /**
  * First we will load all of this project_id's JavaScript dependencies which
@@ -2471,26 +2472,37 @@ var app = new Vue({
 	el: '#report',
 
 	data: {
-		tasks: [],
-
-		job_type: null,
-
-		newTask: {
-			id: -1,
-			activity: '-',
-			project_id: '-',
-			group_id: '-',
-			absence_id: '-',
-			training_type: '-',
-			time_slots: 0,
-			job_type: this.job_type,
-			comments: '',
-			pm_validation: false,
-			admin_validation: false
-		},
 		user: user,
 		reportdate: reportdate,
-		editIndex: -1
+		groupProjects: groupProjects,
+		absences: absences,
+
+		projectList: [],
+		groupList: [],
+
+		job_type: null,
+		editIndex: -1,
+		newTask: {
+			id: -1,
+			activity: null,
+			project_id: null,
+			group_id: null,
+			absence_id: null,
+			training_type: null,
+			time_slots: 0,
+			job_type: null,
+			comments: null,
+			pm_validation: 0,
+			admin_validation: 0
+		},
+
+		newTaskNames: {
+			project: null,
+			group: null,
+			absence: null
+		},
+
+		tasks: []
 	},
 
 	computed: {
@@ -2506,17 +2518,15 @@ var app = new Vue({
 			return total;
 		},
 		taskValidated: function taskValidated() {
-			if (this.job_type != '-') {
-				if (this.newTask.activity != '-' && this.newTask.time_slots != 0 && this.newTask.comments != '') {
-					if (this.newTask.activity == 'project' && this.newTask.project_id != '-' && this.newTask.group_id != '-') {
-						return true;
-					}
-					if (this.newTask.activity == 'absence' && this.newTask.absence_id != '-') {
-						return true;
-					}
-					if (this.newTask.activity == 'training' && this.newTask.training_type != '-') {
-						return true;
-					}
+			if (this.newTask.activity != null && this.newTask.time_slots != 0 && this.newTask.comments != null) {
+				if (this.newTask.activity == 'project' && this.newTaskNames.project != null && this.newTaskNames.group != null) {
+					return true;
+				}
+				if (this.newTask.activity == 'absence' && this.newTaskNames.absence != null) {
+					return true;
+				}
+				if (this.newTask.activity == 'training' && this.newTask.training_type != null) {
+					return true;
 				}
 			}
 
@@ -2547,30 +2557,40 @@ var app = new Vue({
 				pm_validation: task.pm_validation,
 				admin_validation: task.admin_validation
 			};
+
+			_this.idTraduction();
+
 			_this.editIndex = index;
 		});
 	},
 	mounted: function mounted() {
-		console.log("A");
 		this.fetchData();
+		this.project();
 	},
 
 
 	methods: {
 		addTask: function addTask() {
+			this.nameTraduction();
 			this.tasks.push(this.newTask);
 			this.newTask = {
 				id: -1,
-				activity: '-',
-				project_id: '-',
-				group_id: '-',
-				absence_id: '-',
-				training_type: '-',
+				activity: null,
+				project_id: null,
+				group_id: null,
+				absence_id: null,
+				training_type: null,
 				time_slots: 0,
-				job_type: this.job_type,
-				comments: '',
-				pm_validation: false,
-				admin_validation: false
+				job_type: null,
+				comments: null,
+				pm_validation: 0,
+				admin_validation: 0
+			};
+
+			this.newTaskNames = {
+				project: null,
+				group: null,
+				absence: null
 			};
 		},
 		editTask: function editTask() {
@@ -2584,60 +2604,73 @@ var app = new Vue({
 
 			this.newTask = {
 				id: -1,
-				activity: '-',
-				project_id: '-',
-				group_id: '-',
-				absence_id: '-',
-				training_type: '-',
+				activity: null,
+				project_id: null,
+				group_id: null,
+				absence_id: null,
+				training_type: null,
 				time_slots: 0,
-				job_type: this.job_type,
-				comments: '',
-				pm_validation: false,
-				admin_validation: false
+				job_type: null,
+				comments: null,
+				pm_validation: 0,
+				admin_validation: 0
 			};
 
 			this.editIndex = -1;
 		},
 		validateTask: function validateTask() {
 
-			console.log("Validando el dia");
+			if (confirm("¿Estás seguro de que quieres validar el día?")) {
 
-			this.tasks.forEach(function (item) {
-				item.pm_validation = true;
-				item.admin_validation = true;
-			});
+				console.log("Validando el dia");
+				this.tasks.forEach(function (item) {
+					item.pm_validation = 1;
+					item.admin_validation = 1;
+				});
 
-			this.newTask = {
-				id: -1,
-				activity: '-',
-				project_id: '-',
-				group_id: '-',
-				absence_id: '-',
-				training_type: '-',
-				time_slots: 0,
-				job_type: this.job_type,
-				comments: '',
-				pm_validation: false,
-				admin_validation: false
-			};
+				this.newTask = {
+					id: -1,
+					activity: null,
+					project_id: null,
+					group_id: null,
+					absence_id: null,
+					training_type: null,
+					time_slots: 0,
+					job_type: null,
+					comments: null,
+					pm_validation: 0,
+					admin_validation: 0
+				};
+
+				this.newTaskNames = {
+					project: null,
+					group: null,
+					absence: null
+				};
+			}
 		},
 		refreshForm: function refreshForm() {
 			this.newTask = {
 				id: this.newTask.id,
 				activity: this.newTask.activity,
-				project_id: '-',
-				group_id: '-',
-				absence_id: '-',
-				training_type: '-',
+				project_id: null,
+				group_id: null,
+				absence_id: null,
+				training_type: null,
 				time_slots: 0,
-				job_type: this.job_type,
-				comments: '',
-				pm_validation: false,
-				admin_validation: false
+				job_type: null,
+				comments: null,
+				pm_validation: 0,
+				admin_validation: 0
+			};
+
+			this.newTaskNames = {
+				project: null,
+				group: null,
+				absence: null
 			};
 		},
 		fetchData: function fetchData() {
-			console.log("B");
 			var vm = this;
 			vm.tasks = [];
 
@@ -2647,15 +2680,88 @@ var app = new Vue({
 					created_at: vm.reportdate
 				}
 			}).then(function (response) {
-				console.log("C");
 				vm.tasks = response.data;
-				console.log(response.data);
+				//console.log(response.data);
 			}).catch(function (error) {
-				console.log("D");
 				console.log(error);
 			});
 		},
-		postData: function postData() {}
+		project: function project() {
+			var setList = new Set();
+
+			this.groupProjects.forEach(function (item) {
+				setList.add(item.project);
+			});
+
+			this.projectList = [].concat(_toConsumableArray(setList));
+		},
+		groupsRefresh: function groupsRefresh() {
+			var vm = this;
+			var setList = new Set();
+
+			vm.groupProjects.forEach(function (item) {
+				if (vm.newTaskNames.project == item.project) {
+					setList.add(item.group);
+				}
+			});
+
+			this.groupList = [].concat(_toConsumableArray(setList));
+		},
+		nameTraduction: function nameTraduction() {
+
+			this.newTask.project_id = null;
+			this.newTask.group_id = null;
+			this.newTask.absence_id = null;
+
+			//Ausencia
+			if (this.newTask.activity == 'absence') {
+				for (var i = this.absences.length - 1; i >= 0; i--) {
+					if (this.absences[i].name == this.newTaskNames.absence) {
+						this.newTask.absence_id = this.absences[i].id;
+					}
+				}
+			}
+
+			//GrupoProyecto
+			if (this.newTask.activity == 'project') {
+				for (var key = this.groupProjects.length - 1; key >= 0; key--) {
+					if (this.groupProjects[key].group == this.newTaskNames.group) {
+						this.newTask.group_id = this.groupProjects[key].group_id;
+						this.newTask.project_id = this.groupProjects[key].project_id;
+					}
+				}
+			}
+		},
+		idTraduction: function idTraduction() {
+
+			this.newTaskNames.project = null;
+			this.newTaskNames.group = null;
+			this.newTaskNames.absence = null;
+
+			//Ausencia
+			if (this.newTask.activity == 'absence') {
+				for (var i = this.absences.length - 1; i >= 0; i--) {
+					if (this.newTask.absence_id == this.absences[i].id) {
+						this.newTaskNames.absence = this.absences[i].name;
+						break;
+					}
+				}
+			}
+
+			//GrupoProyecto
+			if (this.newTask.activity == 'project') {
+				for (var key = this.groupProjects.length - 1; key >= 0; key--) {
+					if (this.newTask.group_id == this.groupProjects[key].group_id) {
+						this.newTaskNames.group = this.groupProjects[key].group;
+						this.newTaskNames.project = this.groupProjects[key].project;
+						break;
+					}
+				}
+			}
+		},
+		save: function save() {
+			//TODO
+		}
 	}
 });
 
@@ -2722,7 +2828,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     template: '#task-template',
 
-    props: ['task', 'index'],
+    props: ['task', 'index', 'newTaskNames'],
 
     computed: {
         time: function time() {
