@@ -2543,6 +2543,7 @@ var app = new Vue({
 
 		Event.$on('DeleteTask', function (index, task) {
 			console.log("Borrado el indice " + index);
+			_this.delete(index);
 			_this.tasks.splice(index, 1);
 		});
 
@@ -2762,6 +2763,16 @@ var app = new Vue({
 			}
 
 			axios.post('/api/reports', vm.newTask).then(function (response) {
+				console.log(response.data);
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		delete: function _delete(index) {
+			var vm = this;
+			console.log(vm.tasks[index]);
+
+			axios.delete('/api/reports/' + vm.tasks[index].id).then(function (response) {
 				console.log(response.data);
 			}).catch(function (error) {
 				console.log(error);
