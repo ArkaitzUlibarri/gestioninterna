@@ -55,6 +55,10 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     key: 'your-pusher-key'
 // });
 // 
+
+/**
+ * Instancia de Vue para la gestion de eventos.
+ */
 window.Event = new Vue();
 
 /***/ }),
@@ -2485,6 +2489,8 @@ var app = new Vue({
 
 		newTask: {
 			id: -1,
+			user_id: this.user,
+			created_at: this.reportdate,
 			activity: null,
 			project_id: null,
 			project: null,
@@ -2544,6 +2550,8 @@ var app = new Vue({
 			console.log("Editando el indice " + index);
 			_this.newTask = {
 				id: task.id,
+				user_id: _this.user,
+				created_at: _this.reportdate,
 				activity: task.activity,
 				project_id: task.project_id,
 				project: task.project,
@@ -2574,11 +2582,14 @@ var app = new Vue({
 	methods: {
 		addTask: function addTask() {
 			this.nameTraduction();
+			this.save();
 			this.tasks.push(this.newTask);
 			this.initializeTask();
 		},
 		editTask: function editTask() {
 			console.log("Editado el indice " + this.editIndex);
+
+			this.save();
 
 			var properties = Object.keys(this.newTask);
 
@@ -2593,6 +2604,8 @@ var app = new Vue({
 		initializeTask: function initializeTask() {
 			this.newTask = {
 				id: -1,
+				user_id: this.user,
+				created_at: this.reportdate,
 				activity: null,
 				project_id: null,
 				project: null,
@@ -2624,6 +2637,8 @@ var app = new Vue({
 		refreshForm: function refreshForm() {
 			this.newTask = {
 				id: this.newTask.id,
+				user_id: this.user,
+				created_at: this.reportdate,
 				activity: this.newTask.activity,
 				project_id: null,
 				project: null,
@@ -2643,6 +2658,8 @@ var app = new Vue({
 			var vm = this;
 			vm.tasks = [];
 
+			vm.initializeTask();
+
 			axios.get('/api/reports', {
 				params: {
 					user_id: vm.user,
@@ -2650,7 +2667,7 @@ var app = new Vue({
 				}
 			}).then(function (response) {
 				vm.tasks = response.data;
-				console.log(response.data);
+				//console.log(response.data);
 			}).catch(function (error) {
 				console.log(error);
 			});
@@ -2729,7 +2746,26 @@ var app = new Vue({
 			}
 		},
 		save: function save() {
-			//TODO
+
+			var vm = this;
+			console.log(vm.newTask);
+
+			if (vm.newTask.id != -1) {
+
+				axios.patch('/api/reports/' + vm.newTask.id, vm.newTask).then(function (response) {
+					console.log(response.data);
+				}).catch(function (error) {
+					console.log(error);
+				});
+
+				return;
+			}
+
+			axios.post('/api/reports', vm.newTask).then(function (response) {
+				console.log(response.data);
+			}).catch(function (error) {
+				console.log(error);
+			});
 		}
 	}
 });
@@ -3016,7 +3052,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "aria-hidden": "true"
     }
-  })]) : _vm._e()]), _vm._v(" "), (_vm.task.activity == 'absence') ? _c('span', [_c('h4', [_c('b', [_vm._v(" " + _vm._s(_vm.time) + " ")]), _vm._v(" " + _vm._s(_vm.task.absence) + "  ")]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.task.comments))])]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'project') ? _c('span', [_c('h4', [_c('b', [_vm._v(" " + _vm._s(_vm.time) + " ")]), _vm._v(" " + _vm._s(_vm.task.project + ' \\ ' + _vm.task.group) + "  ")]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.task.comments))])]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'training') ? _c('span', [_c('h4', [_c('b', [_vm._v(" " + _vm._s(_vm.time) + " ")]), _vm._v("  " + _vm._s('TRAINING \\ ' + _vm.task.training_type) + "  ")]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.task.comments))])]) : _vm._e()])
+  })]) : _vm._e()]), _vm._v(" "), (_vm.task.activity == 'absence') ? _c('span', [_c('h4', [_c('b', [_vm._v(" " + _vm._s(_vm.time) + " ")]), _vm._v(" " + _vm._s('ABSENCE \\ ' + _vm.task.absence) + "  ")]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.task.comments))])]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'project') ? _c('span', [_c('h4', [_c('b', [_vm._v(" " + _vm._s(_vm.time) + " ")]), _vm._v(" " + _vm._s(_vm.task.project + ' \\ ' + _vm.task.group) + "  ")]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.task.comments))])]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'training') ? _c('span', [_c('h4', [_c('b', [_vm._v(" " + _vm._s(_vm.time) + " ")]), _vm._v("  " + _vm._s('TRAINING \\ ' + _vm.task.training_type) + "  ")]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.task.comments))])]) : _vm._e()])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

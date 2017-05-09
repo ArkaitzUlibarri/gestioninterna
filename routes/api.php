@@ -20,6 +20,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 /** 
  * Apis
  */
+
+Route::patch('reports/{id}', 'Api\ReportController@update');
+Route::post('reports', 'Api\ReportController@store');
 Route::get('reports', 'Api\ReportController@index');
+//Route::delete('reports/{id}', 'Api\ReportController@destroy');
+
 Route::get('groups', 'Api\GroupController@index');
 

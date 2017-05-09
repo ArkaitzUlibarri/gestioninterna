@@ -31,6 +31,8 @@ const app = new Vue({
 
 		newTask: {
 			id: -1,
+			user_id:this.user,
+			created_at:this.reportdate,
 			activity: null,
 			project_id: null,
 			project: null,
@@ -91,6 +93,8 @@ const app = new Vue({
 			console.log("Editando el indice "+ index);
 			this.newTask = {
 				id: task.id,
+				user_id:this.user,
+				created_at:this.reportdate,
 				activity:task.activity,
 				project_id:task.project_id,
 				project:task.project,
@@ -123,13 +127,15 @@ const app = new Vue({
 
 		addTask() {
 			this.nameTraduction();
+			this.save();
 			this.tasks.push(this.newTask);
-			this.initializeTask();
-			
+			this.initializeTask();			
 		},
 
 		editTask() {
 			console.log("Editado el indice "+ this.editIndex);
+
+			this.save();
 
 			let properties = Object.keys(this.newTask);
 
@@ -145,6 +151,8 @@ const app = new Vue({
 		initializeTask(){
 			this.newTask = {
 				id: -1,
+				user_id:this.user,
+				created_at:this.reportdate,
 				activity: null,
 				project_id: null,
 				project: null,
@@ -181,6 +189,8 @@ const app = new Vue({
 		refreshForm(){
 			this.newTask = {
 				id: this.newTask.id,
+				user_id:this.user,
+				created_at:this.reportdate,
 				activity:this.newTask.activity,
 				project_id: null,
 				project: null,
@@ -202,6 +212,8 @@ const app = new Vue({
 			let vm = this;
 			vm.tasks = [];
 
+			vm.initializeTask();
+
 			axios.get('/api/reports', {
 				params: {
 					user_id: vm.user,
@@ -210,7 +222,7 @@ const app = new Vue({
 			})
 			.then(function (response) {
 				vm.tasks = response.data;
-				console.log(response.data);
+				//console.log(response.data);
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -300,7 +312,31 @@ const app = new Vue({
 		},
 
 		save(){
-		//TODO
+
+			let vm = this;
+			console.log(vm.newTask);
+			
+			if(vm.newTask.id != -1) {
+
+				axios.patch('/api/reports/' + vm.newTask.id, vm.newTask)
+				.then(function (response) {
+					console.log(response.data);
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
+
+				return;
+			}
+				
+			axios.post('/api/reports', vm.newTask)
+			.then(function (response) {
+				console.log(response.data);
+			})
+			.catch(function (error) {
+				console.log(error);
+			});		
+
 		}
 
 	}

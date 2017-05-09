@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
+use App\Http\Requests\ReportFormApiRequest;
+use App\Workingreport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -60,9 +62,77 @@ class ReportController extends ApiController
 
 	}
 
-		//'activity'   => 'required|' . Rule::in(config('options.activities')),
-		//'time_slots' => 'required|numeric',
-		//'job_type' => 'required|' . Rule::in(config('options.typeOfJob')),
-		//'comments'   => 'required|string',
+	/**
+	 * Creo un reporte de trabajo
+	 * 
+	 * @param  ReportFormApiRequest $request
+	 * @return json
+	 */
+	public function store(ReportFormApiRequest $request)
+	{
+
+		$array = $request->all();
+
+		unset($array['id']);
+		unset($array['absence']);
+		unset($array['group']);
+		unset($array['project']);
+
+		$report = DB::table('working_report')
+			->insert($array);
+
+		return $this->respond();
+
+	}
+
+	/**
+	 * Actualizo un reporte de trabajo
+	 * 
+	 * @param  ReportFormApiRequest $request
+	 * @param  $id
+	 * @return json
+	 */
+	public function update(ReportFormApiRequest $request, $id)
+	{
+		$array = $request->all();
+
+		unset($array['absence']);
+		unset($array['group']);
+		unset($array['project']);
+
+		$report = Workingreport::find($id);
+
+		if($report == null) {
+			return $this->respondNotFound();
+		}
+
+		$report = DB::table('working_report')
+			->where('id',$id)
+			->update($array);
+
+		return $this->respond();
+
+	}
+
+	/**
+	 * Elimino un reporte de trabajo mediante el id.
+	 * 
+	 * @param  $id
+	 */
+	public function destroy($id)
+	{
+		$report = Workingreport::find($id);
+
+		if($report == null) {
+			return $this->respondNotFound();
+		}
+
+		$report = DB::table('working_report')
+			->where('id',$id)
+			->delete();
+
+		return $this->respond();
+	}
+
 
 }

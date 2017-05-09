@@ -22,7 +22,7 @@
 		
 		<div class="form-group col-xs-12 col-sm-2 pull-right">
 			<label>Date</label>
-			<input name="created_at" type ="date" class="form-control" value="{{$date}}">
+			<input name="created_at" type ="date" class="form-control" v-model="reportdate" v-on:change="fetchData">
 		</div>
 		
 	</div>
@@ -127,14 +127,12 @@
 
 	<hr>
 
-	<a title="Cancel" class="btn btn-danger" href="{{ url('workingreports') }}">
-		<span class="glyphicon glyphicon-arrow-left"></span> Cancel
+	<a title="Exit" class="btn btn-danger" href="{{ url('workingreports') }}">
+		<span class="glyphicon glyphicon-arrow-left"></span> Exit
 	</a>
-	
-	<button title="Save" class="btn btn-success"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
 
 	@include('layouts.errors')
-	<pre>@{{$data}}</pre>
+	<pre>@{{$data.newTask}}</pre>
 
 </div>
 

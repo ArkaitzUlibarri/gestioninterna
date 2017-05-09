@@ -16,7 +16,7 @@
         </div>
 
         <span v-if="task.activity == 'absence'">
-            <h4> <b> {{  time  }} </b> {{ task.absence }}  </h4> 
+            <h4> <b> {{  time  }} </b> {{ 'ABSENCE \\ ' + task.absence }}  </h4> 
             <p>{{ task.comments }}</p>
         </span>
 

@@ -122,6 +122,10 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     key: 'your-pusher-key'
 // });
 // 
+
+/**
+ * Instancia de Vue para la gestion de eventos.
+ */
 window.Event = new Vue();
 
 /***/ }),
