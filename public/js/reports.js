@@ -2484,24 +2484,23 @@ var app = new Vue({
 		projectList: [],
 		groupList: [],
 
-		job_type: null,
 		editIndex: -1,
 
 		newTask: {
 			id: -1,
-			user_id: this.user,
-			created_at: this.reportdate,
-			activity: null,
-			project_id: null,
-			project: null,
-			group_id: null,
-			group: null,
-			absence_id: null,
-			absence: null,
-			training_type: null,
+			user_id: -1,
+			created_at: '',
+			activity: "",
+			project_id: "",
+			project: "",
+			group_id: "",
+			group: "",
+			absence_id: "",
+			absence: "",
+			training_type: "",
 			time_slots: 0,
-			job_type: null,
-			comments: null,
+			job_type: "",
+			comments: "",
 			pm_validation: 0,
 			admin_validation: 0
 		},
@@ -2522,14 +2521,14 @@ var app = new Vue({
 			return total;
 		},
 		taskValidated: function taskValidated() {
-			if (this.newTask.activity != null && this.newTask.time_slots != 0 && this.newTask.comments != null) {
-				if (this.newTask.activity == 'project' && this.newTask.project != null && this.newTask.group != null) {
+			if (this.newTask.activity != "" && this.newTask.time_slots != 0 && this.newTask.comments != "") {
+				if (this.newTask.activity == 'project' && this.newTask.project != "" && this.newTask.group != "" && this.newTask.job_type != "") {
 					return true;
 				}
-				if (this.newTask.activity == 'absence' && this.newTask.absence != null) {
+				if (this.newTask.activity == 'absence' && this.newTask.absence != "") {
 					return true;
 				}
-				if (this.newTask.activity == 'training' && this.newTask.training_type != null) {
+				if (this.newTask.activity == 'training' && this.newTask.training_type != "" && this.newTask.job_type != "") {
 					return true;
 				}
 			}
@@ -2542,13 +2541,11 @@ var app = new Vue({
 		var _this = this;
 
 		Event.$on('DeleteTask', function (index, task) {
-			console.log("Borrado el indice " + index);
 			_this.delete(index);
 			_this.tasks.splice(index, 1);
 		});
 
 		Event.$on('EditTask', function (index, task) {
-			console.log("Editando el indice " + index);
 			_this.newTask = {
 				id: task.id,
 				user_id: _this.user,
@@ -2584,56 +2581,29 @@ var app = new Vue({
 		addTask: function addTask() {
 			this.nameTraduction();
 			this.save();
-			this.tasks.push(this.newTask);
-			this.initializeTask();
 		},
 		editTask: function editTask() {
-			console.log("Editado el indice " + this.editIndex);
-
 			this.save();
-
-			var properties = Object.keys(this.newTask);
-
-			for (var i = properties.length - 1; i >= 0; i--) {
-				this.tasks[this.editIndex][properties[i]] = this.newTask[properties[i]];
-			}
-
-			this.initializeTask();
-
-			this.editIndex = -1;
 		},
 		initializeTask: function initializeTask() {
 			this.newTask = {
 				id: -1,
 				user_id: this.user,
 				created_at: this.reportdate,
-				activity: null,
-				project_id: null,
-				project: null,
-				group_id: null,
-				group: null,
-				absence_id: null,
-				absence: null,
-				training_type: null,
+				activity: "",
+				project_id: "",
+				project: "",
+				group_id: "",
+				group: "",
+				absence_id: "",
+				absence: "",
+				training_type: "",
 				time_slots: 0,
-				job_type: null,
-				comments: null,
+				job_type: "",
+				comments: "",
 				pm_validation: 0,
 				admin_validation: 0
 			};
-		},
-		validateTask: function validateTask() {
-
-			if (confirm("¿Estás seguro de que quieres validar el día?")) {
-
-				console.log("Validando el dia");
-				this.tasks.forEach(function (item) {
-					item.pm_validation = 1;
-					item.admin_validation = 1;
-				});
-
-				this.initializeTask();
-			}
 		},
 		refreshForm: function refreshForm() {
 			this.newTask = {
@@ -2641,37 +2611,19 @@ var app = new Vue({
 				user_id: this.user,
 				created_at: this.reportdate,
 				activity: this.newTask.activity,
-				project_id: null,
-				project: null,
-				group_id: null,
-				group: null,
-				absence_id: null,
-				absence: null,
-				training_type: null,
+				project_id: "",
+				project: "",
+				group_id: "",
+				group: "",
+				absence_id: "",
+				absence: "",
+				training_type: "",
 				time_slots: 0,
-				job_type: null,
-				comments: null,
+				job_type: this.newTask.job_type,
+				comments: "",
 				pm_validation: 0,
 				admin_validation: 0
 			};
-		},
-		fetchData: function fetchData() {
-			var vm = this;
-			vm.tasks = [];
-
-			vm.initializeTask();
-
-			axios.get('/api/reports', {
-				params: {
-					user_id: vm.user,
-					created_at: vm.reportdate
-				}
-			}).then(function (response) {
-				vm.tasks = response.data;
-				//console.log(response.data);
-			}).catch(function (error) {
-				console.log(error);
-			});
 		},
 		project: function project() {
 			var setList = new Set();
@@ -2694,11 +2646,23 @@ var app = new Vue({
 
 			this.groupList = [].concat(_toConsumableArray(setList));
 		},
+		validateTask: function validateTask() {
+
+			if (confirm("¿Estás seguro de que quieres validar el día?")) {
+
+				this.tasks.forEach(function (item) {
+					item.pm_validation = 1;
+					item.admin_validation = 1;
+				});
+
+				this.initializeTask();
+			}
+		},
 		nameTraduction: function nameTraduction() {
 
-			this.newTask.project_id = null;
-			this.newTask.group_id = null;
-			this.newTask.absence_id = null;
+			this.newTask.project_id = "";
+			this.newTask.group_id = "";
+			this.newTask.absence_id = "";
 
 			//Ausencia
 			if (this.newTask.activity == 'absence') {
@@ -2721,9 +2685,9 @@ var app = new Vue({
 		},
 		idTraduction: function idTraduction() {
 
-			this.newTask.project = null;
-			this.newTask.group = null;
-			this.newTask.absence = null;
+			this.newTask.project = "";
+			this.newTask.group = "";
+			this.newTask.absence = "";
 
 			//Ausencia
 			if (this.newTask.activity == 'absence') {
@@ -2746,31 +2710,58 @@ var app = new Vue({
 				}
 			}
 		},
-		save: function save() {
-
+		fetchData: function fetchData() {
 			var vm = this;
-			console.log(vm.newTask);
+			vm.tasks = [];
+
+			vm.initializeTask();
+
+			axios.get('/api/reports', {
+				params: {
+					user_id: vm.user,
+					created_at: vm.reportdate
+				}
+			}).then(function (response) {
+				vm.tasks = response.data;
+				console.log(response.data);
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		save: function save() {
+			var vm = this;
 
 			if (vm.newTask.id != -1) {
-
 				axios.patch('/api/reports/' + vm.newTask.id, vm.newTask).then(function (response) {
 					console.log(response.data);
+
+					var properties = Object.keys(vm.newTask);
+
+					for (var i = properties.length - 1; i >= 0; i--) {
+						vm.tasks[vm.editIndex][properties[i]] = vm.newTask[properties[i]];
+					}
+
+					vm.initializeTask();
+
+					vm.editIndex = -1;
 				}).catch(function (error) {
 					console.log(error);
 				});
-
 				return;
 			}
 
+			console.log(vm.newTask);
+
 			axios.post('/api/reports', vm.newTask).then(function (response) {
 				console.log(response.data);
+				vm.tasks.push(vm.newTask);
+				vm.initializeTask();
 			}).catch(function (error) {
 				console.log(error);
 			});
 		},
 		delete: function _delete(index) {
 			var vm = this;
-			console.log(vm.tasks[index]);
 
 			axios.delete('/api/reports/' + vm.tasks[index].id).then(function (response) {
 				console.log(response.data);
@@ -3063,7 +3054,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "aria-hidden": "true"
     }
-  })]) : _vm._e()]), _vm._v(" "), (_vm.task.activity == 'absence') ? _c('span', [_c('h4', [_c('b', [_vm._v(" " + _vm._s(_vm.time) + " ")]), _vm._v(" " + _vm._s('ABSENCE \\ ' + _vm.task.absence) + "  ")]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.task.comments))])]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'project') ? _c('span', [_c('h4', [_c('b', [_vm._v(" " + _vm._s(_vm.time) + " ")]), _vm._v(" " + _vm._s(_vm.task.project + ' \\ ' + _vm.task.group) + "  ")]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.task.comments))])]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'training') ? _c('span', [_c('h4', [_c('b', [_vm._v(" " + _vm._s(_vm.time) + " ")]), _vm._v("  " + _vm._s('TRAINING \\ ' + _vm.task.training_type) + "  ")]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.task.comments))])]) : _vm._e()])
+  })]) : _vm._e()]), _vm._v(" "), (_vm.task.activity == 'absence') ? _c('span', [_c('h4', [_c('b', [_vm._v(" " + _vm._s(_vm.time) + " ")]), _vm._v(" " + _vm._s('ABSENCE \\ ' + _vm.task.absence.toUpperCase()) + "  ")]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.task.comments))])]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'project') ? _c('span', [_c('h4', [_c('b', [_vm._v(" " + _vm._s(_vm.time) + " ")]), _vm._v(" " + _vm._s(_vm.task.project.toUpperCase() + ' \\ ' + _vm.task.group.toUpperCase()) + "  ")]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.task.comments))])]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'training') ? _c('span', [_c('h4', [_c('b', [_vm._v(" " + _vm._s(_vm.time) + " ")]), _vm._v("  " + _vm._s('TRAINING \\ ' + _vm.task.training_type.toUpperCase()) + "  ")]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.task.comments))])]) : _vm._e()])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

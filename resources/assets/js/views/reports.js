@@ -26,24 +26,23 @@ const app = new Vue({
 		projectList: [] ,
 		groupList:[] ,
 
-		job_type:null,
 		editIndex: -1,
 
 		newTask: {
 			id: -1,
-			user_id:this.user,
-			created_at:this.reportdate,
-			activity: null,
-			project_id: null,
-			project: null,
-			group_id: null,
-			group: null,
-			absence_id: null,
-			absence: null,
-			training_type:null,
+			user_id: -1,
+			created_at: '',
+			activity: "",
+			project_id: "",
+			project: "",
+			group_id: "",
+			group: "",
+			absence_id: "",
+			absence: "",
+			training_type:"",
 			time_slots: 0,
-			job_type:null,
-			comments: null,
+			job_type:"",
+			comments: "",
 			pm_validation: 0,
 			admin_validation: 0,
 		},
@@ -66,14 +65,14 @@ const app = new Vue({
 		},
 
 		taskValidated(){
-			if (this.newTask.activity != null && this.newTask.time_slots != 0 && this.newTask.comments != null) {
-				if(this.newTask.activity == 'project' && this.newTask.project != null && this.newTask.group != null ){
+			if (this.newTask.activity != "" && this.newTask.time_slots != 0 && this.newTask.comments != "") {
+				if(this.newTask.activity == 'project' && this.newTask.project != "" && this.newTask.group != "" && this.newTask.job_type != ""){
 					return true;
 				}
-				if(this.newTask.activity == 'absence' && this.newTask.absence != null){
+				if(this.newTask.activity == 'absence' && this.newTask.absence != ""){
 					return true;
 				}
-				if(this.newTask.activity == 'training' && this.newTask.training_type != null){
+				if(this.newTask.activity == 'training' && this.newTask.training_type != "" && this.newTask.job_type != ""){
 					return true;
 				}
 			}
@@ -85,13 +84,11 @@ const app = new Vue({
 
 	created() {
 		Event.$on('DeleteTask', (index, task) => {
-			console.log("Borrado el indice "+ index);
 			this.delete(index);
 			this.tasks.splice(index, 1);
 		});
 
 		Event.$on('EditTask', (index, task) => {
-			console.log("Editando el indice "+ index);
 			this.newTask = {
 				id: task.id,
 				user_id:this.user,
@@ -129,24 +126,10 @@ const app = new Vue({
 		addTask() {
 			this.nameTraduction();
 			this.save();
-			this.tasks.push(this.newTask);
-			this.initializeTask();			
 		},
 
 		editTask() {
-			console.log("Editado el indice "+ this.editIndex);
-
 			this.save();
-
-			let properties = Object.keys(this.newTask);
-
-			for (let i = properties.length - 1; i >= 0; i--) {
-				this.tasks[this.editIndex][properties[i]] = this.newTask[properties[i]];
-			}
-
-			this.initializeTask();
-
-			this.editIndex = -1;
 		},
 		
 		initializeTask(){
@@ -154,36 +137,20 @@ const app = new Vue({
 				id: -1,
 				user_id:this.user,
 				created_at:this.reportdate,
-				activity: null,
-				project_id: null,
-				project: null,
-				group_id: null,
-				group: null,
-				absence_id: null,
-				absence: null,
-				training_type:null,
+				activity: "",
+				project_id: "",
+				project: "",
+				group_id: "",
+				group: "",
+				absence_id: "",
+				absence: "",
+				training_type:"",
 				time_slots: 0,
-				job_type:null,
-				comments: null,
+				job_type:"",
+				comments: "",
 				pm_validation: 0,
 				admin_validation: 0,
 			};
-
-		},
-
-		validateTask(){
-
-			if(confirm("¿Estás seguro de que quieres validar el día?")){
-
-				console.log("Validando el dia");
-				this.tasks.forEach( (item) => {
-					item.pm_validation = 1;
-					item.admin_validation = 1;
-				});
-
-				this.initializeTask();
-
-			}
 
 		},
 		
@@ -193,41 +160,19 @@ const app = new Vue({
 				user_id:this.user,
 				created_at:this.reportdate,
 				activity:this.newTask.activity,
-				project_id: null,
-				project: null,
-				group_id: null,
-				group: null,
-				absence_id:null,
-				absence:null,
-				training_type: null,
+				project_id: "",
+				project: "",
+				group_id: "",
+				group: "",
+				absence_id:"",
+				absence:"",
+				training_type: "",
 				time_slots: 0,
-				job_type:null,
-				comments: null,
+				job_type:this.newTask.job_type,
+				comments: "",
 				pm_validation: 0,
 				admin_validation: 0,
 			};
-
-		},
-
-		fetchData() {
-			let vm = this;
-			vm.tasks = [];
-
-			vm.initializeTask();
-
-			axios.get('/api/reports', {
-				params: {
-					user_id: vm.user,
-					created_at: vm.reportdate,
-				}
-			})
-			.then(function (response) {
-				vm.tasks = response.data;
-				//console.log(response.data);
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
 
 		},
 
@@ -256,11 +201,26 @@ const app = new Vue({
 
 		},
 
+		validateTask(){
+
+			if(confirm("¿Estás seguro de que quieres validar el día?")){
+
+				this.tasks.forEach( (item) => {
+					item.pm_validation = 1;
+					item.admin_validation = 1;
+				});
+
+				this.initializeTask();
+
+			}
+
+		},
+
 		nameTraduction(){
 
-			this.newTask.project_id= null;
-			this.newTask.group_id= null;
-			this.newTask.absence_id= null;
+			this.newTask.project_id= "";
+			this.newTask.group_id= "";
+			this.newTask.absence_id= "";
 
 			//Ausencia
 			if(this.newTask.activity =='absence') {		
@@ -285,9 +245,9 @@ const app = new Vue({
 
 		idTraduction(){
 
-			this.newTask.project= null;
-			this.newTask.group= null;
-			this.newTask.absence= null;
+			this.newTask.project= "";
+			this.newTask.group= "";
+			this.newTask.absence= "";
 
 			//Ausencia
 			if(this.newTask.activity =='absence') {		
@@ -312,37 +272,68 @@ const app = new Vue({
 
 		},
 
-		save(){
-
+		fetchData() {
 			let vm = this;
-			console.log(vm.newTask);
-			
-			if(vm.newTask.id != -1) {
+			vm.tasks = [];
 
-				axios.patch('/api/reports/' + vm.newTask.id, vm.newTask)
-				.then(function (response) {
-					console.log(response.data);
-				})
-				.catch(function (error) {
-					console.log(error);
-				});
+			vm.initializeTask();
 
-				return;
-			}
-				
-			axios.post('/api/reports', vm.newTask)
+			axios.get('/api/reports', {
+				params: {
+					user_id: vm.user,
+					created_at: vm.reportdate,
+				}
+			})
 			.then(function (response) {
+				vm.tasks = response.data;
 				console.log(response.data);
 			})
 			.catch(function (error) {
 				console.log(error);
-			});		
+			});
 
+		},
+
+		save(){
+			let vm = this;
+			
+			
+			if(vm.newTask.id != -1) {
+				axios.patch('/api/reports/' + vm.newTask.id, vm.newTask)
+				.then(function (response) {
+					console.log(response.data);
+
+					let properties = Object.keys(vm.newTask);
+
+					for (let i = properties.length - 1; i >= 0; i--) {
+						vm.tasks[vm.editIndex][properties[i]] = vm.newTask[properties[i]];
+					}
+
+					vm.initializeTask();
+
+					vm.editIndex = -1;
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
+				return;
+			}
+			
+			console.log(vm.newTask);
+
+			axios.post('/api/reports', vm.newTask)
+			.then(function (response) {
+				console.log(response.data);
+				vm.tasks.push(vm.newTask);
+				vm.initializeTask();		
+			})
+			.catch(function (error) {
+				console.log(error);
+			});		
 		},
 
 		delete(index){
 			let vm = this;
-			console.log(vm.tasks[index]);
 				
 			axios.delete('/api/reports/' + vm.tasks[index].id)
 			.then(function (response) {

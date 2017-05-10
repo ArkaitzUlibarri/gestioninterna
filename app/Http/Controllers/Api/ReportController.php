@@ -94,6 +94,7 @@ class ReportController extends ApiController
 	 */
 	public function update(ReportFormApiRequest $request, $id)
 	{
+
 		$array = $request->all();
 
 		unset($array['absence']);

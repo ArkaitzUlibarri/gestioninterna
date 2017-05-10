@@ -59,6 +59,8 @@ class UsersController extends Controller
 
         $user->password = bcrypt($request->get('name'));
 
+        $user->remember_token = str_random(10);
+
         $user->save();
 
         return redirect('/users');

@@ -16,17 +16,17 @@
         </div>
 
         <span v-if="task.activity == 'absence'">
-            <h4> <b> {{  time  }} </b> {{ 'ABSENCE \\ ' + task.absence }}  </h4> 
+            <h4> <b> {{  time  }} </b> {{ 'ABSENCE \\ ' + task.absence.toUpperCase() }}  </h4> 
             <p>{{ task.comments }}</p>
         </span>
 
         <span v-if="task.activity == 'project'">
-            <h4> <b> {{  time  }} </b> {{ task.project + ' \\ ' + task.group }}  </h4>      
+            <h4> <b> {{  time  }} </b> {{ task.project.toUpperCase() + ' \\ ' + task.group.toUpperCase()}}  </h4>      
             <p>{{ task.comments }}</p>
         </span>
 
         <span v-if="task.activity == 'training'">
-            <h4> <b> {{ time }} </b>  {{ 'TRAINING \\ ' + task.training_type }}  </h4> 
+            <h4> <b> {{ time }} </b>  {{ 'TRAINING \\ ' + task.training_type.toUpperCase() }}  </h4> 
             <p>{{ task.comments }}</p>
         </span>
       
