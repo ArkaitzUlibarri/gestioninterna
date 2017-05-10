@@ -65,7 +65,7 @@ const app = new Vue({
 		},
 
 		taskValidated(){
-			if (this.newTask.activity != "" && this.newTask.time_slots != 0 && this.newTask.comments != "") {
+			if (this.newTask.activity != "" && this.newTask.time_slots != 0) {
 				if(this.newTask.activity == 'project' && this.newTask.project != "" && this.newTask.group != "" && this.newTask.job_type != ""){
 					return true;
 				}
@@ -318,18 +318,21 @@ const app = new Vue({
 				});
 				return;
 			}
-			
-			console.log(vm.newTask);
+			else{
 
-			axios.post('/api/reports', vm.newTask)
-			.then(function (response) {
-				console.log(response.data);
-				vm.tasks.push(vm.newTask);
-				vm.initializeTask();		
-			})
-			.catch(function (error) {
-				console.log(error);
-			});		
+				axios.post('/api/reports', vm.newTask)
+				.then(function (response) {
+					console.log(response.data);
+					vm.newTask.id=response.data;
+					vm.tasks.push(vm.newTask);
+					vm.initializeTask();		
+				})
+				.catch(function (error) {
+					console.log(error);
+				});	
+				return;
+
+			}	
 		},
 
 		delete(index){

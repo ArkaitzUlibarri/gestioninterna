@@ -86,12 +86,12 @@
 
     .validated-task {
         border-style: double;
-        border-color: red;
+        border-color: #21d421;
     }
     .validated-pm-text {
-        color: pink;
+        color: #98FB98;
     }
     .validated-admin-text {
-        color: red;
+        color: #21d421;
     }
 </style>

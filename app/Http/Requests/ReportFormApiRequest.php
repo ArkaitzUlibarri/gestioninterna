@@ -35,7 +35,7 @@ class ReportFormApiRequest extends FormRequest
             'absence_id'       => 'required_if:activity,absence|numeric|nullable',
             'time_slots'       => 'required|numeric',
             'job_type'         => 'nullable|' . Rule::in(config('options.typeOfJob')),
-            'comments'         => 'required|string',
+            'comments'         => 'nullable|string',
             'pm_validation'    => 'required|boolean',
             'admin_validation' => 'required|boolean'
         ];

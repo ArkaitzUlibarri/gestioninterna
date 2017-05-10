@@ -2499,6 +2499,7 @@ var app = new Vue({
 			absence: "",
 			training_type: "",
 			time_slots: 0,
+			time: 0,
 			job_type: "",
 			comments: "",
 			pm_validation: 0,
@@ -2521,7 +2522,7 @@ var app = new Vue({
 			return total;
 		},
 		taskValidated: function taskValidated() {
-			if (this.newTask.activity != "" && this.newTask.time_slots != 0 && this.newTask.comments != "") {
+			if (this.newTask.activity != "" && this.newTask.time_slots != 0) {
 				if (this.newTask.activity == 'project' && this.newTask.project != "" && this.newTask.group != "" && this.newTask.job_type != "") {
 					return true;
 				}
@@ -2748,17 +2749,18 @@ var app = new Vue({
 					console.log(error);
 				});
 				return;
+			} else {
+
+				axios.post('/api/reports', vm.newTask).then(function (response) {
+					console.log(response.data);
+					vm.newTask.id = response.data;
+					vm.tasks.push(vm.newTask);
+					vm.initializeTask();
+				}).catch(function (error) {
+					console.log(error);
+				});
+				return;
 			}
-
-			console.log(vm.newTask);
-
-			axios.post('/api/reports', vm.newTask).then(function (response) {
-				console.log(response.data);
-				vm.tasks.push(vm.newTask);
-				vm.initializeTask();
-			}).catch(function (error) {
-				console.log(error);
-			});
 		},
 		delete: function _delete(index) {
 			var vm = this;
@@ -2859,7 +2861,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(35)();
-exports.push([module.i, "\n.task-panel {\n    position:relative;\n    margin-bottom: .5em;\n    background-color: #fff;\n    border: 1px solid #777777;\n    border-radius: 0px;\n    box-shadow: 0 3px 1px rgba(0, 0, 0, .05);\n    padding: .7em;\n}\n.panel-right-corner {\n    position: absolute;\n    top: .4em;\n    right: 1em;\n}\n.task-action-icon {\n    font-weight: bold;\n    cursor: pointer;\n    display: block;\n    margin: 0.4em;\n}\n.validated-task {\n    border-style: double;\n    border-color: red;\n}\n.validated-pm-text {\n    color: pink;\n}\n.validated-admin-text {\n    color: red;\n}\n", ""]);
+exports.push([module.i, "\n.task-panel {\n    position:relative;\n    margin-bottom: .5em;\n    background-color: #fff;\n    border: 1px solid #777777;\n    border-radius: 0px;\n    box-shadow: 0 3px 1px rgba(0, 0, 0, .05);\n    padding: .7em;\n}\n.panel-right-corner {\n    position: absolute;\n    top: .4em;\n    right: 1em;\n}\n.task-action-icon {\n    font-weight: bold;\n    cursor: pointer;\n    display: block;\n    margin: 0.4em;\n}\n.validated-task {\n    border-style: double;\n    border-color: #21d421;\n}\n.validated-pm-text {\n    color: #98FB98;\n}\n.validated-admin-text {\n    color: #21d421;\n}\n", ""]);
 
 /***/ }),
 /* 35 */

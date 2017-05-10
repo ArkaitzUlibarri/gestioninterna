@@ -78,10 +78,10 @@ class ReportController extends ApiController
 		unset($array['group']);
 		unset($array['project']);
 
-		$report = DB::table('working_report')
-			->insert($array);
+		$id = DB::table('working_report')
+			->insertGetId($array);
 
-		return $this->respond();
+		return $this->respond($id);
 
 	}
 
@@ -107,11 +107,11 @@ class ReportController extends ApiController
 			return $this->respondNotFound();
 		}
 
-		$report = DB::table('working_report')
+		$confirmation = DB::table('working_report')
 			->where('id',$id)
 			->update($array);
 
-		return $this->respond();
+		return $this->respond($confirmation);
 
 	}
 

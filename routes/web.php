@@ -13,6 +13,8 @@
 
 Auth::routes();
 
+Route::get('/', 'HomeController@index')->name('home');
+
 Route::resource('users', 'UsersController', ['except' => [
     'destroy'
 ]]);
@@ -32,4 +34,4 @@ Route::resource('groups', 'GroupsController', ['only' => [
 Route::get('workingreports', 'WorkingreportController@index');
 Route::get('workingreports/add/{id}/{date}/',['as'=> 'workingreports.edit','uses'=>'WorkingreportController@edit']);
 
-Route::get('/home', 'HomeController@index')->name('home');
+

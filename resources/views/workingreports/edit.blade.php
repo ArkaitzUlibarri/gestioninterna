@@ -10,8 +10,6 @@
 			<h1>Working Report</h1>				
 		</div>
 
-
-		
 		<div class="form-group col-xs-12 col-sm-2 pull-right">
 			<label>Date</label>
 			<input name="created_at" type ="date" class="form-control" v-model="reportdate" v-on:change="fetchData">
@@ -25,7 +23,7 @@
 		<h3>Task</h3>
 
 		<div class="row">
-			<div class="form-group col-xs-12 col-sm-6 pull-left">
+			<div class="form-group col-xs-12 col-sm-3">
 				<label>Activity</label>
 				<select class="form-control" v-model="newTask.activity" v-on:change="refreshForm" >
 					<option value="">-</option>
@@ -36,11 +34,11 @@
 			</div>
 
 			<div class="form-group col-xs-12 col-sm-3">
-				<label>Time (15 mins)</label>
-				<input type="number" min=0 max=33 class="form-control" placeholder="Time" v-model="newTask.time_slots">
+				<label>Time (Hours)</label>
+				<input type="number" min=0 max=8.25 step="0.25" class="form-control" placeholder="Time" v-model="newTask.time_slots">
 			</div>
 
-			<div class="form-group col-xs-12 col-sm-3 pull-right">
+			<div class="form-group col-xs-12 col-sm-3 ">
 				<label>Type</label>
 				<select class="form-control" v-model="newTask.job_type" >
 					<option value="">-</option>
@@ -54,9 +52,9 @@
 
 		<div class="row">
 
-			<div class="form-group col-xs-12 col-sm-3 ">
+			<div class="form-group col-xs-12 col-sm-3 " v-show="newTask.activity == 'project'">
 				<label>Project</label>
-				<select class="form-control" :disabled="newTask.activity != 'project'" v-on:change="groupsRefresh" v-model="newTask.project">
+				<select class="form-control" v-on:change="groupsRefresh" v-model="newTask.project">
 					<option value="">-</option>
 					<template v-for="(element, index) in projectList">
 						<option :project="element" :index="index">@{{element}}</option>
@@ -64,9 +62,9 @@
 				</select>
 			</div>
 
-			<div class="form-group col-xs-12 col-sm-3">
+			<div class="form-group col-xs-12 col-sm-3" v-show="newTask.project != ''">
 				<label>Group</label>
-				<select class="form-control" :disabled="newTask.activity != 'project'" v-model="newTask.group">
+				<select class="form-control"  v-model="newTask.group">
 					<option value="">-</option>
 					<template v-for="(group, index) in groupList">
 						<option :group="group" :index="index">@{{group}}</option>
@@ -74,9 +72,9 @@
 				</select>
 			</div>
 
-			<div class="form-group col-xs-12 col-sm-3">
+			<div class="form-group col-xs-12 col-sm-3" v-show="newTask.activity == 'absence'">
 				<label>Absence</label>
-				<select class="form-control" :disabled="newTask.activity != 'absence'" v-model="newTask.absence">
+				<select class="form-control" v-model="newTask.absence">
 					<option value="">-</option>
 					@foreach($absences as $absence)				
 					<option value="{{$absence->name}}">{{ucfirst($absence->name)}}</option>
@@ -84,9 +82,9 @@
 				</select>
 			</div>	
 
-			<div class="form-group col-xs-12 col-sm-3">
+			<div class="form-group col-xs-12 col-sm-3" v-show="newTask.activity == 'training'">
 				<label>Training</label>
-				<select class="form-control" :disabled="newTask.activity != 'training'" v-model="newTask.training_type">
+				<select class="form-control" v-model="newTask.training_type">
 					<option value="">-</option>
 					@foreach(config('options.training') as $training)				
 					<option value="{{$training}}">{{ucfirst($training)}}</option>
@@ -135,8 +133,8 @@
 	</a>
 
 	@include('layouts.errors')
-	<pre>@{{$data.newTask}}</pre>
-
+	
+	<pre>@{{$data}}</pre>
 </div>
 
 

@@ -25,9 +25,17 @@ class WorkingReportController extends Controller
     {
         $today=Carbon::now();
     	$user_id = Auth::user()->id;
-        $workingreports = $this->getReportsPerUserPerDay($user_id);
-    
-    	return view('workingreports.index', compact('workingreports','today'));
+
+        $role=Auth::user()->role;
+
+        if($role == config('options.roles')[0]){
+            $workingreports = $this->getReportsPerUserPerDay($user_id,true);
+        }
+        else{
+            $workingreports = $this->getReportsPerUserPerDay($user_id,false);
+        }
+        
+    	return view('workingreports.index', compact('workingreports','user_id','today'));
     }
 
     public function edit($user_id,$date)
@@ -39,8 +47,9 @@ class WorkingReportController extends Controller
         return view('workingreports.edit',compact('workingreports','date','user_id','absences','groupProjects'));
     }
 
-    private function getReportsPerUserPerDay($user_id)
+    private function getReportsPerUserPerDay($user_id , $auth)
     {
+        if($auth){
     	return DB::table('working_report')
 			->select(
 				DB::raw("CONCAT(users.name, ' ', users.lastname_1 ) as fullname"),
@@ -50,11 +59,28 @@ class WorkingReportController extends Controller
 				DB::raw("SUM(case when pm_validation = 0 then time_slots else 0 end)*0.25 as horas_validadas_pm"),
 				DB::raw("SUM(case when admin_validation = 0 then time_slots else 0 end)*0.25 as horas_validadas_admin")
             )
-            ->join('users','working_report.user_id','=','users.id')
-            ->where('user_id',$user_id)
+            ->join('users','working_report.user_id','=','users.id')        
 			->groupBy('user_id','created_at')
+            //->where('user_id',$user_id)  
             ->orderBy('created_at','asc')
-	        ->get();
+            ->get();
+        }
+
+        return DB::table('working_report')
+            ->select(
+                DB::raw("CONCAT(users.name, ' ', users.lastname_1 ) as fullname"),
+                'working_report.created_at',
+                'working_report.user_id',
+                DB::raw("sum(time_slots)*0.25 as horas_reportadas"),
+                DB::raw("SUM(case when pm_validation = 0 then time_slots else 0 end)*0.25 as horas_validadas_pm"),
+                DB::raw("SUM(case when admin_validation = 0 then time_slots else 0 end)*0.25 as horas_validadas_admin")
+            )
+            ->join('users','working_report.user_id','=','users.id')        
+            ->groupBy('user_id','created_at')
+            ->where('user_id',$user_id)  
+            ->orderBy('created_at','asc')
+            ->get();
+
     }
 
     private function getReportsPerDay($user_id,$created)
@@ -73,6 +99,7 @@ class WorkingReportController extends Controller
             ->orderBy('created_at','asc')
             ->get();
     }
+
     private function getGroupsProjectsByUser($user_id)
     {
         return DB::table('group_user')
@@ -89,4 +116,5 @@ class WorkingReportController extends Controller
             ->orderBy('group_id','asc')
             ->get();
     }
+
 }

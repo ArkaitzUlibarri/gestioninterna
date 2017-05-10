@@ -11,8 +11,8 @@
                         <th>Employee</th>
                         <th>Date</th>
                         <th>Stated Hours</th>
-                        <th>Validado (PM)</th>
-                        <th>Validado (ADMIN)</th>
+                        <th>Validated (PM)</th>
+                        <th>Validated (ADMIN)</th>
                         <th>Actions</th>
                     </thead>
 
@@ -37,7 +37,7 @@
             </div>
 
             <div align="right" class="form-group">  
-               <a type="button" title="New Report" class="btn btn-success" href="{{ url('/workingreports/add', [$workingreport->user_id,$today->format('Y-m-d')] ) }}">
+               <a type="button" title="New Report" class="btn btn-success" href="{{ url('/workingreports/add', [$user_id,$today->format('Y-m-d')] ) }}">
                 <span class="glyphicon glyphicon-plus"></span> New Report
                 </a>
             </div>

@@ -41,11 +41,11 @@ return [
 	'training' => [
 		'course',
 		'development',
-		'workplace'
+		'learning on the job'
 	],
 
 	'typeOfJob' => [
-		'in-person',
+		'on site work',
 		'remote',
 		'teleworking'
 	],
