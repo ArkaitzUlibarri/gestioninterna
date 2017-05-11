@@ -41,4 +41,19 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\WorkingReport')->orderBy('user','date','desc');
     }
+
+
+    /**
+     * Check the role of the user
+     */
+    public function is(string $rolename)
+    {
+
+        if ($this->role == strtolower($roleName))
+        {
+            return true;
+        }
+
+        return false;
+    }
 }

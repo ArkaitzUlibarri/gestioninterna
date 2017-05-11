@@ -2522,7 +2522,7 @@ var app = new Vue({
 			return total;
 		},
 		taskValidated: function taskValidated() {
-			if (this.newTask.activity != "" && this.newTask.time_slots != 0) {
+			if (this.newTask.activity != "" && this.newTask.time != 0) {
 				if (this.newTask.activity == 'project' && this.newTask.project != "" && this.newTask.group != "" && this.newTask.job_type != "") {
 					return true;
 				}
@@ -2560,6 +2560,7 @@ var app = new Vue({
 				absence: task.absence,
 				training_type: task.training_type,
 				time_slots: task.time_slots,
+				time: parseInt(task.time_slots) * 0.25,
 				job_type: task.job_type,
 				comments: task.comments,
 				pm_validation: task.pm_validation,
@@ -2580,10 +2581,12 @@ var app = new Vue({
 
 	methods: {
 		addTask: function addTask() {
+			this.newTask.time_slots = this.newTask.time * 4;
 			this.nameTraduction();
 			this.save();
 		},
 		editTask: function editTask() {
+			this.newTask.time_slots = this.newTask.time * 4;
 			this.save();
 		},
 		initializeTask: function initializeTask() {
@@ -2600,6 +2603,7 @@ var app = new Vue({
 				absence: "",
 				training_type: "",
 				time_slots: 0,
+				time: 0,
 				job_type: "",
 				comments: "",
 				pm_validation: 0,
@@ -2620,11 +2624,16 @@ var app = new Vue({
 				absence: "",
 				training_type: "",
 				time_slots: 0,
-				job_type: this.newTask.job_type,
+				time: 0,
+				job_type: "",
 				comments: "",
 				pm_validation: 0,
 				admin_validation: 0
 			};
+
+			if (this.newTask.activity == 'training') {
+				this.newTask.job_type = 'on site work';
+			}
 		},
 		project: function project() {
 			var setList = new Set();

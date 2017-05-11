@@ -77,6 +77,7 @@ class ReportController extends ApiController
 		unset($array['absence']);
 		unset($array['group']);
 		unset($array['project']);
+		unset($array['time']);
 
 		$id = DB::table('working_report')
 			->insertGetId($array);
@@ -100,6 +101,7 @@ class ReportController extends ApiController
 		unset($array['absence']);
 		unset($array['group']);
 		unset($array['project']);
+		unset($array['time']);
 
 		$report = Workingreport::find($id);
 
