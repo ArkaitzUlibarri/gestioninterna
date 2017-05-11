@@ -18,10 +18,18 @@ class CreateGeneralTable extends Migration
          */
         Schema::create('absences', function (Blueprint $table) {
             $table->increments('id');  
+            $table->enum('code',['m','w','ee','e','r','f','o','p','h']);
+            $table->enum('group',['sick leave','permission','holidays','others']); 
+            $table->string('name');
+        });
+        /*
+        Schema::create('absences', function (Blueprint $table) {
+            $table->increments('id');  
             $table->enum('code',['v','b','e','p','f','o','m','mud','pend']);
             $table->enum('group',['baja','permiso','vacaciones','otros']); 
             $table->string('name');
         });
+        */
 
         /**
          * Tabla de cientes de nuestro proyectos

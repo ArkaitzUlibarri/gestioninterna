@@ -20,6 +20,7 @@ class ContractsController extends Controller
 	public function __construct(ContractRepository $contractRepository)
 	{
 		$this->middleware('auth');
+		$this->middleware('checkrole');
 		$this->contractRepository = $contractRepository;
 	}
 

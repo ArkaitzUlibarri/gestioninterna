@@ -13,7 +13,7 @@ class ConfigTableSeeder extends Seeder
 	 */
 	public function run()
 	{
-
+		/*
 		$absences=[
 			['code' =>'m','group'=>'baja','name'=>'medico o baja medica'],
 			['code' =>'b','group'=>'permiso','name'=>'boda'],
@@ -22,8 +22,21 @@ class ConfigTableSeeder extends Seeder
 			['code' =>'mud','group'=>'permiso','name'=>'mudanza'],	
 			['code' =>'f','group'=>'permiso','name'=>'permiso por asunto familiar'],
 			['code' =>'o','group'=>'otros','name'=>'otros'],
-			['code' =>'pend','group'=>'otros','name'=>'pendiente'],
+			['code' =>'pend','group'=>'otros','name'=>'pendiente de reportar'],
 			['code' =>'v','group'=>'vacaciones','name'=>'vacaciones'],
+		];	
+		*/
+	
+		$absences=[
+			['code' =>'m','group'=>'sick leave','name'=>'medical or sick leave'],
+			['code' =>'w','group'=>'permission','name'=>'wedding'],
+			['code' =>'ee','group'=>'permission','name'=>'exam eve'],
+			['code' =>'e','group'=>'permission','name'=>'exam'],
+			['code' =>'r','group'=>'permission','name'=>'removal'],	
+			['code' =>'f','group'=>'permission','name'=>'family bussiness leave'],
+			['code' =>'o','group'=>'others','name'=>'others'],
+			['code' =>'p','group'=>'others','name'=>'pending to report'],
+			['code' =>'h','group'=>'holidays','name'=>'holidays'],
 		];	
 
 		$bank_holidays=[

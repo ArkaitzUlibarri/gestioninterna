@@ -15,6 +15,10 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/access', function(){
+	return view('access');
+});
+
 Route::resource('users', 'UsersController', ['except' => [
     'destroy'
 ]]);

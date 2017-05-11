@@ -46,10 +46,10 @@ class User extends Authenticatable
     /**
      * Check the role of the user
      */
-    public function is(string $rolename)
+    public function isRole($rolename)
     {
 
-        if ($this->role == strtolower($roleName))
+        if ($this->role == strtolower($rolename))
         {
             return true;
         }
