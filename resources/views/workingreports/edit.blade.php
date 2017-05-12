@@ -64,11 +64,18 @@
 
 			<div class="form-group col-xs-12 col-sm-3" v-show="newTask.project != ''">
 				<label>Group</label>
-				<select class="form-control"  v-model="newTask.group">
+				<select class="form-control" v-model="newTask.group">
 					<option value="">-</option>
 					<template v-for="(group, index) in groupList">
 						<option :group="group" :index="index">@{{group}}</option>
 					</template>	
+				</select>
+			</div>
+
+			<div class="form-group col-xs-12 col-sm-3" v-show=" newTask.group != '' ">
+				<label>Category</label>
+				<select class="form-control" disabled>
+					<option value="">-</option>
 				</select>
 			</div>
 
@@ -148,11 +155,13 @@
 @endsection
 
 @push('script-bottom')
-	<script type="text/javascript">
-		var reportdate= '{{ $date }}';
-		var user= '{{ $user_id }}';
-		var absences=<?php echo json_encode($absences);?>;
-		var groupProjects=<?php echo json_encode($groupProjects);?>;
+	<script type = "text/javascript">
+		var reportdate    = '{{ $date }}';
+		var user          = '{{ $user_id }}';
+		var role          = '{{ $role }}';
+		var absences      = <?php echo json_encode($absences);?>;
+		var groupProjects = <?php echo json_encode($groupProjects);?>;
+		var categories    = <?php echo json_encode($categories);?>;
 	</script>
 	
     <script src="{{ asset('js/reports.js') }}"></script>

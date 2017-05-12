@@ -7,10 +7,10 @@
             <div class="task-action-icon validated-admin-text" v-if="task.admin_validation">
                 <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
             </div>
-            <div class="task-action-icon task-panel-close" v-if="! task.pm_validation" v-on:click="deleteTask">
+            <div class="task-action-icon " v-if="! task.pm_validation" v-on:click="deleteTask">
                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
             </div>
-            <div class="task-action-icon task-panel-close" v-if="! task.pm_validation"  v-on:click="editTask">
+            <div class="task-action-icon" v-if="! task.pm_validation"  v-on:click="editTask">
                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
             </div>
         </div>
@@ -81,7 +81,7 @@
         font-weight: bold;
         cursor: pointer;
         display: block;
-        margin: 0.4em;
+        margin: auto ;
     }
 
     .validated-task {

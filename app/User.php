@@ -56,4 +56,13 @@ class User extends Authenticatable
 
         return false;
     }
+
+    /**
+     * Check if the user is ProjectManager
+     */
+    public function isPM($rolename)
+    {
+        //TODO
+        return false;
+    }
 }

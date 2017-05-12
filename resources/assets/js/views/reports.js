@@ -19,12 +19,16 @@ const app = new Vue({
 
 	data: {			
 		user: user,
+		role: role,
 		reportdate: reportdate,
+
+		categories: categories,
 		groupProjects: groupProjects,
 		absences:absences,
 
 		projectList: [] ,
 		groupList:[] ,
+		categoryList: [] ,
 
 		editIndex: -1,
 
@@ -112,6 +116,7 @@ const app = new Vue({
 
 			this.idTraduction();
 			this.groupsRefresh();
+			this.categoriesRefresh();
 
 			this.editIndex = index;
 
@@ -128,6 +133,7 @@ const app = new Vue({
 		addTask() {
 			this.newTask.time_slots=this.newTask.time*4;
 			this.nameTraduction();
+			this.categoriesRefresh();
 			this.save();
 		},
 
@@ -210,18 +216,37 @@ const app = new Vue({
 			this.groupList=[...setList];
 
 		},
+		categoriesRefresh(){
+			let vm = this;
+			let setList = new Set();
+			
+			vm.categories.forEach(function(item) {						
+				if( vm.newTask.group_id == item.group_id){
+					 setList.add(item.name);
+				}				
+			});
+
+			this.categoryList=[...setList];
+		},
 
 		validateTask(){
 
 			if(confirm("¿Estás seguro de que quieres validar el día?")){
+				if(this.role=='admin'){				
+					this.tasks.forEach( (item) => {
+						if(item.pm_validation == 1){
+							item.admin_validation = 1;
+						}				
+					});
+					
+				}
+				else{
+					this.tasks.forEach( (item) => {
+						item.pm_validation = 1;
+					});
 
-				this.tasks.forEach( (item) => {
-					item.pm_validation = 1;
-					item.admin_validation = 1;
-				});
-
+				}
 				this.initializeTask();
-
 			}
 
 		},

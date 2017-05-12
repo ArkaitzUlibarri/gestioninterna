@@ -2477,12 +2477,16 @@ var app = new Vue({
 
 	data: {
 		user: user,
+		role: role,
 		reportdate: reportdate,
+
+		categories: categories,
 		groupProjects: groupProjects,
 		absences: absences,
 
 		projectList: [],
 		groupList: [],
+		categoryList: [],
 
 		editIndex: -1,
 
@@ -2569,6 +2573,7 @@ var app = new Vue({
 
 			_this.idTraduction();
 			_this.groupsRefresh();
+			_this.categoriesRefresh();
 
 			_this.editIndex = index;
 		});
@@ -2583,6 +2588,7 @@ var app = new Vue({
 		addTask: function addTask() {
 			this.newTask.time_slots = this.newTask.time * 4;
 			this.nameTraduction();
+			this.categoriesRefresh();
 			this.save();
 		},
 		editTask: function editTask() {
@@ -2656,15 +2662,32 @@ var app = new Vue({
 
 			this.groupList = [].concat(_toConsumableArray(setList));
 		},
+		categoriesRefresh: function categoriesRefresh() {
+			var vm = this;
+			var setList = new Set();
+
+			vm.categories.forEach(function (item) {
+				if (vm.newTask.group_id == item.group_id) {
+					setList.add(item.name);
+				}
+			});
+
+			this.categoryList = [].concat(_toConsumableArray(setList));
+		},
 		validateTask: function validateTask() {
 
 			if (confirm("¿Estás seguro de que quieres validar el día?")) {
-
-				this.tasks.forEach(function (item) {
-					item.pm_validation = 1;
-					item.admin_validation = 1;
-				});
-
+				if (this.role == 'admin') {
+					this.tasks.forEach(function (item) {
+						if (item.pm_validation == 1) {
+							item.admin_validation = 1;
+						}
+					});
+				} else {
+					this.tasks.forEach(function (item) {
+						item.pm_validation = 1;
+					});
+				}
 				this.initializeTask();
 			}
 		},
@@ -2870,7 +2893,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(35)();
-exports.push([module.i, "\n.task-panel {\n    position:relative;\n    margin-bottom: .5em;\n    background-color: #fff;\n    border: 1px solid #777777;\n    border-radius: 0px;\n    box-shadow: 0 3px 1px rgba(0, 0, 0, .05);\n    padding: .7em;\n}\n.panel-right-corner {\n    position: absolute;\n    top: .4em;\n    right: 1em;\n}\n.task-action-icon {\n    font-weight: bold;\n    cursor: pointer;\n    display: block;\n    margin: 0.4em;\n}\n.validated-task {\n    border-style: double;\n    border-color: #21d421;\n}\n.validated-pm-text {\n    color: #98FB98;\n}\n.validated-admin-text {\n    color: #21d421;\n}\n", ""]);
+exports.push([module.i, "\n.task-panel {\n    position:relative;\n    margin-bottom: .5em;\n    background-color: #fff;\n    border: 1px solid #777777;\n    border-radius: 0px;\n    box-shadow: 0 3px 1px rgba(0, 0, 0, .05);\n    padding: .7em;\n}\n.panel-right-corner {\n    position: absolute;\n    top: .4em;\n    right: 1em;\n}\n.task-action-icon {\n    font-weight: bold;\n    cursor: pointer;\n    display: block;\n    margin: auto ;\n}\n.validated-task {\n    border-style: double;\n    border-color: #21d421;\n}\n.validated-pm-text {\n    color: #98FB98;\n}\n.validated-admin-text {\n    color: #21d421;\n}\n", ""]);
 
 /***/ }),
 /* 35 */
@@ -3046,7 +3069,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "aria-hidden": "true"
     }
   })]) : _vm._e(), _vm._v(" "), (!_vm.task.pm_validation) ? _c('div', {
-    staticClass: "task-action-icon task-panel-close",
+    staticClass: "task-action-icon ",
     on: {
       "click": _vm.deleteTask
     }
@@ -3056,7 +3079,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "aria-hidden": "true"
     }
   })]) : _vm._e(), _vm._v(" "), (!_vm.task.pm_validation) ? _c('div', {
-    staticClass: "task-action-icon task-panel-close",
+    staticClass: "task-action-icon",
     on: {
       "click": _vm.editTask
     }

@@ -25,7 +25,6 @@ class WorkingReportController extends Controller
     {
         $today=Carbon::now();
     	$user_id = Auth::user()->id;
-
         $role=Auth::user()->role;
 
         if($role == config('options.roles')[0]){
@@ -42,9 +41,11 @@ class WorkingReportController extends Controller
     {
         $workingreports=$this->getReportsPerDay($user_id,$date);
         $absences=Absence::all();
-        $groupProjects=$this->getGroupsProjectsByUser(7);
+        $groupProjects=$this->getGroupsProjectsByUser($user_id);
+        $role=Auth::user()->role;
+        $categories=$this->getCategory($user_id);
 
-        return view('workingreports.edit',compact('workingreports','date','user_id','absences','groupProjects'));
+        return view('workingreports.edit',compact('workingreports','date','user_id','absences','groupProjects','role','categories'));
     }
 
     private function getReportsPerUserPerDay($user_id , $auth)
@@ -117,4 +118,22 @@ class WorkingReportController extends Controller
             ->get();
     }
 
+    private function getCategory($user_id)
+    {
+        return DB::table('group_user')
+            ->select(
+                //'group_user.user_id',
+                //'users.role as role',
+                'group_user.group_id',
+                'groups.name as group',
+                'group_user.category_id',
+                'categories.code',
+                'categories.name'
+            )
+            ->LeftJoin('users','group_user.user_id','=','users.id')
+            ->LeftJoin('groups','group_user.group_id','=','groups.id')
+            ->LeftJoin('categories','group_user.category_id','=','categories.id')
+            ->where('user_id',$user_id)
+            ->get();
+    }
 }
