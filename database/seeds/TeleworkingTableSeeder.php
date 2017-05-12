@@ -28,6 +28,8 @@ class TeleworkingTableSeeder extends Seeder
 				'wednesday'   => $faker->boolean(20),
 				'thursday'    => $faker->boolean(30),
 				'friday'      => $faker->boolean(10),
+				'saturday'    => $faker->boolean(10),
+				'sunday'      => $faker->boolean(10),
         	],
 
         	[
@@ -39,6 +41,8 @@ class TeleworkingTableSeeder extends Seeder
 				'wednesday'   => $faker->boolean(20),
 				'thursday'    => $faker->boolean(30),
 				'friday'      => $faker->boolean(10),
+				'saturday'    => $faker->boolean(10),
+				'sunday'      => $faker->boolean(10),
         	],
 
         	[
@@ -50,6 +54,8 @@ class TeleworkingTableSeeder extends Seeder
 				'wednesday'   => $faker->boolean(20),
 				'thursday'    => $faker->boolean(30),
 				'friday'      => $faker->boolean(10),
+				'saturday'    => $faker->boolean(10),
+				'sunday'      => $faker->boolean(10),
         	],
 
         	[
@@ -61,6 +67,8 @@ class TeleworkingTableSeeder extends Seeder
 				'wednesday'   => $faker->boolean(20),
 				'thursday'    => $faker->boolean(30),
 				'friday'      => $faker->boolean(10),
+				'saturday'    => $faker->boolean(10),
+				'sunday'      => $faker->boolean(10),
         	],
 
         ];
@@ -75,6 +83,9 @@ class TeleworkingTableSeeder extends Seeder
 				'wednesday'   => $item['wednesday'],
 				'thursday'    => $item['thursday'],
 				'friday'      => $item['friday'],
+				'saturday'    => $item['saturday'],
+				'sunday'      => $item['sunday'],
+
 			]); 					
 		}		
     }

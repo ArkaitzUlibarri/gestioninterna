@@ -139,6 +139,8 @@ class CreateUsersTable extends Migration
             $table->boolean('wednesday')->default(false);
             $table->boolean('thursday')->default(false);
             $table->boolean('friday')->default(false);
+            $table->boolean('saturday')->default(false);
+            $table->boolean('sunday')->default(false);
 
             $table->foreign('contract_id')
                   ->references('id')

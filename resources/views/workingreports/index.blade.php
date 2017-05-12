@@ -11,7 +11,7 @@
                         <th>Employee</th>
                         <th>Date</th>
                         <th>Stated Hours</th>
-                        <th>Validated (PM)</th>
+                        <th>Validated (RP)</th>
                         <th>Validated (ADMIN)</th>
                         <th>Actions</th>
                     </thead>

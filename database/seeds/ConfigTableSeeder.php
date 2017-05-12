@@ -101,9 +101,9 @@ class ConfigTableSeeder extends Seeder
 		];
 	   
 		$categories = [
-			['name' =>'DI', 'code' => 'di', 'description' => 'Director'],
-			['name' =>'RP Junior', 'code' => 'rp', 'description' => 'Responsable de Proyecto'],
-			['name' =>'RP Senior', 'code' => 'rp', 'description' => 'Responsable de Proyecto'],
+			['name' =>'di', 'code' => 'di', 'description' => 'Director'],
+			['name' =>'rp junior', 'code' => 'rp', 'description' => 'Responsable de Proyecto'],
+			['name' =>'rp senior', 'code' => 'rp', 'description' => 'Responsable de Proyecto'],
 			['name' =>'rg junior', 'code' => 'rg', 'description' => 'Responsable de Grupo'],
 			['name' =>'rg intermediate', 'code' => 'rg', 'description' => 'Responsable de Grupo'],
 			['name' =>'rg senior', 'code' => 'rg', 'description' => 'Responsable de Grupo'],

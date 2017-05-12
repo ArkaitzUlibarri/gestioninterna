@@ -114,11 +114,11 @@
 		</div>
 		
 		<div class="form-group">	
-			<button title="New Task" class="btn btn-primary" :disabled="taskValidated==false" v-on:click="addTask" v-show="editIndex==-1">
-				<span class="glyphicon glyphicon-plus"></span> New Task
+			<button title="Save Task" class="btn btn-primary" :disabled="taskValidated==false" v-on:click="addTask" v-show="editIndex==-1">
+				<span class="glyphicon glyphicon-floppy-disk"></span> Save Task
 			</button>
-			<button title="Edit Task" class="btn btn-primary" :disabled="taskValidated==false" v-on:click="editTask" v-show="editIndex!=-1">
-				<span class="glyphicon glyphicon-edit"></span> Edit Task
+			<button title="Save Task" class="btn btn-primary" :disabled="taskValidated==false" v-on:click="editTask" v-show="editIndex!=-1">
+				<span class="glyphicon glyphicon-floppy-disk"></span> Save Task
 			</button>
 		</div>	
 

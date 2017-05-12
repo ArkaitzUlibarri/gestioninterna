@@ -49,30 +49,27 @@
 		</form>
 
 		<div id="project" class ="form-group">
-		@if(count($project->groups)> 0)
-			
-				<label>Groups:</label>
+		<label>New Group</label>
 
-					<table class="table table-hover">
-		                <thead>
-		                    <th>Name</th>
-		                    <th>Status</th>
-		                </thead>
+		<div class="form-group">
+			<label>Name</label>
+			<textarea class="form-control" rows="2" v-model="newTask.comments"></textarea>
+		</div>
 
-		                @foreach($project->groups as $group)
-		                    <tbody>
-		                        <tr>
-		                            <td>
-		                            	<input type="text" value="{{$group->name}}">
-		                            </td>
-		                            <td>
-		                            	<input type="checkbox" checked="{{$group->enabled ? 'yes':'no'}}">
-		                            </td>
-		                        </tr>
-		                    </tbody>
-		                @endforeach
-		            </table>
-		@endif
+		<hr>
+		
+		<div class="form-group">	
+			<button title="New Task" class="btn btn-primary" v-on:click="addGroup">
+				<span class="glyphicon glyphicon-plus"></span> New Task
+			</button>
+			<button title="Edit Task" class="btn btn-primary" v-on:click="editGroup">
+				<span class="glyphicon glyphicon-edit"></span> Edit Task
+			</button>
+		</div>	
+
+		<hr>
+
+
 		</div>
 
 	</div>
@@ -80,7 +77,7 @@
 
 @push('script-bottom')
 <script type="text/javascript">
-	var id= '{{ $project->id }}';
+	var id = '{{ $project->id }}';
 </script>
 
 <script src="{{ asset('js/projects.js') }}"></script>
