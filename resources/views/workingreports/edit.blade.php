@@ -129,9 +129,11 @@
 		<h3 class="dl-horizontal">			
 			<label>Total Hours:</label>
 			<label>@{{totalTime}}</label>
-			<button title="Validate" class="btn btn-success pull-right" v-on:click="validateTask">
+			<!--
+			<button style="display: none;" title="Validate" class="btn btn-success pull-right" v-on:click="validateTask">
 				<span class="glyphicon glyphicon-ok"></span> Validate
 			</button>
+			-->
 		</h3>
 		
 	<hr>
@@ -148,7 +150,6 @@
 
 	@include('layouts.errors')
 	
-	<pre>@{{$data}}</pre>
 </div>
 
 

@@ -32,13 +32,72 @@ class GroupController extends ApiController
 			->where('project_id', $request->get('project_id'))
 			->orderBy('name','asc')
 			->get();
-			//->toArray();
 			
 		return  $this->respond($data);
 	
 	}
 
-		//'name'    => 'required|string',
-		//'enabled' => 'required|boolean'
+	/**
+	 * Creo un grupo de proyecto
+	 * 
+	 * @param  Request $request
+	 * @return json
+	 */
+	public function store(Request $request)
+	{
+		$validator = Validator::make($request->all(), [
+			'name'    => 'required|string',
+			'enabled' => 'required|boolean'
+		]);
+		
+        if ($validator->fails()) {
+        	return $this->respondNotAcceptable($validator->errors()->all());
+        }
+
+		$array = $request->all();
+
+		unset($array['id']);
+
+		$id = DB::table('groups')
+			->insertGetId($array);
+
+		return $this->respond($id);
+
+	}
+
+	/**
+	 * Actualizo un grupo de proyecto
+	 * 
+	 * @param  Request $request
+	 * @param  $id
+	 * @return json
+	 */
+	public function update(Request $request, $id)
+	{
+		$validator = Validator::make($request->all(), [
+			'name'    => 'required|string',
+			'enabled' => 'required|boolean'
+		]);
+		
+        if ($validator->fails()) {
+        	return $this->respondNotAcceptable($validator->errors()->all());
+        }
+
+		$array = $request->all();
+
+		$group = Group::find($id);
+
+		if($group == null) {
+			return $this->respondNotFound();
+		}
+
+		$confirmation = DB::table('groups')
+			->where('id',$id)
+			->update($array);
+
+		return $this->respond($confirmation);
+
+	}
+
 
 }

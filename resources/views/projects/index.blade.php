@@ -11,7 +11,6 @@
                 <thead>
                     <th>#</th>
                     <th>Project</th>
-                    <th>Description</th>
                     <th>Customer</th>
                     <th>Start date</th>
                     <th>End date</th>
@@ -23,15 +22,20 @@
                         <tr>
                             <td>{{$loop->iteration}}</td>
                             <td>{{$project->name}}</td>
-                            <td>{{ substr($project->description, 0, 50) }}...</td>
                             <td>{{ strtoupper($project->customer)}}</td>
                             <td>{{$project->start_date}}</td>
                             <td>{{empty($project->end_date) ? "In progress" : $project->end_date }}</td>
-                            <td><a class="btn btn-info btn-sm" type="button" href="{{ url('projects' . '/' . $project->id . '/') }}"><span class="glyphicon glyphicon-eye-open"></span> Show</a>
+                            <td>
+                                <a class="btn btn-info btn-sm" type="button" href="{{ url('projects' . '/' . $project->id . '/') }}">
+                                    <span class="glyphicon glyphicon-eye-open"></span> Show
+                                </a>
                                 <a class="btn btn-primary btn-sm {{ empty($project->end_date) ? '' : 'disabled' }}"
-                                   type="button"
-                                   href="{{ url('projects' . '/' . $project->id . '/' . 'edit') }}">
+                                   type="button" href="{{ url('projects' . '/' . $project->id . '/' . 'edit') }}">
                                    <span class="glyphicon glyphicon-edit"></span> Edit
+                                </a>
+                                <a class="btn btn-primary btn-sm {{ empty($project->end_date) ? '' : 'disabled' }}"
+                                   type="button" href="{{ url('projects' . '/' . $project->id . '/addgroup/' . '/') }}">
+                                   <span class="glyphicon glyphicon-plus"></span> Add Group
                                 </a>
                             </td>
                         </tr>

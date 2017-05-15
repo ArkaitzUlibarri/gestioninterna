@@ -48,37 +48,6 @@
 
 		</form>
 
-		<div id="project" class ="form-group">
-		<label>New Group</label>
-
-		<div class="form-group">
-			<label>Name</label>
-			<textarea class="form-control" rows="2" v-model="newTask.comments"></textarea>
-		</div>
-
-		<hr>
-		
-		<div class="form-group">	
-			<button title="New Task" class="btn btn-primary" v-on:click="addGroup">
-				<span class="glyphicon glyphicon-plus"></span> New Task
-			</button>
-			<button title="Edit Task" class="btn btn-primary" v-on:click="editGroup">
-				<span class="glyphicon glyphicon-edit"></span> Edit Task
-			</button>
-		</div>	
-
-		<hr>
-
-
-		</div>
-
 	</div>
 @endsection
 
-@push('script-bottom')
-<script type="text/javascript">
-	var id = '{{ $project->id }}';
-</script>
-
-<script src="{{ asset('js/projects.js') }}"></script>
-@endpush
