@@ -214,8 +214,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     template: '#group-template',
@@ -227,7 +225,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             Event.$emit('Edit', this.index, this.group);
         }
     }
-
 });
 
 /***/ }),
@@ -236,7 +233,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(3)();
-exports.push([module.i, "\n.group-panel {\n    position:relative;\n    margin-bottom: .5em;\n    background-color: #fff;\n    border: 1px solid #777777;\n    border-radius: 25px;\n    box-shadow: 0 3px 1px rgba(0, 0, 0, .05);\n    padding: .7em;\n}\n.panel-right-corner {\n    position: absolute;\n    top: .4em;\n    right: 1em;\n}\n.group-action-icon {\n    font-weight: bold;\n    cursor: pointer;\n    display: block;\n    margin: auto ;\n}\n.group-enabled{\n    background-color: green;\n}\n.group-disabled{\n    background-color: red;\n}\n\n", ""]);
+exports.push([module.i, "\n.group-panel {\n    position:relative;\n    margin-bottom: .5em;\n    background-color: #fff;\n    border: 1px solid #777777;\n    border-radius: 25px;\n    box-shadow: 0 3px 1px rgba(0, 0, 0, .05);\n    padding: .7em;\n}\n.panel-right-corner {\n    position: absolute;\n    top: 1.2em;\n    right: 2em;\n}\n.group-action-icon {\n    font-weight: bold;\n    cursor: pointer;\n    display: block;\n    margin: auto ;\n}\n.group-enabled{\n    background-color: #b0f2b8;\n}\n.group-disabled{\n    background-color: #f491a5;\n}\n\n", ""]);
 
 /***/ }),
 
@@ -286,8 +283,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return _c('div', {
     staticClass: "row"
   }, [_c('div', {
-    staticClass: "group-panel col-xs-12 col-sm-4"
-  }, [_c('div', {
+    staticClass: "group-panel col-xs-12 col-sm-4",
+    class: {
+      'group-enabled': _vm.group.enabled
+    }
+  }, [_c('h4', [_c('b', [_vm._v(_vm._s(_vm.group.name.toUpperCase()))])]), _vm._v(" "), _c('div', {
     staticClass: "panel-right-corner"
   }, [_c('div', {
     staticClass: "group-action-icon",
@@ -299,7 +299,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "aria-hidden": "true"
     }
-  })])]), _vm._v(" "), _c('span', [_c('h4', [_vm._v(_vm._s(_vm.group.name.toUpperCase()))])])])])
+  })])])])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

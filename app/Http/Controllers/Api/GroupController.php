@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Api\ApiController;
 use App\Group;
 use Illuminate\Http\Request;
+use App\Http\Requests\GroupFormApiRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -40,19 +41,11 @@ class GroupController extends ApiController
 	/**
 	 * Creo un grupo de proyecto
 	 * 
-	 * @param  Request $request
+	 * @param  GroupFormApiRequest $request
 	 * @return json
 	 */
-	public function store(Request $request)
+	public function store(GroupFormApiRequest $request)
 	{
-		$validator = Validator::make($request->all(), [
-			'name'    => 'required|string',
-			'enabled' => 'required|boolean'
-		]);
-		
-        if ($validator->fails()) {
-        	return $this->respondNotAcceptable($validator->errors()->all());
-        }
 
 		$array = $request->all();
 
@@ -68,20 +61,12 @@ class GroupController extends ApiController
 	/**
 	 * Actualizo un grupo de proyecto
 	 * 
-	 * @param  Request $request
+	 * @param  GroupFormApiRequest $request
 	 * @param  $id
 	 * @return json
 	 */
-	public function update(Request $request, $id)
+	public function update(GroupFormApiRequest $request, $id)
 	{
-		$validator = Validator::make($request->all(), [
-			'name'    => 'required|string',
-			'enabled' => 'required|boolean'
-		]);
-		
-        if ($validator->fails()) {
-        	return $this->respondNotAcceptable($validator->errors()->all());
-        }
 
 		$array = $request->all();
 
@@ -98,6 +83,5 @@ class GroupController extends ApiController
 		return $this->respond($confirmation);
 
 	}
-
 
 }

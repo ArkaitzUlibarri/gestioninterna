@@ -1,17 +1,15 @@
 <template id="group-template">
 
     <div class="row">
-        <div class="group-panel col-xs-12 col-sm-4"> 
+        <div class="group-panel col-xs-12 col-sm-4" v-bind:class="{ 'group-enabled': group.enabled }"> 
+
+            <h4><b>{{group.name.toUpperCase()}}</b></h4> 
 
             <div class="panel-right-corner">
                 <div class="group-action-icon" v-on:click="editGroup">
                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                 </div>
             </div>
-
-            <span>
-                <h4>{{group.name.toUpperCase()}}</h4> 
-            </span>
           
         </div>
     </div>
@@ -29,7 +27,6 @@
                 Event.$emit('Edit', this.index, this.group);
             }
         }
-
     }
 </script>
 
@@ -48,8 +45,8 @@
 
     .panel-right-corner {
         position: absolute;
-        top: .4em;
-        right: 1em;
+        top: 1.2em;
+        right: 2em;
     }
 
     .group-action-icon {
@@ -60,11 +57,11 @@
     }
 
     .group-enabled{
-        background-color: green;
+        background-color: #b0f2b8;
     }
 
     .group-disabled{
-        background-color: red;
+        background-color: #f491a5;
     }
 
 </style>

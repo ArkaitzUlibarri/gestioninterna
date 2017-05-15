@@ -13,10 +13,13 @@
 			</div>
 
 			<div class="row">
-				<label>New Group</label>
+				<div class ="form-group col-xs-12 col-sm-4">
+					<label>New Group</label>				
+				</div>
+				
 			</div>
 
-			<div class="row">
+			<div class="row">		
 				<div class="col-lg-4">
 					<div class="input-group">
 						<span class="input-group-addon">
@@ -39,16 +42,17 @@
 			</div>	
 
 			<hr>
+				<h3>Groups for this project</h3>
+			<hr>
 
 			<template v-for="(group, index) in groups">
 				<group-template :group="group" :index="index"></group-template>
 			</template>
 
 			<hr>
-
+	
 			<a class="btn btn-primary" href="{{ url('projects') }}"><span class="glyphicon glyphicon-arrow-left"></span> Back</a>
 
-			<pre> @{{ $data }} </pre>
 		</div>
 
 		
