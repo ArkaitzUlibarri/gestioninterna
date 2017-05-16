@@ -29,16 +29,17 @@ class WorkingReportController extends Controller
 		$user_id = Auth::user()->id;
 		$role=Auth::user()->role;
 
-		if($role == config('options.roles')[0]) {
-			//$workingreports = $this->getReportsPerUserPerDay($user_id,true);
-			$workingreports = $this->workingreportRepository->search($request->all(), $user_id,true);
+		if($role == config('options.roles')[0]) {		
+			$admin=true;
 		}
 		else {
-			//$workingreports = $this->getReportsPerUserPerDay($user_id,false);
-			$workingreports = $this->workingreportRepository->search($request->all(), $user_id,false);
+			$admin=false;
 		}
-		
-		return view('workingreports.index', compact('workingreports','user_id','today'));
+
+		//$workingreports = $this->getReportsPerUserPerDay($user_id,$admin);
+		$workingreports = $this->workingreportRepository->search($request->all(), $user_id,$admin);
+
+		return view('workingreports.index', compact('workingreports','user_id','today','admin'));
 	}
 
 	public function edit($user_id,$date)

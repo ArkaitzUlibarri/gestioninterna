@@ -55,7 +55,7 @@ class WorkingreportRepository
         }
 
         if(! $admin) {
-            $q = $query->where('user_id',$user_id);
+            $q = $q->where('user_id',$user_id);
         }
        
         return $q->get();

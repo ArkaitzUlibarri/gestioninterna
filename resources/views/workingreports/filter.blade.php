@@ -2,7 +2,7 @@
 
 	<form class="form-inline pull-right" method="GET" action="{{ route('workingreports.index') }}">
 
-		<input name="name" type="text" class="form-control"  placeholder="Employee name">
+		<input type="{{ $admin ? 'text' : 'hidden' }}" name="name" class="form-control"  placeholder="Employee name" >
 
 		<select name="date" class="form-control">
 			<option selected="true" disabled="disabled" value="">Period</option>
