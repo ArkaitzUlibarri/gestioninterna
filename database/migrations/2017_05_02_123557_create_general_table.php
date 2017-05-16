@@ -120,7 +120,7 @@ class CreateGeneralTable extends Migration
                   ->on('categories')
                   ->onDelete('cascade'); 
 
-            $table->unique(['user_id', 'group_id']);      
+            $table->unique(['user_id', 'group_id', 'category_id']);      
         });
 
         /**

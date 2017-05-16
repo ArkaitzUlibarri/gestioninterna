@@ -25,7 +25,6 @@ class GroupsController extends Controller
 
     public function edit($id)
     {
-
         $project=Project::find($id);
 
         return view('projects.addgroup',compact('project'));

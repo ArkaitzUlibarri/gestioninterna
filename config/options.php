@@ -31,6 +31,15 @@ return [
 		'local',
 		'others'
 	],
+	'periods' => [
+		'yesterday',
+		'-1 week',
+		'-2 weeks',
+		'-3 weeks',
+		'-1 month',
+		'-2 months',
+		'-1 year'
+	],
 
 	'roles' => [
 		'admin',
@@ -53,5 +62,10 @@ return [
 	'status' => [
 		'active',
 		'inactive'
+	],
+
+	'validations' => [
+		'validated',
+		'not validated'
 	]
 ];

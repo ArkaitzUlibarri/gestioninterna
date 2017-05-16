@@ -3,7 +3,7 @@
 
 		<input type="text" class="form-control" name="name" placeholder="Employee name">
 
-		<button type="submit" class="btn btn-default">
+		<button type="submit" title="Search" class="btn btn-default">
 			<span class="glyphicon glyphicon-search"></span>
 		</button>
 	</form> 

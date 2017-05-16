@@ -9,7 +9,7 @@
                     <th>#</th>
                     <th>Project</th>
                     <th>Group</th> 
-                    <!--<th>Actions</th>-->
+                    <th>Actions</th>
                 </thead>
 
                 @foreach($groups as $group)
@@ -24,8 +24,12 @@
                                 <td><s>{{$group->project}}</s></td>
                                 <td><s>{{$group->name}}</s></td>  
                             @endif        
-                                <!--<td><a class="btn btn-default" type="button" href="{{ url('groups/' . $group->id) }}">Show</a>
-                                    <a class="btn btn-default" type="button" href="{{ url('groups/' . $group->id . '/edit') }}">Edit</a></td>-->
+                                <td>
+                                    <!--
+                                    <a class="btn btn-default" type="button" href="{{ url('groups/' . $group->id) }}">Show</a>
+                                    <a class="btn btn-default" type="button" href="{{ url('groups/' . $group->id . '/edit') }}">Edit</a>
+                                    -->
+                                </td>
                         </tr>
                     </tbody>
                 @endforeach

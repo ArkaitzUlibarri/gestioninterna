@@ -34,7 +34,7 @@ Route::resource('projects', 'ProjectsController', ['except' => [
 Route::get('groups', 'GroupsController@index');
 Route::get('projects/{id}/addgroup/', 'GroupsController@edit');
 
-Route::get('workingreports', 'WorkingreportController@index');
+Route::get('workingreports', ['as'=> 'workingreports.index','uses'=>'WorkingreportController@index']);
 Route::get('workingreports/add/{id}/{date}/',['as'=> 'workingreports.edit','uses'=>'WorkingreportController@edit']);
 
 
