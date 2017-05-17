@@ -29,5 +29,6 @@ Route::delete('reports/{id}', 'Api\ReportController@destroy');
 Route::patch('groups/{id}', 'Api\GroupController@update');
 Route::post('groups', 'Api\GroupController@store');
 Route::get('groups', 'Api\GroupController@index');
+Route::delete('groups/{id}', 'Api\GroupController@destroy');
 
 

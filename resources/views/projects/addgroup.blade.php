@@ -12,9 +12,24 @@
 		
 			</div>
 
+			<hr>
+				<h3>Groups for this project</h3>
+			<hr>
+
+			<template v-for="(group, index) in groups">
+				<group-template :group="group" :index="index"></group-template>
+			</template>
+
+			<hr>
+
 			<div class="row">
 				<div class ="form-group col-xs-12 col-sm-4">
-					<label>New Group</label>				
+					<span v-if="editIndex==-1">
+						<label>Adding a new group</label>	
+        			</span>		
+        			<span v-if="editIndex!=-1">
+						<label>Editing group @{{editIndex +1}}</label>	
+        			</span>	
 				</div>
 				
 			</div>
@@ -33,26 +48,17 @@
 			<br> 
 
 			<div class="form-group">	
-				<button title="Save Group" class="btn btn-primary" :disabled="newGroup.name==''" v-show="editIndex==-1" v-on:click="addGroup">
+				<button title="Save Group" class="btn btn-primary" :disabled="newGroup.name==''" v-on:click="saveGroup">
 					<span class="glyphicon glyphicon-floppy-disk"></span> Save
 				</button>
-				<button title="Save Group" class="btn btn-primary" :disabled="newGroup.name==''" v-show="editIndex!=-1" v-on:click="editGroup">
-					<span class="glyphicon glyphicon-floppy-disk"></span> Save
+				<button title="New Group" class="btn btn-primary" :disabled="newGroup.name==''" v-show="editIndex!=-1" v-on:click="initializeGroup">
+					<span class="glyphicon glyphicon-plus"></span> New Group
 				</button>
 			</div>	
 
 			<hr>
-				<h3>Groups for this project</h3>
-			<hr>
-
-			<template v-for="(group, index) in groups">
-				<group-template :group="group" :index="index"></group-template>
-			</template>
-
-			<hr>
 	
-			<a class="btn btn-primary" href="{{ url('projects') }}"><span class="glyphicon glyphicon-arrow-left"></span> Back</a>
-
+			<!--<a class="btn btn-primary" href="{{ url('projects') }}"><span class="glyphicon glyphicon-arrow-left"></span> Back</a>-->
 		</div>
 
 		

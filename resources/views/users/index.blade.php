@@ -19,13 +19,13 @@
                         <tbody>
                             <tr>
                                 <td>{{$user->id}}</td>
-                                <td>{{$user->name}} {{$user->lastname_1}} {{$user->lastname_2}}</td>
+                                <td>
+                                    <a  href = "{{ url('users' . '/' . $user->id . '/') }}" title="Show">
+                                        {{$user->name}} {{$user->lastname_1}} {{$user->lastname_2}}
+                                    </a>
+                                </td>
                                 <td>{{$user->email}}</td>
                                 <td>
-                                    <a  href = "{{ url('users' . '/' . $user->id . '/') }}" 
-                                        title="Show" class="btn btn-info btn-sm" 
-                                        aria-hidden="true"><span class="glyphicon glyphicon-eye-open"></span> Show
-                                    </a>
                                     <a href = "{{ url('users' . '/' . $user->id . '/' . 'edit') }}" 
                                     title="Edit" class="btn btn-primary btn-sm" aria-hidden="true"><span class="glyphicon glyphicon-edit"></span> Edit</a>
                                 </td>

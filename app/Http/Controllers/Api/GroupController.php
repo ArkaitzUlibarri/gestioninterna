@@ -84,4 +84,34 @@ class GroupController extends ApiController
 
 	}
 
+	/**
+	 * Elimino un grupo del proyecto mediante el id.
+	 * 
+	 * @param  $id
+	 */
+	public function destroy($id)
+	{
+		$group = Group::find($id);
+
+		if($group == null) {
+			return $this->respondNotFound();
+		}
+
+		$reports = DB::table('working_report')
+			->where('group_id',$id)
+			->get()
+			->toArray();
+
+		if($reports == []) {
+			$group = DB::table('groups')
+				->where('id',$id)
+				->delete();
+
+			return $this->respond(true);
+		}
+
+		return $this->respond(false);
+
+	}
+
 }

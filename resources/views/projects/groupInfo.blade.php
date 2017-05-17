@@ -7,7 +7,7 @@
             @foreach($project->groups as $group)
             <dl class="dl-horizontal">
                 <dt>{{ $loop->iteration}}</dt>
-                <dd>{{ $group->name }}</dd>
+                <dd><b>{{ $group->name }}</b> {{ $group->enabled ? '(Enabled)' : '(Disabled)' }} </dd>
             </dl>
             @endforeach
 

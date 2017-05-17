@@ -21,14 +21,15 @@
                     <tbody>
                         <tr>
                             <td>{{$loop->iteration}}</td>
-                            <td>{{$project->name}}</td>
+                            <td>
+                                <a a title="Show" href="{{ url('projects' . '/' . $project->id . '/') }}">
+                                    {{$project->name}}
+                                </a>
+                            </td>
                             <td>{{ strtoupper($project->customer)}}</td>
                             <td>{{$project->start_date}}</td>
                             <td>{{empty($project->end_date) ? "In progress" : $project->end_date }}</td>
                             <td>
-                                <a class="btn btn-info btn-sm" type="button" href="{{ url('projects' . '/' . $project->id . '/') }}">
-                                    <span class="glyphicon glyphicon-eye-open"></span> Show
-                                </a>
                                 <a class="btn btn-primary btn-sm {{ empty($project->end_date) ? '' : 'disabled' }}"
                                    type="button" href="{{ url('projects' . '/' . $project->id . '/' . 'edit') }}">
                                    <span class="glyphicon glyphicon-edit"></span> Edit

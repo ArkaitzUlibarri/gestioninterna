@@ -3,11 +3,13 @@
     <div class="row">
         <div class="group-panel col-xs-12 col-sm-4" v-bind:class="{ 'group-enabled': group.enabled }"> 
 
-            <h4><b>{{group.name.toUpperCase()}}</b></h4> 
-
+            <h5 class="group-action-icon"  v-on:click="editGroup">
+                {{group.name.toUpperCase().substring(0,30)}}<span v-if="group.name.length >30">...</span>
+            </h5> 
+            
             <div class="panel-right-corner">
-                <div class="group-action-icon" v-on:click="editGroup">
-                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                <div class="group-action-icon" v-on:click="deleteGroup">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                 </div>
             </div>
           
@@ -22,9 +24,14 @@
 
         props: ['group', 'index'],
 
-        methods: {         
+        methods: {     
+
             editGroup() {
                 Event.$emit('Edit', this.index, this.group);
+            },
+
+            deleteGroup() {
+                Event.$emit('Delete', this.index, this.group);
             }
         }
     }
@@ -45,7 +52,8 @@
 
     .panel-right-corner {
         position: absolute;
-        top: 1.2em;
+        top: 0.5em;
+        //top:1.2em;
         right: 2em;
     }
 

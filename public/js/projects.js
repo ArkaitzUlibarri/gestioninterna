@@ -40,6 +40,10 @@ var app = new Vue({
 	created: function created() {
 		var _this = this;
 
+		Event.$on('Delete', function (index, group) {
+			_this.delete(index);
+		});
+
 		Event.$on('Edit', function (index, group) {
 			_this.newGroup = {
 				id: group.id,
@@ -58,11 +62,7 @@ var app = new Vue({
 
 
 	methods: {
-		addGroup: function addGroup() {
-			console.log("addGroup");
-			this.save();
-		},
-		editGroup: function editGroup() {
+		saveGroup: function saveGroup() {
 			console.log("editGroup");
 			this.save();
 		},
@@ -73,6 +73,8 @@ var app = new Vue({
 				name: "",
 				enabled: 0
 			};
+
+			this.editIndex = -1;
 		},
 		fetchData: function fetchData() {
 
@@ -96,15 +98,15 @@ var app = new Vue({
 			if (vm.newGroup.id != -1) {
 				axios.patch('/api/groups/' + vm.newGroup.id, vm.newGroup).then(function (response) {
 					console.log(response.data);
-
+					//---------------------------------------
+					console.log("editGroup");
 					var properties = Object.keys(vm.newGroup);
 
 					for (var i = properties.length - 1; i >= 0; i--) {
 						vm.groups[vm.editIndex][properties[i]] = vm.newGroup[properties[i]];
 					}
-
 					vm.initializeGroup();
-					vm.editIndex = -1;
+					//---------------------------------------
 				}).catch(function (error) {
 					console.log(error);
 				});
@@ -113,14 +115,34 @@ var app = new Vue({
 
 				axios.post('/api/groups', vm.newGroup).then(function (response) {
 					console.log(response.data);
+					//---------------------------------------
+					console.log("addGroup");
 					vm.newGroup.id = response.data;
 					vm.groups.push(vm.newGroup);
 					vm.initializeGroup();
+					//---------------------------------------
 				}).catch(function (error) {
 					console.log(error);
 				});
 				return;
 			}
+		},
+		delete: function _delete(index) {
+			var vm = this;
+
+			axios.delete('/api/groups/' + vm.groups[index].id).then(function (response) {
+				console.log(response.data);
+				//---------------------------------------
+				if (response.data) {
+					vm.groups.splice(index, 1);
+					vm.initializeGroup();
+				} else {
+					console.log("No es posible borrar este grupo, al tener reportes asociados");
+				}
+				//---------------------------------------
+			}).catch(function (error) {
+				console.log(error);
+			});
 		}
 	}
 });
@@ -214,6 +236,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     template: '#group-template',
@@ -223,6 +247,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         editGroup: function editGroup() {
             Event.$emit('Edit', this.index, this.group);
+        },
+        deleteGroup: function deleteGroup() {
+            Event.$emit('Delete', this.index, this.group);
         }
     }
 });
@@ -233,7 +260,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(3)();
-exports.push([module.i, "\n.group-panel {\n    position:relative;\n    margin-bottom: .5em;\n    background-color: #fff;\n    border: 1px solid #777777;\n    border-radius: 25px;\n    box-shadow: 0 3px 1px rgba(0, 0, 0, .05);\n    padding: .7em;\n}\n.panel-right-corner {\n    position: absolute;\n    top: 1.2em;\n    right: 2em;\n}\n.group-action-icon {\n    font-weight: bold;\n    cursor: pointer;\n    display: block;\n    margin: auto ;\n}\n.group-enabled{\n    background-color: #b0f2b8;\n}\n.group-disabled{\n    background-color: #f491a5;\n}\n\n", ""]);
+exports.push([module.i, "\n.group-panel {\n    position:relative;\n    margin-bottom: .5em;\n    background-color: #fff;\n    border: 1px solid #777777;\n    border-radius: 25px;\n    box-shadow: 0 3px 1px rgba(0, 0, 0, .05);\n    padding: .7em;\n}\n.panel-right-corner {\n    position: absolute;\n    top: 0.5em;\n    //top:1.2em;\n    right: 2em;\n}\n.group-action-icon {\n    font-weight: bold;\n    cursor: pointer;\n    display: block;\n    margin: auto ;\n}\n.group-enabled{\n    background-color: #b0f2b8;\n}\n.group-disabled{\n    background-color: #f491a5;\n}\n\n", ""]);
 
 /***/ }),
 
@@ -287,15 +314,20 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     class: {
       'group-enabled': _vm.group.enabled
     }
-  }, [_c('h4', [_c('b', [_vm._v(_vm._s(_vm.group.name.toUpperCase()))])]), _vm._v(" "), _c('div', {
-    staticClass: "panel-right-corner"
-  }, [_c('div', {
+  }, [_c('h5', {
     staticClass: "group-action-icon",
     on: {
       "click": _vm.editGroup
     }
+  }, [_vm._v("\n            " + _vm._s(_vm.group.name.toUpperCase().substring(0, 30))), (_vm.group.name.length > 30) ? _c('span', [_vm._v("...")]) : _vm._e()]), _vm._v(" "), _c('div', {
+    staticClass: "panel-right-corner"
+  }, [_c('div', {
+    staticClass: "group-action-icon",
+    on: {
+      "click": _vm.deleteGroup
+    }
   }, [_c('span', {
-    staticClass: "glyphicon glyphicon-edit",
+    staticClass: "glyphicon glyphicon-trash",
     attrs: {
       "aria-hidden": "true"
     }

@@ -20,12 +20,16 @@
                 @foreach($contracts as $contract)
                     <tbody>
                         <tr>
-                            <td>{{$contract->name}} {{$contract->lastname_1}} {{$contract->lastname_2}}</td>
+                            <td>    
+                                <a title="Show" href="{{ url('contracts/' . $contract->id) }}">
+                                    {{$contract->name}} {{$contract->lastname_1}} {{$contract->lastname_2}}
+                                </a>
+                            </td>
                             <td>{{$contract->contract_types}}</td>
                             <td>{{$contract->start_date}}</td>
                             <td>{{empty($contract->estimated_end_date) ? "None" : "$contract->estimated_end_date"}}</td>    
                             <td>{{empty($contract->end_date) ? "In progress" : "$contract->end_date"}}</td>          
-                            <td><a title="Show" class="btn btn-info btn-sm" type="button" href="{{ url('contracts/' . $contract->id) }}"><span class="glyphicon glyphicon-eye-open"></span> Show</a>
+                            <td>
                                 <a title="Edit" class="btn btn-primary btn-sm {{ ! empty($contract->end_date) ? 'disabled' : '' }}" type="button" 
                                    href="{{ url('contracts/' . $contract->id . '/edit') }}">
                                    <span class="glyphicon glyphicon-edit"></span> Edit

@@ -34,6 +34,9 @@ const app = new Vue({
 	},
 
 	created() {
+		Event.$on('Delete', (index, group) => {
+			this.delete(index);
+		});
 
 		Event.$on('Edit', (index, group) => {
 			this.newGroup = {
@@ -55,12 +58,7 @@ const app = new Vue({
 
 	methods: {
 
-		addGroup(){
-			console.log("addGroup");
-			this.save();
-		},
-
-		editGroup(){
+		saveGroup(){
 			console.log("editGroup");
 			this.save();
 		},
@@ -72,6 +70,8 @@ const app = new Vue({
 				name:"",
 				enabled:0,
 			};
+
+			this.editIndex = -1;
 		},
 
 		fetchData() {
@@ -100,15 +100,15 @@ const app = new Vue({
 				axios.patch('/api/groups/' + vm.newGroup.id, vm.newGroup)
 				.then(function (response) {
 					console.log(response.data);
-
+					//---------------------------------------
+					console.log("editGroup");
 					let properties = Object.keys(vm.newGroup);
 
 					for (let i = properties.length - 1; i >= 0; i--) {
 						vm.groups[vm.editIndex][properties[i]] = vm.newGroup[properties[i]];
 					}
-
 					vm.initializeGroup();
-					vm.editIndex = -1;
+					//---------------------------------------
 				})
 				.catch(function (error) {
 					console.log(error);
@@ -120,9 +120,12 @@ const app = new Vue({
 				axios.post('/api/groups', vm.newGroup)
 				.then(function (response) {
 					console.log(response.data);
+					//---------------------------------------
+					console.log("addGroup");
 					vm.newGroup.id=response.data;
 					vm.groups.push(vm.newGroup);
 					vm.initializeGroup();
+					//---------------------------------------
 				})
 				.catch(function (error) {
 					console.log(error);
@@ -131,6 +134,27 @@ const app = new Vue({
 
 			}	
 		},
+
+		delete(index){
+			let vm = this;
+				
+			axios.delete('/api/groups/' + vm.groups[index].id)
+			.then(function (response) {
+				console.log(response.data);
+				//---------------------------------------
+				if(response.data){
+					vm.groups.splice(index, 1);
+					vm.initializeGroup();
+				}
+				else {
+					console.log("No es posible borrar este grupo, al tener reportes asociados");
+				}
+				//---------------------------------------
+			})
+			.catch(function (error) {
+				console.log(error);
+			});	
+		}
 
 	},
 });
