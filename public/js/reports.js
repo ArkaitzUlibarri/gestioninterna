@@ -464,14 +464,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     template: '#task-template',
@@ -501,7 +493,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(3)();
-exports.push([module.i, "\n.label-position {\n    position: relative;\n    right:3em;\n    top:3.5em;\n}\n.panel-right-corner {\n    position: absolute;\n    right: 2em;\n    top:1em;\n}\n.task-action-icon {\n    cursor: pointer;\n    display: block;\n    margin: auto ;\n}\n.task-panel {\n    position:relative;\n    margin-bottom: .3em;\n    background-color: #fff;\n    border: 1px solid #777777;\n    border-radius: 0px;\n    box-shadow: 0 3px 1px rgba(0, 0, 0, .05);\n    padding: .3em .7em .3em .7em;\n}\n.validated-task {\n    border-style: double;\n    border-color: #21d421;\n}\n.validated-pm-text {\n    //color: #98FB98;\n    color: #21d421;\n}\n.validated-admin-text {\n    color: #21d421;\n}\n\n", ""]);
+exports.push([module.i, "\n.label-position {\n    position: relative;\n    right:3em;\n    top:3.5em;\n}\n.panel-right-corner {\n    position: absolute;\n    right: 2em;\n    top:1em;\n}\n.task-action-icon {\n    cursor: pointer;\n    display: block;\n    margin: auto ;\n}\n.task-panel {\n    position:relative;\n    border-bottom: 1px solid #ccc;\n    padding:.4em\n}\n.validated-task {\n    border-style: double;\n    border-color: #21d421;\n}\n.validated-pm-text {\n    //color: #98FB98;\n    color: #21d421;\n}\n.validated-admin-text {\n    color: #21d421;\n}\n\n", ""]);
 
 /***/ }),
 
@@ -549,27 +541,18 @@ module.exports = Component.exports
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticStyle: {
-      "border": "1px solid red"
-    }
-  }, [_c('span', {
-    staticClass: "label label-primary label-position"
-  }, [_vm._v(_vm._s(_vm.index + 1))]), _vm._v(" "), _c('div', {
-    staticClass: "task-panel",
-    class: {
-      'validated-task': _vm.task.admin_validation
-    }
+    staticClass: "task-panel"
   }, [(!_vm.task.admin_validation) ? _c('div', {
     staticClass: "panel-right-corner"
   }, [(_vm.task.pm_validation) ? _c('div', {
-    staticClass: "task-action-icon validated-pm-text"
+    staticClass: "validated-pm-text"
   }, [_c('span', {
     staticClass: "glyphicon glyphicon-eye-open",
     attrs: {
       "aria-hidden": "true"
     }
   })]) : _vm._e(), _vm._v(" "), (!_vm.task.pm_validation) ? _c('div', {
-    staticClass: "task-action-icon task-delete",
+    staticClass: "task-delete",
     on: {
       "click": _vm.deleteTask
     }
@@ -579,11 +562,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "aria-hidden": "true"
     }
   })]) : _vm._e()]) : _vm._e(), _vm._v(" "), _c('div', {
-    staticClass: "task-action-icon",
     on: {
       "click": _vm.editTask
     }
-  }, [(_vm.task.activity == 'absence') ? _c('span', [_c('h5', [_c('b', [_vm._v(" " + _vm._s(_vm.time) + " " + _vm._s('ABSENCE \\ ' + _vm.task.absence.toUpperCase()))]), _c('p', [_vm._v(_vm._s(_vm.task.comments))])])]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'project') ? _c('span', [_c('h5', [_c('p', [_c('b', [_vm._v(_vm._s(_vm.time) + " " + _vm._s(_vm.task.project.toUpperCase() + ' \\ ' + _vm.task.group.toUpperCase()))])]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.task.comments))])])]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'training') ? _c('span', [_c('h5', [_c('b', [_vm._v(" " + _vm._s(_vm.time) + " " + _vm._s('TRAINING \\ ' + _vm.task.training_type.toUpperCase()))]), _c('p', [_vm._v(_vm._s(_vm.task.comments))])])]) : _vm._e()])])])
+  }, [(_vm.task.activity == 'project') ? _c('h5', [_c('span', [_c('b', [_vm._v(_vm._s(_vm.time) + " " + _vm._s(_vm.task.project.toUpperCase() + ' | ' + _vm.task.group.toUpperCase()))]), _vm._v(" | ")]), _vm._v(" " + _vm._s(_vm.task.comments.substring(0, 75)) + "...\n        ")]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'absence') ? _c('h5', [_c('span', [_c('b', [_vm._v(_vm._s(_vm.time) + " " + _vm._s('ABSENCE | ' + _vm.task.absence.toUpperCase()))]), _vm._v(" | ")]), _vm._v(" " + _vm._s(_vm.task.comments.substring(0, 75)) + "...\n        ")]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'training') ? _c('h5', [_c('span', [_c('b', [_vm._v(_vm._s(_vm.time) + " " + _vm._s('TRAINING | ' + _vm.task.training_type.toUpperCase()))]), _vm._v(" | ")]), _vm._v(" " + _vm._s(_vm.task.comments.substring(0, 75)) + "...\n        ")]) : _vm._e()])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

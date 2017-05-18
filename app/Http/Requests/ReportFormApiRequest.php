@@ -29,7 +29,7 @@ class ReportFormApiRequest extends FormRequest
         return [
             'user_id'          => 'required|numeric',
             //'created_at'       => 'required|date|before:' . date('Y-m-d') . '|date_format:Y-m-d',
-            'created_at'       => 'required|date|before:' . date('Y-m-d') . '|date_format:Y-m-d',
+            'created_at'       => 'required|date',
             'activity'         => 'required|' . Rule::in(config('options.activities')), 
             'project_id'       => 'required_if:activity,project|numeric|nullable',
             'group_id'         => 'required_if:activity,project|numeric|nullable',
