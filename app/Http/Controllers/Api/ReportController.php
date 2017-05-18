@@ -75,6 +75,7 @@ class ReportController extends ApiController
 
 		unset($array['id']);
 		unset($array['absence']);
+		unset($array['category']);
 		unset($array['group']);
 		unset($array['project']);
 		unset($array['time']);
@@ -99,6 +100,7 @@ class ReportController extends ApiController
 		$array = $request->all();
 
 		unset($array['absence']);
+		unset($array['category']);
 		unset($array['group']);
 		unset($array['project']);
 		unset($array['time']);

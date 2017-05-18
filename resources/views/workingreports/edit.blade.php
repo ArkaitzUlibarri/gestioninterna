@@ -5,22 +5,31 @@
 <div id="report" class="container">
 
 	<div class="row">
-
 		<div class ="form-group col-xs-12 col-sm-4">
-			<h1>Working Report</h1>				
+			<h2>Working Report</h2>				
 		</div>
 
 		<div class="form-group col-xs-12 col-sm-2 pull-right">
 			<label>Date</label>
-			<input name="created_at" type ="date" class="form-control" v-model="reportdate" v-on:change="fetchData">
+			<input id="datefield" name="created_at" type ="date" class="form-control" min="2017-01-01" v-model="reportdate" v-on:change="fetchData">
 		</div>
-		
+
+		<h3 class="dl-horizontal">			
+			<span class="label label-danger">TOTAL HOURS: @{{totalTime}}</span>
+		</h3>
 	</div>
+
+
+		<span v-for="(task, index) in tasks">
+			<task-template :task="task" :index="index"></task-template>
+		</span>
+
 
 	<hr>
 
-	<div>
-		<h3>Task</h3>
+	<div class="row">
+		<h4 v-if="editIndex==-1">Adding a new task</h4>	
+		<h4 v-if="editIndex!=-1">Editing task @{{editIndex +1}}</h4>	
 
 		<div class="row">
 			<div class="form-group col-xs-12 col-sm-3">
@@ -64,7 +73,7 @@
 
 			<div class="form-group col-xs-12 col-sm-3" v-show="newTask.project != ''">
 				<label>Group</label>
-				<select class="form-control" v-model="newTask.group">
+				<select class="form-control" v-on:change="categoriesLoad" v-model="newTask.group" >
 					<option value="">-</option>
 					<template v-for="(group, index) in groupList">
 						<option :group="group" :index="index">@{{group}}</option>
@@ -74,8 +83,11 @@
 
 			<div class="form-group col-xs-12 col-sm-3" v-show=" newTask.group != '' ">
 				<label>Category</label>
-				<select class="form-control" disabled>
+				<select class="form-control" v-model="newTask.category">
 					<option value="">-</option>
+					<template v-for="(element, index) in categoryList">
+						<option :category="element" :index="index">@{{element}}</option>
+					</template>	
 				</select>
 			</div>
 
@@ -114,11 +126,14 @@
 		</div>
 		
 		<div class="form-group">	
-			<button title="Save Task" class="btn btn-primary" :disabled="taskValidated==false" v-on:click="addTask" v-show="editIndex==-1">
-				<span class="glyphicon glyphicon-floppy-disk"></span> Save Task
+			<button title="Save Task" class="btn btn-primary" :disabled="formTaskFilled==false" v-on:click="addTask" v-show="editIndex==-1">
+				<span class="glyphicon glyphicon-floppy-disk"></span> Save
 			</button>
-			<button title="Save Task" class="btn btn-primary" :disabled="taskValidated==false" v-on:click="editTask" v-show="editIndex!=-1">
-				<span class="glyphicon glyphicon-floppy-disk"></span> Save Task
+			<button title="Save Task" class="btn btn-primary" :disabled="formTaskFilled==false" v-on:click="editTask" v-show="editIndex!=-1">
+				<span class="glyphicon glyphicon-floppy-disk"></span> Save
+			</button>
+			<button title="New Task" class="btn btn-primary" v-show="editIndex!=-1" v-on:click="initializeTask">
+				<span class="glyphicon glyphicon-plus"></span> New Task
 			</button>
 		</div>	
 
@@ -126,30 +141,17 @@
 
 	<hr>
 
-		<h3 class="dl-horizontal">			
-			<label>Total Hours:</label>
-			<label>@{{totalTime}}</label>
-			<!--
-			<button style="display: none;" title="Validate" class="btn btn-success pull-right" v-on:click="validateTask">
-				<span class="glyphicon glyphicon-ok"></span> Validate
-			</button>
-			-->
-		</h3>
-		
-	<hr>
 
-	<template v-for="(task, index) in tasks">
-			<task-template :task="task" :index="index"></task-template>
-	</template>
-
-	<hr>
-
+	<!--
 	<a title="Exit" class="btn btn-danger" href="{{ url('workingreports') }}">
 		<span class="glyphicon glyphicon-arrow-left"></span> Exit
 	</a>
+	-->
 
 	@include('layouts.errors')
-	
+	<pre>@{{$data.newTask}}</pre>
+	<pre>@{{$data.categoryList}}</pre>
+	<pre>@{{$data.categories}}</pre>
 </div>
 
 
@@ -158,8 +160,8 @@
 @push('script-bottom')
 	<script type = "text/javascript">
 		var reportdate    = '{{ $date }}';
-		var user          = '{{ $user_id }}';
-		var role          = '{{ $role }}';
+		var user       = '{{ $user_id }}';
+		var role          = '{{ $auth_user->role }}';
 		var absences      = <?php echo json_encode($absences);?>;
 		var groupProjects = <?php echo json_encode($groupProjects);?>;
 		var categories    = <?php echo json_encode($categories);?>;

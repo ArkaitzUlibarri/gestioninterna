@@ -41,6 +41,8 @@ const app = new Vue({
 			project: "",
 			group_id: "",
 			group: "",
+			category_id:"",
+			category:"",
 			absence_id: "",
 			absence: "",
 			training_type:"",
@@ -69,18 +71,20 @@ const app = new Vue({
 			return total;
 		},
 
-		taskValidated(){
-			if (this.newTask.activity != "" && this.newTask.time != 0) {
-				if(this.newTask.activity == 'project' && this.newTask.project != "" && this.newTask.group != "" && this.newTask.job_type != ""){
-					return true;
+		formTaskFilled(){
+			if(this.newTask.pm_validation == 0 && this.newTask.admin_validation == 0){
+				if (this.newTask.activity != "" && this.newTask.time != 0) {
+					if(this.newTask.activity == 'project' && this.newTask.project != "" && this.newTask.group != "" && this.newTask.category != "" && this.newTask.job_type != ""){
+						return true;
+					}
+					if(this.newTask.activity == 'absence' && this.newTask.absence != ""){
+						return true;
+					}
+					if(this.newTask.activity == 'training' && this.newTask.training_type != "" && this.newTask.job_type != ""){
+						return true;
+					}
 				}
-				if(this.newTask.activity == 'absence' && this.newTask.absence != ""){
-					return true;
-				}
-				if(this.newTask.activity == 'training' && this.newTask.training_type != "" && this.newTask.job_type != ""){
-					return true;
-				}
-			}
+			}		
 
 			return false;
 		},
@@ -103,6 +107,8 @@ const app = new Vue({
 				project:task.project,
 				group_id:task.group_id,
 				group:task.group,
+				category_id:task.category_id,
+				category:task.category,
 				absence_id:task.absence_id,
 				absence:task.absence,
 				training_type:task.training_type,
@@ -116,7 +122,6 @@ const app = new Vue({
 
 			this.idTraduction();
 			this.groupsRefresh();
-			this.categoriesRefresh();
 
 			this.editIndex = index;
 
@@ -126,14 +131,31 @@ const app = new Vue({
 	mounted() {
 		this.fetchData();
 		this.project();
+		this.categoriesLoad();
+		this.maxDate();
 	},
 
 	methods: {
 
+		maxDate(){
+			var today = new Date();
+			var dd    = today.getDate();
+			var mm    = today.getMonth()+1; //January is 0!
+			var yyyy  = today.getFullYear();
+
+			if(dd<10){
+				dd ='0'+dd
+			} 
+			if(mm<10){
+				mm ='0'+mm
+			} 
+			today = yyyy+'-'+mm+'-'+dd;
+			document.getElementById("datefield").setAttribute("max", today);
+		},
+
 		addTask() {
 			this.newTask.time_slots=this.newTask.time*4;
 			this.nameTraduction();
-			this.categoriesRefresh();
 			this.save();
 		},
 
@@ -152,6 +174,8 @@ const app = new Vue({
 				project: "",
 				group_id: "",
 				group: "",
+				category_id:"",
+				category:"",
 				absence_id: "",
 				absence: "",
 				training_type:"",
@@ -162,6 +186,8 @@ const app = new Vue({
 				pm_validation: 0,
 				admin_validation: 0,
 			};
+
+			this.editIndex = -1;
 
 		},
 		
@@ -175,6 +201,8 @@ const app = new Vue({
 				project: "",
 				group_id: "",
 				group: "",
+				category_id:"",
+				category:"",
 				absence_id:"",
 				absence:"",
 				training_type: "",
@@ -182,8 +210,8 @@ const app = new Vue({
 				time:0,
 				job_type:"",
 				comments: "",
-				pm_validation: 0,
-				admin_validation: 0,
+				pm_validation: this.newTask.pm_validation,
+				admin_validation: this.newTask.admin_validation,
 			};
 
 			if (this.newTask.activity == 'training'){
@@ -216,62 +244,45 @@ const app = new Vue({
 			this.groupList=[...setList];
 
 		},
-		categoriesRefresh(){
+
+		categoriesLoad(){
+			this.nameTraduction();
+			
 			let vm = this;
 			let setList = new Set();
 			
 			vm.categories.forEach(function(item) {						
-				if( vm.newTask.group_id == item.group_id){
-					 setList.add(item.name);
+				if( vm.user == item.user_id){
+					 setList.add(item.description);
 				}				
 			});
 
 			this.categoryList=[...setList];
 		},
 
-		validateTask(){
-
-			if(confirm("¿Estás seguro de que quieres validar el día?")){
-				if(this.role=='admin'){				
-					this.tasks.forEach( (item) => {
-						if(item.pm_validation == 1){
-							item.admin_validation = 1;
-						}				
-					});
-					
-				}
-				else{
-					this.tasks.forEach( (item) => {
-						item.pm_validation = 1;
-					});
-
-				}
-				this.initializeTask();
-			}
-
-		},
-
 		nameTraduction(){
 
-			this.newTask.project_id= "";
-			this.newTask.group_id= "";
-			this.newTask.absence_id= "";
+			this.newTask.project_id  = "";
+			this.newTask.group_id    = "";
+			this.newTask.category_id = "";
+			this.newTask.absence_id  = "";
 
 			//Ausencia
-			if(this.newTask.activity =='absence') {		
+			if(this.newTask.activity == 'absence') {		
 				for (let i = this.absences.length - 1; i >= 0; i--) {
-					if(this.absences[i].name==this.newTask.absence){
-						this.newTask.absence_id=this.absences[i].id;
+					if(this.absences[i].name == this.newTask.absence){
+						this.newTask.absence_id = this.absences[i].id;
 					}
 				}
 			}
 		
 			//GrupoProyecto
-			if(this.newTask.activity =='project') {		
+			if(this.newTask.activity == 'project') {		
 				for (var key = this.groupProjects.length - 1; key >= 0; key--) {
-					if(this.groupProjects[key].group==this.newTask.group){
-						this.newTask.group_id=this.groupProjects[key].group_id;
-						this.newTask.project_id=this.groupProjects[key].project_id;
+					if(this.groupProjects[key].group == this.newTask.group){
+						this.newTask.category_id = this.groupProjects[key].category_id;
+						this.newTask.group_id    = this.groupProjects[key].group_id;
+						this.newTask.project_id  = this.groupProjects[key].project_id;
 					}
 				}
 			}
@@ -280,26 +291,28 @@ const app = new Vue({
 
 		idTraduction(){
 
-			this.newTask.project= "";
-			this.newTask.group= "";
-			this.newTask.absence= "";
+			this.newTask.project  = "";
+			this.newTask.group    = "";
+			this.newTask.category = "";
+			this.newTask.absence  = "";
 
 			//Ausencia
 			if(this.newTask.activity =='absence') {		
 				for (let i = this.absences.length - 1; i >= 0; i--) {
-					if(this.newTask.absence_id==this.absences[i].id){
-						this.newTask.absence=this.absences[i].name;
+					if(this.newTask.absence_id == this.absences[i].id){
+						this.newTask.absence = this.absences[i].name;
 						break;
 					}
 				}
 			}
 		
 			//GrupoProyecto
-			if(this.newTask.activity =='project') {		
+			if( this.newTask.activity == 'project' ) {		
 				for (let key = this.groupProjects.length - 1; key >= 0; key--) {
-					if(this.newTask.group_id == this.groupProjects[key].group_id ) {	
-						this.newTask.group = this.groupProjects[key].group;
-						this.newTask.project = this.groupProjects[key].project;
+					if( this.newTask.group_id == this.groupProjects[key].group_id ) {	
+						this.newTask.category = this.groupProjects[key].category;
+						this.newTask.group    = this.groupProjects[key].group;
+						this.newTask.project  = this.groupProjects[key].project;
 						break;
 					}
 				}
@@ -308,7 +321,7 @@ const app = new Vue({
 		},
 
 		fetchData() {
-			let vm = this;
+			let vm   = this;
 			vm.tasks = [];
 
 			vm.initializeTask();
@@ -337,16 +350,14 @@ const app = new Vue({
 				axios.patch('/api/reports/' + vm.newTask.id, vm.newTask)
 				.then(function (response) {
 					console.log(response.data);
-
+					//---------------------------------------
 					let properties = Object.keys(vm.newTask);
 
 					for (let i = properties.length - 1; i >= 0; i--) {
 						vm.tasks[vm.editIndex][properties[i]] = vm.newTask[properties[i]];
 					}
-
 					vm.initializeTask();
-
-					vm.editIndex = -1;
+					//---------------------------------------
 				})
 				.catch(function (error) {
 					console.log(error);
@@ -358,9 +369,11 @@ const app = new Vue({
 				axios.post('/api/reports', vm.newTask)
 				.then(function (response) {
 					console.log(response.data);
-					vm.newTask.id=response.data;
+					//---------------------------------------
+					vm.newTask.id = response.data;
 					vm.tasks.push(vm.newTask);
-					vm.initializeTask();		
+					vm.initializeTask();	
+					//---------------------------------------	
 				})
 				.catch(function (error) {
 					console.log(error);

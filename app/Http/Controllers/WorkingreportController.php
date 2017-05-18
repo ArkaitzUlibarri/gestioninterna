@@ -25,15 +25,15 @@ class WorkingReportController extends Controller
 
 	public function index(Request $request)
 	{
-		$today=Carbon::now();
+		$today   = Carbon::now();
 		$user_id = Auth::user()->id;
-		$role=Auth::user()->role;
+		$role    = Auth::user()->role;
 
 		if($role == config('options.roles')[0]) {		
-			$admin=true;
+			$admin = true;
 		}
 		else {
-			$admin=false;
+			$admin = false;
 		}
 
 		//$workingreports = $this->getReportsPerUserPerDay($user_id,$admin);
@@ -44,13 +44,13 @@ class WorkingReportController extends Controller
 
 	public function edit($user_id,$date)
 	{
-		$workingreports=$this->getReportsPerDay($user_id,$date);
-		$absences=Absence::all();
-		$groupProjects=$this->getGroupsProjectsByUser($user_id);
-		$role=Auth::user()->role;
-		$categories=$this->getCategory($user_id);
+		$absences       = Absence::all();
+		$auth_user      = Auth::user();
+		$workingreports = $this->getReportsPerDay($user_id,$date);
+		$groupProjects  = $this->getGroupsProjectsByUser($user_id);
+		$categories     = $this->getCategories($user_id);
 
-		return view('workingreports.edit',compact('workingreports','date','user_id','absences','groupProjects','role','categories'));
+		return view('workingreports.edit',compact('date','auth_user','user_id','workingreports','absences','groupProjects','categories'));
 	}
 
 	private function getReportsPerUserPerDay($user_id , $admin)
@@ -110,21 +110,18 @@ class WorkingReportController extends Controller
 			->get();
 	}
 
-	private function getCategory($user_id)
+	private function getCategories($user_id)
 	{
-		return DB::table('group_user')
+		return DB::table('category_user')
 			->select(
-				//'group_user.user_id',
-				//'users.role as role',
-				'group_user.group_id',
-				'groups.name as group',
-				'group_user.category_id',
+				'category_user.user_id',
+				'category_user.category_id',
 				'categories.code',
-				'categories.name'
+				'categories.name',
+				'categories.description'
 			)
-			->LeftJoin('users','group_user.user_id','=','users.id')
-			->LeftJoin('groups','group_user.group_id','=','groups.id')
-			->LeftJoin('categories','group_user.category_id','=','categories.id')
+			->LeftJoin('users','category_user.user_id','=','users.id')
+			->LeftJoin('categories','category_user.category_id','=','categories.id')
 			->where('user_id',$user_id)
 			->get();
 	}

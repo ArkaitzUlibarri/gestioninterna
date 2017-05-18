@@ -59,7 +59,6 @@ const app = new Vue({
 	methods: {
 
 		saveGroup(){
-			console.log("editGroup");
 			this.save();
 		},
 

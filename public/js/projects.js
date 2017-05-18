@@ -63,7 +63,6 @@ var app = new Vue({
 
 	methods: {
 		saveGroup: function saveGroup() {
-			console.log("editGroup");
 			this.save();
 		},
 		initializeGroup: function initializeGroup() {

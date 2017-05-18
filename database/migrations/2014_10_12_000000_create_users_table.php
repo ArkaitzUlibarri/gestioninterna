@@ -23,7 +23,6 @@ class CreateUsersTable extends Migration
             $table->string('lastname_2')->nullable();
             //$table->string('DNI',9)->unique();
             $table->enum('role',config('options.roles'));
-            //$table->string('category', 50); // temp
             $table->string('email')->unique();
             $table->string('password');
             $table->rememberToken();

@@ -30,14 +30,21 @@
                             <td>{{$project->start_date}}</td>
                             <td>{{empty($project->end_date) ? "In progress" : $project->end_date }}</td>
                             <td>
-                                <a class="btn btn-primary btn-sm {{ empty($project->end_date) ? '' : 'disabled' }}"
-                                   type="button" href="{{ url('projects' . '/' . $project->id . '/' . 'edit') }}">
-                                   <span class="glyphicon glyphicon-edit"></span> Edit
-                                </a>
-                                <a class="btn btn-primary btn-sm {{ empty($project->end_date) ? '' : 'disabled' }}"
-                                   type="button" href="{{ url('projects' . '/' . $project->id . '/addgroup/' . '/') }}">
-                                   <span class="glyphicon glyphicon-plus"></span> Add Group
-                                </a>
+                                @if(empty($project->end_date))
+                                    <a class="btn btn-primary btn-sm"
+                                       type="button" href="{{ url('projects' . '/' . $project->id . '/' . 'edit') }}">
+                                       <span class="glyphicon glyphicon-edit"></span> Edit
+                                    </a>
+                                    <a class="btn btn-primary btn-sm"
+                                       type="button" href="{{ url('projects' . '/' . $project->id . '/addgroup/' . '/') }}">
+                                       <span class="glyphicon glyphicon-plus"></span> Add Group
+                                    </a>
+                                @else
+                                    <a class="btn btn-warning btn-sm"
+                                       type="button" href="{{ url('projects' . '/' . $project->id . '/' . 'edit') }}">
+                                       <span class="glyphicon glyphicon-folder-open"></span> Reopen
+                                    </a>
+                                @endif
                             </td>
                         </tr>
                     </tbody>

@@ -51,7 +51,7 @@
 				<button title="Save Group" class="btn btn-primary" :disabled="newGroup.name==''" v-on:click="saveGroup">
 					<span class="glyphicon glyphicon-floppy-disk"></span> Save
 				</button>
-				<button title="New Group" class="btn btn-primary" :disabled="newGroup.name==''" v-show="editIndex!=-1" v-on:click="initializeGroup">
+				<button title="New Group" class="btn btn-primary" v-show="editIndex!=-1" v-on:click="initializeGroup">
 					<span class="glyphicon glyphicon-plus"></span> New Group
 				</button>
 			</div>	

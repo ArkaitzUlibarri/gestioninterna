@@ -50,6 +50,28 @@ class CreateGeneralTable extends Migration
         });
 
         /**
+         * Tabla de categorias para cada usuario/empleado
+         */
+        Schema::create('category_user', function (Blueprint $table) {
+            $table->integer('user_id')->unsigned();    
+            $table->integer('category_id')->unsigned(); 
+
+            $table->foreign('user_id')
+                  ->references('id')
+                  ->on('users')
+                  ->onDelete('cascade');    
+
+            $table->foreign('category_id')
+                  ->references('id')
+                  ->on('categories')
+                  ->onDelete('cascade'); 
+
+            $table->unique(['user_id', 'category_id']);      
+
+        });
+
+
+        /**
          * Tabla con la lista de proyectos de la empresa
          */
         Schema::create('projects', function (Blueprint $table) {
@@ -59,30 +81,18 @@ class CreateGeneralTable extends Migration
             $table->integer('customer_id')->unsigned();    
             $table->date('start_date');
             $table->date('end_date')->nullable();
-            //$table->integer('project_manager_id')->unsigned()->nullable();  
 
             $table->foreign('customer_id')
                   ->references('id')
                   ->on('customers')
                   ->onDelete('cascade');  
-            /*
-            $table->foreign('project_manager_id')
-                  ->references('id')
-                  ->on('users')
-                  ->onDelete('cascade');
-            */
+
             $table->unique(['name', 'customer_id']);        
         });
 
         /**
          * Tabla con los posiles grupos de trabajo para cada proyecto
          */
-        /*
-        Schema::create('groups', function (Blueprint $table) {
-            $table->increments('id');        
-            $table->string('name');
-        });
-        */
         Schema::create('groups', function (Blueprint $table) {
             $table->increments('id');    
             $table->integer('project_id')->unsigned();    
@@ -103,7 +113,6 @@ class CreateGeneralTable extends Migration
         Schema::create('group_user', function (Blueprint $table) {
             $table->integer('user_id')->unsigned();    
             $table->integer('group_id')->unsigned();   
-            $table->integer('category_id')->unsigned(); 
 
             $table->foreign('user_id')
                   ->references('id')
@@ -115,67 +124,9 @@ class CreateGeneralTable extends Migration
                   ->on('groups')
                   ->onDelete('cascade');      
 
-            $table->foreign('category_id')
-                  ->references('id')
-                  ->on('categories')
-                  ->onDelete('cascade'); 
-
-            $table->unique(['user_id', 'group_id', 'category_id']);      
+            $table->unique(['user_id', 'group_id']);     
+     
         });
-
-        /**
-         * Tabla de la relacion grupo-proyecto
-         */
-        /*
-        Schema::create('group_project', function (Blueprint $table) {
-            $table->increments('id');    
-            $table->integer('project_id')->unsigned();
-            $table->integer('group_id')->unsigned();
-
-            $table->foreign('project_id')
-                  ->references('id')
-                  ->on('projects')
-                  ->onDelete('cascade');  
-
-            $table->foreign('group_id')
-                  ->references('id')
-                  ->on('groups')
-                  ->onDelete('cascade');
-
-            $table->unique(['project_id', 'group_id']);
-
-        });
-        */
-
-        /**
-         * Tabla de la relacion usuarios por grupo de trabajo
-         */
-        /*
-        Schema::create('group_project_user', function (Blueprint $table) {
-            $table->increments('id');    
-            $table->integer('group_project_id')->unsigned();
-            $table->integer('user_id')->unsigned();
-            $table->integer('category_id')->unsigned();
-
-            $table->foreign('group_project_id')
-                  ->references('id')
-                  ->on('group_project')
-                  ->onDelete('cascade');  
-
-            $table->foreign('user_id')
-                  ->references('id')
-                  ->on('users')
-                  ->onDelete('cascade');
-
-            $table->foreign('category_id')
-                  ->references('id')
-                  ->on('categories')
-                  ->onDelete('cascade');      
-
-            $table->unique(['group_project_id', 'user_id']);
-
-        });
-        */
 
         /**
          * Tabla con la informacion de cada parte de horas
@@ -188,8 +139,8 @@ class CreateGeneralTable extends Migration
 
             //Proyecto
             $table->integer('project_id')->unsigned()->nullable();
-            //$table->integer('group_project_id')->unsigned()->nullable();
             $table->integer('group_id')->unsigned()->nullable();
+            $table->integer('category_id')->unsigned()->nullable();
 
             //Formacion
             $table->enum('training_type',config('options.training'))->nullable();
@@ -221,18 +172,12 @@ class CreateGeneralTable extends Migration
                   ->references('id')
                   ->on('groups')
                   ->onDelete('cascade'); 
-            /*
-            $table->foreign('group_project_id')
+
+            $table->foreign('category_id')
                   ->references('id')
-                  ->on('group_project')
+                  ->on('categories')
                   ->onDelete('cascade'); 
-            */
-            /*
-            $table->foreign('course_group_id')
-                  ->references('id')
-                  ->on('course_groups')
-                  ->onDelete('cascade');  
-            */
+
             $table->foreign('absence_id')
                   ->references('id')
                   ->on('absences')
@@ -254,6 +199,7 @@ class CreateGeneralTable extends Migration
         Schema::dropIfExists('groups'); 
         Schema::dropIfExists('projects');
         Schema::dropIfExists('absences');
+        Schema::dropIfExists('category_user');
         Schema::dropIfExists('categories');
         Schema::dropIfExists('customers');      
         

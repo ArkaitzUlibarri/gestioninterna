@@ -47,6 +47,8 @@ var app = new Vue({
 			project: "",
 			group_id: "",
 			group: "",
+			category_id: "",
+			category: "",
 			absence_id: "",
 			absence: "",
 			training_type: "",
@@ -73,16 +75,18 @@ var app = new Vue({
 
 			return total;
 		},
-		taskValidated: function taskValidated() {
-			if (this.newTask.activity != "" && this.newTask.time != 0) {
-				if (this.newTask.activity == 'project' && this.newTask.project != "" && this.newTask.group != "" && this.newTask.job_type != "") {
-					return true;
-				}
-				if (this.newTask.activity == 'absence' && this.newTask.absence != "") {
-					return true;
-				}
-				if (this.newTask.activity == 'training' && this.newTask.training_type != "" && this.newTask.job_type != "") {
-					return true;
+		formTaskFilled: function formTaskFilled() {
+			if (this.newTask.pm_validation == 0 && this.newTask.admin_validation == 0) {
+				if (this.newTask.activity != "" && this.newTask.time != 0) {
+					if (this.newTask.activity == 'project' && this.newTask.project != "" && this.newTask.group != "" && this.newTask.category != "" && this.newTask.job_type != "") {
+						return true;
+					}
+					if (this.newTask.activity == 'absence' && this.newTask.absence != "") {
+						return true;
+					}
+					if (this.newTask.activity == 'training' && this.newTask.training_type != "" && this.newTask.job_type != "") {
+						return true;
+					}
 				}
 			}
 
@@ -108,6 +112,8 @@ var app = new Vue({
 				project: task.project,
 				group_id: task.group_id,
 				group: task.group,
+				category_id: task.category_id,
+				category: task.category,
 				absence_id: task.absence_id,
 				absence: task.absence,
 				training_type: task.training_type,
@@ -121,7 +127,6 @@ var app = new Vue({
 
 			_this.idTraduction();
 			_this.groupsRefresh();
-			_this.categoriesRefresh();
 
 			_this.editIndex = index;
 		});
@@ -129,14 +134,30 @@ var app = new Vue({
 	mounted: function mounted() {
 		this.fetchData();
 		this.project();
+		this.categoriesLoad();
+		this.maxDate();
 	},
 
 
 	methods: {
+		maxDate: function maxDate() {
+			var today = new Date();
+			var dd = today.getDate();
+			var mm = today.getMonth() + 1; //January is 0!
+			var yyyy = today.getFullYear();
+
+			if (dd < 10) {
+				dd = '0' + dd;
+			}
+			if (mm < 10) {
+				mm = '0' + mm;
+			}
+			today = yyyy + '-' + mm + '-' + dd;
+			document.getElementById("datefield").setAttribute("max", today);
+		},
 		addTask: function addTask() {
 			this.newTask.time_slots = this.newTask.time * 4;
 			this.nameTraduction();
-			this.categoriesRefresh();
 			this.save();
 		},
 		editTask: function editTask() {
@@ -153,6 +174,8 @@ var app = new Vue({
 				project: "",
 				group_id: "",
 				group: "",
+				category_id: "",
+				category: "",
 				absence_id: "",
 				absence: "",
 				training_type: "",
@@ -163,6 +186,8 @@ var app = new Vue({
 				pm_validation: 0,
 				admin_validation: 0
 			};
+
+			this.editIndex = -1;
 		},
 		refreshForm: function refreshForm() {
 			this.newTask = {
@@ -174,6 +199,8 @@ var app = new Vue({
 				project: "",
 				group_id: "",
 				group: "",
+				category_id: "",
+				category: "",
 				absence_id: "",
 				absence: "",
 				training_type: "",
@@ -181,8 +208,8 @@ var app = new Vue({
 				time: 0,
 				job_type: "",
 				comments: "",
-				pm_validation: 0,
-				admin_validation: 0
+				pm_validation: this.newTask.pm_validation,
+				admin_validation: this.newTask.admin_validation
 			};
 
 			if (this.newTask.activity == 'training') {
@@ -210,39 +237,25 @@ var app = new Vue({
 
 			this.groupList = [].concat(_toConsumableArray(setList));
 		},
-		categoriesRefresh: function categoriesRefresh() {
+		categoriesLoad: function categoriesLoad() {
+			this.nameTraduction();
+
 			var vm = this;
 			var setList = new Set();
 
 			vm.categories.forEach(function (item) {
-				if (vm.newTask.group_id == item.group_id) {
-					setList.add(item.name);
+				if (vm.user == item.user_id) {
+					setList.add(item.description);
 				}
 			});
 
 			this.categoryList = [].concat(_toConsumableArray(setList));
 		},
-		validateTask: function validateTask() {
-
-			if (confirm("¿Estás seguro de que quieres validar el día?")) {
-				if (this.role == 'admin') {
-					this.tasks.forEach(function (item) {
-						if (item.pm_validation == 1) {
-							item.admin_validation = 1;
-						}
-					});
-				} else {
-					this.tasks.forEach(function (item) {
-						item.pm_validation = 1;
-					});
-				}
-				this.initializeTask();
-			}
-		},
 		nameTraduction: function nameTraduction() {
 
 			this.newTask.project_id = "";
 			this.newTask.group_id = "";
+			this.newTask.category_id = "";
 			this.newTask.absence_id = "";
 
 			//Ausencia
@@ -258,6 +271,7 @@ var app = new Vue({
 			if (this.newTask.activity == 'project') {
 				for (var key = this.groupProjects.length - 1; key >= 0; key--) {
 					if (this.groupProjects[key].group == this.newTask.group) {
+						this.newTask.category_id = this.groupProjects[key].category_id;
 						this.newTask.group_id = this.groupProjects[key].group_id;
 						this.newTask.project_id = this.groupProjects[key].project_id;
 					}
@@ -268,6 +282,7 @@ var app = new Vue({
 
 			this.newTask.project = "";
 			this.newTask.group = "";
+			this.newTask.category = "";
 			this.newTask.absence = "";
 
 			//Ausencia
@@ -284,6 +299,7 @@ var app = new Vue({
 			if (this.newTask.activity == 'project') {
 				for (var key = this.groupProjects.length - 1; key >= 0; key--) {
 					if (this.newTask.group_id == this.groupProjects[key].group_id) {
+						this.newTask.category = this.groupProjects[key].category;
 						this.newTask.group = this.groupProjects[key].group;
 						this.newTask.project = this.groupProjects[key].project;
 						break;
@@ -315,16 +331,14 @@ var app = new Vue({
 			if (vm.newTask.id != -1) {
 				axios.patch('/api/reports/' + vm.newTask.id, vm.newTask).then(function (response) {
 					console.log(response.data);
-
+					//---------------------------------------
 					var properties = Object.keys(vm.newTask);
 
 					for (var i = properties.length - 1; i >= 0; i--) {
 						vm.tasks[vm.editIndex][properties[i]] = vm.newTask[properties[i]];
 					}
-
 					vm.initializeTask();
-
-					vm.editIndex = -1;
+					//---------------------------------------
 				}).catch(function (error) {
 					console.log(error);
 				});
@@ -333,9 +347,11 @@ var app = new Vue({
 
 				axios.post('/api/reports', vm.newTask).then(function (response) {
 					console.log(response.data);
+					//---------------------------------------
 					vm.newTask.id = response.data;
 					vm.tasks.push(vm.newTask);
 					vm.initializeTask();
+					//---------------------------------------	
 				}).catch(function (error) {
 					console.log(error);
 				});
@@ -453,6 +469,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     template: '#task-template',
@@ -482,7 +501,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(3)();
-exports.push([module.i, "\n.task-panel {\n    position:relative;\n    margin-bottom: .5em;\n    background-color: #fff;\n    border: 1px solid #777777;\n    border-radius: 0px;\n    box-shadow: 0 3px 1px rgba(0, 0, 0, .05);\n    padding: .7em;\n}\n.panel-right-corner {\n    position: absolute;\n    top: .4em;\n    right: 1em;\n}\n.task-action-icon {\n    font-weight: bold;\n    cursor: pointer;\n    display: block;\n    margin: auto ;\n}\n.validated-task {\n    border-style: double;\n    border-color: #21d421;\n}\n.validated-pm-text {\n    color: #98FB98;\n}\n.validated-admin-text {\n    color: #21d421;\n}\n", ""]);
+exports.push([module.i, "\n.label-position {\n    position: relative;\n    right:3em;\n    top:3.5em;\n}\n.panel-right-corner {\n    position: absolute;\n    right: 2em;\n    top:1em;\n}\n.task-action-icon {\n    cursor: pointer;\n    display: block;\n    margin: auto ;\n}\n.task-panel {\n    position:relative;\n    margin-bottom: .3em;\n    background-color: #fff;\n    border: 1px solid #777777;\n    border-radius: 0px;\n    box-shadow: 0 3px 1px rgba(0, 0, 0, .05);\n    padding: .3em .7em .3em .7em;\n}\n.validated-task {\n    border-style: double;\n    border-color: #21d421;\n}\n.validated-pm-text {\n    //color: #98FB98;\n    color: #21d421;\n}\n.validated-admin-text {\n    color: #21d421;\n}\n\n", ""]);
 
 /***/ }),
 
@@ -530,28 +549,27 @@ module.exports = Component.exports
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
+    staticStyle: {
+      "border": "1px solid red"
+    }
+  }, [_c('span', {
+    staticClass: "label label-primary label-position"
+  }, [_vm._v(_vm._s(_vm.index + 1))]), _vm._v(" "), _c('div', {
     staticClass: "task-panel",
     class: {
-      'validated-task': _vm.task.pm_validation
+      'validated-task': _vm.task.admin_validation
     }
-  }, [_c('div', {
+  }, [(!_vm.task.admin_validation) ? _c('div', {
     staticClass: "panel-right-corner"
   }, [(_vm.task.pm_validation) ? _c('div', {
     staticClass: "task-action-icon validated-pm-text"
   }, [_c('span', {
-    staticClass: "glyphicon glyphicon-ok",
-    attrs: {
-      "aria-hidden": "true"
-    }
-  })]) : _vm._e(), _vm._v(" "), (_vm.task.admin_validation) ? _c('div', {
-    staticClass: "task-action-icon validated-admin-text"
-  }, [_c('span', {
-    staticClass: "glyphicon glyphicon-ok",
+    staticClass: "glyphicon glyphicon-eye-open",
     attrs: {
       "aria-hidden": "true"
     }
   })]) : _vm._e(), _vm._v(" "), (!_vm.task.pm_validation) ? _c('div', {
-    staticClass: "task-action-icon ",
+    staticClass: "task-action-icon task-delete",
     on: {
       "click": _vm.deleteTask
     }
@@ -560,17 +578,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "aria-hidden": "true"
     }
-  })]) : _vm._e(), _vm._v(" "), (!_vm.task.pm_validation) ? _c('div', {
+  })]) : _vm._e()]) : _vm._e(), _vm._v(" "), _c('div', {
     staticClass: "task-action-icon",
     on: {
       "click": _vm.editTask
     }
-  }, [_c('span', {
-    staticClass: "glyphicon glyphicon-edit",
-    attrs: {
-      "aria-hidden": "true"
-    }
-  })]) : _vm._e()]), _vm._v(" "), (_vm.task.activity == 'absence') ? _c('span', [_c('h4', [_c('b', [_vm._v(" " + _vm._s(_vm.time) + " ")]), _vm._v(" " + _vm._s('ABSENCE \\ ' + _vm.task.absence.toUpperCase()) + "  ")]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.task.comments))])]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'project') ? _c('span', [_c('h4', [_c('b', [_vm._v(" " + _vm._s(_vm.time) + " ")]), _vm._v(" " + _vm._s(_vm.task.project.toUpperCase() + ' \\ ' + _vm.task.group.toUpperCase()) + "  ")]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.task.comments))])]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'training') ? _c('span', [_c('h4', [_c('b', [_vm._v(" " + _vm._s(_vm.time) + " ")]), _vm._v("  " + _vm._s('TRAINING \\ ' + _vm.task.training_type.toUpperCase()) + "  ")]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.task.comments))])]) : _vm._e()])
+  }, [(_vm.task.activity == 'absence') ? _c('span', [_c('h5', [_c('b', [_vm._v(" " + _vm._s(_vm.time) + " " + _vm._s('ABSENCE \\ ' + _vm.task.absence.toUpperCase()))]), _c('p', [_vm._v(_vm._s(_vm.task.comments))])])]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'project') ? _c('span', [_c('h5', [_c('p', [_c('b', [_vm._v(_vm._s(_vm.time) + " " + _vm._s(_vm.task.project.toUpperCase() + ' \\ ' + _vm.task.group.toUpperCase()))])]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.task.comments))])])]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'training') ? _c('span', [_c('h5', [_c('b', [_vm._v(" " + _vm._s(_vm.time) + " " + _vm._s('TRAINING \\ ' + _vm.task.training_type.toUpperCase()))]), _c('p', [_vm._v(_vm._s(_vm.task.comments))])])]) : _vm._e()])])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

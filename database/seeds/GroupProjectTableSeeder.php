@@ -46,7 +46,9 @@ class GroupProjectTableSeeder extends Seeder
 		];
 
 		// Obtengo los usuarios con role igual a "user"
-		$users = DB::Table('users')->where('role', 'user')->select('id')->get()->toArray();
+		$users = DB::Table('users')
+			//->where('role', 'user')
+			->select('id')->get()->toArray();
 		
 		$users = array_map( function($item) {
 			return ['id' => $item->id, 'PM' => false];
@@ -84,7 +86,7 @@ class GroupProjectTableSeeder extends Seeder
 					DB::table('group_user')->insert([
 						'group_id'    => $groupId,
 						'user_id'     => $userItem['id'],
-						'category_id' => $userItem['PM'] == true ? $idProjectManager :  $faker->randomElement($categorieIds)
+						//'category_id' => $userItem['PM'] == true ? $idProjectManager :  $faker->randomElement($categorieIds)
 					]);
 				}
 			}
