@@ -53,7 +53,7 @@
             
 
             <div align="right" class="form-group">  
-               <a type="button" class="btn btn-success" href="{{ url('/projects/create') }}">
+               <a type="button" class="btn btn-default" href="{{ url('/projects/create') }}">
                     Add Project
                </a>
             </div>

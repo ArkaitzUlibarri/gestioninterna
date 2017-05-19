@@ -1,17 +1,19 @@
 <template id="group-template">
 
-    <div class="group-panel col-xs-12 col-sm-4" v-bind:class="{ 'group-enabled': group.enabled }"> 
+    <div class= col-xs-12>
+        <div class="group-panel col-sm-4" v-bind:class="{ 'group-enabled': group.enabled }"> 
 
-        <h5 class="action"  v-on:click="editGroup">
-            <b>{{group.name.toUpperCase().substring(0,30)}}<span v-if="group.name.length >30">...</span></b>
-        </h5> 
-        
-        <div class="panel-right-corner">
-            <div class="action" v-on:click="deleteGroup">
-                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+            <h5 class="action"  v-on:click="editGroup">
+                <b>{{group.name.toUpperCase().substring(0,30)}}<span v-if="group.name.length >30">...</span></b>
+            </h5> 
+            
+            <div class="panel-right-corner">
+                <div class="action" v-on:click="deleteGroup">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </div>
             </div>
+          
         </div>
-      
     </div>
 
 </template>

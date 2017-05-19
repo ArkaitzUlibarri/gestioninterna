@@ -46,7 +46,7 @@
             </div>
 
             <div align="right" class="form-group">  
-                <a type="button" title="Add Contract" class="btn btn-success" href="{{ url('/contracts/create') }}">
+                <a type="button" title="Add Contract" class="btn btn-default" href="{{ url('/contracts/create') }}">
                     Add Contract
                 </a>
             </div>

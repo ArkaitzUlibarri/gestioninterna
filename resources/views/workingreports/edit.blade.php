@@ -10,13 +10,22 @@
 		</div>
 	</div>
 
-	<div class="row">
-		<div class="col-xs-12 col-sm-2 pull-right">
-			<input id="datefield" name="created_at" type ="date" class="form-control" min="2017-01-01" v-model="reportdate" v-on:change="fetchData">
+		
+	<div class="panel panel-default">
+		<div class="panel-body">
+
+			<div class="col-xs-12 col-sm-4">	
+				<input class="form-control" type="text" placeholder="{{$report_user->fullname}}" readonly>
+			</div>	
+
+			<div class="col-xs-12 col-sm-2">
+				<input id="datefield" name="created_at" type ="date" class="form-control" min="2017-01-01" v-model="reportdate" v-on:change="fetchData">
+			</div>	
+
 		</div>
 	</div>
 
-
+	
 	<div class="panel panel-primary">
 
 		  <div class="panel-heading">
@@ -180,8 +189,8 @@
 @push('script-bottom')
 	<script type = "text/javascript">
 		var reportdate    = '{{ $date }}';
-		var user          = '{{ $user_id }}';
 		var role          = '{{ $auth_user->role }}';
+		var user          = <?php echo json_encode($report_user);?>;
 		var absences      = <?php echo json_encode($absences);?>;
 		var groupProjects = <?php echo json_encode($groupProjects);?>;
 		var categories    = <?php echo json_encode($categories);?>;

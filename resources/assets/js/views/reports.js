@@ -100,7 +100,7 @@ const app = new Vue({
 		Event.$on('EditTask', (index, task) => {
 			this.newTask = {
 				id: task.id,
-				user_id:this.user,
+				user_id:this.user.id,
 				created_at:this.reportdate,
 				activity:task.activity,
 				project_id:task.project_id,
@@ -167,7 +167,7 @@ const app = new Vue({
 		initializeTask(){
 			this.newTask = {
 				id: -1,
-				user_id:this.user,
+				user_id:this.user.id,
 				created_at:this.reportdate,
 				activity: "",
 				project_id: "",
@@ -194,7 +194,7 @@ const app = new Vue({
 		refreshForm(){
 			this.newTask = {
 				id: this.newTask.id,
-				user_id:this.user,
+				user_id:this.user.id,
 				created_at:this.reportdate,
 				activity:this.newTask.activity,
 				project_id: "",
@@ -252,7 +252,7 @@ const app = new Vue({
 			let setList = new Set();
 			
 			vm.categories.forEach(function(item) {						
-				if( vm.user == item.user_id){
+				if( vm.user.id == item.user_id){
 					 setList.add(item.description);
 				}				
 			});
@@ -328,7 +328,7 @@ const app = new Vue({
 
 			axios.get('/api/reports', {
 				params: {
-					user_id: vm.user,
+					user_id: vm.user.id,
 					created_at: vm.reportdate,
 				}
 			})

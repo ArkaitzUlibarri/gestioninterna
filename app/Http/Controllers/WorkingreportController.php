@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Absence;
+use App\User;
 use App\WorkingreportRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -46,11 +47,12 @@ class WorkingReportController extends Controller
 	{
 		$absences       = Absence::all();
 		$auth_user      = Auth::user();
+		$report_user	= User::find($user_id);
 		$workingreports = $this->getReportsPerDay($user_id,$date);
 		$groupProjects  = $this->getGroupsProjectsByUser($user_id);
 		$categories     = $this->getCategories($user_id);
 
-		return view('workingreports.edit',compact('date','auth_user','user_id','workingreports','absences','groupProjects','categories'));
+		return view('workingreports.edit',compact('date','auth_user','report_user','workingreports','absences','groupProjects','categories'));
 	}
 
 	private function getReportsPerUserPerDay($user_id , $admin)

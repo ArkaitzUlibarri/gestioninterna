@@ -18,11 +18,11 @@
 
 		  <div class="panel-body">
 				<div class="row">
-					<div class="col-xs-12">
-						<span v-for="(group, index) in groups">
-							<group-template :group="group" :index="index"></group-template>
-						</span>
-					</div>
+					
+					<span v-for="(group, index) in groups">
+						<group-template :group="group" :index="index"></group-template>
+					</span>
+					
 				</div>
 		  </div>
 
@@ -60,6 +60,7 @@
 						</div>	
 
 					</div>
+
 				</div>
 			</div>
 		</div>

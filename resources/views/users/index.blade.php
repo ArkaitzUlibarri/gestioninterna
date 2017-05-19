@@ -40,7 +40,7 @@
             </div>
 
             <div align="right" class="form-group">  
-                <a type="button" title="Add User" class=" btn btn-success" href="{{ url('/users/create') }}">
+                <a type="button" title="Add User" class=" btn btn-default" href="{{ url('/users/create') }}">
                     Add User
                 </a>
             </div>

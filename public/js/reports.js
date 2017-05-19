@@ -17,7 +17,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 /**
  * Registro los componentes necesarios.
  */
-Vue.component('task-template', __webpack_require__(42));
+Vue.component('task-template', __webpack_require__(43));
 
 var app = new Vue({
 
@@ -105,7 +105,7 @@ var app = new Vue({
 		Event.$on('EditTask', function (index, task) {
 			_this.newTask = {
 				id: task.id,
-				user_id: _this.user,
+				user_id: _this.user.id,
 				created_at: _this.reportdate,
 				activity: task.activity,
 				project_id: task.project_id,
@@ -167,7 +167,7 @@ var app = new Vue({
 		initializeTask: function initializeTask() {
 			this.newTask = {
 				id: -1,
-				user_id: this.user,
+				user_id: this.user.id,
 				created_at: this.reportdate,
 				activity: "",
 				project_id: "",
@@ -192,7 +192,7 @@ var app = new Vue({
 		refreshForm: function refreshForm() {
 			this.newTask = {
 				id: this.newTask.id,
-				user_id: this.user,
+				user_id: this.user.id,
 				created_at: this.reportdate,
 				activity: this.newTask.activity,
 				project_id: "",
@@ -244,7 +244,7 @@ var app = new Vue({
 			var setList = new Set();
 
 			vm.categories.forEach(function (item) {
-				if (vm.user == item.user_id) {
+				if (vm.user.id == item.user_id) {
 					setList.add(item.description);
 				}
 			});
@@ -315,7 +315,7 @@ var app = new Vue({
 
 			axios.get('/api/reports', {
 				params: {
-					user_id: vm.user,
+					user_id: vm.user.id,
 					created_at: vm.reportdate
 				}
 			}).then(function (response) {
@@ -429,7 +429,7 @@ module.exports = function() {
 
 /***/ }),
 
-/***/ 37:
+/***/ 38:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -489,7 +489,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 40:
+/***/ 41:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(3)();
@@ -497,18 +497,18 @@ exports.push([module.i, "\n.panel-right-corner {\n    position: absolute;\n    r
 
 /***/ }),
 
-/***/ 42:
+/***/ 43:
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(46)
+__webpack_require__(47)
 
 var Component = __webpack_require__(5)(
   /* script */
-  __webpack_require__(37),
+  __webpack_require__(38),
   /* template */
-  __webpack_require__(44),
+  __webpack_require__(45),
   /* scopeId */
   null,
   /* cssModules */
@@ -536,7 +536,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 44:
+/***/ 45:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -578,13 +578,13 @@ if (false) {
 
 /***/ }),
 
-/***/ 46:
+/***/ 47:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(40);
+var content = __webpack_require__(41);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -659,7 +659,7 @@ module.exports = function normalizeComponent (
 
 /***/ }),
 
-/***/ 50:
+/***/ 51:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(17);
@@ -923,4 +923,4 @@ module.exports = function listToStyles (parentId, list) {
 
 /***/ })
 
-},[50]);
+},[51]);

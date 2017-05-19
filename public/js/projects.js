@@ -16,7 +16,7 @@ webpackJsonp([1],{
 /**
  * Registro los componentes necesarios.
  */
-Vue.component('group-template', __webpack_require__(41));
+Vue.component('group-template', __webpack_require__(42));
 
 var app = new Vue({
 
@@ -148,7 +148,7 @@ var app = new Vue({
 
 /***/ }),
 
-/***/ 18:
+/***/ 19:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
@@ -212,11 +212,13 @@ module.exports = function() {
 
 /***/ }),
 
-/***/ 36:
+/***/ 37:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
 //
 //
 //
@@ -253,26 +255,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 39:
+/***/ 40:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(3)();
-exports.push([module.i, "\n.group-panel {\n    position:relative;\n    border-bottom: 1px solid #ccc;\n    padding: .4em;\n    margin-bottom: .5em;\n}\n.panel-right-corner {\n    position: absolute;\n    right: 2em;\n    top:1em;\n}\n.action {\n    cursor: pointer;\n    //display: block;\n    //margin: auto ;\n}\n.group-action-icon {\n    font-weight: bold;\n    cursor: pointer;\n    display: block;\n    margin: auto ;\n}\n.group-enabled{\n    background-color: #b0f2b8;\n}\n\n", ""]);
+exports.push([module.i, "\n.group-panel {\n    position:relative;\n    border-bottom: 1px solid #ccc;\n    padding: .4em;\n    margin-bottom: .5em;\n}\n.panel-right-corner {\n    position: absolute;\n    right: 2em;\n    top:1em;\n}\n.action {\n    cursor: pointer;\n    //display: block;\n    //margin: auto ;\n}\n.group-enabled{\n    background-color: #b0f2b8;\n}\n\n", ""]);
 
 /***/ }),
 
-/***/ 41:
+/***/ 42:
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(45)
+__webpack_require__(46)
 
 var Component = __webpack_require__(5)(
   /* script */
-  __webpack_require__(36),
+  __webpack_require__(37),
   /* template */
-  __webpack_require__(43),
+  __webpack_require__(44),
   /* scopeId */
   null,
   /* cssModules */
@@ -300,12 +302,14 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 43:
+/***/ 44:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "group-panel col-xs-12 col-sm-4",
+    staticClass: "col-xs-12"
+  }, [_c('div', {
+    staticClass: "group-panel col-sm-4",
     class: {
       'group-enabled': _vm.group.enabled
     }
@@ -326,7 +330,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "aria-hidden": "true"
     }
-  })])])])
+  })])])])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -338,13 +342,13 @@ if (false) {
 
 /***/ }),
 
-/***/ 45:
+/***/ 46:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(39);
+var content = __webpack_require__(40);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -362,15 +366,6 @@ if(false) {
  // When the module is disposed, remove the <style> tags
  module.hot.dispose(function() { update(); });
 }
-
-/***/ }),
-
-/***/ 49:
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(16);
-module.exports = __webpack_require__(18);
-
 
 /***/ }),
 
@@ -424,6 +419,15 @@ module.exports = function normalizeComponent (
     options: options
   }
 }
+
+
+/***/ }),
+
+/***/ 50:
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(16);
+module.exports = __webpack_require__(19);
 
 
 /***/ }),
@@ -684,4 +688,4 @@ module.exports = function listToStyles (parentId, list) {
 
 /***/ })
 
-},[49]);
+},[50]);
