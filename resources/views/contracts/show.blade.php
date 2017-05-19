@@ -53,7 +53,7 @@
 		@include ('contracts.reductionInfo')
 		
 		<dl class="dl-horizontal">
-			<dt><a title="Back" class="btn btn-primary" href="{{ url('contracts') }}"><span class="glyphicon glyphicon-arrow-left"></span> Back</a></dt>
+			<dt><a title="Back" class="btn btn-primary" href="{{ url('contracts') }}">Back</a></dt>
 		</dl>	
 
 	</div>

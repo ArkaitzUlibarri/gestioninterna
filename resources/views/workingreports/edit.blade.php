@@ -8,26 +8,47 @@
 		<div class ="col-xs-12 col-sm-4">
 			<h2>Working Report</h2>				
 		</div>
+	</div>
+
+	<div class="row">
 		<div class="col-xs-12 col-sm-2 pull-right">
 			<input id="datefield" name="created_at" type ="date" class="form-control" min="2017-01-01" v-model="reportdate" v-on:change="fetchData">
 		</div>
 	</div>
 
-	<div class="row" style="margin-bottom: 2em;">
-		<div class="col-xs-12">
-			<h3><span class="label label-danger">TOTAL HOURS: @{{totalTime}}</span></h3>
-			<span v-for="(task, index) in tasks">
-				<task-template :task="task" :index="index"></task-template>
-			</span>
-		</div>
+
+	<div class="panel panel-primary">
+
+		  <div class="panel-heading">
+		    	Tasks
+		  </div>
+
+		  <div class="panel-body">
+
+				<div class="row">
+					<div class="col-xs-12">
+						<span v-for="(task, index) in tasks">
+							<task-template :task="task" :index="index"></task-template>
+						</span>
+					</div>
+				</div>
+
+		  </div>
+
+		  <div class="panel-footer">
+		  		<b>TOTAL HOURS: @{{totalTime}}</b>
+		  </div>
+
 	</div>
+
+
 
 	<div class="row">
 		<div class="col-xs-12">
 		<div class="panel panel-primary">
 			<div class="panel-heading">
-				<h4 v-if="editIndex==-1">Adding a new task</h4>	
-				<h4 v-if="editIndex!=-1">Editing task @{{editIndex +1}}</h4>	
+				<span v-if="editIndex==-1">Adding a new task</span>	
+				<span v-if="editIndex!=-1">Editing task @{{editIndex +1}}</span>	
 			</div>
 		
 			<div class="panel-body">
@@ -133,7 +154,7 @@
 						<span class="glyphicon glyphicon-floppy-disk"></span> Save
 					</button>
 					<button title="New Task" class="btn btn-primary" v-show="editIndex!=-1" v-on:click="initializeTask">
-						<span class="glyphicon glyphicon-plus"></span> New Task
+						New Task
 					</button>
 				</div>
 			</div>
@@ -141,7 +162,7 @@
 		</div>
 	</div>
 
-	<a class="btn btn-default" href="{{ url('workingreports') }}">Back</a>
+	<a class="btn btn-primary" href="{{ url('workingreports') }}">Back</a>
 
 
 	@include('layouts.errors')

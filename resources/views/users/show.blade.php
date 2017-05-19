@@ -34,7 +34,11 @@
         </dl>
 
         <dl class="dl-horizontal">
-            <dt><a title="Back" class="btn btn-primary" href="{{ url('users') }}"><span class="glyphicon glyphicon-arrow-left"></span> Back</a></dt>
+            <dt>
+                <a title="Back" class="btn btn-primary" href="{{ url('users') }}">
+                    Back
+                </a>
+            </dt>
         </dl>   
     </div>
 @endsection

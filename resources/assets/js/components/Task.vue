@@ -3,15 +3,15 @@
     <div class="task-panel">
 
         <div class="panel-right-corner" v-if="! task.admin_validation">
-            <div class="validated-pm-text" v-if="task.pm_validation">
-                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+            <div class="validated-color" v-if="task.pm_validation">
+                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
             </div>
-            <div class="task-delete" v-if="! task.pm_validation" v-on:click="deleteTask">            
+            <div class="task-delete action" v-if="! task.pm_validation" v-on:click="deleteTask">            
                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
             </div>
         </div>
 
-        <div v-on:click="editTask">
+        <div class="action" v-on:click="editTask">
             <h5 v-if="task.activity == 'project'">
                 <span><b>{{ time }} {{ task.project.toUpperCase() + ' | ' + task.group.toUpperCase() }}</b> | </span> {{ task.comments.substring(0, 75) }}...
             </h5>             
@@ -55,22 +55,16 @@
 
 <style>
 
-    .label-position {
-        position: relative;
-        right:3em;
-        top:3.5em;
-    }
-
     .panel-right-corner {
         position: absolute;
         right: 2em;
         top:1em;
     }
 
-    .task-action-icon {
+    .action {
         cursor: pointer;
-        display: block;
-        margin: auto ;
+        //display: block;
+        //margin: auto ;
     }
 
     .task-panel {
@@ -84,12 +78,7 @@
         border-color: #21d421;
     }
 
-    .validated-pm-text {
-        //color: #98FB98;
-        color: #21d421;
-    }
-
-    .validated-admin-text {
+    .validated-color {
         color: #21d421;
     }
 

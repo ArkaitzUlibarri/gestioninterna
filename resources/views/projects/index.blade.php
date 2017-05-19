@@ -37,7 +37,7 @@
                                     </a>
                                     <a class="btn btn-primary btn-sm"
                                        type="button" href="{{ url('projects' . '/' . $project->id . '/addgroup/' . '/') }}">
-                                       <span class="glyphicon glyphicon-plus"></span> Add Group
+                                       Add Group
                                     </a>
                                 @else
                                     <a class="btn btn-warning btn-sm"
@@ -53,7 +53,9 @@
             
 
             <div align="right" class="form-group">  
-               <a type="button" class="btn btn-success" href="{{ url('/projects/create') }}"><span class="glyphicon glyphicon-plus"></span> Add Project</a>
+               <a type="button" class="btn btn-success" href="{{ url('/projects/create') }}">
+                    Add Project
+               </a>
             </div>
     </div>
 @endsection

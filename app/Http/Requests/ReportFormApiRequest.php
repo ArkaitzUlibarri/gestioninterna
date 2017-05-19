@@ -25,7 +25,7 @@ class ReportFormApiRequest extends FormRequest
      */
     public function rules()
     {
-        
+        Carbon::tomorrow();
         return [
             'user_id'          => 'required|numeric',
             //'created_at'       => 'required|date|before:' . date('Y-m-d') . '|date_format:Y-m-d',

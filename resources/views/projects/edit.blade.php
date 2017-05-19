@@ -40,7 +40,7 @@
 			</div>		
 
 			<div class="form-group">		
-				<a class="btn btn-danger" href="{{ url('projects') }}"><span class="glyphicon glyphicon-arrow-left"></span> Cancel</a>
+				<a class="btn btn-primary" href="{{ url('projects') }}"><span class="glyphicon glyphicon-arrow-left"></span> Cancel</a>
 				<button type ="submit" class="btn btn-success"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
 			</div>
 				

@@ -493,7 +493,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(3)();
-exports.push([module.i, "\n.label-position {\n    position: relative;\n    right:3em;\n    top:3.5em;\n}\n.panel-right-corner {\n    position: absolute;\n    right: 2em;\n    top:1em;\n}\n.task-action-icon {\n    cursor: pointer;\n    display: block;\n    margin: auto ;\n}\n.task-panel {\n    position:relative;\n    border-bottom: 1px solid #ccc;\n    padding:.4em\n}\n.validated-task {\n    border-style: double;\n    border-color: #21d421;\n}\n.validated-pm-text {\n    //color: #98FB98;\n    color: #21d421;\n}\n.validated-admin-text {\n    color: #21d421;\n}\n\n", ""]);
+exports.push([module.i, "\n.panel-right-corner {\n    position: absolute;\n    right: 2em;\n    top:1em;\n}\n.action {\n    cursor: pointer;\n    //display: block;\n    //margin: auto ;\n}\n.task-panel {\n    position:relative;\n    border-bottom: 1px solid #ccc;\n    padding:.4em\n}\n.validated-task {\n    border-style: double;\n    border-color: #21d421;\n}\n.validated-color {\n    color: #21d421;\n}\n\n", ""]);
 
 /***/ }),
 
@@ -545,14 +545,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [(!_vm.task.admin_validation) ? _c('div', {
     staticClass: "panel-right-corner"
   }, [(_vm.task.pm_validation) ? _c('div', {
-    staticClass: "validated-pm-text"
+    staticClass: "validated-color"
   }, [_c('span', {
-    staticClass: "glyphicon glyphicon-eye-open",
+    staticClass: "glyphicon glyphicon-ok",
     attrs: {
       "aria-hidden": "true"
     }
   })]) : _vm._e(), _vm._v(" "), (!_vm.task.pm_validation) ? _c('div', {
-    staticClass: "task-delete",
+    staticClass: "task-delete action",
     on: {
       "click": _vm.deleteTask
     }
@@ -562,6 +562,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "aria-hidden": "true"
     }
   })]) : _vm._e()]) : _vm._e(), _vm._v(" "), _c('div', {
+    staticClass: "action",
     on: {
       "click": _vm.editTask
     }

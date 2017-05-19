@@ -52,7 +52,7 @@
 
             <div align="right" class="form-group">  
                <a type="button" title="New Report" class="btn btn-success" href="{{ url('/workingreports/add', [$user_id,$today->format('Y-m-d')] ) }}">
-                <span class="glyphicon glyphicon-plus"></span> New Report
+                    New Report
                 </a>
             </div>
             
