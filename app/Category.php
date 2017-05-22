@@ -4,17 +4,17 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Group extends Model
+class Category extends Model
 {
-    /**
+	 /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [	
-		'project_id', 
 		'name',	
-		'enabled'
+		'code',
+		'description',
     ];
 
     /**
@@ -29,7 +29,7 @@ class Group extends Model
 	 *
 	 * @var string
 	 */
-	protected $table = 'groups';
+	protected $table = 'categories';
 	
 	/**
 	 * Does not have timestamps
@@ -41,16 +41,8 @@ class Group extends Model
 	 */
 	public $incrementing = true;
 
-	/**
-     * Get the project that owns the group.
-     */
-    public function project()
-    {
-        return $this->belongsTo('App\Project');
-    }
-
     /**
-     * The users that belong to the group.
+     * The users that belong to the category.
      */
     public function users()
     {

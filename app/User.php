@@ -42,6 +42,21 @@ class User extends Authenticatable
         return $this->hasMany('App\WorkingReport')->orderBy('user','date','desc');
     }
 
+    /**
+     * The categories that belong to the user.
+     */
+    public function categories()
+    {
+        return $this->belongsToMany('App\Category','category_user');
+    }
+
+    /**
+     * The categories that belong to the user.
+     */
+    public function groups()
+    {
+        return $this->belongsToMany('App\Group','group_user');
+    }
 
     /**
      * Check the role of the user
