@@ -4,7 +4,7 @@
     <div class="container">   
         <h2>GROUPS</h2>
         <!--<p>Lista con los grupos de los proyectos:</p> -->    
-             <table class="table table-hover">
+             <table class="table table-hover table-condensed">
                 <thead>
                     <th>#</th>
                     <th>Project</th>

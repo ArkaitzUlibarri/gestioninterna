@@ -7,7 +7,7 @@
 
             @include('contracts.filter')
             <div class="table-responsive">
-            <table class="table table-hover">
+            <table class="table table-hover table-condensed">
                 <thead>
                     <th>Employee</th>
                     <th>Contract</th>

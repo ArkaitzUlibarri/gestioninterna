@@ -7,7 +7,7 @@
             @include('users.filter')
 
             <div class="table-responsive">     
-                <table class="table table-hover">
+                <table class="table table-hover table-condensed">
                     <thead>
                         <th>Employee ID</th>
                         <th>Name</th>

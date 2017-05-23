@@ -10,47 +10,68 @@
 
 			<input type=hidden name="project_id" type="text" value="{{ $project->id }}">
 
-			<div class="form-group">
-				<label>Project name:</label>
-				<input name="name" type ="text" class="form-control" placeholder="Project name" value="{{ strtoupper($project->name) }}">
-			</div>
+			<div class="panel panel-primary">
 
-			<div class="form-group">
-				<label>Description:</label>
-				<textarea name="description" class="form-control" placeholder="Description" rows=5 >{{ $project->description }}</textarea>
-			</div>
+				<div class="panel-heading">
+			    	Editing a Project
+			 	</div>
 
-			<div class="form-group">
-				<label>Customer:</label>
-				<select name="customer_id" class="form-control">	
-					@foreach ($customers as $customer)
-						<option {{$customer->name==$project->customerName ? 'selected' : ''}} value="{{ $customer->id }}">{{ strtoupper($customer->name) }}</option>
-					@endforeach	  
-				</select>
-			</div>	
+			 	<div class="panel-body">
 
-			<div class  ="form-group">
-				<label>Start date::</label>
-				<input name="start_date" type ="date" class="form-control" value="{{ $project->start_date }}">
-			</div>
+			 		<div class="row">
+						<div class="form-group col-xs-12 col-sm-6">
+							<label>Project name:</label>
+							<input name="name" type ="text" class="form-control" placeholder="Project name" value="{{ strtoupper($project->name) }}">
+						</div>
+					</div>	
 
-			<div class  ="form-group">
-				<label>End date:</label>
-				<input name="end_date" type ="date" class="form-control"  value="{{ $project->end_date }}">
-			</div>		
+					<div class="row">
+						<div class="form-group col-xs-12 col-sm-6">
+							<label>Project Manager:</label>
+							<select name="pm_id" class="form-control">	
+								@foreach ($PM_Users as $user)
+									<option {{$user->id==$project->pm_id ? 'selected' : ''}} value="{{ $user->id }}">{{ strtoupper($user->fullname) }}</option>
+								@endforeach	  
+							</select>
+						</div>
+					</div>	
 
-			<div class="form-group">
-				<label>Project Manager:</label>
-				<select name="pm_id" class="form-control">	
-					@foreach ($PM_Users as $user)
-						<option {{$user->id==$project->pm_id ? 'selected' : ''}} value="{{ $user->id }}">{{ strtoupper($user->fullname) }}</option>
-					@endforeach	  
-				</select>
-			</div>
+					<div class="form-group">
+						<label>Description:</label>
+						<textarea name="description" class="form-control" placeholder="Description" rows=5 >{{ $project->description }}</textarea>
+					</div>
 
-			<div class="form-group">		
-				<a class="btn btn-primary" href="{{ url('projects') }}"><span class="glyphicon glyphicon-arrow-left"></span> Cancel</a>
-				<button type ="submit" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+					<div class="row">
+						<div class="form-group col-xs-12 col-sm-6">
+							<label>Customer:</label>
+							<select name="customer_id" class="form-control">	
+								@foreach ($customers as $customer)
+									<option {{$customer->name==$project->customerName ? 'selected' : ''}} value="{{ $customer->id }}">{{ strtoupper($customer->name) }}</option>
+								@endforeach	  
+							</select>
+						</div>	
+
+
+					</div>	
+
+					<div class="row">
+						<div class="form-group col-xs-12 col-sm-3">
+							<label>Start date:</label>
+							<input name="start_date" type ="date" class="form-control" value="{{ $project->start_date }}">
+						</div>
+
+						<div class="form-group col-xs-12 col-sm-3">
+							<label>End date:</label>
+							<input name="end_date" type ="date" class="form-control"  value="{{ $project->end_date }}">
+						</div>		
+					</div>
+
+					<div class="form-group">		
+						<a class="btn btn-primary" href="{{ url('projects') }}"><span class="glyphicon glyphicon-arrow-left"></span> Cancel</a>
+						<button type ="submit" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+					</div>
+
+				</div>
 			</div>
 				
 			@include('layouts.errors')
