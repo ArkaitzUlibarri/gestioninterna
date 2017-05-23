@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Absence;
+use App\Category;
 use App\User;
 use App\WorkingreportRepository;
 use Illuminate\Support\Facades\Auth;
@@ -125,6 +126,24 @@ class WorkingReportController extends Controller
 			->LeftJoin('users','category_user.user_id','=','users.id')
 			->LeftJoin('categories','category_user.category_id','=','categories.id')
 			->where('user_id',$user_id)
+			->get();
+	}
+
+	private function categoryUsers()
+	{
+		return DB::table('category_user')
+			->select(
+				'category_user.user_id',
+				'users.name as username',
+				'users.lastname_1',
+				DB::raw("CONCAT(users.name, ' ', users.lastname_1) as fullname"),
+				'category_user.category_id',
+				'categories.code as code',
+				'categories.name as category',
+				'categories.description as description'
+			)
+			->LeftJoin('users','category_user.user_id','=','users.id')
+			->LeftJoin('categories','category_user.category_id','=','categories.id')
 			->get();
 	}
 }

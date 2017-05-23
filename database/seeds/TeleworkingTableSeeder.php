@@ -15,9 +15,9 @@ class TeleworkingTableSeeder extends Seeder
      */
     public function run()
     {
-        $faker =Faker::create();
+        $faker = Faker::create();
 
-        $teleworkingData=[
+        $teleworkingData = [
 
             [
 				'contract_id' => 1,

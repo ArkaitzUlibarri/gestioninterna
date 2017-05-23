@@ -35,11 +35,21 @@
 			<div class  ="form-group">
 				<label>End date:</label>
 				<input name="end_date" type ="date" class="form-control" value="{{ old('end_date') }}">
-			</div>		
+			</div>	
+
+			<div class="form-group">
+				<label>Project Manager:</label>
+				<select class="form-control" name="pm_id">	
+					<option value="">-</option>	
+					@foreach ($PM_Users as $user)
+						<option value="{{ $user->id }}" {{ (old('pm_id') == $user->id ? "selected":"") }} >{{ strtoupper($user->fullname) }}</option>
+					@endforeach	  
+				</select>
+			</div>	
 
 			<div class  ="form-group">	
 				<a class="btn btn-primary" href="{{ url('projects') }}"><span class="glyphicon glyphicon-arrow-left"></span> Cancel</a>
-				<button type ="submit" class="btn btn-success"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+				<button type ="submit" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
 			</div>	
 
 			@include('layouts.errors')

@@ -22,32 +22,34 @@ class ProjectsController extends Controller
 
     public function index(Request $request)
     {
-    	//$projects=$this->getProjects();
-    	$projects = $this->projectRepository->search($request->all(), true);
-    	$customers=Customer::all();
+		//$projects = $this->getProjects();
+		$projects   = $this->projectRepository->search($request->all(), true);
+		$customers  = Customer::all();
     	return view('projects.index',compact('projects','customers'));
     }
 
     public function edit($id)
     {
-    	//$project=$this->getProject($id);
-    	$project = Project::find($id);
-    	$customers=Customer::all();
-		//$customers=$this->customers();	
-    	return view('projects.edit',compact('project','customers'));
+		//$project   = $this->getProject($id);
+		//$customers = $this->customers();	
+		$project     = Project::find($id);
+		$customers   = Customer::all();
+		$PM_Users    = $this->getPMs();
+    	return view('projects.edit',compact('project','customers','PM_Users'));
     }
 
     public function show($id)
     {
-		//$project=$this->getProject($id);
-		$project = Project::find($id);
+		//$project = $this->getProject($id);
+		$project   = Project::find($id);
     	return view('projects.show',compact('project'));
     }
 
     public function create()
     {
-    	$customers=$this->customers();
-    	return view('projects.create',compact('customers'));
+		$customers = $this->customers();
+		$PM_Users  = $this->getPMs();
+    	return view('projects.create',compact('customers','PM_Users'));
     }
 
     public function store(ProjectFormRequest $request)
@@ -63,7 +65,7 @@ class ProjectsController extends Controller
 
 	public function update(ProjectFormRequest $request, $id)
 	{
-		$project=Project::find($id);
+		$project = Project::find($id);
 
 		$project->update($request->all());
 
@@ -99,6 +101,29 @@ class ProjectsController extends Controller
 			)
 			//->where('end_date',null)
 			->orderBy('start_date','asc')
+			->get();
+	}
+
+	private function getPMs()
+	{
+		return DB::table('category_user')
+			->LeftJoin('categories','category_user.category_id','=','categories.id')
+			->LeftJoin('users','category_user.user_id','=','users.id')
+			->select(
+				/*'category_user.category_id as category_id',
+				'categories.name as name',
+				'categories.code as code',
+				'categories.description as description',*/
+				'category_user.user_id as id',
+				'users.name as username',
+				'users.lastname_1 as lastname_1',
+				'users.lastname_2 as lastname_2',
+				'users.role as role',
+				DB::raw("CONCAT(users.name, ' ', users.lastname_1) as fullname")
+			)
+			->where('code','RP')
+			->orWhere('code','RTP')
+			->groupBy('user_id')
 			->get();
 	}
 }

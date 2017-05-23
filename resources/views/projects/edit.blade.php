@@ -39,9 +39,18 @@
 				<input name="end_date" type ="date" class="form-control"  value="{{ $project->end_date }}">
 			</div>		
 
+			<div class="form-group">
+				<label>Project Manager:</label>
+				<select name="pm_id" class="form-control">	
+					@foreach ($PM_Users as $user)
+						<option {{$user->id==$project->pm_id ? 'selected' : ''}} value="{{ $user->id }}">{{ strtoupper($user->fullname) }}</option>
+					@endforeach	  
+				</select>
+			</div>
+
 			<div class="form-group">		
 				<a class="btn btn-primary" href="{{ url('projects') }}"><span class="glyphicon glyphicon-arrow-left"></span> Cancel</a>
-				<button type ="submit" class="btn btn-success"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+				<button type ="submit" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
 			</div>
 				
 			@include('layouts.errors')

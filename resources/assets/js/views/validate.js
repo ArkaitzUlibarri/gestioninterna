@@ -31,7 +31,7 @@ const app = new Vue({
 
 			var d = new Date(stringDate);
 
-			dowOffset = typeof(dowOffset) == 'int' ? dowOffset : 0; //default dowOffset to zero
+			dowOffset = typeof(dowOffset) == 'number' ? dowOffset : 0; //default dowOffset to zero
 		    var newYear = new Date(d.getFullYear(),0,1);
 		    var day = newYear.getDay() - dowOffset; //the day of week the year begins on
 		    day = (day >= 0 ? day : day + 7);
@@ -82,16 +82,26 @@ const app = new Vue({
 			if (confirm("¿Estás seguro de que quieres validar el día?")) {
 				vm.tasks.forEach(function (item) {
 
-					if(vm.role == 'admin'){
+					if(vm.role == 'admin' && item.pm_validation == 1 || item.pm_validation == true){
 						item.admin_validation = 1;
 						console.log("Admin:" + item.admin_validation);
 					}
-					else if (vm.role == 'user'){
+					else if (vm.role == 'user' && isRP()){
 						item.pm_validation = 1;
 						console.log("PM:" + item.pm_validation);
 					}			
 				});
 			}
+		},
+
+		isRP() {
+			let vm  = this;
+
+			vm.categories.forEach(function (item) {
+				if (item.code == "RP") {
+					return true;
+				}						
+			});
 		},
 
 		fetchData(user_id,created_at) {
@@ -108,7 +118,7 @@ const app = new Vue({
 				vm.tasks = response.data;
 				console.log(response.data);
 				vm.supervise();
-				//vm.save();
+				vm.save();
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -117,13 +127,17 @@ const app = new Vue({
 
 		save(){
 			let vm = this;
-			
-			axios.patch('/api/reports/' + vm.newTask.id, vm.newTask)
-			.then(function (response) {
-				console.log(response.data);
-			})
-			.catch(function (error) {
-				console.log(error);
+
+			vm.tasks.forEach(function (item) {
+		
+				axios.patch('/api/reports/' + item.id, item)
+				.then(function (response) {
+					console.log(response.data);
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
+
 			});
 
 		},

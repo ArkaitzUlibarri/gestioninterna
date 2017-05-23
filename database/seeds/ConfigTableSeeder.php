@@ -27,7 +27,7 @@ class ConfigTableSeeder extends Seeder
 		];	
 		*/
 	
-		$absences=[
+		$absences = [
 			['code' =>'m','group'=>'sick leave','name'=>'medical or sick leave'],
 			['code' =>'w','group'=>'permission','name'=>'wedding'],
 			['code' =>'ee','group'=>'permission','name'=>'exam eve'],
@@ -39,7 +39,7 @@ class ConfigTableSeeder extends Seeder
 			['code' =>'h','group'=>'holidays','name'=>'holidays'],
 		];	
 
-		$bank_holidays=[
+		$bank_holidays = [
 
 			 /**
 			 * Fiestas nacionales
@@ -89,7 +89,7 @@ class ConfigTableSeeder extends Seeder
 			 ['date' => Carbon::createFromDate(2017, 12, 7),'code_id'=>8],//7 de Diciembre
 		];
 
-		$bank_holidays_codes=[
+		$bank_holidays_codes = [
 			['type' =>'national','name'=>'España','code'=>'ne'],
 			['type' =>'regional','name'=>'País vasco','code'=>'pv'],
 			['type' =>'regional','name'=>'Comunidad de Madrid','code'=>'cmad'],
@@ -104,6 +104,7 @@ class ConfigTableSeeder extends Seeder
 			['name' =>'DI', 'code' => 'DI', 'description' => 'Director'],
 			['name' =>'RP Junior', 'code' => 'RP', 'description' => 'Responsable de Proyecto'],
 			['name' =>'RP Senior', 'code' => 'RP', 'description' => 'Responsable de Proyecto'],
+			['name' =>'RTP', 'code' => 'RTP', 'description' => 'Responsable Temporal de Proyecto'],
 			['name' =>'RG Junior', 'code' => 'RG', 'description' => 'Responsable de Grupo'],
 			['name' =>'RG Intermediate', 'code' => 'RG', 'description' => 'Responsable de Grupo'],
 			['name' =>'RG Senior', 'code' => 'RG', 'description' => 'Responsable de Grupo'],
@@ -125,7 +126,7 @@ class ConfigTableSeeder extends Seeder
 			['name' =>'BC', 'code' => 'BC', 'description' => 'Becario'],
 		];
 
-		$contract_types=[
+		$contract_types = [
 			['code' =>'100','name'=>'Indefinido','holidays'=>22],
 			['code' =>'401','name'=>'Obra o servicio','holidays'=>22],
 			['code' =>'402','name'=>'Eventual (circunstancias de la producción)','holidays'=>22],
@@ -135,7 +136,7 @@ class ConfigTableSeeder extends Seeder
 			['code' =>'fp','name'=>'Prácticas formación profesional','holidays'=>0],
 		];  
 
-		$customers=[
+		$customers = [
 			['name'=>'3db'],
 			['name'=>'alcatel'],
 			['name'=>'berrio-otxoa ikastetxea'],
@@ -150,20 +151,9 @@ class ConfigTableSeeder extends Seeder
 			['name'=>'varios'],
 			['name'=>'yoigo'],
 		];
-
-		/*
-		$groups=[
-			['name' => '-'],
-			['name' => 'Gestión'],
-			['name' => 'Tunning'],
-			['name' => 'Diseño'],
-			['name' => 'OPT'],
-			['name' => 'RSSI']
-		];
-		*/
 	
 		/*
-		$planes=[
+		$planes = [
 			['area'=>'diseño','name'=>'diseño de emplazamiento','hours'=>8],
 			['area'=>'diseño','name'=>'diseño de rbs600','hours'=>8],
 			['area'=>'diseño','name'=>'diseño de lld en orange spain','hours'=>8],
@@ -301,13 +291,6 @@ class ConfigTableSeeder extends Seeder
 				'name' => $customer['name'],
 			]);
 		}
-		/*
-		foreach ($groups as $group) {
-			DB::table('groups')->insert([
-				'name' => $group['name'],
-			]);
-		}
-		*/
 
 		foreach ($categories as $category) {
 			DB::table('categories')->insert([

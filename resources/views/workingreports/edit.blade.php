@@ -11,18 +11,36 @@
 	</div>
 
 		
-	<div class="panel panel-default">
+	<div class="panel panel-primary">
+
+		<div class="panel-heading">
+		    Report Details
+		 </div>
+
 		<div class="panel-body">
+			<div class="row">
+				<div class="col-xs-12 col-sm-4">	
+					<label>Employee</label>
+					<input class="form-control" type="text" placeholder="{{$report_user->fullname}}" readonly>
+				</div>	
 
-			<div class="col-xs-12 col-sm-4">	
-				<input class="form-control" type="text" placeholder="{{$report_user->fullname}}" readonly>
-			</div>	
+				<div class="col-xs-12 col-sm-2">
+					<label>Report date</label>
+					<input id="datefield" name="created_at" type ="date" class="form-control" min="2017-01-01" v-model="reportdate" v-on:change="fetchData">
+				</div>				
 
-			<div class="col-xs-12 col-sm-2">
-				<input id="datefield" name="created_at" type ="date" class="form-control" min="2017-01-01" v-model="reportdate" v-on:change="fetchData">
-			</div>	
+				<div class="col-xs-12 col-sm-2">
+					<label>Report day</label>
+					<input class="form-control" type="text" v-bind:placeholder="reportDayWeek" readonly>
+				</div>	
 
+				<div class="col-xs-12 col-sm-1">
+					<label>Week</label>
+					<input class="form-control" type="text" v-bind:placeholder="week" readonly>
+				</div>	
+			</div>
 		</div>
+		
 	</div>
 
 	

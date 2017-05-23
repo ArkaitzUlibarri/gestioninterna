@@ -15,61 +15,65 @@ class WorkingReportTableSeeder extends Seeder
      */
     public function run()
     {
-    	$faker=Faker::create();
-
-		$users    = $this->users();
-		$projects = $this->projects();
-		$absences = $this->absences();
-
-		//$activities      = ['proyecto','formacion','ausencia'];
+		$faker           = Faker::create();
+		
+		$users           = $this->users();
+		$projects        = $this->projects();
+		$absences        = $this->absences();
+		
 		$activities      = config('options.activities');
 		$jobTypes        = config('options.typeOfJob');
 		$trainingOptions = config('options.training');
 		
-		$today     = SeederConfig::TODAY();
-		$timeSlots = SeederConfig::TIME_SLOTS;
+		$today           = SeederConfig::TODAY();
+		$timeSlots       = SeederConfig::TIME_SLOTS;
 
 		foreach ($users as $user) {
 			foreach ($activities as $activity) {
 				
-				if($activity=='project'){		
-					$project=$faker->randomElement($projects);
-					$groups=$this->groups($project);
-					$group=$faker->randomElement($groups);
-
-					$projectId     = $project;
-					$groupId       = $group;	
-					$trainingType  = null;
-					$courseGroupId = null;			
-					$absenceId     = null;
-					$jobType       = $faker->randomElement($jobTypes);
+				if($activity == 'project') {		
+					$project        = $faker->randomElement($projects);
+					$groups         = $this->groups($project);
+					$group          = $faker->randomElement($groups);
+					$categoriesUser = $this->categoryUser($user);
+					$category       = $faker->randomElement($categoriesUser);
+					
+					$projectId      = $project;
+					$groupId        = $group;	
+					$categoryId     = $category;
+					$trainingType   = null;
+					$courseGroupId  = null;			
+					$absenceId      = null;
+					$jobType        = $faker->randomElement($jobTypes);
 				}
-				elseif ($activity=='absence') {
+				elseif ($activity == 'absence') {
 					$projectId     = null;
 					$groupId       = null;
+					$categoryId    = null;
 					$trainingType  = null;
 					$courseGroupId = null;	
 					$absenceId     = $faker->randomElement($absences);	
 					$jobType       = null;
 				}
-				elseif ($activity=='training') {
+				elseif ($activity == 'training') {
 					$projectId     = null;
 					$groupId       = null;
+					$categoryId    = null;
 					$trainingType  = $faker->randomElement($trainingOptions);
 					$courseGroupId = null;	
 					$absenceId     = null;	
 					$jobType       = null;
 				}
 				//Comentarios
-				$comments=$faker->text(100);
+				$comments = $faker->text(100);
 
 				//Validaciones
-				$pmValidation=$faker->boolean(50);
+				$pmValidation = $faker->boolean(50);
 				if($pmValidation){
-					$adminValidation=$faker->boolean(50);
+					$adminValidation = $faker->boolean(50);
 				}
 				else{
-					$adminValidation=false;
+					$adminValidation = false;
 				}
 
 
@@ -82,6 +86,7 @@ class WorkingReportTableSeeder extends Seeder
 					//Proyecto
 					'project_id'       => $projectId,
 					'group_id'         => $groupId,
+					'category_id'      => $categoryId,
 					
 					//Formacion
 					'training_type'    => $trainingType,

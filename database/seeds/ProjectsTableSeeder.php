@@ -131,44 +131,49 @@ class ProjectsTableSeeder extends Seeder
 		];
 		*/
 
-        $projects=[
+        $projects = [
 			[
-				'name'               => 'MIND Ingenieria',
-				'description'        => 'Renovación de la red de TX de ORA con equipos Alcatel-Lucent',
-				'customer_id'        => 2,
-				'start_date'         => '2011-12-01',
-				'end_date'           => null,
+				'name'        => 'MIND Ingenieria',
+				'description' => 'Renovación de la red de TX de ORA con equipos Alcatel-Lucent',
+				'customer_id' => 2,
+				'start_date'  => '2011-12-01',
+				'end_date'    => null,
+				'pm_id'       => 6,
 			],
 			[
-				'name'               => 'MEDIDAS WIFI MERCEDES',
-				'description'        => 'Medidas Wifi fábrica MBE Vitoria',
-				'customer_id'        => 11,
-				'start_date'         => '2017-01-01',
-				'end_date'           => '2017-02-01',
+				'name'        => 'MEDIDAS WIFI MERCEDES',
+				'description' => 'Medidas Wifi fábrica MBE Vitoria',
+				'customer_id' => 11,
+				'start_date'  => '2017-01-01',
+				'end_date'    => '2017-02-01',
+				'pm_id'       => 5,
 			],
 			[
-				'name'               => 'RAN EVO',
-				'description'        => 'Proyecto de ampliaciones de red e implantaciones de Orange fusión de DELTA y RAN BAU. Fundamentalmente es un proyecto de despliegue 4G',
-				'customer_id'        => 7,
-				'start_date'         => '2015-09-01',
-				'end_date'           => null,
+				'name'        => 'RAN EVO',
+				'description' => 'Proyecto de ampliaciones de red e implantaciones de Orange fusión de DELTA y RAN BAU. Fundamentalmente es un proyecto de despliegue 4G',
+				'customer_id' => 7,
+				'start_date'  => '2015-09-01',
+				'end_date'    => null,
+				'pm_id'       => 6,
 			],
 			[
-				'name'               => 'ANE TFCA',
-				'description'        => 'Swap Nokia 2G a Ericsson  e Introducción de U900 y LTE. Diseño, monitorización y optimización. Telefónica',
-				'customer_id'        => 7,
-				'start_date'         => '2014-06-01',
-				'end_date'           => null,
+				'name'        => 'ANE TFCA',
+				'description' => 'Swap Nokia 2G a Ericsson  e Introducción de U900 y LTE. Diseño, monitorización y optimización. Telefónica',
+				'customer_id' => 7,
+				'start_date'  => '2014-06-01',
+				'end_date'    => null,
+				'pm_id'       => 8,
 			],
 		];
 
         foreach ($projects as $project) {
 			DB::table('projects')->insert([
-				'name'               => $project['name'],
-				'description'        => $project['description'],
-				'customer_id'        => $project['customer_id'],
-				'start_date'         => $project['start_date'],
-				'end_date'           => $project['end_date'],
+				'name'        => $project['name'],
+				'description' => $project['description'],
+				'customer_id' => $project['customer_id'],
+				'start_date'  => $project['start_date'],
+				'end_date'    => $project['end_date'],
+				'pm_id'       => $project['pm_id'],
 			]);
 		}
     }

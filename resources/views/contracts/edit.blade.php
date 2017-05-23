@@ -89,7 +89,7 @@
 				<a title="Cancel" class="btn btn-primary" href="{{ url('contracts') }}">
 					<span class="glyphicon glyphicon-arrow-left"></span> Cancel
 				</a>
-				<button type="submit" title="Save" class="btn btn-success">
+				<button type="submit" title="Save" class="btn btn-primary">
 					<span class="glyphicon glyphicon-floppy-disk"></span> Save
 				</button>
 			</div>

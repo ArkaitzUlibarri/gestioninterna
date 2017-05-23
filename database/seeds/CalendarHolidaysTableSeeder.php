@@ -15,44 +15,45 @@ class CalendarHolidaysTableSeeder extends Seeder
      */
     public function run()
     {        
-        $faker=Faker::create();
-        $userHolidays=$this->userHolidays();
-        $contracts=$this->contracts();
+        $faker        = Faker::create();
+        $userHolidays = $this->userHolidays();
+        $contracts    = $this->contracts();
 
-        $k=0;
+        $k = 0;
 
-        for ($i=1; $i <=count($userHolidays) ; $i++) { 
-            $usedCurrentYear=$userHolidays[$i]['used_current_year'];
-            $usedLastYear=$userHolidays[$i]['used_last_year'];
-            $usedExtras=$userHolidays[$i]['used_extras'];
-            $contractID=$userHolidays[$i]['contract_id'];
+        for ($i = 1; $i <= count($userHolidays) ; $i++) { 
+            $usedCurrentYear  = $userHolidays[$i]['used_current_year'];
+            $usedLastYear     = $userHolidays[$i]['used_last_year'];
+            $usedExtras       = $userHolidays[$i]['used_extras'];
+            $contractID       = $userHolidays[$i]['contract_id'];
             
-            $user=$contracts[$contractID]['user_id'];
-            $startDate=$contracts[$contractID]['start_date'];
-            $estimatedEndDate=$contracts[$contractID]['estimated_end_date']; 
+            $user             = $contracts[$contractID]['user_id'];
+            $startDate        = $contracts[$contractID]['start_date'];
+            $estimatedEndDate = $contracts[$contractID]['estimated_end_date']; 
+            
+            $startDateYear    = Carbon::createFromFormat('Y-m-d',$startDate)->year;
 
-            $startDateYear=Carbon::createFromFormat('Y-m-d',$startDate)->year;
             if(is_null($estimatedEndDate)){
-                $endDate=Carbon::createFromDate(2017, 12, 31)->copy();
+                $endDate = Carbon::createFromDate(2017, 12, 31)->copy();
             }
             else{
-                $endDate=Carbon::createFromFormat('Y-m-d',$estimatedEndDate);
+                $endDate = Carbon::createFromFormat('Y-m-d',$estimatedEndDate);
             }
 
-            $types=['current_year','last_year','extras'];
-            $quantities=[
+            $types = ['current_year','last_year','extras'];
+            $quantities = [
                 'current_year' => $usedCurrentYear,
                 'last_year'    => $usedLastYear,
                 'extras'       => $usedExtras,
             ];
 
-            $date=Carbon::createFromFormat('Y-m-d',$faker->dateTimeBetween( $startDate, $endDate)->format('Y-m-d'));
+            $date = Carbon::createFromFormat('Y-m-d',$faker->dateTimeBetween( $startDate, $endDate)->format('Y-m-d'));
             
             foreach ($types as $type) {
 
-                $quantityType=$quantities[$type];
+                $quantityType = $quantities[$type];
                 
-                for ($j=1; $j <= $quantityType ; $j++) {  
+                for ($j = 1; $j <= $quantityType ; $j++) {  
 
                     DB::table('calendar_holidays')->insert([
                         'user_id'   => $user,    

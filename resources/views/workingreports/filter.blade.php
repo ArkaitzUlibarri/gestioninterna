@@ -2,7 +2,9 @@
 	<div class="row">
 		<form class="form-inline pull-right" method="GET" action="{{ route('workingreports.index') }}">
 
-			<input type="{{ $auth_user->role =='admin' ? 'text' : 'hidden' }}" name="name" class="form-control"  placeholder="Employee name" >
+			@if(Auth::user()->role =='admin')
+				<input type="text" name="name" class="form-control"  placeholder="Employee name" >
+			@endif
 
 			<select name="date" class="form-control">
 				<option selected="true" disabled="disabled" value="">Period</option>

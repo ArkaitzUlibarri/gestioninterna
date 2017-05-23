@@ -16,7 +16,7 @@ class GroupProjectTableSeeder extends Seeder
     {
     	$faker = Faker::create();
 
-        $projects=[
+        $projects = [
 			'MIND Ingenieria' => [
 				'groups' => [
 					'Gestión',
@@ -67,7 +67,7 @@ class GroupProjectTableSeeder extends Seeder
 			// Obtengo el ID del proyecto
 			$project = DB::Table('projects')->where('name', $projectName)->select('id')->first();
 
-			if($project->id==3) {
+			if($project->id == 3) {
 				$users[0]['PM'] = true;
 			}else{
 				$users[0]['PM'] = false;
@@ -76,7 +76,7 @@ class GroupProjectTableSeeder extends Seeder
 			foreach ($projectValues['groups'] as $groupName) {
 
 				// Completo la tabla pivot "groups 
-				$groupId=$groupProjectId = DB::table('groups')->insertGetId([
+				$groupId = $groupProjectId = DB::table('groups')->insertGetId([
 					'project_id' => $project->id,
 					'name'       => $groupName
 				]);

@@ -34,7 +34,8 @@ class ProjectFormRequest extends FormRequest
                     'description' => 'required|string',
                     'customer_id' => 'required|exists:customers,id',
                     'start_date'  => 'required|date',
-                    'end_date'    => 'nullable|date|after:start_date'
+                    'end_date'    => 'nullable|date|after:start_date',
+                    'pm_id'       => 'required|string'
                 ];
             }
             case 'PUT':
@@ -50,7 +51,8 @@ class ProjectFormRequest extends FormRequest
                     'description' => 'required|string',
                     'customer_id' => 'required|exists:customers,id',
                     'start_date'  => 'required|date',
-                    'end_date'    => 'nullable|date|after:start_date'
+                    'end_date'    => 'nullable|date|after:start_date',
+                    'pm_id'       => 'required|string'
                 ];
             }
             default:break;

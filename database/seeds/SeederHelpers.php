@@ -11,7 +11,7 @@ trait SeederHelpers
 	 */
 	private function users()
 	{
-		$array=DB::table('users')
+		$array = DB::table('users')
 			->select('id')
 			->orderBy('id')
 			->get();
@@ -25,7 +25,7 @@ trait SeederHelpers
 	 */
 	private function projects()
 	{
-		$array=DB::table('projects')
+		$array = DB::table('projects')
 			->select('id')
 			->orderBy('id')
 			->get();
@@ -39,7 +39,7 @@ trait SeederHelpers
 	 */
 	private function groups($projectId)
 	{
-		$array=DB::table('groups')
+		$array = DB::table('groups')
 			->select('id')
 			->where('project_id',$projectId)
 			->orderBy('id')
@@ -55,7 +55,7 @@ trait SeederHelpers
 	 */
 	private function absences()
 	{
-		$array=DB::table('absences')
+		$array = DB::table('absences')
 			->select('id')
 			->orderBy('id')
 			->get();
@@ -63,10 +63,30 @@ trait SeederHelpers
 		return array_pluck($array,'id');	
 	}
 
+	private function categories()
+	{
+		$array = DB::table('categories')
+			->select('id')
+			->orderBy('id')
+			->get();
+
+		return array_pluck($array,'id');	
+	}
+
+	private function categoryUser($userId)
+	{
+		$array = DB::table('category_user')
+			->select('category_id')
+			->where('user_id',$userId)
+			->orderBy('category_id')
+			->get();
+
+		return array_pluck($array,'category_id');	
+	}
 
 	private function userCategories()
 	{
-		$array=DB::table('categories')
+		$array = DB::table('categories')
 			->where('code', '!=', 'di')
 			->where('code', '!=', 'rp')
 			->where('code', '!=', 'ds')
@@ -85,7 +105,7 @@ trait SeederHelpers
 	 */
 	private function planes()
 	{
-		$array=DB::table('planes')
+		$array = DB::table('planes')
 			->select('id')
 			->orderBy('id')
 			->get();
@@ -99,7 +119,7 @@ trait SeederHelpers
 	 */
 	private function courses()
 	{
-		$array=DB::table('courses')
+		$array = DB::table('courses')
 			->select('id','plan_id')
 			->get();
 
@@ -117,7 +137,7 @@ trait SeederHelpers
 	 */
 	private function courseGroups()
 	{
-		$array=DB::table('course_groups')
+		$array = DB::table('course_groups')
 			->select('id','start_date','end_date','hours')
 			->get();
 
@@ -139,7 +159,7 @@ trait SeederHelpers
 	 */
 	private function contractTypes()
 	{
-		$array=DB::table('contract_types')
+		$array = DB::table('contract_types')
 			->select('id','holidays')
 			->get();
 
@@ -158,11 +178,11 @@ trait SeederHelpers
 	 */
 	private function contracts()
 	{
-		$array=DB::table('contracts')
+		$array = DB::table('contracts')
 			->select('id','user_id','start_date','estimated_end_date','end_date','week_hours','contract_type_id')
 			->get();
 
-		$contracts=array();
+		$contracts = array();
 		
 		foreach ($array as $contract) {
 	         $contracts[$contract->id] = [
@@ -183,12 +203,12 @@ trait SeederHelpers
 	 */
 	private function userHolidays()
 	{
-		$array=DB::table('user_holidays')
+		$array = DB::table('user_holidays')
 			->select('contract_id','used_current_year','used_last_year','used_extras')
 			->get();
 
-		$holidays=array();
-		$i=0;
+		$holidays = array();
+		$i = 0;
 		foreach ($array as $holiday) {
 			$i++;
 	         $holidays[$i] = [

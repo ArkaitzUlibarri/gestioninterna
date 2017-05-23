@@ -16,8 +16,11 @@
                     <th>Stated Hours</th>
                     <th>Validated (RP)</th>
                     <th>Validated (ADMIN)</th>
-                    <th>Actions</th>
-
+                    
+                    @if(Auth::user()->role =='admin')
+                        <th>Actions</th>
+                    @endif
+                    
                 </thead>
        
                 <tbody>
@@ -28,16 +31,20 @@
                             @{{ item.created_at }}  
                         </td>
                         <td>@{{ item.horas_reportadas }}</td>  
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <button title="Invalidate" class="btn btn-danger btn-xs" v-on:click="validate(item.user_id, item.created_at)">
-                                <span class="glyphicon glyphicon-remove"></span>
-                            </button>
-                            <button title="Validate" class="btn btn-success btn-xs" v-on:click.prevent="validate(item.user_id, item.created_at)">
-                                <span class="glyphicon glyphicon-ok"></span>
-                            </button>
-                        </td>
+                        <td>@{{ item.horas_validadas_pm }} </td>
+                        <td>@{{ item.horas_validadas_admin }}</td>
+
+                        @if(Auth::user()->role =='admin')
+                            <td>
+                                <button title="Invalidate" class="btn btn-danger btn-xs" v-on:click="validate(item.user_id, item.created_at)">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                                <button title="Validate" class="btn btn-success btn-xs" v-on:click.prevent="validate(item.user_id, item.created_at)">
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                </button>
+                            </td>
+                        @endif
+
                     </tr>
                 </tbody>
                      

@@ -30,7 +30,7 @@
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
                         @else
-                            @if(Auth::user()->role=='admin')
+                            @if(Auth::user()->role =='admin')
                                  <li><a href  = "{{ url('users') }}">Users</a></li> 
                                  <li><a href  = "{{ url('contracts') }}">Contracts</a></li>
                                  <li><a href = "{{ url('projects') }}">Projects</a></li>  

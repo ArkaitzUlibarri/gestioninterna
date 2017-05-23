@@ -15,9 +15,9 @@ class ReductionsTableSeeder extends Seeder
      */
     public function run()
     {
-        $faker =Faker::create();
+        $faker = Faker::create();
 
-        $reductions=[
+        $reductions = [
             [
                 'contract_id' => 6,
                 'start_date'  => $faker->dateTimeBetween('-4 months','-3 months'),
