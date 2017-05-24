@@ -191,16 +191,8 @@
 
 	<a class="btn btn-primary" href="{{ url('workingreports') }}">Back</a>
 
-
 	@include('layouts.errors')
 
-	<pre>@{{$data.newTask}}</pre>
-	
-	<!--
-	<pre>@{{$data}}</pre>
-	<pre>@{{$data.categoryList}}</pre>
-	<pre>@{{$data.categories}}</pre>
-	-->
 </div>
 
 

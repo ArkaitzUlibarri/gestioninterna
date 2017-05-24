@@ -142,13 +142,21 @@ const app = new Vue({
 		dateValidation() {
 			var today = this.getDate();
 			var datefield = document.getElementById("datefield").value;
-			//TODO FORMAT VALIDATION
-			if(datefield <= today && moment.isDate(datefield) ) {
-				this.fetchData();
+
+			if(moment.isDate(datefield)){
+
+				if(datefield <= today) {
+					this.fetchData();
+				}
+				else{
+					console.log("Fecha mayor que hoy")
+				}
+				
 			}
 			else{
-				console.log("Fecha mayor que hoy o con formato erróneo")
+				console.log("Fecha con formato erróneo")
 			}
+
 		},
 
 		getDate() {

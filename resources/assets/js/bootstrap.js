@@ -50,6 +50,13 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 // 
 
 /**
+ * Moment
+ */
+
+window.moment = require('moment');
+window.moment.locale('en');
+
+/**
  * Instancia de Vue para la gestion de eventos.
  */
 window.Event = new Vue();

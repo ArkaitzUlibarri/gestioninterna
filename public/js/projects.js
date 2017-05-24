@@ -1,6 +1,6 @@
-webpackJsonp([1],{
+webpackJsonp([2],{
 
-/***/ 16:
+/***/ 132:
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -16,7 +16,7 @@ webpackJsonp([1],{
 /**
  * Registro los componentes necesarios.
  */
-Vue.component('group-template', __webpack_require__(42));
+Vue.component('group-template', __webpack_require__(159));
 
 var app = new Vue({
 
@@ -148,14 +148,180 @@ var app = new Vue({
 
 /***/ }),
 
-/***/ 19:
+/***/ 135:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 3:
+/***/ 153:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    template: '#group-template',
+
+    props: ['group', 'index'],
+
+    methods: {
+        editGroup: function editGroup() {
+            Event.$emit('Edit', this.index, this.group);
+        },
+        deleteGroup: function deleteGroup() {
+            Event.$emit('Delete', this.index, this.group);
+        }
+    }
+});
+
+/***/ }),
+
+/***/ 156:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(4)();
+exports.push([module.i, "\n.group-panel {\n    position:relative;\n    border-bottom: 1px solid #ccc;\n    padding: .4em;\n    margin-bottom: .5em;\n}\n.panel-right-corner {\n    position: absolute;\n    right: 2em;\n    top:1em;\n}\n.action {\n    cursor: pointer;\n    //display: block;\n    //margin: auto ;\n}\n.group-enabled{\n    background-color: #b0f2b8;\n}\n\n", ""]);
+
+/***/ }),
+
+/***/ 159:
+/***/ (function(module, exports, __webpack_require__) {
+
+
+/* styles */
+__webpack_require__(163)
+
+var Component = __webpack_require__(6)(
+  /* script */
+  __webpack_require__(153),
+  /* template */
+  __webpack_require__(161),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/home/vagrant/Code/gestioninterna/resources/assets/js/components/Group.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Group.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1a44a115", Component.options)
+  } else {
+    hotAPI.reload("data-v-1a44a115", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ 161:
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "col-xs-12"
+  }, [_c('div', {
+    staticClass: "group-panel col-sm-4",
+    class: {
+      'group-enabled': _vm.group.enabled
+    }
+  }, [_c('h5', {
+    staticClass: "action",
+    on: {
+      "click": _vm.editGroup
+    }
+  }, [_c('b', [_vm._v(_vm._s(_vm.group.name.toUpperCase().substring(0, 30))), (_vm.group.name.length > 30) ? _c('span', [_vm._v("...")]) : _vm._e()])]), _vm._v(" "), _c('div', {
+    staticClass: "panel-right-corner"
+  }, [_c('div', {
+    staticClass: "action",
+    on: {
+      "click": _vm.deleteGroup
+    }
+  }, [_c('span', {
+    staticClass: "glyphicon glyphicon-trash",
+    attrs: {
+      "aria-hidden": "true"
+    }
+  })])])])])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-1a44a115", module.exports)
+  }
+}
+
+/***/ }),
+
+/***/ 163:
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(156);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(7)("1e74c370", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-1a44a115!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Group.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-1a44a115!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Group.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ 168:
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(132);
+module.exports = __webpack_require__(135);
+
+
+/***/ }),
+
+/***/ 4:
 /***/ (function(module, exports) {
 
 /*
@@ -212,164 +378,7 @@ module.exports = function() {
 
 /***/ }),
 
-/***/ 37:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    template: '#group-template',
-
-    props: ['group', 'index'],
-
-    methods: {
-        editGroup: function editGroup() {
-            Event.$emit('Edit', this.index, this.group);
-        },
-        deleteGroup: function deleteGroup() {
-            Event.$emit('Delete', this.index, this.group);
-        }
-    }
-});
-
-/***/ }),
-
-/***/ 40:
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(3)();
-exports.push([module.i, "\n.group-panel {\n    position:relative;\n    border-bottom: 1px solid #ccc;\n    padding: .4em;\n    margin-bottom: .5em;\n}\n.panel-right-corner {\n    position: absolute;\n    right: 2em;\n    top:1em;\n}\n.action {\n    cursor: pointer;\n    //display: block;\n    //margin: auto ;\n}\n.group-enabled{\n    background-color: #b0f2b8;\n}\n\n", ""]);
-
-/***/ }),
-
-/***/ 42:
-/***/ (function(module, exports, __webpack_require__) {
-
-
-/* styles */
-__webpack_require__(46)
-
-var Component = __webpack_require__(5)(
-  /* script */
-  __webpack_require__(37),
-  /* template */
-  __webpack_require__(44),
-  /* scopeId */
-  null,
-  /* cssModules */
-  null
-)
-Component.options.__file = "/home/vagrant/Code/gestioninterna/resources/assets/js/components/Group.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] Group.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1a44a115", Component.options)
-  } else {
-    hotAPI.reload("data-v-1a44a115", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-
-/***/ 44:
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "col-xs-12"
-  }, [_c('div', {
-    staticClass: "group-panel col-sm-4",
-    class: {
-      'group-enabled': _vm.group.enabled
-    }
-  }, [_c('h5', {
-    staticClass: "action",
-    on: {
-      "click": _vm.editGroup
-    }
-  }, [_c('b', [_vm._v(_vm._s(_vm.group.name.toUpperCase().substring(0, 30))), (_vm.group.name.length > 30) ? _c('span', [_vm._v("...")]) : _vm._e()])]), _vm._v(" "), _c('div', {
-    staticClass: "panel-right-corner"
-  }, [_c('div', {
-    staticClass: "action",
-    on: {
-      "click": _vm.deleteGroup
-    }
-  }, [_c('span', {
-    staticClass: "glyphicon glyphicon-trash",
-    attrs: {
-      "aria-hidden": "true"
-    }
-  })])])])])
-},staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-1a44a115", module.exports)
-  }
-}
-
-/***/ }),
-
-/***/ 46:
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(40);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(6)("1e74c370", content, false);
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-1a44a115!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Group.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-1a44a115!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Group.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-
-/***/ 5:
+/***/ 6:
 /***/ (function(module, exports) {
 
 module.exports = function normalizeComponent (
@@ -423,16 +432,7 @@ module.exports = function normalizeComponent (
 
 /***/ }),
 
-/***/ 50:
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(16);
-module.exports = __webpack_require__(19);
-
-
-/***/ }),
-
-/***/ 6:
+/***/ 7:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -451,7 +451,7 @@ if (typeof DEBUG !== 'undefined' && DEBUG) {
   ) }
 }
 
-var listToStyles = __webpack_require__(7)
+var listToStyles = __webpack_require__(8)
 
 /*
 type StyleObject = {
@@ -654,7 +654,7 @@ function applyToTag (styleElement, obj) {
 
 /***/ }),
 
-/***/ 7:
+/***/ 8:
 /***/ (function(module, exports) {
 
 /**
@@ -688,4 +688,4 @@ module.exports = function listToStyles (parentId, list) {
 
 /***/ })
 
-},[50]);
+},[168]);
