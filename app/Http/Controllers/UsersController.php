@@ -29,17 +29,17 @@ class UsersController extends Controller
 
     public function edit($id)
     {
-    	$user=$this->getUser($id);
-
-    	$roles = config('options.roles');
+        $user  = $this->getUser($id);
+        
+        $roles = config('options.roles');
 		
     	return view('users.edit',compact('user','roles'));
     }
 
     public function show($id)
     {
-        $user=$this->getUser($id);
-
+        $user  = $this->getUser($id);
+        
         $roles = config('options.roles');
         
         return view('users.show',compact('user','roles'));
@@ -69,7 +69,7 @@ class UsersController extends Controller
 
     public function update(UserFormRequest $request,$id)
     {
-        $user=User::find($id);
+        $user = User::find($id);
 
         $user->update($request->all());
 

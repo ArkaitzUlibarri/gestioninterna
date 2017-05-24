@@ -29,6 +29,7 @@ class WorkingReportController extends Controller
 	{
 		$today      = Carbon::now();
 		$auth_user  = Auth::user();
+		$users      = User::all();
 		$categories = $auth_user->categories;
 
 		if($auth_user->role == config('options.roles')[0]) {		
@@ -41,14 +42,14 @@ class WorkingReportController extends Controller
 		//$workingreports = $this->getReportsPerUserPerDay($user_id,$admin);
 		$workingreports = $this->workingreportRepository->search($request->all(), $auth_user->id,$admin);
 
-		return view('workingreports.index', compact('workingreports','auth_user','categories','today'));
+		return view('workingreports.index', compact('workingreports','users','auth_user','categories','today'));
 	}
 
 	public function edit($user_id,$date)
 	{
 		$absences       = Absence::all();
 		$auth_user      = Auth::user();
-		$report_user	= User::find($user_id);
+		$report_user    = User::find($user_id);
 		$workingreports = $this->getReportsPerDay($user_id,$date);
 		$groupProjects  = $this->getGroupsProjectsByUser($user_id);
 		$categories     = $this->getCategories($user_id);

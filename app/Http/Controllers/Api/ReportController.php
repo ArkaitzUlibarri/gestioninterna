@@ -29,12 +29,13 @@ class ReportController extends ApiController
 			return $this->respondNotAcceptable($validator->errors()->all());
 		}
 
-		$data=DB::table('working_report')
+		$data = DB::table('working_report')
 			->where('user_id', $request->get('user_id'))
 			->where('created_at', $request->get('created_at'))
 			->leftJoin('projects', 'working_report.project_id','=','projects.id')
 			->leftJoin('absences', 'working_report.absence_id','=','absences.id')
 			->leftJoin('groups', 'working_report.group_id','=','groups.id')
+			->leftJoin('categories', 'working_report.category_id','=','categories.id')
 			->select(
 				'working_report.id',
 				'working_report.user_id',
@@ -44,6 +45,8 @@ class ReportController extends ApiController
 				'projects.name as project',
 				'working_report.group_id',
 				'groups.name as group',
+				'working_report.category_id',
+				'categories.description as category',
 				'working_report.training_type',
 				'working_report.course_group_id',
 				'working_report.absence_id',
@@ -115,7 +118,7 @@ class ReportController extends ApiController
 			->where('id',$id)
 			->update($array);
 
-		return $this->respond($confirmation);
+		return $this->respond("Updated index:" . $id);
 
 	}
 
@@ -136,7 +139,7 @@ class ReportController extends ApiController
 			->where('id',$id)
 			->delete();
 
-		return $this->respond();
+		return $this->respond("Deleted index:" . $id);
 	}
 
 

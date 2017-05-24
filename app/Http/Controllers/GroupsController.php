@@ -18,14 +18,14 @@ class GroupsController extends Controller
 
     public function index()
     {  
-    	$groups=$this->getGroups();
+    	$groups = $this->getGroups();
 
     	return view('groups.index',compact('groups'));
     }
 
     public function edit($id)
     {
-        $project=Project::find($id);
+        $project = Project::find($id);
 
         return view('projects.addgroup',compact('project'));
     }

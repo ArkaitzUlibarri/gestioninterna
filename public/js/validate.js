@@ -50,7 +50,7 @@ var app = new Vue({
 					nday = nYear.getDay() - dowOffset;
 					nday = nday >= 0 ? nday : nday + 7;
 					/*if the next year starts before the middle of
-       the week, it is week #1 of that year*/
+     the week, it is week #1 of that year*/
 					weeknum = nday < 4 ? 1 : 53;
 				}
 			} else {

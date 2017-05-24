@@ -26,7 +26,7 @@
 
 				<div class="col-xs-12 col-sm-2">
 					<label>Report date</label>
-					<input id="datefield" name="created_at" type ="date" class="form-control" min="2017-01-01" v-model="reportdate" v-on:change="fetchData">
+					<input id="datefield" name="created_at" type ="date" class="form-control" min="2017-01-01" v-model="reportdate" v-on:blur="dateValidation">
 				</div>				
 
 				<div class="col-xs-12 col-sm-2">
@@ -121,7 +121,7 @@
 
 					<div class="form-group col-xs-12 col-sm-3" v-show="newTask.project != ''">
 						<label>Group</label>
-						<select class="form-control" v-on:change="categoriesLoad" v-model="newTask.group" >
+						<select class="form-control" v-model="newTask.group" >
 							<option value="">-</option>
 							<template v-for="(group, index) in groupList">
 								<option :group="group" :index="index">@{{group}}</option>
@@ -194,8 +194,10 @@
 
 	@include('layouts.errors')
 
-	<!--
 	<pre>@{{$data.newTask}}</pre>
+	
+	<!--
+	<pre>@{{$data}}</pre>
 	<pre>@{{$data.categoryList}}</pre>
 	<pre>@{{$data.categories}}</pre>
 	-->
@@ -208,7 +210,7 @@
 	<script type = "text/javascript">
 		var reportdate    = '{{ $date }}';
 		var role          = '{{ $auth_user->role }}';
-		var user          = <?php echo json_encode($report_user);?>;
+		var report_user   = <?php echo json_encode($report_user);?>;
 		var absences      = <?php echo json_encode($absences);?>;
 		var groupProjects = <?php echo json_encode($groupProjects);?>;
 		var categories    = <?php echo json_encode($categories);?>;

@@ -18,11 +18,11 @@ const app = new Vue({
 	el: '#report',
 
 	data: {			
-		user: user,
+		user: report_user,
 		role: role,
 		reportdate: reportdate,
 		reportDayWeek: "",
-		week:0,
+		week: 0,
 
 		categories: categories,
 		groupProjects: groupProjects,
@@ -134,24 +134,43 @@ const app = new Vue({
 		this.fetchData();
 		this.project();
 		this.categoriesLoad();
-		this.maxDate();
+		this.setMaxDate();
 	},
 
 	methods: {
 
-		maxDate(){
+		dateValidation() {
+			var today = this.getDate();
+			var datefield = document.getElementById("datefield").value;
+			//TODO FORMAT VALIDATION
+			if(datefield <= today && moment.isDate(datefield) ) {
+				this.fetchData();
+			}
+			else{
+				console.log("Fecha mayor que hoy o con formato erróneo")
+			}
+		},
+
+		getDate() {
 			var today = new Date();
 			var dd    = today.getDate();
-			var mm    = today.getMonth()+1; //January is 0!
+			var mm    = today.getMonth() + 1; //January is 0!
 			var yyyy  = today.getFullYear();
 
-			if(dd<10){
+			if(dd < 10){
 				dd ='0'+dd
 			} 
-			if(mm<10){
+			if(mm < 10){
 				mm ='0'+mm
 			} 
-			today = yyyy+'-'+mm+'-'+dd;
+			today = yyyy +'-'+ mm +'-'+ dd;
+
+			return today;
+		},
+
+		setMaxDate(){
+			var today = this.getDate();
+
 			document.getElementById("datefield").setAttribute("max", today);
 		},
 
@@ -207,6 +226,7 @@ const app = new Vue({
 
 		editTask() {
 			this.newTask.time_slots = this.newTask.time*4;
+			this.nameTraduction();
 			this.save();
 		},
 		
@@ -290,14 +310,13 @@ const app = new Vue({
 				}				
 			});
 
-			this.groupList=[...setList];
+			this.groupList = [...setList];
 
 		},
 
 		categoriesLoad(){
-			this.nameTraduction();
 			
-			let vm      = this;
+			let vm = this;
 			let setList = new Set();
 			
 			vm.categories.forEach(function(item) {						
@@ -327,9 +346,13 @@ const app = new Vue({
 		
 			//GrupoProyecto
 			if(this.newTask.activity == 'project') {		
+				for (var key = this.categories.length - 1; key >= 0; key--) {
+					if(this.categories[key].description == this.newTask.category){
+						this.newTask.category_id = this.categories[key].category_id;
+					}
+				}
 				for (var key = this.groupProjects.length - 1; key >= 0; key--) {
 					if(this.groupProjects[key].group == this.newTask.group){
-						this.newTask.category_id = this.groupProjects[key].category_id;
 						this.newTask.group_id    = this.groupProjects[key].group_id;
 						this.newTask.project_id  = this.groupProjects[key].project_id;
 					}
@@ -357,9 +380,14 @@ const app = new Vue({
 		
 			//GrupoProyecto
 			if( this.newTask.activity == 'project' ) {		
+				for (let key = this.categories.length - 1; key >= 0; key--) {
+					if( this.newTask.category_id == this.categories[key].category_id ) {	
+						this.newTask.category = this.categories[key].description;
+						break;
+					}
+				}
 				for (let key = this.groupProjects.length - 1; key >= 0; key--) {
 					if( this.newTask.group_id == this.groupProjects[key].group_id ) {	
-						this.newTask.category = this.groupProjects[key].category;
 						this.newTask.group    = this.groupProjects[key].group;
 						this.newTask.project  = this.groupProjects[key].project;
 						break;
