@@ -16,7 +16,8 @@ class Project extends Model
 		'description', 		
 		'customer_id', 
 		'start_date',
-		'end_date'
+		'end_date',
+		'pm_id',
     ];
 
     /**

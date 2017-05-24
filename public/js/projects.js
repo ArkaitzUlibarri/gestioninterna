@@ -87,6 +87,12 @@ var app = new Vue({
 			}).then(function (response) {
 				vm.groups = response.data;
 				console.log(response.data);
+
+				vm.groups.forEach(function (element, index, array) {
+					if (element.name == '-') {
+						array.splice(index, 1);
+					}
+				});
 			}).catch(function (error) {
 				console.log(error);
 			});
@@ -136,7 +142,7 @@ var app = new Vue({
 					vm.groups.splice(index, 1);
 					vm.initializeGroup();
 				} else {
-					console.log("No es posible borrar este grupo, al tener reportes asociados");
+					console.log("No es posible borrar este grupo");
 				}
 				//---------------------------------------
 			}).catch(function (error) {

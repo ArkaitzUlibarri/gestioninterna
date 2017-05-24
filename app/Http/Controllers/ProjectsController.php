@@ -54,11 +54,28 @@ class ProjectsController extends Controller
 
     public function store(ProjectFormRequest $request)
 	{		
+		/*
 		$project = new Project;
-		
-        $project->fill($request->all());
+	    $project->fill($request->all());
+	    $project->save();
+	    */
+	   
+    	try{
+	    	DB::beginTransaction();
+			//******************************************************************************
+		    $array = $request->all();
+		    unset($array['_token']);
 
-        $project->save();
+		    $id = DB::table('projects')->insertGetId($array);
+
+			DB::table('groups')->insert(['project_id' =>$id, 'name' => '-','enabled'=> 1]);
+			//******************************************************************************
+			DB::commit();/* Transaction successful. */
+		
+		}catch(\Exception $e){       
+
+		    DB::rollback(); /* Transaction failed. */ 
+		}
 
 		return redirect('/projects');
 	}

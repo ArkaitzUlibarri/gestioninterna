@@ -96,18 +96,20 @@ class GroupController extends ApiController
 		if($group == null) {
 			return $this->respondNotFound();
 		}
+		
+		if($group->name !='-'){
+			$reports = DB::table('working_report')
+				->where('group_id',$id)
+				->get()
+				->toArray();
 
-		$reports = DB::table('working_report')
-			->where('group_id',$id)
-			->get()
-			->toArray();
+			if($reports == []) {
+				$group = DB::table('groups')
+					->where('id',$id)
+					->delete();
 
-		if($reports == []) {
-			$group = DB::table('groups')
-				->where('id',$id)
-				->delete();
-
-			return $this->respond(true);
+				return $this->respond(true);
+			}
 		}
 
 		return $this->respond(false);
