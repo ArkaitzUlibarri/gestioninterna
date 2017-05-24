@@ -20,8 +20,8 @@ const app = new Vue({
 	},
 
 	mounted() {
-		this.reports = workingreport;
-		this.role = auth_user.role;
+		this.reports         = workingreport;
+		this.role            = auth_user.role;
 		this.user_categories = categories;
 	},
 
