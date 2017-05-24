@@ -18,12 +18,16 @@
 							<label>Name:</label>
 							<input name="name" type ="text" class="form-control" placeholder="Name" value="{{ old('name') }}" >
 						</div>
+					</div>
 
+					<div class="row">
 						<div class="form-group col-xs-12 col-sm-4"">
 							<label>Lastname 1:</label>
 							<input name="lastname_1" type ="text" class="form-control" placeholder="Lastname 1" value="{{ old('lastname_1') }}" >
 						</div>
+					</div>
 
+					<div class="row">
 						<div class="form-group col-xs-12 col-sm-4"">
 							<label>Lastname 2:</label>
 							<input name="lastname_2" type ="text" class="form-control" placeholder="Lastname 2" value="{{ old('lastname_2') }}">
@@ -35,7 +39,21 @@
 							<label>Email:</label>
 							<input name="email" type="email" class="form-control" placeholder="Email" value="{{ old('email') }}">
 						</div>
-								
+					</div>
+					
+					<!--
+					<div class="row">
+						<div class ="form-group col-xs-12 col-sm-4">
+							<label>Email:</label>
+							<div class="input-group">
+						  		<input type="text" class="form-control" placeholder="Email" aria-describedby="basic-addon2">
+						  		<span class="input-group-addon" id="basic-addon2">@3dbconsult.com</span>
+							</div>
+						</div>
+					</div>	
+					-->
+
+					<div class="row">
 						<div class ="form-group col-xs-12 col-sm-2">
 							<label>Role:</label>
 							<select class="form-control" name="role">

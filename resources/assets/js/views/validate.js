@@ -31,23 +31,23 @@ const app = new Vue({
 
 			var d = new Date(stringDate);
 
-			dowOffset = typeof(dowOffset) == 'number' ? dowOffset : 0; //default dowOffset to zero
-		    var newYear = new Date(d.getFullYear(),0,1);
-		    var day = newYear.getDay() - dowOffset; //the day of week the year begins on
-		    day = (day >= 0 ? day : day + 7);
-		    var daynum = Math.floor((d.getTime() - newYear.getTime() - 
+			dowOffset   = typeof(dowOffset) == 'number' ? dowOffset : 0; //default dowOffset to zero
+			var newYear = new Date(d.getFullYear(),0,1);
+			var day     = newYear.getDay() - dowOffset; //the day of week the year begins on
+			day         = (day >= 0 ? day : day + 7);
+			var daynum  = Math.floor((d.getTime() - newYear.getTime() - 
 		    (d.getTimezoneOffset()-newYear.getTimezoneOffset())*60000)/86400000) + 1;
 		    var weeknum;
 		    //if the year starts before the middle of a week
 		    if(day < 4) {
 		        weeknum = Math.floor((daynum+day-1)/7) + 1;
 		        if(weeknum > 52) {
-		            nYear = new Date(d.getFullYear() + 1,0,1);
-		            nday = nYear.getDay() - dowOffset;
-		            nday = nday >= 0 ? nday : nday + 7;
-		            /*if the next year starts before the middle of
-		              the week, it is week #1 of that year*/
-		            weeknum = nday < 4 ? 1 : 53;
+					nYear = new Date(d.getFullYear() + 1,0,1);
+					nday  = nYear.getDay() - dowOffset;
+					nday  = nday >= 0 ? nday : nday + 7;
+					/*if the next year starts before the middle of
+					the week, it is week #1 of that year*/
+					weeknum = nday < 4 ? 1 : 53;
 		        }
 		    }
 		    else {
@@ -60,13 +60,13 @@ const app = new Vue({
 			var d = new Date(stringDate);
 
 			var weekday = new Array(7);
-			weekday[0] =  "Sunday";
-			weekday[1] = "Monday";
-			weekday[2] = "Tuesday";
-			weekday[3] = "Wednesday";
-			weekday[4] = "Thursday";
-			weekday[5] = "Friday";
-			weekday[6] = "Saturday";
+			weekday[0]  = "Sunday";
+			weekday[1]  = "Monday";
+			weekday[2]  = "Tuesday";
+			weekday[3]  = "Wednesday";
+			weekday[4]  = "Thursday";
+			weekday[5]  = "Friday";
+			weekday[6]  = "Saturday";
 
 			return weekday[d.getDay()];
 		},
