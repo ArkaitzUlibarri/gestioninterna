@@ -2,7 +2,7 @@
 	<div class="row">
 		<form class="form-inline pull-right" method="GET" action="{{ route('workingreports.index') }}">
 
-			@if(Auth::user()->role =='admin')
+			@if(Auth::user()->isRole('admin') || Auth::user()->isPM())
 				<input type="text" name="name" class="form-control"  placeholder="Employee name" >
 			@endif
 

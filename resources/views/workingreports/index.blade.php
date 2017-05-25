@@ -17,7 +17,7 @@
                     <th>Validated (RP)</th>
                     <th>Validated (ADMIN)</th>
                     
-                    @if(Auth::user()->role =='admin')
+                    @if(Auth::user()->isRole('admin') || Auth::user()->isPM())
                         <th>Actions</th>
                     @endif
                     
@@ -50,7 +50,7 @@
                             </div>  
                         </td>
 
-                        @if(Auth::user()->role =='admin')
+                        @if(Auth::user()->isRole('admin') || Auth::user()->isPM())
                             <td>
                                 <button title="Invalidate" class="btn btn-danger btn-xs" v-on:click="validate(item.user_id, item.created_at)">
                                     <span class="glyphicon glyphicon-remove"></span>
@@ -68,12 +68,11 @@
         </div>
 
         <div align="right" class="form-group">  
-           <a type="button" title="New Report" class="btn btn-default" href="{{ url('/workingreports/add', [$auth_user->id,$today->format('Y-m-d')] ) }}">
+           <a type="button" title="New Report" class="btn btn-default" v-bind:href="'/workingreports/add/'+user_id +'/'+ getDate() +'/'" >
                 New Report
             </a>
         </div>
-        
-        
+              
         <pre>@{{$data}}</pre>
 
         
@@ -83,8 +82,8 @@
 @push('script-bottom')
     <script type = "text/javascript">
         var workingreport = <?php echo json_encode($workingreports);?>;
-        var auth_user = <?php echo json_encode($auth_user);?>;
-        var categories = <?php echo json_encode($categories);?>;
+        var auth_user     = <?php echo json_encode($auth_user);?>;
+        var pm            = '{{ $auth_user->isPM() }}';
     </script>
 
     <script src="{{ asset('js/validate.js') }}"></script>

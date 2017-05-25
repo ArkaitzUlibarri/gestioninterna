@@ -27,22 +27,16 @@ class WorkingReportController extends Controller
 
 	public function index(Request $request)
 	{
-		$today      = Carbon::now();
-		$auth_user  = Auth::user();
-		$users      = User::all();
-		$categories = $auth_user->categories;
+		$auth_user   = Auth::user();
+		$admin       = $auth_user->isRole(config('options.roles')[0]) ? true : false;
+		$pm          = $auth_user->isPM() ? true : false;
+		$pm_projects = $auth_user->PMProjects();
 
-		if($auth_user->role == config('options.roles')[0]) {		
-			$admin = true;
-		}
-		else {
-			$admin = false;
-		}
+		$workingreports = $this->workingreportRepository->search($request->all(), $auth_user->id, $admin, $pm, $pm_projects);//$workingreports = $this->getReportsPerUserPerDay($user_id,$admin);
 		
-		//$workingreports = $this->getReportsPerUserPerDay($user_id,$admin);
-		$workingreports = $this->workingreportRepository->search($request->all(), $auth_user->id,$admin);
+		$users       = User::all();
 
-		return view('workingreports.index', compact('workingreports','users','auth_user','categories','today'));
+		return view('workingreports.index', compact('workingreports','users','auth_user'));
 	}
 
 	public function edit($user_id,$date)

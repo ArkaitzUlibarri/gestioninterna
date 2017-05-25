@@ -86,13 +86,13 @@ const app = new Vue({
 			.then(function (response) {
 				vm.groups = response.data;	
 				console.log(response.data);		
-
+				//****************************************************
 				vm.groups.forEach(function(element,index,array) {
 					if(element.name =='-'){
 						array.splice(index, 1);
 					}
 				});
-				
+				//****************************************************
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -128,7 +128,7 @@ const app = new Vue({
 					console.log(response.data);
 					//---------------------------------------
 					console.log("addGroup");
-					vm.newGroup.id=response.data;
+					vm.newGroup.id = response.data;
 					vm.groups.push(vm.newGroup);
 					vm.initializeGroup();
 					//---------------------------------------

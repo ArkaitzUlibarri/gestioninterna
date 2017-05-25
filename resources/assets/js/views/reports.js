@@ -142,7 +142,7 @@ const app = new Vue({
 		dateValidation() {
 			var today = this.getDate();
 			var datefield = document.getElementById("datefield").value;
-
+			console.log(datefield);
 			if(moment.isDate(datefield)){
 
 				if(datefield <= today) {

@@ -18,20 +18,38 @@ var app = new Vue({
 	el: '#app',
 
 	data: {
+		role: '',
+		pm: 0,
+		user_id: -1,
 		reports: [],
-		user_categories: [],
-		tasks: [],
-		role: ''
+		tasks: []
 	},
 
 	mounted: function mounted() {
 		this.reports = workingreport;
 		this.role = auth_user.role;
-		this.user_categories = categories;
+		this.user_id = auth_user.id;
+		this.pm = pm;
 	},
 
 
 	methods: {
+		getDate: function getDate() {
+			var today = new Date();
+			var dd = today.getDate();
+			var mm = today.getMonth() + 1; //January is 0!
+			var yyyy = today.getFullYear();
+
+			if (dd < 10) {
+				dd = '0' + dd;
+			}
+			if (mm < 10) {
+				mm = '0' + mm;
+			}
+			today = yyyy + '-' + mm + '-' + dd;
+
+			return today;
+		},
 		getWeek: function getWeek(dowOffset, stringDate) {
 
 			var d = new Date(stringDate);
@@ -91,15 +109,6 @@ var app = new Vue({
 					}
 				});
 			}
-		},
-		isRP: function isRP() {
-			var vm = this;
-
-			vm.categories.forEach(function (item) {
-				if (item.code == "RP") {
-					return true;
-				}
-			});
 		},
 		fetchData: function fetchData(user_id, created_at) {
 			var vm = this;

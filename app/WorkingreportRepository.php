@@ -27,7 +27,21 @@ class WorkingreportRepository
 		return new Workingreport;
 	}
 
-    public function search(array $data = array(), $user_id, $admin)
+    public function usersByProject($project)
+    {
+        return DB::table('projects')
+            ->join('groups','projects.id','=','groups.project_id')
+            ->join('group_user','groups.id','=','group_user.group_id')
+            ->join('users','group_user.user_id','=','users.id')
+            ->select(
+                'users.id'
+            ) 
+            ->where('projects.name',$project)
+            ->groupBy('users.id')
+            ->get();
+    }
+
+    public function search(array $data = array(), $user_id, $admin, $pm, $pm_projects)
     {
         $data = array_only($data, $this->filters);
         $data = array_filter($data, 'strlen');
@@ -54,8 +68,17 @@ class WorkingreportRepository
             }
         }
 
-        if(! $admin) {
+        if(! $admin && ! $pm) {
             $q = $q->where('user_id',$user_id);
+        }
+        if(! $admin && $pm){
+            //$users = [1,2,3,$user_id];
+            foreach ($pm_projects as $project) {
+                $users = $this->usersByProject($project);  
+                $users = array_pluck($users, 'id');   
+            }
+                        
+            $q = $q->whereIn('user_id',$users);
         }
        
         return $q->get();
@@ -97,32 +120,39 @@ class WorkingreportRepository
      */
     public function filterByDate($q, $value)
     {
+        $year = Carbon::now()->year;
+        $month = Carbon::now()->month;
+        $day = Carbon::now()->day;
+        $weekOfYear = Carbon::now()->weekOfYear;
+        $dayOfWeek = Carbon::now()->dayOfWeek;
+
         if ($value == config('options.periods')[0]){
-            $startDate=Carbon::now()->addDays(-1);// -1 day
+            $startDate = Carbon::now()->addDays(-1);// Today
         } 
-        elseif ($value == config('options.periods')[1]){
-            $startDate=Carbon::now()->addWeeks(-1);// -1 week
+        if ($value == config('options.periods')[1]){
+            $startDate = Carbon::now()->startOfWeek();// This week
+            $endDate = Carbon::now()->endOfWeek();
+        } 
+        elseif ($value == config('options.periods')[2]){
+            $startDate = Carbon::now()->subWeeks(1)->startOfWeek();// Last week
+            $endDate = Carbon::now()->subWeeks(1)->endOfWeek();
         }    
-        elseif ($value == config('options.periods')[2]) {
-            $startDate=Carbon::now()->addWeeks(-2);// -2 week
-        }
         elseif ($value == config('options.periods')[3]) {
-            $startDate=Carbon::now()->addWeeks(-3);// -3 week
+            $startDate = Carbon::create($year, $month, 1, 0, 0, 0);// This month
+            $endDate = Carbon::now();
         }
         elseif ($value == config('options.periods')[4]) {
-            $startDate=Carbon::now()->addMonths(-1);// -1 month
+            $startDate = Carbon::now()->subMonths(1)->startOfMonth();// Last month
+            $startDate = Carbon::now()->subMonths(1)->endOfMonth();
         }
         elseif ($value == config('options.periods')[5]) {
-            $startDate=Carbon::now()->addMonths(-2);// -2 month
-        }
-        elseif ($value == config('options.periods')[6]) {
-            $startDate=Carbon::now()->addYears(-1);// -1 year
+            $startDate = Carbon::create($year, 1, 1, 0, 0, 0);//This year
+            $endDate = Carbon::now();
         }
         else {
             return;
         }
 
-        $endDate = Carbon::now();//now
         $q->whereBetween('working_report.created_at', [$startDate,$endDate]);
     }
 }

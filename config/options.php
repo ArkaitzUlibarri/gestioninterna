@@ -32,13 +32,12 @@ return [
 		'others'
 	],
 	'periods' => [
-		'yesterday',
-		'-1 week',
-		'-2 weeks',
-		'-3 weeks',
-		'-1 month',
-		'-2 months',
-		'-1 year'
+		'Today',
+		'This week',
+		'Last week',
+		'This month',
+		'Last month',
+		'This year'
 	],
 
 	'roles' => [

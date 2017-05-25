@@ -19,6 +19,7 @@ class GroupProjectTableSeeder extends Seeder
         $projects = [
 			'MIND Ingenieria' => [
 				'groups' => [
+					'-',
 					'Gestión',
 					'Tunning',
 				]
@@ -30,6 +31,7 @@ class GroupProjectTableSeeder extends Seeder
 			],
 			'RAN EVO' => [
 				'groups' => [
+					'-',
 					'Gestión',
 					'Tunning',
 					'Diseño',
@@ -39,39 +41,17 @@ class GroupProjectTableSeeder extends Seeder
 			],
 			'ANE TFCA' => [
 				'groups' => [
+					'-',
 					'Gestión',
 					'Diseño',
 				]
 			],
 		];
 
-		// Obtengo los usuarios con role igual a "user"
-		$users = DB::Table('users')
-			//->where('role', 'user')
-			->select('id')->get()->toArray();
-		
-		$users = array_map( function($item) {
-			return ['id' => $item->id, 'PM' => false];
-		}, $users);
-
-		$idProjectManager = DB::Table('categories')
-			->where('code', 'rp')
-			->select('id')
-			->first()
-			->id;
-
-		$categorieIds = $this->userCategories();
-
 		foreach ($projects as $projectName => $projectValues) {
 
 			// Obtengo el ID del proyecto
 			$project = DB::Table('projects')->where('name', $projectName)->select('id')->first();
-
-			if($project->id == 3) {
-				$users[0]['PM'] = true;
-			}else{
-				$users[0]['PM'] = false;
-			}
 
 			foreach ($projectValues['groups'] as $groupName) {
 
@@ -80,15 +60,6 @@ class GroupProjectTableSeeder extends Seeder
 					'project_id' => $project->id,
 					'name'       => $groupName
 				]);
-
-				foreach ($users as $userItem) {
-
-					DB::table('group_user')->insert([
-						'group_id'    => $groupId,
-						'user_id'     => $userItem['id'],
-						//'category_id' => $userItem['PM'] == true ? $idProjectManager :  $faker->randomElement($categorieIds)
-					]);
-				}
 			}
 		}
     }

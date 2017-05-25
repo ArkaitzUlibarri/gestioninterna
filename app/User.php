@@ -75,9 +75,34 @@ class User extends Authenticatable
     /**
      * Check if the user is ProjectManager
      */
-    public function isPM($rolename)
+    public function isPM()
     {
-        //TODO
+        foreach ($this->categories as $category) {
+            if($category->code == 'RP' || $category->code == 'RTP'){
+                return true;
+            }
+        }
+
         return false;
     }
+
+    /**
+     * Return the projects in which a User is PM
+     */
+    public function PMProjects()
+    {
+        $array = array();
+
+        if($this->isPM()){   
+            foreach ($this->groups as $group) {
+                if($group->project->pm_id == $this->id){
+                     $array[$group->project->id] = $group->project->name;
+                }
+            }
+        }
+
+        return $array;
+    }
+
+
 }

@@ -87,12 +87,13 @@ var app = new Vue({
 			}).then(function (response) {
 				vm.groups = response.data;
 				console.log(response.data);
-
+				//****************************************************
 				vm.groups.forEach(function (element, index, array) {
 					if (element.name == '-') {
 						array.splice(index, 1);
 					}
 				});
+				//****************************************************
 			}).catch(function (error) {
 				console.log(error);
 			});
