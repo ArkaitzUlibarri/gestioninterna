@@ -26,7 +26,7 @@
 
 				<div class="col-xs-12 col-sm-2">
 					<label>Report date</label>
-					<input id="datefield" name="created_at" type ="date" class="form-control" min="2017-01-01" v-model="reportdate" v-on:blur="dateValidation">
+					<input id="datefield" name="created_at" type ="date" class="form-control" min="2017-01-01" placeholder="yyyy-mm-dd" v-model="reportdate" v-on:blur="dateValidation">
 				</div>				
 
 				<div class="col-xs-12 col-sm-2">

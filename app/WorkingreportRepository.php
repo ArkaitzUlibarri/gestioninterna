@@ -120,34 +120,53 @@ class WorkingreportRepository
      */
     public function filterByDate($q, $value)
     {
-        $year = Carbon::now()->year;
-        $month = Carbon::now()->month;
-        $day = Carbon::now()->day;
+        $year       = Carbon::now()->year;
+        $month      = Carbon::now()->month;
+        $day        = Carbon::now()->day;
         $weekOfYear = Carbon::now()->weekOfYear;
-        $dayOfWeek = Carbon::now()->dayOfWeek;
+        $dayOfWeek  = Carbon::now()->dayOfWeek;
 
         if ($value == config('options.periods')[0]){
-            $startDate = Carbon::now()->addDays(-1);// Today
+            // Today
+            $Date = Carbon::today();
+            $q->whereDate('working_report.created_at', $Date);
+            return;
         } 
         if ($value == config('options.periods')[1]){
-            $startDate = Carbon::now()->startOfWeek();// This week
-            $endDate = Carbon::now()->endOfWeek();
+            // Yesterday
+            $Date = Carbon::yesterday();
+            $q->whereDate('working_report.created_at', $Date);
+            return;
         } 
-        elseif ($value == config('options.periods')[2]){
-            $startDate = Carbon::now()->subWeeks(1)->startOfWeek();// Last week
-            $endDate = Carbon::now()->subWeeks(1)->endOfWeek();
+        if ($value == config('options.periods')[2]){
+            // This week
+            $startDate = Carbon::today()->startOfWeek();
+            $endDate   = Carbon::today()->endOfWeek();
+        } 
+        elseif ($value == config('options.periods')[3]){
+            // Last week
+            $startDate = Carbon::today()->subWeeks(1)->startOfWeek();
+            $endDate   = Carbon::today()->subWeeks(1)->endOfWeek();
         }    
-        elseif ($value == config('options.periods')[3]) {
-            $startDate = Carbon::create($year, $month, 1, 0, 0, 0);// This month
-            $endDate = Carbon::now();
-        }
         elseif ($value == config('options.periods')[4]) {
-            $startDate = Carbon::now()->subMonths(1)->startOfMonth();// Last month
-            $startDate = Carbon::now()->subMonths(1)->endOfMonth();
+            // This month
+            $startDate = Carbon::today()->startOfMonth();
+            $endDate   = Carbon::today()->endOfMonth();
         }
         elseif ($value == config('options.periods')[5]) {
-            $startDate = Carbon::create($year, 1, 1, 0, 0, 0);//This year
-            $endDate = Carbon::now();
+            // Last month
+            $startDate = Carbon::now()->subMonths(1)->startOfMonth();
+            $endDate   = Carbon::now()->subMonths(1)->endOfMonth();
+        }
+        elseif ($value == config('options.periods')[6]) {
+            //This year
+            $startDate = Carbon::today()->startOfYear();
+            $endDate   = Carbon::today()->endOfYear();
+        }
+        elseif ($value == config('options.periods')[7]) {
+            //Last year
+            $startDate = Carbon::today()->subYears(1)->startOfYear();
+            $endDate   = Carbon::today()->subYears(1)->endOfYear();
         }
         else {
             return;

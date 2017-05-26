@@ -142,8 +142,8 @@ const app = new Vue({
 		dateValidation() {
 			var today = this.getDate();
 			var datefield = document.getElementById("datefield").value;
-			console.log(datefield);
-			if(moment.isDate(datefield)){
+			
+			if(moment(datefield,"YYYY-MM-DD").isValid()){
 
 				if(datefield <= today) {
 					this.fetchData();
@@ -156,7 +156,7 @@ const app = new Vue({
 			else{
 				console.log("Fecha con formato erróneo")
 			}
-
+			
 		},
 
 		getDate() {

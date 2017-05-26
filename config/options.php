@@ -33,11 +33,13 @@ return [
 	],
 	'periods' => [
 		'Today',
+		'Yesterday',
 		'This week',
 		'Last week',
 		'This month',
 		'Last month',
-		'This year'
+		'This year',
+		'Last year',
 	],
 
 	'roles' => [
