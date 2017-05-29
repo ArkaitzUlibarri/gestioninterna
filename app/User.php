@@ -63,13 +63,15 @@ class User extends Authenticatable
      */
     public function isRole($rolename)
     {
+        return $this->role == strtolower($rolename) ? 1 : 0;
+    }
 
-        if ($this->role == strtolower($rolename))
-        {
-            return true;
-        }
-
-        return false;
+    /**
+     * Check the role of the user
+     */
+    public function isAdmin()
+    {
+        return $this->role == config('options.roles')[0] ? 1 : 0;
     }
 
     /**
@@ -79,15 +81,15 @@ class User extends Authenticatable
     {
         foreach ($this->categories as $category) {
             if($category->code == 'RP' || $category->code == 'RTP'){
-                return true;
+                return 1;
             }
         }
 
-        return false;
+        return 0;
     }
 
     /**
-     * Return the projects in which a User is PM
+     * Return the active projects in which a User is PM
      */
     public function PMProjects()
     {
@@ -95,7 +97,7 @@ class User extends Authenticatable
 
         if($this->isPM()){   
             foreach ($this->groups as $group) {
-                if($group->project->pm_id == $this->id){
+                if($group->project->pm_id == $this->id && $group->project->end_date == null){
                      $array[$group->project->id] = $group->project->name;
                 }
             }

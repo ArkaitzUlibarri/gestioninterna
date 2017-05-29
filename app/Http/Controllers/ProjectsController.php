@@ -68,7 +68,7 @@ class ProjectsController extends Controller
 
 		    $id = DB::table('projects')->insertGetId($array);
 
-			DB::table('groups')->insert(['project_id' =>$id, 'name' => '-','enabled'=> 1]);
+			DB::table('groups')->insert(['project_id' =>$id, 'name' => 'Default','enabled'=> 1]);
 			//******************************************************************************
 			DB::commit();/* Transaction successful. */
 		

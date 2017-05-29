@@ -97,13 +97,13 @@ var app = new Vue({
 		supervise: function supervise() {
 			var vm = this;
 
-			if (confirm("¿Estás seguro de que quieres validar el día?")) {
+			if (confirm("¿Estás seguro de que quieres (des)validar el día?")) {
 				vm.tasks.forEach(function (item) {
 
 					if (vm.role == 'admin' && item.pm_validation == 1 || item.pm_validation == true) {
 						item.admin_validation = 1;
 						console.log("Admin:" + item.admin_validation);
-					} else if (vm.role == 'user' && isRP()) {
+					} else if (vm.role == 'user') {
 						item.pm_validation = 1;
 						console.log("PM:" + item.pm_validation);
 					}

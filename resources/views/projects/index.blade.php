@@ -6,8 +6,10 @@
         <!--<p>Lista con los proyectos de la empresa:</p>-->   
 
             @include('projects.filter')   
+
+            <div class="clearfix" ></div>
              
-             <table class="table table-hover">
+             <table class="table table-hover" style="margin: 2em 0 5em 0;">
                 <thead>
                     <th>#</th>
                     <th>Project</th>

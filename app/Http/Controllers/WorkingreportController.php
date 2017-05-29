@@ -28,15 +28,15 @@ class WorkingReportController extends Controller
 	public function index(Request $request)
 	{
 		$auth_user   = Auth::user();
-		$admin       = $auth_user->isRole(config('options.roles')[0]) ? true : false;
-		$pm          = $auth_user->isPM() ? true : false;
+		$admin       = $auth_user->isAdmin();
+		$pm          = $auth_user->isPM();
 		$pm_projects = $auth_user->PMProjects();
 
-		$workingreports = $this->workingreportRepository->search($request->all(), $auth_user->id, $admin, $pm, $pm_projects);//$workingreports = $this->getReportsPerUserPerDay($user_id,$admin);
+		$workingreports = $this->workingreportRepository->search($request->all(), $auth_user->id);//$workingreports = $this->getReportsPerUserPerDay($user_id,$admin);
 		
-		$users       = User::all();
+		$users = User::all();
 
-		return view('workingreports.index', compact('workingreports','users','auth_user'));
+		return view('workingreports.index', compact('workingreports','users','auth_user','pm_projects'));
 	}
 
 	public function edit($user_id,$date)

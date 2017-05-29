@@ -89,7 +89,7 @@ var app = new Vue({
 				console.log(response.data);
 				//****************************************************
 				vm.groups.forEach(function (element, index, array) {
-					if (element.name == '-') {
+					if (element.name == 'Default') {
 						array.splice(index, 1);
 					}
 				});

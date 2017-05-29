@@ -511,7 +511,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(4)();
-exports.push([module.i, "\n.panel-right-corner {\n    position: absolute;\n    right: 2em;\n    top:1em;\n}\n.action {\n    cursor: pointer;\n    //display: block;\n    //margin: auto ;\n}\n.task-panel {\n    position:relative;\n    border-bottom: 1px solid #ccc;\n    padding:.4em\n}\n.validated-task {\n    border-style: double;\n    border-color: #21d421;\n}\n.validated-color {\n    color: #21d421;\n}\n\n", ""]);
+exports.push([module.i, "\n.panel-right-corner {\n    position: absolute;\n    right: 2em;\n    top:1em;\n}\n.action {\n    cursor: pointer;\n    //display: block;\n    //margin: auto ;\n}\n.task-panel {\n    position:relative;\n    border-bottom: 1px solid #ccc;\n    padding:.4em\n}\n.validated-task {\n    background-color: #b0f2b8;\n}\n.validated-color {\n    color: #21d421;\n}\n\n", ""]);
 
 /***/ }),
 
@@ -559,13 +559,16 @@ module.exports = Component.exports
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "task-panel"
+    staticClass: "task-panel",
+    class: {
+      'validated-task': _vm.task.admin_validation
+    }
   }, [(!_vm.task.admin_validation) ? _c('div', {
     staticClass: "panel-right-corner"
-  }, [(_vm.task.pm_validation) ? _c('div', {
+  }, [(_vm.task.admin_validation) ? _c('div', {
     staticClass: "validated-color"
   }, [_c('span', {
-    staticClass: "glyphicon glyphicon-ok",
+    staticClass: "glyphicon glyphicon-ok-sign",
     attrs: {
       "aria-hidden": "true"
     }

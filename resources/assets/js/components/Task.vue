@@ -1,10 +1,10 @@
 <template id="task-template">
     
-    <div class="task-panel">
+    <div class="task-panel" v-bind:class="{ 'validated-task': task.admin_validation }">
 
         <div class="panel-right-corner" v-if="! task.admin_validation">
-            <div class="validated-color" v-if="task.pm_validation">
-                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+            <div class="validated-color" v-if="task.admin_validation">
+                <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>  
             </div>
             <div class="task-delete action" v-if="! task.pm_validation" v-on:click="deleteTask">            
                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -74,8 +74,7 @@
     }
 
     .validated-task {
-        border-style: double;
-        border-color: #21d421;
+        background-color: #b0f2b8;
     }
 
     .validated-color {

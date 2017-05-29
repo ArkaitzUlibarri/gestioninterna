@@ -19,19 +19,19 @@ class GroupProjectTableSeeder extends Seeder
         $projects = [
 			'MIND Ingenieria' => [
 				'groups' => [
-					'-',
+					'Default',
 					'Gestión',
 					'Tunning',
 				]
 			],
 			'MEDIDAS WIFI MERCEDES' => [
 				'groups' => [
-					'-'
+					'Default'
 				]
 			],
 			'RAN EVO' => [
 				'groups' => [
-					'-',
+					'Default',
 					'Gestión',
 					'Tunning',
 					'Diseño',
@@ -41,7 +41,7 @@ class GroupProjectTableSeeder extends Seeder
 			],
 			'ANE TFCA' => [
 				'groups' => [
-					'-',
+					'Default',
 					'Gestión',
 					'Diseño',
 				]

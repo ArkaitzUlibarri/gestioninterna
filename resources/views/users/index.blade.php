@@ -6,7 +6,9 @@
         <!--<p>Lista con los empleados de la compañia:</p>-->
             @include('users.filter')
 
-            <div class="table-responsive">     
+            <div class="clearfix" ></div>
+
+            <div class="table-responsive" style="margin: 2em 0 5em 0;">     
                 <table class="table table-hover table-condensed">
                     <thead>
                         <th>Employee ID</th>
