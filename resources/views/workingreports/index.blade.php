@@ -54,10 +54,10 @@
 
 						@if(Auth::user()->isAdmin() || Auth::user()->isPM())
 							<td>
-								<button title="Invalidate" class="btn btn-danger btn-xs" v-on:click="validate(item.user_id, item.created_at)">
+								<button title="Invalidate" class="btn btn-danger btn-xs" v-on:click="fetchData(item.user_id, item.created_at, index , 0)">
 									<span class="glyphicon glyphicon-remove"></span>
 								</button>
-								<button title="Validate" class="btn btn-success btn-xs" v-on:click="validate(item.user_id, item.created_at)">
+								<button title="Validate" class="btn btn-success btn-xs" v-on:click="fetchData(item.user_id, item.created_at, index, 1)">
 									<span class="glyphicon glyphicon-ok"></span>
 								</button>
 							</td>
@@ -81,10 +81,10 @@
 				</a>
 			</div>
 		</div>
-
-		<!--<pre>@{{$data}}</pre>-->
 		
 </div>
+
+<pre>@{{$data.reports}}</pre>
 
 
 
