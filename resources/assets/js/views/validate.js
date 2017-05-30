@@ -101,14 +101,14 @@ const app = new Vue({
 
 			if (confirm("¿Estás seguro de que quieres validar el día?")) {
 
-				console.log("Admin: " + vm.admin);
+				/*console.log("Admin: " + vm.admin);
 				console.log("PM: " + vm.pm);
-				console.log("Flag: " + flag);
+				console.log("Flag: " + flag);*/
 
 				vm.tasks.forEach(function (item) {
 
-					console.log("pm_validation: " + item.pm_validation);
-					console.log("admin_validation: " + item.admin_validation);
+					/*console.log("pm_validation: " + item.pm_validation);
+					console.log("admin_validation: " + item.admin_validation);*/
 
 					if(vm.admin){
 						if(flag){

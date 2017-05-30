@@ -36,7 +36,7 @@
 						</td>
 						<td>@{{ item.horas_reportadas }}</td>  
 						<td>
-							<div v-if="item.horas_validadas_pm !=0">
+							<div v-if="item.horas_validadas_pm != 0">
 								<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
 							</div>
 							<div v-else>
@@ -44,7 +44,7 @@
 							</div>                                  
 						</td>
 						<td>
-							<div v-if="item.horas_validadas_admin !=0">
+							<div v-if="item.horas_validadas_admin != 0">
 								<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
 							</div>
 							<div v-else>
@@ -52,12 +52,23 @@
 							</div>  
 						</td>
 
-						@if(Auth::user()->isAdmin() || Auth::user()->isPM())
+						@if(Auth::user()->isAdmin())
 							<td>
-								<button title="Invalidate" class="btn btn-danger btn-xs" v-on:click="fetchData(item.user_id, item.created_at, index , 0)">
+								<button title="Invalidate" class="btn btn-danger btn-xs" v-if="item.horas_validadas_pm == 0 && item.horas_validadas_admin == 0" v-on:click="fetchData(item.user_id, item.created_at, index , 0)">
 									<span class="glyphicon glyphicon-remove"></span>
 								</button>
-								<button title="Validate" class="btn btn-success btn-xs" v-on:click="fetchData(item.user_id, item.created_at, index, 1)">
+								<button title="Validate" class="btn btn-success btn-xs" v-if="item.horas_validadas_pm == 0 && item.horas_validadas_admin != 0" v-on:click="fetchData(item.user_id, item.created_at, index, 1)">
+									<span class="glyphicon glyphicon-ok"></span>
+								</button>
+							</td>
+						@endif
+
+						@if(!(Auth::user()->isAdmin()) && Auth::user()->isPM())
+							<td>
+								<button title="Invalidate" class="btn btn-danger btn-xs" v-if="item.horas_validadas_admin != 0 && item.horas_validadas_pm == 0" v-on:click="fetchData(item.user_id, item.created_at, index , 0)">
+									<span class="glyphicon glyphicon-remove"></span>
+								</button>
+								<button title="Validate" class="btn btn-success btn-xs" v-if="item.horas_validadas_admin != 0 && item.horas_validadas_pm != 0" v-on:click="fetchData(item.user_id, item.created_at, index, 1)">
 									<span class="glyphicon glyphicon-ok"></span>
 								</button>
 							</td>
@@ -74,21 +85,13 @@
 				<input class="form-control" type="text" placeholder="{{$auth_user->fullname}}" readonly>   
 			</div>
 			<div class="form-group">
-				<a type="button"
-				   title="New Report"
-				   class="btn btn-default"
-				   v-bind:href="'/workingreports/add/'+user_id +'/'+ getDate() +'/'" >New Report
+				<a type="button" title="New Report" class="btn btn-default" v-bind:href="'/workingreports/add/'+user_id +'/'+ getDate() +'/'" >
+					New Report
 				</a>
 			</div>
 		</div>
 		
 </div>
-
-<pre>@{{$data.reports}}</pre>
-
-
-
-
 
 @endsection
 
