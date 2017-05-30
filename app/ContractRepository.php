@@ -12,7 +12,7 @@ class ContractRepository
      * @var array
      */
     protected $filters = [
-        'name', 'end_date',
+        'name', 'type',
     ];
 	/**
 	 * Devuelve una instancia del modelo del repositorio.
@@ -75,7 +75,7 @@ class ContractRepository
      * @param  [type] $value [description]
      * @return [type]        [description]
      */
-    public function filterByEndDate($q, $value)
+    public function filterByType($q, $value)
     {
         if ($value == config('options.dates')[0]){
             $q->where('contracts.end_date', null);

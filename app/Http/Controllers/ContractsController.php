@@ -28,7 +28,12 @@ class ContractsController extends Controller
 	{
 		$contracts = $this->contractRepository->search($request->all(), true);
 
-    	return view('contracts.index', compact('contracts'));
+		$filter = array(	
+			'name' => $request->get('name'),
+			'type' => $request->get('type'),
+		);
+
+    	return view('contracts.index', compact('contracts','filter'));
 	}
 
 	public function create()	

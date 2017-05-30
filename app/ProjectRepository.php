@@ -12,7 +12,7 @@ class ProjectRepository
      * @var array
      */
     protected $filters = [
-        'name', 'customer','end_date',
+        'name', 'customer','type',
     ];
 
 	/**
@@ -84,7 +84,7 @@ class ProjectRepository
      * @param  [type] $value [description]
      * @return [type]        [description]
      */
-    public function filterByEndDate($q, $value)
+    public function filterByType($q, $value)
     {
         if ($value == config('options.dates')[0]){
             $q->where('projects.end_date', null);

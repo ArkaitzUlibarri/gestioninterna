@@ -29,6 +29,16 @@ class WorkingReportTableSeeder extends Seeder
 		$timeSlots       = SeederConfig::TIME_SLOTS;
 
 		foreach ($users as $user) {
+
+			//Validaciones
+			$pmValidation = $faker->boolean(75);
+			if($pmValidation){
+				$adminValidation = $faker->boolean(40);
+			}
+			else{
+				$adminValidation = false;
+			}
+			
 			foreach ($activities as $activity) {
 				
 				if($activity == 'project') {		
@@ -66,15 +76,6 @@ class WorkingReportTableSeeder extends Seeder
 				}
 				//Comentarios
 				$comments = $faker->text(100);
-
-				//Validaciones
-				$pmValidation = $faker->boolean(50);
-				if($pmValidation){
-					$adminValidation = $faker->boolean(50);
-				}
-				else{
-					$adminValidation = false;
-				}
 
 
 				DB::table('working_report')->insert([

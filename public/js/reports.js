@@ -66,6 +66,23 @@ var app = new Vue({
 	},
 
 	computed: {
+		validatedTasks: function validatedTasks() {
+
+			var output = true;
+
+			if (this.tasks.length > 0) {
+				this.tasks.forEach(function (item) {
+					if (item.pm_validation == 0) {
+						output = false;
+						return output;
+					}
+				});
+				if (output) {
+					return true;
+				}
+			}
+			return false;
+		},
 		totalTime: function totalTime() {
 			var total = 0;
 
@@ -565,10 +582,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [(!_vm.task.admin_validation) ? _c('div', {
     staticClass: "panel-right-corner"
-  }, [(_vm.task.admin_validation) ? _c('div', {
+  }, [(_vm.task.pm_validation) ? _c('div', {
     staticClass: "validated-color"
   }, [_c('span', {
-    staticClass: "glyphicon glyphicon-ok-sign",
+    staticClass: "glyphicon glyphicon-ok",
     attrs: {
       "aria-hidden": "true"
     }
@@ -587,7 +604,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "click": _vm.editTask
     }
-  }, [(_vm.task.activity == 'project') ? _c('h5', [_c('span', [_c('b', [_vm._v(_vm._s(_vm.time) + " " + _vm._s(_vm.task.project.toUpperCase() + ' | ' + _vm.task.group.toUpperCase()))]), _vm._v(" | ")]), _vm._v(" "), (_vm.task.comments) ? _c('span', [_vm._v(_vm._s(_vm.task.comments.substring(0, 75)) + "...")]) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'absence') ? _c('h5', [_c('span', [_c('b', [_vm._v(_vm._s(_vm.time) + " " + _vm._s('ABSENCE | ' + _vm.task.absence.toUpperCase()))]), _vm._v(" | ")]), _vm._v(" "), (_vm.task.comments) ? _c('span', [_vm._v(_vm._s(_vm.task.comments.substring(0, 75)) + "...")]) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'training') ? _c('h5', [_c('span', [_c('b', [_vm._v(_vm._s(_vm.time) + " " + _vm._s('TRAINING | ' + _vm.task.training_type.toUpperCase()))]), _vm._v(" | ")]), _vm._v(" "), (_vm.task.comments) ? _c('span', [_vm._v(_vm._s(_vm.task.comments.substring(0, 75)) + "...")]) : _vm._e()]) : _vm._e()])])
+  }, [(_vm.task.activity == 'project') ? _c('h5', [_c('span', [_c('b', [_vm._v(_vm._s(_vm.time) + " " + _vm._s(_vm.task.project.toUpperCase() + ' | ' + _vm.task.group.toUpperCase()))]), _vm._v(" | ")]), _vm._v(" "), (_vm.task.comments) ? _c('span', [_vm._v(_vm._s(_vm.task.comments.substring(0, 90)) + "...")]) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'absence') ? _c('h5', [_c('span', [_c('b', [_vm._v(_vm._s(_vm.time) + " " + _vm._s('ABSENCE | ' + _vm.task.absence.toUpperCase()))]), _vm._v(" | ")]), _vm._v(" "), (_vm.task.comments) ? _c('span', [_vm._v(_vm._s(_vm.task.comments.substring(0, 90)) + "...")]) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'training') ? _c('h5', [_c('span', [_c('b', [_vm._v(_vm._s(_vm.time) + " " + _vm._s('TRAINING | ' + _vm.task.training_type.toUpperCase()))]), _vm._v(" | ")]), _vm._v(" "), (_vm.task.comments) ? _c('span', [_vm._v(_vm._s(_vm.task.comments.substring(0, 90)) + "...")]) : _vm._e()]) : _vm._e()])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

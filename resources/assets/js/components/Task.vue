@@ -3,8 +3,8 @@
     <div class="task-panel" v-bind:class="{ 'validated-task': task.admin_validation }">
 
         <div class="panel-right-corner" v-if="! task.admin_validation">
-            <div class="validated-color" v-if="task.admin_validation">
-                <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>  
+            <div class="validated-color" v-if="task.pm_validation">
+                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>  
             </div>
             <div class="task-delete action" v-if="! task.pm_validation" v-on:click="deleteTask">            
                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -13,15 +13,15 @@
 
         <div class="action" v-on:click="editTask">
             <h5 v-if="task.activity == 'project'">
-                <span><b>{{ time }} {{ task.project.toUpperCase() + ' | ' + task.group.toUpperCase() }}</b> | </span> <span v-if="task.comments">{{ task.comments.substring(0, 75) }}...</span>
+                <span><b>{{ time }} {{ task.project.toUpperCase() + ' | ' + task.group.toUpperCase() }}</b> | </span> <span v-if="task.comments">{{ task.comments.substring(0, 90) }}...</span>
             </h5>             
             
             <h5 v-if="task.activity == 'absence'">
-                <span><b>{{ time }} {{ 'ABSENCE | ' + task.absence.toUpperCase() }}</b> | </span> <span v-if="task.comments">{{ task.comments.substring(0, 75) }}...</span>
+                <span><b>{{ time }} {{ 'ABSENCE | ' + task.absence.toUpperCase() }}</b> | </span> <span v-if="task.comments">{{ task.comments.substring(0, 90) }}...</span>
             </h5>
 
             <h5 v-if="task.activity == 'training'">
-                <span><b>{{ time }} {{ 'TRAINING | ' + task.training_type.toUpperCase() }}</b> | </span> <span v-if="task.comments">{{ task.comments.substring(0, 75) }}...</span>
+                <span><b>{{ time }} {{ 'TRAINING | ' + task.training_type.toUpperCase() }}</b> | </span> <span v-if="task.comments">{{ task.comments.substring(0, 90) }}...</span>
             </h5> 
         </div>
     </div>

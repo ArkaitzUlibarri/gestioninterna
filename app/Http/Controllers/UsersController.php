@@ -23,14 +23,16 @@ class UsersController extends Controller
     {
     	//$users =$this->getUsers();
         $users = $this->userRepository->search($request->all(), true);
+        $filter = array(    
+            'name' => $request->get('name'),
+        );
         
-    	return view('users.index', compact('users'));
+    	return view('users.index', compact('users','filter'));
     }
 
     public function edit($id)
     {
         $user  = $this->getUser($id);
-        
         $roles = config('options.roles');
 		
     	return view('users.edit',compact('user','roles'));

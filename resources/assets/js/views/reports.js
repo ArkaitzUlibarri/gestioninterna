@@ -61,6 +61,26 @@ const app = new Vue({
 
 
 	computed: {
+
+		validatedTasks(){
+
+			let output = true;
+
+			if (this.tasks.length > 0) {
+				this.tasks.forEach( (item) => {
+					if(item.pm_validation == 0){
+						output = false;
+						return output;
+					}
+				});
+				if(output){
+					return true;
+				}
+			}
+			return false;
+				
+		},
+
 		totalTime() {
 			let total = 0;
 			

@@ -14,17 +14,20 @@ const app = new Vue({
 
 	data: {		
 		role: '',	
+		admin: 0,
 		pm: 0,
 		user_id: -1,	
+		
 		reports: [],
 		tasks: [],
+		users: [],
 	},
 
 	mounted() {
 		this.reports = workingreport;
 		this.role    = auth_user.role;
 		this.user_id = auth_user.id;
-		this.pm      = pm;
+
 	},
 
 	methods: {

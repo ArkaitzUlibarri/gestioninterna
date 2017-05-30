@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Absence;
 use App\Category;
+use App\Project;
 use App\User;
 use App\WorkingreportRepository;
 use Illuminate\Support\Facades\Auth;
@@ -27,16 +28,22 @@ class WorkingReportController extends Controller
 
 	public function index(Request $request)
 	{
-		$auth_user   = Auth::user();
-		$admin       = $auth_user->isAdmin();
-		$pm          = $auth_user->isPM();
-		$pm_projects = $auth_user->PMProjects();
+		$users     = User::all();
+		$auth_user = Auth::user();
+		$admin     = $auth_user->isAdmin();
+		$pm        = $auth_user->isPM();
+		$projects  = $admin ? Project::all()->where('end_date', null) : $auth_user->PMProjects();
 
-		$workingreports = $this->workingreportRepository->search($request->all(), $auth_user->id);//$workingreports = $this->getReportsPerUserPerDay($user_id,$admin);
+		$workingreports = $this->workingreportRepository->search($request->all(), $auth_user->id, $projects);//$workingreports = $this->getReportsPerUserPerDay($user_id,$admin);
 		
-		$users = User::all();
-
-		return view('workingreports.index', compact('workingreports','users','auth_user','pm_projects'));
+		$filter = array(	
+			'project'    => $request->get('project'),
+			'name'       => $request->get('name'),
+			'date'       => $request->get('date'),
+			'validation' => $request->get('validation'),
+		);
+		
+		return view('workingreports.index', compact('workingreports','users','auth_user','projects','filter'));
 	}
 
 	public function edit($user_id,$date)

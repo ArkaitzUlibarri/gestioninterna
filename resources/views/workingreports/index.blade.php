@@ -57,7 +57,7 @@
 								<button title="Invalidate" class="btn btn-danger btn-xs" v-on:click="validate(item.user_id, item.created_at)">
 									<span class="glyphicon glyphicon-remove"></span>
 								</button>
-								<button title="Validate" class="btn btn-success btn-xs" v-on:click.prevent="validate(item.user_id, item.created_at)">
+								<button title="Validate" class="btn btn-success btn-xs" v-on:click="validate(item.user_id, item.created_at)">
 									<span class="glyphicon glyphicon-ok"></span>
 								</button>
 							</td>
@@ -96,6 +96,7 @@
 	<script type = "text/javascript">
 		var workingreport = <?php echo json_encode($workingreports);?>;
 		var auth_user     = <?php echo json_encode($auth_user);?>;
+		var users         = <?php echo json_encode($users);?>;
 		var pm            = '{{ $auth_user->isPM() }}';
 	</script>
 

@@ -3,30 +3,41 @@
 	<input type="hidden" name="admin" type="text" value="{{ $auth_user->isAdmin() }}">
 	<input type="hidden" name="pm" type="text" value="{{ $auth_user->isPM() }}">
 
-	@if(Auth::user()->isPM() && count($pm_projects))
+	@if(! Auth::user()->isAdmin() && Auth::user()->isPM() && count($projects))
 		<select name="project" class="form-control">
 			<option selected="true" disabled="disabled" value="">Project</option>
-			@foreach ($pm_projects as $project)
-				<option value="{{ $project}}">{{ strtoupper($project) }}</option>
+			@foreach ($projects as $project)
+				<option value="{{ $project }}" {{ $project == $filter['project'] ? 'selected' : '' }} >{{ strtoupper($project) }}</option>
 			@endforeach
+			<option value="All" {{ "All" == $filter['project'] ? 'selected' : '' }}>All</option>
+		</select>
+	@endif
+
+	@if(Auth::user()->isAdmin() && count($projects))
+		<select name="project" class="form-control">
+			<option selected="true" value="">Project</option>
+			@foreach ($projects as $project)
+				<option value="{{ $project->name }}" {{ $project->name == $filter['project'] ? 'selected' : '' }} >{{ strtoupper($project->name) }}</option>
+			@endforeach
+			<option value="All" {{ "All" == $filter['project'] ? 'selected' : '' }} >All</option>
 		</select>
 	@endif
 
 	@if(Auth::user()->isAdmin() || Auth::user()->isPM())
-		<input type="text" name="name" class="form-control"  placeholder="Employee name" >
+		<input name="name" type="text" class="form-control"  placeholder="Employee name" value="{{ $filter['name'] }}">
 	@endif
 
 	<select name="date" class="form-control">
-		<option selected="true" disabled="disabled" value="">Period</option>
+		<option selected="true" value="">Period</option>
 		@foreach (config('options.periods') as $date)
-			<option value="{{ $date }}">{{ ucfirst($date) }}</option>
+			<option value="{{ $date }}" {{ $date == $filter['date'] ? 'selected' : '' }} >{{ ucfirst($date) }}</option>
 		@endforeach
 	</select>
 
 	<select name="validation" class="form-control">
-		<option selected="true" disabled="disabled" value="">Validation</option>
+		<option selected="true" value="">Validation</option>
 		@foreach (config('options.validations') as $validation)
-			<option value="{{ $validation }}">{{ ucfirst($validation) }}</option>
+			<option value="{{ $validation }}"  {{ $validation == $filter['validation'] ? 'selected' : '' }}>{{ ucfirst($validation) }}</option>
 		@endforeach
 	</select>
 

@@ -27,11 +27,10 @@ class WorkingreportRepository
 		return new Workingreport;
 	}
 
-    public function search(array $data = array(), $user_id)
+    public function search(array $data = array(), $user_id, $projects)
     {
         $data = array_only($data, $this->filters);
         $data = array_filter($data, 'strlen');
-
 
         $q = $this->getModel()
             ->join('users','working_report.user_id','=','users.id')
@@ -48,7 +47,6 @@ class WorkingreportRepository
             ->orderBy('fullname','asc');
 
         foreach ($data as $field => $value) {
-
             $filterMethod = 'filterBy' . studly_case($field);
             if(method_exists(get_called_class(), $filterMethod)) {
                 $this->$filterMethod($q, $value);
@@ -57,29 +55,85 @@ class WorkingreportRepository
 
         
         //Filtro por Admin,PM y Proyecto
+        //**********************************************************************
         if($data != []){
-            if(! $data['admin']){
+            if(! $data['admin']){             
                 if($data['pm']){
+                    //Project Manager
                     if(isset($data['project'])){
-                        $users = $this->usersByProject($data['project']);  
-                        $users = array_pluck($users, 'id');   
-                                    
+                        if ($data['project'] == "All") {
+                            $users = $this->usersByProjects($projects);                             
+                        }
+                        else{
+                            $users = $this->usersByProject($data['project']);                                 
+                        }
                         $q = $q->whereIn('user_id',$users);
                     }
                     else{
                         $this->filterByUser($q,$user_id);
                   }
                 }
-                else{
+                else{//User
                      $this->filterByUser($q,$user_id);
                 }
+
+            }
+            else{//Admin
+                if(isset($data['project'])){
+                    if($data['project'] == "All"){
+                        $projects = array_pluck($projects, ['name']);
+                        $users = $this->usersByProjects($projects);    
+                    } 
+                    else{
+                        $users = $this->usersByProject($data['project']);
+                    }   
+                    $q = $q->whereIn('user_id',$users);
+                }  
+                else{
+                        $this->filterByUser($q,$user_id);
+                }           
             }
         }
         else{
              $this->filterByUser($q,$user_id);
         }
- 
+        //**********************************************************************
+        
         return $q->get();
+    }
+
+    public function usersByProject($project)
+    {
+        $users = DB::table('projects')
+            ->join('groups','projects.id','=','groups.project_id')
+            ->join('group_user','groups.id','=','group_user.group_id')
+            ->join('users','group_user.user_id','=','users.id')
+            ->select(
+                'users.id'
+            ) 
+            ->where('projects.name',$project)//Proyectos activos
+            ->where('projects.end_date', null)
+            ->groupBy('users.id')
+            ->get();
+
+        return array_pluck($users, 'id'); 
+    }
+
+    public function usersByProjects(array $projects)
+    {
+        $users = DB::table('projects')
+            ->join('groups','projects.id','=','groups.project_id')
+            ->join('group_user','groups.id','=','group_user.group_id')
+            ->join('users','group_user.user_id','=','users.id')
+            ->select(
+                'users.id'
+            ) 
+            ->whereIn('projects.name',$projects)
+            ->where('projects.end_date', null)//Proyectos activos
+            ->groupBy('users.id')
+            ->get();
+
+        return array_pluck($users, 'id'); 
     }
 
     /**
@@ -184,18 +238,4 @@ class WorkingreportRepository
         $q->whereBetween('working_report.created_at', [$startDate,$endDate]);
     }
 
-    public function usersByProject($project)
-    {
-        return DB::table('projects')
-            ->join('groups','projects.id','=','groups.project_id')
-            ->join('group_user','groups.id','=','group_user.group_id')
-            ->join('users','group_user.user_id','=','users.id')
-            ->select(
-                'users.id'
-            ) 
-            ->where('projects.name',$project)
-            ->where('users.role','user')
-            ->groupBy('users.id')
-            ->get();
-    }
 }

@@ -25,7 +25,14 @@ class ProjectsController extends Controller
 		//$projects = $this->getProjects();
 		$projects   = $this->projectRepository->search($request->all(), true);
 		$customers  = Customer::all();
-    	return view('projects.index',compact('projects','customers'));
+
+		$filter = array(	
+			'name'  => $request->get('name'),
+			'customer' => $request->get('customer'),
+			'type'     => $request->get('type'),
+		);
+
+    	return view('projects.index',compact('projects','customers','filter'));
     }
 
     public function edit($id)

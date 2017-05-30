@@ -59,4 +59,10 @@ class Project extends Model
     {
         return $this->hasOne('App\Customer','id','customer_id');
     }
+    
+    public function isActive()
+    {
+    	 return $this->end_date != null ? 0 : 1;
+    }
+
 }
