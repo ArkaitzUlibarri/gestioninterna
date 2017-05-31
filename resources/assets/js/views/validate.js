@@ -22,14 +22,16 @@ const app = new Vue({
 		tasks: [],
 
 		users: [],
+		user_report: -1,
 	},
 
 	mounted() {
-		this.reports = workingreport;
-		this.role    = auth_user.role;
-		this.admin   = this.role == 'admin' ? 1 : 0 ;
-		this.pm      = pm;
-		this.user_id = auth_user.id;
+		this.reports     = workingreport;
+		this.role        = auth_user.role;
+		this.admin       = this.role == 'admin' ? 1 : 0 ;
+		this.pm          = pm;
+		this.user_id     = auth_user.id;
+		this.user_report = auth_user.id;
 	},
 
 	methods: {

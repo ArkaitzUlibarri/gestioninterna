@@ -21,7 +21,6 @@ class UsersController extends Controller
 
     public function index(Request $request)
     {
-    	//$users =$this->getUsers();
         $users = $this->userRepository->search($request->all(), true);
         $filter = array(    
             'name' => $request->get('name'),
@@ -32,7 +31,7 @@ class UsersController extends Controller
 
     public function edit($id)
     {
-        $user  = $this->getUser($id);
+        $user  = User::find($id);
         $roles = config('options.roles');
 		
     	return view('users.edit',compact('user','roles'));
@@ -40,11 +39,12 @@ class UsersController extends Controller
 
     public function show($id)
     {
-        $user  = $this->getUser($id);
+        $user       = User::find($id);
+        $categories = $user->categories;
+        $groups     = $user->groups->where('enabled',1);
+        $roles      = config('options.roles');
         
-        $roles = config('options.roles');
-        
-        return view('users.show',compact('user','roles'));
+        return view('users.show',compact('user','roles','categories','groups'));
     }
 
     public function create()
@@ -57,13 +57,9 @@ class UsersController extends Controller
     public function store(UserFormRequest $request)
     {
         $user = new User;
-
         $user->fill($request->all());
-
         $user->password = bcrypt($request->get('name'));
-
         $user->remember_token = str_random(10);
-
         $user->save();
 
         return redirect('/users');
@@ -72,25 +68,8 @@ class UsersController extends Controller
     public function update(UserFormRequest $request,$id)
     {
         $user = User::find($id);
-
         $user->update($request->all());
 
         return redirect('/users');
-    }
-
-    private function getUser($id)
-    {
-        return DB::table('users')
-            ->select('id','name','lastname_1','lastname_2','role','email')
-            ->where('id',$id)
-            ->first();
-    }
-
-    private function getUsers()
-    {
-        return DB::table('users')
-            ->orderBy('id','asc')
-            ->paginate(10);
-            //->get();
     }
 }

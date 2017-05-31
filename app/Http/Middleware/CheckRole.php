@@ -15,11 +15,13 @@ class CheckRole
      */
     public function handle($request, Closure $next)
     {
-        if (! $request->user()->isRole('admin')) {
-            //throw new \Exception("Error Processing Request, You are not admin"); 
-            return redirect('/access');     
+        if (! $request->user()->isAdmin()){
+            if($request->user()->id != intval($request->route('id'))){
+                //throw new \Exception("Error Processing Request, You are not admin"); 
+                return redirect('/access'); 
+           }    
         }
-
+        
         return $next($request);
     }
 }

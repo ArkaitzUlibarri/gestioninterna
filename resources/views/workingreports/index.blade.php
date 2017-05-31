@@ -81,17 +81,27 @@
 		</div>
 
 		<div class="form-inline pull-right">
+			@if(Auth::user()->isAdmin())
+				<div class="form-group">			
+					<select class="form-control" v-model="user_report">
+						@foreach($users as $user)				
+						<option value="{{$user->id}}">{{ucfirst($user->name)}} {{ucfirst($user->lastname_1)}}</option>
+						@endforeach
+					</select>
+				</div>
+			@else
+				<input class="form-control" type="text" placeholder="{{$auth_user->fullname}}" readonly>
+			@endif
 			<div class="form-group">
-				<input class="form-control" type="text" placeholder="{{$auth_user->fullname}}" readonly>   
-			</div>
-			<div class="form-group">
-				<a type="button" title="New Report" class="btn btn-default" v-bind:href="'/workingreports/add/'+user_id +'/'+ getDate() +'/'" >
+				<a type="button" title="New Report" class="btn btn-default" v-bind:href="'/workingreports/add/'+user_report +'/'+ getDate() +'/'" >
 					New Report
 				</a>
 			</div>
 		</div>
 		
 </div>
+
+<!--<pre>@{{$data}}</pre>-->
 
 @endsection
 

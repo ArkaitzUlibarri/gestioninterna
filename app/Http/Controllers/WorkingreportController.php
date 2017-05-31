@@ -23,12 +23,26 @@ class WorkingReportController extends Controller
 	public function __construct(WorkingreportRepository $workingreportRepository)
 	{
 		$this->middleware('auth');
+		$this->middleware('checkrole',['only' => ['edit']]);
 		$this->workingreportRepository = $workingreportRepository;
 	}
 
 	public function index(Request $request)
 	{
-		$users     = User::all();
+		$users     = User::all()->sortBy('name');
+		$users     = $users->filter(function($user)
+		{
+			$output = false;
+			foreach ($user->contracts as $contract) {	
+				if($contract->isActive()){
+					$output = true;
+					return $output;
+				}
+			}
+			if($output){
+				return $user;
+			}			
+		});
 		$auth_user = Auth::user();
 		$admin     = $auth_user->isAdmin();
 		$pm        = $auth_user->isPM();
@@ -48,9 +62,14 @@ class WorkingReportController extends Controller
 
 	public function edit($user_id,$date)
 	{
-		$absences       = Absence::all();
 		$auth_user      = Auth::user();
 		$report_user    = User::find($user_id);
+		/*
+		if($auth_user->id != intval($user_id) ){
+			$this->middleware('checkrole');
+		}
+		*/
+		$absences       = Absence::all();
 		$workingreports = $this->getReportsPerDay($user_id,$date);
 		$groupProjects  = $this->getGroupsProjectsByUser($user_id);
 		$categories     = $this->getCategories($user_id);

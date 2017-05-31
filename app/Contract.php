@@ -78,4 +78,9 @@ class Contract extends Model
     {
         return $this->hasOne('App\ContractType','id','contract_type_id');
     }
+
+    public function isActive()
+    {
+    	return $this->end_date != null ? 0 : 1;
+    }
 }

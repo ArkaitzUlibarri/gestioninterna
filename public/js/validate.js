@@ -26,7 +26,8 @@ var app = new Vue({
 		reports: [],
 		tasks: [],
 
-		users: []
+		users: [],
+		user_report: -1
 	},
 
 	mounted: function mounted() {
@@ -35,6 +36,7 @@ var app = new Vue({
 		this.admin = this.role == 'admin' ? 1 : 0;
 		this.pm = pm;
 		this.user_id = auth_user.id;
+		this.user_report = auth_user.id;
 	},
 
 

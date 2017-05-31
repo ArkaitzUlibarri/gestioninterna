@@ -33,12 +33,12 @@
             <dd>{{ strtoupper($user->role)}}</dd>
         </dl>
 
-        <dl class="dl-horizontal">
-            <dt>
-                <a title="Back" class="btn btn-primary" href="{{ url('users') }}">
-                    Back
-                </a>
-            </dt>
-        </dl>   
+        @include('users.categories')
+        @include('users.groups')
+
+        <a title="Back" class="btn btn-primary" href="{{ url('users') }}">
+            Back
+        </a>
+
     </div>
 @endsection

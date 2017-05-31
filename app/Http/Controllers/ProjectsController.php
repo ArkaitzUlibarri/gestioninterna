@@ -22,7 +22,6 @@ class ProjectsController extends Controller
 
     public function index(Request $request)
     {
-		//$projects = $this->getProjects();
 		$projects   = $this->projectRepository->search($request->all(), true);
 		$customers  = Customer::all();
 
@@ -37,25 +36,25 @@ class ProjectsController extends Controller
 
     public function edit($id)
     {
-		//$project   = $this->getProject($id);
-		//$customers = $this->customers();	
 		$project     = Project::find($id);
 		$customers   = Customer::all();
 		$PM_Users    = $this->getPMs();
+
     	return view('projects.edit',compact('project','customers','PM_Users'));
     }
 
     public function show($id)
     {
-		//$project = $this->getProject($id);
 		$project   = Project::find($id);
+
     	return view('projects.show',compact('project'));
     }
 
     public function create()
     {
-		$customers = $this->customers();
+		$customers = Customer::all();
 		$PM_Users  = $this->getPMs();
+
     	return view('projects.create',compact('customers','PM_Users'));
     }
 
@@ -90,42 +89,9 @@ class ProjectsController extends Controller
 	public function update(ProjectFormRequest $request, $id)
 	{
 		$project = Project::find($id);
-
 		$project->update($request->all());
 
 		return redirect('/projects');
-	}
-
-	private function customers()
-	{
-		return DB::table('customers')
-    		->select('id','name')
-    		->get();
-	}
-
-	private function getProject($id)
-	{
-		return DB::table('projects')
-			->join('customers','projects.customer_id','=','customers.id')
-			->where('projects.id', $id)
-			->select(
-				'projects.*',
-				'customers.name as customerName'
-			)
-			->first();
-	}
-
-	private function getProjects()
-	{
-		return DB::table('projects')
-			->join('customers','projects.customer_id','=','customers.id')	
-			->select(
-				'projects.*',
-				'customers.name as customer'
-			)
-			//->where('end_date',null)
-			->orderBy('start_date','asc')
-			->get();
 	}
 
 	private function getPMs()
