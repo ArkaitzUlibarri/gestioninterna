@@ -101,64 +101,49 @@ const app = new Vue({
 			let vm     = this;
 			let output = true;
 
-			if (confirm("¿Estás seguro de que quieres validar el día?")) {
+			vm.tasks.forEach(function (item) {
 
-				/*console.log("Admin: " + vm.admin);
-				console.log("PM: " + vm.pm);
-				console.log("Flag: " + flag);*/
-
-				vm.tasks.forEach(function (item) {
-
-					/*console.log("pm_validation: " + item.pm_validation);
-					console.log("admin_validation: " + item.admin_validation);*/
-
-					if(vm.admin){
-						if(flag){
-						 	if((item.pm_validation == 1)  && (item.admin_validation == 0)){
-								item.admin_validation = 1;
-								console.log("A-Admin:" + item.admin_validation);
-								return output;
-							}
+				if(vm.admin){
+					if(flag){
+					 	if((item.pm_validation == 1)  && (item.admin_validation == 0)){
+							item.admin_validation = 1;
+							return output;
 						}
-						else{
-							if((item.pm_validation == 1)  && (item.admin_validation == 1)){
-								item.admin_validation = 0;
-								console.log("B-Admin:" + item.admin_validation);
-								return output;
-							}
-						}
-						output = false;
-						return output;
 					}
-					else if (vm.pm){
-						if(flag){
-							if((item.pm_validation == 0) && (item.admin_validation == 0)){
-								item.pm_validation = 1;
-								console.log("C-PM:" + item.pm_validation);
-								return output;
-							}
-						}
-						else{
-							if((item.pm_validation == 1) && (item.admin_validation == 0)){
-								item.pm_validation = 0;
-								console.log("D-PM:" + item.pm_validation);
-								return output;
-							}
-						}
-						output = false;
-						return output;
-					}		
 					else{
-						output = false;
-						return output;
-					}	
-
-				});
-				console.log("Output: " + output);
-				if(output){
-					return true;
+						if((item.pm_validation == 1)  && (item.admin_validation == 1)){
+							item.admin_validation = 0;
+							return output;
+						}
+					}
+					output = false;
+					return output;
 				}
+				else if (vm.pm){
+					if(flag){
+						if((item.pm_validation == 0) && (item.admin_validation == 0)){
+							item.pm_validation = 1;
+							return output;
+						}
+					}
+					else{
+						if((item.pm_validation == 1) && (item.admin_validation == 0)){
+							item.pm_validation = 0;
+							return output;
+						}
+					}
+					output = false;
+					return output;
+				}		
+				else{
+					output = false;
+					return output;
+				}	
 
+			});
+
+			if(output){
+				return true;
 			}
 
 			return false;
@@ -177,6 +162,7 @@ const app = new Vue({
 			.then(function (response) {
 				vm.tasks = response.data;
 				console.log(response.data);
+				//toastr.info(response.data);
 				if(vm.validate(flag)){
 					vm.save();
 					vm.updateReport(index,flag);
@@ -184,6 +170,16 @@ const app = new Vue({
 			})
 			.catch(function (error) {
 				console.log(error);
+				//******************************************
+				if(Array.isArray(error.response.data)) {
+					error.response.data.forEach( (error) => {
+						toastr.error(error);
+					})
+				}
+				else {
+					toastr.error(error.response.data);
+				}
+				//********************************************
 			});
 		},
 
@@ -194,10 +190,21 @@ const app = new Vue({
 		
 				axios.patch('/api/reports/' + item.id, item)
 				.then(function (response) {
-					console.log(response.data);
+					console.log(response.data);					
+					toastr.info(response.data);
 				})
 				.catch(function (error) {
 					console.log(error);
+					//********************************************
+					if(Array.isArray(error.response.data)) {
+						error.response.data.forEach( (error) => {
+							toastr.error(error);
+						})
+					}
+					else {
+						toastr.error(error.response.data);
+					}
+					//**********************************************
 				});
 
 			});

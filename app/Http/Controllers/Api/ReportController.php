@@ -118,7 +118,7 @@ class ReportController extends ApiController
 			->where('id',$id)
 			->update($array);
 
-		return $this->respond("Updated index:" . $id);
+		return $this->respond("Updated");
 
 	}
 
@@ -139,7 +139,7 @@ class ReportController extends ApiController
 			->where('id',$id)
 			->delete();
 
-		return $this->respond("Deleted index:" . $id);
+		return $this->respond("Deleted");
 	}
 
 

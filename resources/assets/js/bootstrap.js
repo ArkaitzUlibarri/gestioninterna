@@ -57,6 +57,17 @@ window.moment = require('moment');
 window.moment.locale('en');
 
 /**
+ * toastr is a Javascript library for non-blocking notifications. jQuery is required.
+ */
+
+window.toastr = require('toastr');
+toastr.options.timeOut = 5000;
+toastr.options.newestOnTop = true;
+toastr.options.progressBar = false;
+toastr.options.positionClass = 'toast-top-center';
+toastr.options.preventDuplicates = true;
+
+/**
  * Instancia de Vue para la gestion de eventos.
  */
 window.Event = new Vue();

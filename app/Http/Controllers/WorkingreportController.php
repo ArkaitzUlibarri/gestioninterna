@@ -29,8 +29,8 @@ class WorkingReportController extends Controller
 
 	public function index(Request $request)
 	{
-		$users     = User::all()->sortBy('name');
-		$users     = $users->filter(function($user)
+		$users = User::all()->sortBy('name');
+		$users = $users->filter(function($user)
 		{
 			$output = false;
 			foreach ($user->contracts as $contract) {	
@@ -64,11 +64,6 @@ class WorkingReportController extends Controller
 	{
 		$auth_user      = Auth::user();
 		$report_user    = User::find($user_id);
-		/*
-		if($auth_user->id != intval($user_id) ){
-			$this->middleware('checkrole');
-		}
-		*/
 		$absences       = Absence::all();
 		$workingreports = $this->getReportsPerDay($user_id,$date);
 		$groupProjects  = $this->getGroupsProjectsByUser($user_id);

@@ -162,21 +162,17 @@ const app = new Vue({
 		dateValidation() {
 			var today = this.getDate();
 			var datefield = document.getElementById("datefield").value;
-			
-			if(moment(datefield,"YYYY-MM-DD").isValid()){
 
-				if(datefield <= today) {
-					this.fetchData();
-				}
-				else{
-					console.log("Fecha mayor que hoy")
-				}
-				
+			if (datefield.length == 10 && moment(datefield,"YYYY-MM-DD").isValid() &&  datefield <= today) {
+				this.fetchData();
 			}
 			else{
-				console.log("Fecha con formato erróneo")
+				//console.log("Fecha mayor que hoy");
+				toastr.error("Fecha mayor que hoy o con formato erróneo");
+				this.reportdate = today;
+				this.fetchData();
 			}
-			
+					
 		},
 
 		getDate() {
@@ -443,6 +439,16 @@ const app = new Vue({
 			})
 			.catch(function (error) {
 				console.log(error);
+				//****************************************
+				if(Array.isArray(error.response.data)) {
+					error.response.data.forEach( (error) => {
+						toastr.error(error);
+					})
+				}
+				else {
+					toastr.error(error.response.data);
+				}
+				//****************************************
 			});
 
 		},
@@ -455,6 +461,7 @@ const app = new Vue({
 				axios.patch('/api/reports/' + vm.newTask.id, vm.newTask)
 				.then(function (response) {
 					console.log(response.data);
+					toastr.success(response.data);
 					//---------------------------------------
 					let properties = Object.keys(vm.newTask);
 
@@ -466,6 +473,16 @@ const app = new Vue({
 				})
 				.catch(function (error) {
 					console.log(error);
+					//****************************************
+					if(Array.isArray(error.response.data)) {
+						error.response.data.forEach( (error) => {
+							toastr.error(error);
+						})
+					}
+					else {
+						toastr.error(error.response.data);
+					}
+					//****************************************
 				});
 				return;
 			}
@@ -474,6 +491,7 @@ const app = new Vue({
 				axios.post('/api/reports', vm.newTask)
 				.then(function (response) {
 					console.log(response.data);
+					toastr.success("Saved");
 					//---------------------------------------
 					vm.newTask.id = response.data;
 					vm.tasks.push(vm.newTask);
@@ -482,6 +500,16 @@ const app = new Vue({
 				})
 				.catch(function (error) {
 					console.log(error);
+					//****************************************
+					if(Array.isArray(error.response.data)) {
+						error.response.data.forEach( (error) => {
+							toastr.error(error);
+						})
+					}
+					else {
+						toastr.error(error.response.data);
+					}
+					//****************************************
 				});	
 				return;
 
@@ -494,9 +522,20 @@ const app = new Vue({
 			axios.delete('/api/reports/' + vm.tasks[index].id)
 			.then(function (response) {
 				console.log(response.data);
+				toastr.success(response.data);
 			})
 			.catch(function (error) {
 				console.log(error);
+				//****************************************
+				if(Array.isArray(error.response.data)) {
+					error.response.data.forEach( (error) => {
+						toastr.error(error);
+					})
+				}
+				else {
+					toastr.error(error.response.data);
+				}
+				//****************************************
 			});	
 		}
 

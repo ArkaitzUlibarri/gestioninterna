@@ -96,6 +96,16 @@ const app = new Vue({
 			})
 			.catch(function (error) {
 				console.log(error);
+				//********************************************
+				if(Array.isArray(error.response.data)) {
+					error.response.data.forEach( (error) => {
+						toastr.error(error);
+					})
+				}
+				else {
+					toastr.error(error.response.data);
+				}
+				//**********************************************
 			});
 		},
 
@@ -106,8 +116,8 @@ const app = new Vue({
 				axios.patch('/api/groups/' + vm.newGroup.id, vm.newGroup)
 				.then(function (response) {
 					console.log(response.data);
+					toastr.success("Updated");
 					//---------------------------------------
-					console.log("editGroup");
 					let properties = Object.keys(vm.newGroup);
 
 					for (let i = properties.length - 1; i >= 0; i--) {
@@ -126,8 +136,8 @@ const app = new Vue({
 				axios.post('/api/groups', vm.newGroup)
 				.then(function (response) {
 					console.log(response.data);
+					toastr.success("Saved");
 					//---------------------------------------
-					console.log("addGroup");
 					vm.newGroup.id = response.data;
 					vm.groups.push(vm.newGroup);
 					vm.initializeGroup();
@@ -135,6 +145,16 @@ const app = new Vue({
 				})
 				.catch(function (error) {
 					console.log(error);
+					//****************************************
+					if(Array.isArray(error.response.data)) {
+						error.response.data.forEach( (error) => {
+							toastr.error(error);
+						})
+					}
+					else {
+						toastr.error(error.response.data);
+					}
+					//****************************************
 				});	
 				return;
 
@@ -147,18 +167,30 @@ const app = new Vue({
 			axios.delete('/api/groups/' + vm.groups[index].id)
 			.then(function (response) {
 				console.log(response.data);
+				toastr.success(response.data);
 				//---------------------------------------
 				if(response.data){
 					vm.groups.splice(index, 1);
 					vm.initializeGroup();
 				}
 				else {
-					console.log("No es posible borrar este grupo");
+					//console.log("No es posible borrar este grupo");
+					toastr.warning("No es posible borrar este grupo");
 				}
 				//---------------------------------------
 			})
 			.catch(function (error) {
 				console.log(error);
+				//****************************************
+				if(Array.isArray(error.response.data)) {
+					error.response.data.forEach( (error) => {
+						toastr.error(error);
+					})
+				}
+				else {
+					toastr.error(error.response.data);
+				}
+				//****************************************
 			});	
 		}
 

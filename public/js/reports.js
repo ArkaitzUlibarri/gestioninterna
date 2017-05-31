@@ -17,7 +17,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 /**
  * Registro los componentes necesarios.
  */
-Vue.component('task-template', __webpack_require__(160));
+Vue.component('task-template', __webpack_require__(161));
 
 var app = new Vue({
 
@@ -163,15 +163,13 @@ var app = new Vue({
 			var today = this.getDate();
 			var datefield = document.getElementById("datefield").value;
 
-			if (moment(datefield, "YYYY-MM-DD").isValid()) {
-
-				if (datefield <= today) {
-					this.fetchData();
-				} else {
-					console.log("Fecha mayor que hoy");
-				}
+			if (datefield.length == 10 && moment(datefield, "YYYY-MM-DD").isValid() && datefield <= today) {
+				this.fetchData();
 			} else {
-				console.log("Fecha con formato erróneo");
+				//console.log("Fecha mayor que hoy");
+				toastr.error("Fecha mayor que hoy o con formato erróneo");
+				this.reportdate = today;
+				this.fetchData();
 			}
 		},
 		getDate: function getDate() {
@@ -415,6 +413,15 @@ var app = new Vue({
 				console.log(response.data);
 			}).catch(function (error) {
 				console.log(error);
+				//****************************************
+				if (Array.isArray(error.response.data)) {
+					error.response.data.forEach(function (error) {
+						toastr.error(error);
+					});
+				} else {
+					toastr.error(error.response.data);
+				}
+				//****************************************
 			});
 		},
 		save: function save() {
@@ -423,6 +430,7 @@ var app = new Vue({
 			if (vm.newTask.id != -1) {
 				axios.patch('/api/reports/' + vm.newTask.id, vm.newTask).then(function (response) {
 					console.log(response.data);
+					toastr.success(response.data);
 					//---------------------------------------
 					var properties = Object.keys(vm.newTask);
 
@@ -433,12 +441,22 @@ var app = new Vue({
 					//---------------------------------------
 				}).catch(function (error) {
 					console.log(error);
+					//****************************************
+					if (Array.isArray(error.response.data)) {
+						error.response.data.forEach(function (error) {
+							toastr.error(error);
+						});
+					} else {
+						toastr.error(error.response.data);
+					}
+					//****************************************
 				});
 				return;
 			} else {
 
 				axios.post('/api/reports', vm.newTask).then(function (response) {
 					console.log(response.data);
+					toastr.success("Saved");
 					//---------------------------------------
 					vm.newTask.id = response.data;
 					vm.tasks.push(vm.newTask);
@@ -446,6 +464,15 @@ var app = new Vue({
 					//---------------------------------------	
 				}).catch(function (error) {
 					console.log(error);
+					//****************************************
+					if (Array.isArray(error.response.data)) {
+						error.response.data.forEach(function (error) {
+							toastr.error(error);
+						});
+					} else {
+						toastr.error(error.response.data);
+					}
+					//****************************************
 				});
 				return;
 			}
@@ -455,8 +482,18 @@ var app = new Vue({
 
 			axios.delete('/api/reports/' + vm.tasks[index].id).then(function (response) {
 				console.log(response.data);
+				toastr.success(response.data);
 			}).catch(function (error) {
 				console.log(error);
+				//****************************************
+				if (Array.isArray(error.response.data)) {
+					error.response.data.forEach(function (error) {
+						toastr.error(error);
+					});
+				} else {
+					toastr.error(error.response.data);
+				}
+				//****************************************
 			});
 		}
 	}
@@ -532,18 +569,18 @@ exports.push([module.i, "\n.panel-right-corner {\n    position: absolute;\n    r
 
 /***/ }),
 
-/***/ 160:
+/***/ 161:
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(164)
+__webpack_require__(165)
 
 var Component = __webpack_require__(6)(
   /* script */
   __webpack_require__(154),
   /* template */
-  __webpack_require__(162),
+  __webpack_require__(163),
   /* scopeId */
   null,
   /* cssModules */
@@ -571,7 +608,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 162:
+/***/ 163:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -616,7 +653,7 @@ if (false) {
 
 /***/ }),
 
-/***/ 164:
+/***/ 165:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
@@ -643,7 +680,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 169:
+/***/ 171:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(133);
@@ -1018,4 +1055,4 @@ module.exports = function listToStyles (parentId, list) {
 
 /***/ })
 
-},[169]);
+},[171]);

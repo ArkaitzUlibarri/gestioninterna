@@ -16,7 +16,7 @@ webpackJsonp([2],{
 /**
  * Registro los componentes necesarios.
  */
-Vue.component('group-template', __webpack_require__(159));
+Vue.component('group-template', __webpack_require__(160));
 
 var app = new Vue({
 
@@ -96,6 +96,15 @@ var app = new Vue({
 				//****************************************************
 			}).catch(function (error) {
 				console.log(error);
+				//********************************************
+				if (Array.isArray(error.response.data)) {
+					error.response.data.forEach(function (error) {
+						toastr.error(error);
+					});
+				} else {
+					toastr.error(error.response.data);
+				}
+				//**********************************************
 			});
 		},
 		save: function save() {
@@ -104,8 +113,8 @@ var app = new Vue({
 			if (vm.newGroup.id != -1) {
 				axios.patch('/api/groups/' + vm.newGroup.id, vm.newGroup).then(function (response) {
 					console.log(response.data);
+					toastr.success("Updated");
 					//---------------------------------------
-					console.log("editGroup");
 					var properties = Object.keys(vm.newGroup);
 
 					for (var i = properties.length - 1; i >= 0; i--) {
@@ -121,14 +130,23 @@ var app = new Vue({
 
 				axios.post('/api/groups', vm.newGroup).then(function (response) {
 					console.log(response.data);
+					toastr.success("Saved");
 					//---------------------------------------
-					console.log("addGroup");
 					vm.newGroup.id = response.data;
 					vm.groups.push(vm.newGroup);
 					vm.initializeGroup();
 					//---------------------------------------
 				}).catch(function (error) {
 					console.log(error);
+					//****************************************
+					if (Array.isArray(error.response.data)) {
+						error.response.data.forEach(function (error) {
+							toastr.error(error);
+						});
+					} else {
+						toastr.error(error.response.data);
+					}
+					//****************************************
 				});
 				return;
 			}
@@ -138,16 +156,27 @@ var app = new Vue({
 
 			axios.delete('/api/groups/' + vm.groups[index].id).then(function (response) {
 				console.log(response.data);
+				toastr.success(response.data);
 				//---------------------------------------
 				if (response.data) {
 					vm.groups.splice(index, 1);
 					vm.initializeGroup();
 				} else {
-					console.log("No es posible borrar este grupo");
+					//console.log("No es posible borrar este grupo");
+					toastr.warning("No es posible borrar este grupo");
 				}
 				//---------------------------------------
 			}).catch(function (error) {
 				console.log(error);
+				//****************************************
+				if (Array.isArray(error.response.data)) {
+					error.response.data.forEach(function (error) {
+						toastr.error(error);
+					});
+				} else {
+					toastr.error(error.response.data);
+				}
+				//****************************************
 			});
 		}
 	}
@@ -213,18 +242,18 @@ exports.push([module.i, "\n.group-panel {\n    position:relative;\n    border-bo
 
 /***/ }),
 
-/***/ 159:
+/***/ 160:
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(163)
+__webpack_require__(164)
 
 var Component = __webpack_require__(6)(
   /* script */
   __webpack_require__(153),
   /* template */
-  __webpack_require__(161),
+  __webpack_require__(162),
   /* scopeId */
   null,
   /* cssModules */
@@ -252,7 +281,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 161:
+/***/ 162:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -292,7 +321,7 @@ if (false) {
 
 /***/ }),
 
-/***/ 163:
+/***/ 164:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
@@ -319,7 +348,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 168:
+/***/ 170:
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(132);
@@ -695,4 +724,4 @@ module.exports = function listToStyles (parentId, list) {
 
 /***/ })
 
-},[168]);
+},[170]);
