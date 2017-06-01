@@ -40,13 +40,13 @@ class ContractsController extends Controller
 	{
 		$bankHolidaysCodes = $this->getBankHolidaysCodes();
 
-		$nationalDays = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[0]);
-		$regionalDays = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[1]);
-		$localDays = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[2]);
+		$nationalDays  = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[0]);
+		$regionalDays  = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[1]);
+		$localDays     = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[2]);
 		
-		$contractTypes=$this->getContractTypes();
+		$contractTypes = $this->getContractTypes();
 		
-		$users=$this->getUsers();
+		$users         = $this->getUsers();
 
 		return view('contracts.create', compact('users', 'contractTypes', 'nationalDays', 'regionalDays', 'localDays'));
 	}
@@ -60,23 +60,23 @@ class ContractsController extends Controller
 
 		$nationalDays = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[0]);
 		$regionalDays = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[1]);
-		$localDays = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[2]);
+		$localDays    = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[2]);
 		
 		foreach ($nationalDays as $nationalDay) {
 			if($nationalDay->id == $contract->national_days_id){
-				$nationalDayName=$nationalDay->name;
+				$nationalDayName = $nationalDay->name;
 			}
 		}
 
 		foreach ($regionalDays as $regionalDay) {
 			if($regionalDay->id == $contract->regional_days_id){
-				$regionalDayName=$regionalDay->name;
+				$regionalDayName = $regionalDay->name;
 			}
 		}
 
 		foreach ($localDays as $localDay) {
 			if($localDay->id == $contract->local_days_id){
-				$localDayName=$localDay->name;
+				$localDayName = $localDay->name;
 			}
 		}
 
@@ -88,15 +88,15 @@ class ContractsController extends Controller
 	{
 		$contract = $this->getContractEdit($id);
 
-		$bankHolidaysCodes =$this->getBankHolidaysCodes();
+		$bankHolidaysCodes = $this->getBankHolidaysCodes();
 
 		$nationalDays = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[0]);
 		$regionalDays = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[1]);
-		$localDays = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[2]);
+		$localDays    = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[2]);
 		
-		$contractTypes=$this->getContractTypes();
+		$contractTypes = $this->getContractTypes();
 		
-		$users=$this->getUsers();
+		$users = $this->getUsers();
 
 		return view('contracts.edit', compact('contract','users', 'contractTypes', 'nationalDays', 'regionalDays', 'localDays'));
 	}

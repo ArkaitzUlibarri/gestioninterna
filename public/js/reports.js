@@ -62,8 +62,7 @@ var app = new Vue({
 			admin_validation: 0
 		},
 
-		tasks: [],
-		oldTasks: []
+		tasks: []
 	},
 
 	computed: {
@@ -497,7 +496,31 @@ var app = new Vue({
 				//****************************************
 			});
 		},
-		copyTasks: function copyTasks() {}
+		copyTasks: function copyTasks() {
+			var vm = this;
+
+			axios.get('/api/lastreport', {
+				params: {
+					user_id: vm.user.id,
+					created_at: vm.reportdate
+				}
+			}).then(function (response) {
+				console.log(response.data);
+				toastr.success(response.data);
+				vm.fetchData();
+			}).catch(function (error) {
+				console.log(error);
+				//****************************************
+				if (Array.isArray(error.response.data)) {
+					error.response.data.forEach(function (error) {
+						toastr.error(error);
+					});
+				} else {
+					toastr.error(error.response.data);
+				}
+				//****************************************
+			});
+		}
 	}
 });
 
@@ -508,6 +531,9 @@ var app = new Vue({
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
 //
 //
 //

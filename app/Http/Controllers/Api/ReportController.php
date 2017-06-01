@@ -142,5 +142,48 @@ class ReportController extends ApiController
 		return $this->respond("Deleted");
 	}
 
+	/**
+	 * Extraigo el ultimo reporte
+	 * 
+	 * @param  $id
+	 */
+	public function last(Request $request)
+	{
+		//Validacion
+		$validator = Validator::make($request->all(), [
+			'user_id'    => 'required|numeric',
+			'created_at' => 'required|date',
+		]);
 
+		if ($validator->fails()) {
+			return $this->respondNotAcceptable($validator->errors()->all());
+		}
+
+		//Query de extracción del último reporte
+		$results = DB::select(DB::raw(
+				"INSERT INTO working_report (
+					user_id,
+					created_at,
+					activity,
+					project_id,
+					group_id,
+					category_id,
+					training_type,
+					course_group_id,
+					absence_id,
+					time_slots,
+					job_type
+				)
+				SELECT user_id, :reportdate as created_at, activity, project_id, group_id, category_id ,training_type, course_group_id, absence_id, time_slots, job_type
+				FROM working_report
+				WHERE user_id = :user and created_at = (SELECT MAX(created_at) FROM working_report where created_at <> :report);"
+			), array(
+				'reportdate' => $request['created_at'],
+				'user'       => $request['user_id'],
+				'report'     => $request['created_at'],
+			)
+		);
+
+		return $this->respond("COPIED");	
+	}
 }

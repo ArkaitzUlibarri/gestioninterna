@@ -90,6 +90,19 @@ class User extends Authenticatable
     }
 
     /**
+     * Check if the user has teleworking in his active contract
+     */
+    public function hasTeleworking()
+    {
+        if($this->contracts->where('end_date',null)->first()->teleworking->where('end_date',null)->first() == [] ){
+            return 0; 
+        } 
+        else{
+            return 1;
+        }
+    }
+
+    /**
      * Return the active projects in which a User is PM
      */
     public function PMProjects()

@@ -30,4 +30,9 @@ class Teleworking extends Model
 	{
 		return $this->belongsTo('App\Contract');
 	}
+
+	public function isActive()
+    {
+    	return $this->end_date != null ? 0 : 1;
+    }
 }

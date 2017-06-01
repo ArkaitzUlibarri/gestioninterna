@@ -83,4 +83,5 @@ class Contract extends Model
     {
     	return $this->end_date != null ? 0 : 1;
     }
+
 }

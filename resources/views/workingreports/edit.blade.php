@@ -42,7 +42,7 @@
 
 				<div class="col-xs-12 col-sm-2" v-if="! validatedTasks">
 					<label>Last tasks</label>
-					<button class="btn btn-primary" title="Copy" v-on:click="copyTasks" disabled>
+					<button class="btn btn-primary" title="Copy" v-on:click="copyTasks" v-bind:disabled="tasks.length != 0">
 						Copy last report
 					</button>
 				</div>	
@@ -108,9 +108,12 @@
 						<label>Type</label>
 						<select class="form-control" v-model="newTask.job_type" v-bind:disabled="validatedTasks">
 							<option value="">-</option>
-							@foreach(config('options.typeOfJob') as $type)				
+							@foreach(config('options.types') as $type)				
 								<option value="{{$type}}">{{ucfirst($type)}}</option>
-							@endforeach
+							@endforeach		
+							@if($report_user->hasTeleworking())				
+								<option value="teleworking">Teleworking</option>
+							@endif
 						</select>
 					</div>
 

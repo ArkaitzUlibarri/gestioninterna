@@ -60,6 +60,11 @@ return [
 		'teleworking'
 	],
 
+	'types' => [
+		'on site work',
+		'remote',
+	],
+
 	'status' => [
 		'active',
 		'inactive'

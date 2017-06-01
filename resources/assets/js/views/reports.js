@@ -57,7 +57,6 @@ const app = new Vue({
 		},
 
 		tasks: [],
-		oldTasks: []
 	},
 
 
@@ -232,7 +231,7 @@ const app = new Vue({
 			var d = new Date(stringDate);
 
 			var weekday = new Array(7);
-			weekday[0] =  "Sunday";
+			weekday[0] = "Sunday";
 			weekday[1] = "Monday";
 			weekday[2] = "Tuesday";
 			weekday[3] = "Wednesday";
@@ -541,7 +540,32 @@ const app = new Vue({
 		},
 
 		copyTasks(){
+			let vm = this;
 
+			axios.get('/api/lastreport', {
+				params: {
+					user_id: vm.user.id,
+					created_at: vm.reportdate,
+				}
+			})
+			.then(function (response) {
+				console.log(response.data);
+				toastr.success(response.data);
+				vm.fetchData();
+			})
+			.catch(function (error) {
+				console.log(error);
+				//****************************************
+				if(Array.isArray(error.response.data)) {
+					error.response.data.forEach( (error) => {
+						toastr.error(error);
+					})
+				}
+				else {
+					toastr.error(error.response.data);
+				}
+				//****************************************
+			});	
 		}
 	}
 });
