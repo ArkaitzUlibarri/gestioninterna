@@ -62,7 +62,8 @@ var app = new Vue({
 			admin_validation: 0
 		},
 
-		tasks: []
+		tasks: [],
+		oldTasks: []
 	},
 
 	computed: {
@@ -495,7 +496,8 @@ var app = new Vue({
 				}
 				//****************************************
 			});
-		}
+		},
+		copyTasks: function copyTasks() {}
 	}
 });
 

@@ -41,8 +41,8 @@
 				</div>	
 
 				<div class="col-xs-12 col-sm-2" v-if="! validatedTasks">
-					<label>Yesterday tasks</label>
-					<button class="btn btn-primary" title="Copy" disabled>
+					<label>Last tasks</label>
+					<button class="btn btn-primary" title="Copy" v-on:click="copyTasks" disabled>
 						Copy last report
 					</button>
 				</div>	

@@ -167,15 +167,15 @@ const app = new Vue({
 			axios.delete('/api/groups/' + vm.groups[index].id)
 			.then(function (response) {
 				console.log(response.data);
-				toastr.success(response.data);
 				//---------------------------------------
 				if(response.data){
+					toastr.success("Deleted");
 					vm.groups.splice(index, 1);
 					vm.initializeGroup();
 				}
 				else {
 					//console.log("No es posible borrar este grupo");
-					toastr.warning("No es posible borrar este grupo");
+					toastr.warning("This group cannot be deleted");
 				}
 				//---------------------------------------
 			})

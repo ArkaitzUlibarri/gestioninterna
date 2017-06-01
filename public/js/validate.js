@@ -180,7 +180,7 @@ var app = new Vue({
 
 				axios.patch('/api/reports/' + item.id, item).then(function (response) {
 					console.log(response.data);
-					toastr.info(response.data);
+					toastr.success(response.data);
 				}).catch(function (error) {
 					console.log(error);
 					//********************************************

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Api\ApiController;
 use App\Group;
 use Illuminate\Http\Request;
-use App\Http\Requests\GroupFormApiRequest;
+use App\Http\Requests\GroupApiRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -41,10 +41,10 @@ class GroupController extends ApiController
 	/**
 	 * Creo un grupo de proyecto
 	 * 
-	 * @param  GroupFormApiRequest $request
+	 * @param  GroupApiRequest $request
 	 * @return json
 	 */
-	public function store(GroupFormApiRequest $request)
+	public function store(GroupApiRequest $request)
 	{
 
 		$array = $request->all();
@@ -61,11 +61,11 @@ class GroupController extends ApiController
 	/**
 	 * Actualizo un grupo de proyecto
 	 * 
-	 * @param  GroupFormApiRequest $request
+	 * @param  GroupApiRequest $request
 	 * @param  $id
 	 * @return json
 	 */
-	public function update(GroupFormApiRequest $request, $id)
+	public function update(GroupApiRequest $request, $id)
 	{
 
 		$array = $request->all();

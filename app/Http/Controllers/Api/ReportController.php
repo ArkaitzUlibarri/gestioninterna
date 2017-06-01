@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
-use App\Http\Requests\ReportFormApiRequest;
+use App\Http\Requests\ReportApiRequest;
 use App\Workingreport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -68,10 +68,10 @@ class ReportController extends ApiController
 	/**
 	 * Creo un reporte de trabajo
 	 * 
-	 * @param  ReportFormApiRequest $request
+	 * @param  ReportApiRequest $request
 	 * @return json
 	 */
-	public function store(ReportFormApiRequest $request)
+	public function store(ReportApiRequest $request)
 	{
 
 		$array = $request->all();
@@ -93,11 +93,11 @@ class ReportController extends ApiController
 	/**
 	 * Actualizo un reporte de trabajo
 	 * 
-	 * @param  ReportFormApiRequest $request
+	 * @param  ReportApiRequest $request
 	 * @param  $id
 	 * @return json
 	 */
-	public function update(ReportFormApiRequest $request, $id)
+	public function update(ReportApiRequest $request, $id)
 	{
 
 		$array = $request->all();

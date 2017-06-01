@@ -56,7 +56,8 @@ const app = new Vue({
 			admin_validation: 0,
 		},
 
-		tasks: []
+		tasks: [],
+		oldTasks: []
 	},
 
 
@@ -537,7 +538,10 @@ const app = new Vue({
 				}
 				//****************************************
 			});	
-		}
+		},
 
+		copyTasks(){
+
+		}
 	}
 });
