@@ -27,6 +27,9 @@ Route::resource('contracts', 'ContractsController', ['except' => [
     'destroy'
 ]]);
 
+Route::get('contracts/{contract}/teleworking/', 'TeleworkingController@edit');
+Route::get('contracts/{contract}/reductions/', 'ReductionsController@edit');
+
 Route::resource('projects', 'ProjectsController', ['except' => [
     'destroy'
 ]]);

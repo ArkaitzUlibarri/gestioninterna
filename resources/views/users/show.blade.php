@@ -33,8 +33,8 @@
             <dd>{{ strtoupper($user->role)}}</dd>
         </dl>
 
-        @include('users.categories')
-        @include('users.groups')
+        @include('categories.show')
+        @include('groups.showUsers')
 
         <a title="Back" class="btn btn-primary" href="{{ url('users') }}">
             Back

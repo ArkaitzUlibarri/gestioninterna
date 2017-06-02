@@ -28,7 +28,7 @@
 			<dd>{{empty($project->end_date) ? "In progress" : $project->end_date}}</dd>
 		</dl>	
 
-		@include('projects.groupInfo')
+		@include('groups.showProjects')
 
 		<dl class="dl-horizontal">
 			<dt><a class="btn btn-primary" href="{{ url('projects') }}">Back</a></dt>

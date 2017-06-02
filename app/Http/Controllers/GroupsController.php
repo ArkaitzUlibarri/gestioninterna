@@ -27,7 +27,7 @@ class GroupsController extends Controller
     {
         $project = Project::find($id);
 
-        return view('projects.addgroup',compact('project'));
+        return view('groups.create',compact('project'));
     }
     
     private function getGroups()

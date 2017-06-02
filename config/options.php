@@ -73,5 +73,28 @@ return [
 	'validations' => [
 		'validated',
 		'not validated'
-	]
+	],
+
+	'daysWeek' => [
+		'Monday',
+		'Tuesday',
+		'Wednesday',
+		'Thursday',
+		'Friday',
+		'Saturday',
+		'Sunday'
+	],
+
+	'Weekdays' => [
+		'Monday',
+		'Tuesday',
+		'Wednesday',
+		'Thursday',
+		'Friday',
+	],
+
+	'Weekends' => [
+		'Saturday',
+		'Sunday'
+	],
 ];

@@ -49,8 +49,8 @@
 		</dl>
 		
 
-		@include ('contracts.teleworkingInfo')
-		@include ('contracts.reductionInfo')
+		@include ('teleworking.show')
+		@include ('reductions.show')
 		
 		<dl class="dl-horizontal">
 			<dt><a title="Back" class="btn btn-primary" href="{{ url('contracts') }}">Back</a></dt>

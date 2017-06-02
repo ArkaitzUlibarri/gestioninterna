@@ -33,10 +33,25 @@
                             <td>{{empty($contract->estimated_end_date) ? "None" : "$contract->estimated_end_date"}}</td>    
                             <td>{{empty($contract->end_date) ? "In progress" : "$contract->end_date"}}</td>          
                             <td>
-                                <a title="Edit" class="btn btn-primary btn-sm {{ ! empty($contract->end_date) ? 'disabled' : '' }}" type="button" 
-                                   href="{{ url('contracts/' . $contract->id . '/edit') }}">
-                                   <span class="glyphicon glyphicon-edit"></span> Edit
-                                </a>
+                                @if(empty($contract->end_date))
+                                    <a title="Edit" class="btn btn-primary btn-sm" type="button" 
+                                       href="{{ url('contracts/' . $contract->id . '/edit') }}">
+                                       <span class="glyphicon glyphicon-edit"></span> Edit
+                                    </a>
+                                    <a title="Teleworking" class="btn btn-primary btn-sm" type="button" 
+                                       href="{{ url('contracts/' . $contract->id . '/teleworking') }}">
+                                       Teleworking
+                                    </a>
+                                    <a title="Reductions" class="btn btn-primary btn-sm" type="button" 
+                                       href="{{ url('contracts/' . $contract->id . '/reductions') }}">
+                                        Reductions
+                                    </a>
+                                @else
+                                    <a class="btn btn-warning btn-sm"
+                                       type="button" href="{{ url('contracts/' . $contract->id . '/edit') }}">
+                                       <span class="glyphicon glyphicon-folder-open"></span> Reopen
+                                    </a>
+                                @endif
                             </td>
                         </tr>
                     </tbody>
