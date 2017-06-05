@@ -37,10 +37,6 @@
                 </table>  
             </div>
 
-            <div align="center" class="form-group">  
-                {{ $users->links() }}
-            </div>
-
             <div align="right" class="form-group">  
                 <a type="button" title="Add User" class=" btn btn-default" href="{{ url('/users/create') }}">
                     Add User

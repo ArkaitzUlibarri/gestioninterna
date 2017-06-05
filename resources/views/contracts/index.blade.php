@@ -38,14 +38,6 @@
                                        href="{{ url('contracts/' . $contract->id . '/edit') }}">
                                        <span class="glyphicon glyphicon-edit"></span> Edit
                                     </a>
-                                    <a title="Teleworking" class="btn btn-primary btn-sm" type="button" 
-                                       href="{{ url('contracts/' . $contract->id . '/teleworking') }}">
-                                       Teleworking
-                                    </a>
-                                    <a title="Reductions" class="btn btn-primary btn-sm" type="button" 
-                                       href="{{ url('contracts/' . $contract->id . '/reductions') }}">
-                                        Reductions
-                                    </a>
                                 @else
                                     <a class="btn btn-warning btn-sm"
                                        type="button" href="{{ url('contracts/' . $contract->id . '/edit') }}">
@@ -57,10 +49,6 @@
                     </tbody>
                 @endforeach
             </table>
-            </div>
-
-            <div align="center" class="form-group">  
-                {{ $contracts->links() }}
             </div>
 
             <div align="right" class="form-group">  

@@ -76,13 +76,13 @@ return [
 	],
 
 	'daysWeek' => [
-		'Monday',
-		'Tuesday',
-		'Wednesday',
-		'Thursday',
-		'Friday',
-		'Saturday',
-		'Sunday'
+		'monday',
+		'tuesday',
+		'wednesday',
+		'thursday',
+		'friday',
+		'saturday',
+		'sunday'
 	],
 
 	'Weekdays' => [

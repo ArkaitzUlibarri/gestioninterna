@@ -115,6 +115,7 @@ class CreateUsersTable extends Migration
          * Tabla con los datos de las reducciones de jornada en los contratos de los empleados
          */
         Schema::create('reductions', function (Blueprint $table) {
+            $table->increments('id');
             $table->integer('contract_id')->unsigned();
             $table->date('start_date');
             $table->date('end_date')->nullable();
@@ -130,6 +131,7 @@ class CreateUsersTable extends Migration
          * Tabla con los datos de teletrabajo en los contratos de los empleados
          */
         Schema::create('teleworking', function (Blueprint $table) {
+            $table->increments('id');
             $table->integer('contract_id')->unsigned();
             $table->date('start_date');
             $table->date('end_date')->nullable();

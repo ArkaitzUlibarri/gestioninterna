@@ -22,7 +22,7 @@ class ProjectsController extends Controller
 
     public function index(Request $request)
     {
-		$projects   = $this->projectRepository->search($request->all(), true);
+		$projects   = $this->projectRepository->search($request->all(), false);
 		$customers  = Customer::all();
 
 		$filter = array(	

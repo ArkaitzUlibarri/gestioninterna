@@ -32,4 +32,14 @@ Route::post('groups', 'Api\GroupController@store');
 Route::get('groups', 'Api\GroupController@index');
 Route::delete('groups/{id}', 'Api\GroupController@destroy');
 
+Route::patch('teleworking/{id}', 'Api\TeleworkingApiController@update');
+Route::post('teleworking', 'Api\TeleworkingApiController@store');
+Route::get('teleworking', 'Api\TeleworkingApiController@index');
+Route::delete('teleworking/{id}', 'Api\TeleworkingApiController@destroy');
+
+Route::patch('reductions/{id}', 'Api\ReductionApiController@update');
+Route::post('reductions', 'Api\ReductionApiController@store');
+Route::get('reductions', 'Api\ReductionApiController@index');
+Route::delete('reductions/{id}', 'Api\ReductionApiController@destroy');
+
 

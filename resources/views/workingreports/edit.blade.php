@@ -142,7 +142,7 @@
 					</div>
 
 					<div class="form-group col-xs-12 col-sm-3" v-show=" newTask.group != '' ">
-						<label>Category</label>
+						<label>Level Position</label>
 						<select class="form-control" v-model="newTask.category" v-bind:disabled="validatedTasks">
 							<option value="">-</option>
 							<template v-for="(element, index) in categoryList">
@@ -189,7 +189,7 @@
 					<button title="Save Task" class="btn btn-primary" :disabled="formTaskFilled==false" v-on:click="addTask" v-show="editIndex==-1">
 						<span class="glyphicon glyphicon-floppy-disk"></span> Save
 					</button>
-					<button title="Save Task" class="btn btn-primary" :disabled="formTaskFilled==false" v-on:click="editTask" v-show="editIndex!=-1">
+					<button title="Update Task" class="btn btn-primary" :disabled="formTaskFilled==false" v-on:click="editTask" v-show="editIndex!=-1">
 						<span class="glyphicon glyphicon-floppy-disk"></span> Save
 					</button>
 					<button title="New Task" class="btn btn-primary" v-show="editIndex!=-1" v-on:click="initializeTask">

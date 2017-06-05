@@ -21,7 +21,7 @@ class UsersController extends Controller
 
     public function index(Request $request)
     {
-        $users = $this->userRepository->search($request->all(), true);
+        $users = $this->userRepository->search($request->all(), false);
         $filter = array(    
             'name' => $request->get('name'),
         );

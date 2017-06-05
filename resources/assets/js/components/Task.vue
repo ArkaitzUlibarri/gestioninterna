@@ -13,18 +13,18 @@
 
         <div class="action" v-on:click="editTask">
             <h5 v-if="task.activity == 'project'">
-                <span><b>{{ time }} {{ task.project.toUpperCase() + ' | ' + task.group.toUpperCase() }}</b> | </span> 
-                <span v-if="task.comments">{{ task.comments.substring(0, 90) }}...</span>
+                <span><b>{{ time }} {{ task.project.toUpperCase() + ' | ' + task.group.toUpperCase() + ' | ' + task.category.toUpperCase() }}</b> | </span> 
+                <span v-if="task.comments">{{ task.comments.substring(0, 90) }}<span v-if="task.comments.length >90">...</span></span>
             </h5>             
             
             <h5 v-if="task.activity == 'absence'">
                 <span><b>{{ time }} {{ 'ABSENCE | ' + task.absence.toUpperCase() }}</b> | </span> 
-                <span v-if="task.comments">{{ task.comments.substring(0, 90) }}...</span>
+                <span v-if="task.comments">{{ task.comments.substring(0, 90) }}<span v-if="task.comments.length >90">...</span></span>
             </h5>
 
             <h5 v-if="task.activity == 'training'">
                 <span><b>{{ time }} {{ 'TRAINING | ' + task.training_type.toUpperCase() }}</b> | </span> 
-                <span v-if="task.comments">{{ task.comments.substring(0, 90) }}...</span>
+                <span v-if="task.comments">{{ task.comments.substring(0, 90) }}<span v-if="task.comments.length >90">...</span></span>
             </h5> 
         </div>
     </div>

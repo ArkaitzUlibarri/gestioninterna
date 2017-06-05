@@ -116,6 +116,15 @@
 
 			@include('layouts.errors')
 		</form>
-
+		<div class ="form-group pull-right">
+	        <a title="Teleworking" class="btn btn-primary btn-sm" type="button" 
+	           href="{{ url('contracts/' . $contract->id . '/teleworking') }}">
+	           Teleworking
+	        </a>
+	        <a title="Reductions" class="btn btn-primary btn-sm" type="button" 
+	           href="{{ url('contracts/' . $contract->id . '/reductions') }}">
+	            Reductions
+	        </a>
+	    </div>
 	</div>
 @endsection
