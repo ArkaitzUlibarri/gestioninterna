@@ -53,6 +53,7 @@ class CreateGeneralTable extends Migration
          * Tabla de categorias para cada usuario/empleado
          */
         Schema::create('category_user', function (Blueprint $table) {
+            $table->increments('id');  
             $table->integer('user_id')->unsigned();    
             $table->integer('category_id')->unsigned(); 
 
@@ -69,7 +70,6 @@ class CreateGeneralTable extends Migration
             $table->unique(['user_id', 'category_id']);      
 
         });
-
 
         /**
          * Tabla con la lista de proyectos de la empresa
@@ -117,6 +117,7 @@ class CreateGeneralTable extends Migration
          * Tabla con las usuarios pertenecientes a un grupo y su categoria
          */
         Schema::create('group_user', function (Blueprint $table) {
+            $table->increments('id');  
             $table->integer('user_id')->unsigned();    
             $table->integer('group_id')->unsigned();   
 
@@ -199,7 +200,6 @@ class CreateGeneralTable extends Migration
      */
     public function down()
     {
-        
         Schema::dropIfExists('working_report');     
         Schema::dropIfExists('group_user');
         Schema::dropIfExists('groups'); 
@@ -207,7 +207,6 @@ class CreateGeneralTable extends Migration
         Schema::dropIfExists('absences');
         Schema::dropIfExists('category_user');
         Schema::dropIfExists('categories');
-        Schema::dropIfExists('customers');      
-        
+        Schema::dropIfExists('customers');              
     }
 }

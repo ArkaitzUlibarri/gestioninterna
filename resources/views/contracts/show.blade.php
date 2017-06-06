@@ -14,7 +14,7 @@
 		</dl>
 
 		<dl class="dl-horizontal">
-			<dt>Weekly working hours</dt>
+			<dt>Week working hours</dt>
 			<dd>{{ $contract->week_hours}}</dd>
 		</dl>
 

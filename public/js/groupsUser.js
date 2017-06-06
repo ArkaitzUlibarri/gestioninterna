@@ -1,8 +1,9 @@
-webpackJsonp([3],{
+webpackJsonp([6],{
 
-/***/ 136:
+/***/ 132:
 /***/ (function(module, exports, __webpack_require__) {
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 /**
  * First we will load all of this project_id's JavaScript dependencies which
@@ -16,31 +17,25 @@ webpackJsonp([3],{
 /**
  * Registro los componentes necesarios.
  */
-Vue.component('teleworking-template', __webpack_require__(173));
+Vue.component('group-template', __webpack_require__(170));
 
 var app = new Vue({
 
-	el: '#teleworking',
+	el: '#groups',
 
 	data: {
 
-		contract: contract,
-		daysWeek: [],
-
-		editIndex: -1,
-
-		newTeleworking: {
+		user: user,
+		groupProjects: groupProjects,
+		projectList: [],
+		groupList: [],
+		newGroupUser: {
 			id: -1,
-			contract_id: -1,
-			start_date: '',
-			end_date: '',
-			monday: 0,
-			tuesday: 0,
-			wednesday: 0,
-			thursday: 0,
-			friday: 0,
-			saturday: 0,
-			sunday: 0
+			user_id: -1,
+			project_id: -1,
+			project: '',
+			group_id: -1,
+			group: ''
 		},
 
 		array: []
@@ -48,7 +43,7 @@ var app = new Vue({
 
 	computed: {
 		formFilled: function formFilled() {
-			if ((this.newTeleworking.monday == 1 || this.newTeleworking.tuesday == 1 || this.newTeleworking.wednesday == 1 || this.newTeleworking.thursday == 1 || this.newTeleworking.friday == 1 || this.newTeleworking.saturday == 1 || this.newTeleworking.sunday == 1) && this.newTeleworking.start_date != '') {
+			if (this.newGroupUser.group != '' && this.newGroupUser.project != '') {
 				return true;
 			} else {
 				return false;
@@ -65,70 +60,67 @@ var app = new Vue({
 				_this.array.splice(index, 1);
 			}
 		});
-
-		Event.$on('Edit', function (index, item) {
-			_this.newTeleworking = {
-				id: item.id,
-				contract_id: item.contract_id,
-				start_date: item.start_date,
-				end_date: item.end_date,
-				monday: item.monday,
-				tuesday: item.tuesday,
-				wednesday: item.wednesday,
-				thursday: item.thursday,
-				friday: item.friday,
-				saturday: item.saturday,
-				sunday: item.sunday
-			};
-
-			_this.editIndex = index;
-		});
 	},
 	mounted: function mounted() {
-		this.newTeleworking.contract_id = this.contract.id;
-		this.setDateLimits();
+		this.newGroupUser.user_id = this.user.id;
 		this.fetchData();
-		this.daysWeek = daysWeek;
+		this.project();
 	},
 
 
 	methods: {
-		setDateLimits: function setDateLimits() {
-			document.getElementById("startdatefield").setAttribute("min", this.contract.start_date);
-			document.getElementById("enddatefield").setAttribute("min", this.contract.start_date);
+		project: function project() {
+			var setList = new Set();
 
-			if (this.contract.estimated_end_date != null) {
-				document.getElementById("startdatefield").setAttribute("max", this.contract.estimated_end_date);
-				document.getElementById("enddatefield").setAttribute("max", this.contract.estimated_end_date);
+			this.groupProjects.forEach(function (item) {
+				setList.add(item.project);
+			});
+
+			this.projectList = [].concat(_toConsumableArray(setList));
+		},
+		groupsRefresh: function groupsRefresh() {
+			var vm = this;
+			var setList = new Set();
+
+			vm.groupProjects.forEach(function (item) {
+				if (vm.newGroupUser.project == item.project) {
+					setList.add(item.group);
+				}
+			});
+
+			this.groupList = [].concat(_toConsumableArray(setList));
+		},
+		nameTraduction: function nameTraduction() {
+			//GrupoProyecto
+			for (var key = this.groupProjects.length - 1; key >= 0; key--) {
+				if (this.groupProjects[key].group == this.newGroupUser.group && this.groupProjects[key].project == this.newGroupUser.project) {
+					this.newGroupUser.group_id = this.groupProjects[key].id;
+					this.newGroupUser.project_id = this.groupProjects[key].project_id;
+				}
 			}
 		},
 		initialize: function initialize() {
 
-			this.newTeleworking = {
+			this.newGroupUser = {
 				id: -1,
-				contract_id: this.contract.id,
-				start_date: '',
-				end_date: '',
-				monday: 0,
-				tuesday: 0,
-				wednesday: 0,
-				thursday: 0,
-				friday: 0,
-				saturday: 0,
-				sunday: 0
+				user_id: -1,
+				project_id: -1,
+				project: '',
+				group_id: -1,
+				group: ''
 			};
-
-			this.editIndex = -1;
+		},
+		saveGroup: function saveGroup() {
+			this.nameTraduction();
+			this.save();
 		},
 		fetchData: function fetchData() {
 			var vm = this;
 			vm.array = [];
 
-			vm.initialize();
-
-			axios.get('/api/teleworking', {
+			axios.get('/api/groupsUser', {
 				params: {
-					id: vm.contract.id
+					id: vm.user.id
 				}
 			}).then(function (response) {
 				vm.array = response.data;
@@ -150,7 +142,7 @@ var app = new Vue({
 
 			var vm = this;
 
-			axios.delete('/api/teleworking/' + vm.array[index].id).then(function (response) {
+			axios.delete('/api/groupsUser/' + vm.array[index].id).then(function (response) {
 				console.log(response.data);
 				toastr.success(response.data);
 			}).catch(function (error) {
@@ -169,90 +161,34 @@ var app = new Vue({
 		save: function save() {
 			var vm = this;
 
-			if (vm.newTeleworking.id != -1) {
-				axios.patch('/api/teleworking/' + vm.newTeleworking.id, {
-					contract_start_date: vm.contract.start_date,
-					contract_estimated_end_date: vm.contract.estimated_end_date,
-					id: vm.newTeleworking.id,
-					contract_id: vm.newTeleworking.contract_id,
-					start_date: vm.newTeleworking.start_date,
-					end_date: vm.newTeleworking.end_date,
-					monday: vm.newTeleworking.monday,
-					tuesday: vm.newTeleworking.tuesday,
-					wednesday: vm.newTeleworking.wednesday,
-					thursday: vm.newTeleworking.thursday,
-					friday: vm.newTeleworking.friday,
-					saturday: vm.newTeleworking.saturday,
-					sunday: vm.newTeleworking.sunday
-				}).then(function (response) {
-					console.log(response.data);
-					toastr.success(response.data);
-					//---------------------------------------
-					var properties = Object.keys(vm.newTeleworking);
-
-					for (var i = properties.length - 1; i >= 0; i--) {
-						vm.array[vm.editIndex][properties[i]] = vm.newTeleworking[properties[i]];
-					}
-					vm.initialize();
-					//---------------------------------------
-				}).catch(function (error) {
-					console.log(error);
-					//****************************************
-					if (Array.isArray(error.response.data)) {
-						error.response.data.forEach(function (error) {
-							toastr.error(error);
-						});
-					} else {
-						toastr.error(error.response.data);
-					}
-					//****************************************
-				});
-				return;
-			} else {
-
-				axios.post('/api/teleworking', {
-					contract_start_date: vm.contract.start_date,
-					contract_estimated_end_date: vm.contract.estimated_end_date,
-					id: vm.newTeleworking.id,
-					contract_id: vm.newTeleworking.contract_id,
-					start_date: vm.newTeleworking.start_date,
-					end_date: vm.newTeleworking.end_date,
-					monday: vm.newTeleworking.monday,
-					tuesday: vm.newTeleworking.tuesday,
-					wednesday: vm.newTeleworking.wednesday,
-					thursday: vm.newTeleworking.thursday,
-					friday: vm.newTeleworking.friday,
-					saturday: vm.newTeleworking.saturday,
-					sunday: vm.newTeleworking.sunday
-				}).then(function (response) {
-					console.log(response.data);
-					toastr.success("Saved");
-					//---------------------------------------
-					vm.newTeleworking.id = response.data;
-					vm.array.push(vm.newTeleworking);
-					vm.initialize();
-					//---------------------------------------	
-				}).catch(function (error) {
-					console.log(error);
-					//****************************************
-					if (Array.isArray(error.response.data)) {
-						error.response.data.forEach(function (error) {
-							toastr.error(error);
-						});
-					} else {
-						toastr.error(error.response.data);
-					}
-					//****************************************
-				});
-				return;
-			}
+			axios.post('/api/groupsUser', vm.newGroupUser).then(function (response) {
+				console.log(response.data);
+				toastr.success("Saved");
+				//---------------------------------------
+				vm.newGroupUser.id = response.data;
+				vm.array.push(vm.newGroupUser);
+				vm.initialize();
+				//---------------------------------------	
+			}).catch(function (error) {
+				console.log(error);
+				//****************************************
+				if (Array.isArray(error.response.data)) {
+					error.response.data.forEach(function (error) {
+						toastr.error(error);
+					});
+				} else {
+					toastr.error(error.response.data);
+				}
+				//****************************************
+			});
+			return;
 		}
 	}
 });
 
 /***/ }),
 
-/***/ 160:
+/***/ 157:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -277,26 +213,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    template: '#teleworking-template',
+    template: '#group-template',
 
     props: ['item', 'index'],
 
     methods: {
-        edititem: function edititem() {
-            Event.$emit('Edit', this.index, this.item);
-        },
-        deleteitem: function deleteitem() {
+        deleteGroup: function deleteGroup() {
             Event.$emit('Delete', this.index, this.item);
         }
     }
@@ -304,34 +228,34 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 165:
+/***/ 163:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
-exports.push([module.i, "\n.item-panel {\n    position:relative;\n    border-bottom: 1px solid #ccc;\n    padding: .4em;\n    margin-bottom: .5em;\n}\n.panel-right-corner {\n    position: absolute;\n    right: 2em;\n    top:1em;\n}\n.action {\n    cursor: pointer;\n    //display: block;\n    //margin: auto ;\n}\n\n", ""]);
+exports.push([module.i, "\n.item-panel {\n    position:relative;\n    border-bottom: 1px solid #ccc;\n    padding: .4em;\n    margin-bottom: .5em;\n}\n.panel-right-corner {\n    position: absolute;\n    right: 2em;\n    top:1em;\n}\n.action {\n    cursor: pointer;\n    //display: block;\n    //margin: auto ;\n}\n.item-enabled{\n    background-color: #b0f2b8;\n}\n\n", ""]);
 
 /***/ }),
 
-/***/ 173:
+/***/ 170:
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(182)
+__webpack_require__(180)
 
 var Component = __webpack_require__(3)(
   /* script */
-  __webpack_require__(160),
+  __webpack_require__(157),
   /* template */
-  __webpack_require__(177),
+  __webpack_require__(175),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/home/vagrant/Code/gestioninterna/resources/assets/js/components/TeleworkingPeriod.vue"
+Component.options.__file = "/home/vagrant/Code/gestioninterna/resources/assets/js/components/ProjectGroup.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] TeleworkingPeriod.vue: functional components are not supported with templates, they should use render functions.")}
+if (Component.options.functional) {console.error("[vue-loader] ProjectGroup.vue: functional components are not supported with templates, they should use render functions.")}
 
 /* hot reload */
 if (false) {(function () {
@@ -340,9 +264,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-8da1b404", Component.options)
+    hotAPI.createRecord("data-v-586f7940", Component.options)
   } else {
-    hotAPI.reload("data-v-8da1b404", Component.options)
+    hotAPI.reload("data-v-586f7940", Component.options)
   }
 })()}
 
@@ -351,25 +275,20 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 177:
+/***/ 175:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "col-xs-12"
   }, [_c('div', {
-    staticClass: "item-panel col-sm-12"
-  }, [_c('h5', {
-    staticClass: "action",
-    on: {
-      "click": _vm.edititem
-    }
-  }, [_c('b', [_vm._v("From " + _vm._s(_vm.item.start_date) + " "), (_vm.item.end_date) ? _c('span', [_vm._v("to " + _vm._s(_vm.item.end_date))]) : _vm._e(), _vm._v(" | ")]), _vm._v(" "), _c('label', [(_vm.item.monday) ? _c('span', [_vm._v("Monday |")]) : _vm._e(), _vm._v(" "), (_vm.item.tuesday) ? _c('span', [_vm._v("Tuesday |")]) : _vm._e(), _vm._v(" "), (_vm.item.wednesday) ? _c('span', [_vm._v("Wednesday |")]) : _vm._e(), _vm._v(" "), (_vm.item.thursday) ? _c('span', [_vm._v("Thursday |")]) : _vm._e(), _vm._v(" "), (_vm.item.friday) ? _c('span', [_vm._v("Friday |")]) : _vm._e(), _vm._v(" "), (_vm.item.saturday) ? _c('span', [_vm._v("Saturday |")]) : _vm._e(), _vm._v(" "), (_vm.item.sunday) ? _c('span', [_vm._v("Sunday |")]) : _vm._e()])]), _vm._v(" "), _c('div', {
+    staticClass: "item-panel col-sm-5"
+  }, [_c('h5', [_c('b', [_vm._v(_vm._s(_vm.item.project) + " | " + _vm._s(_vm.item.group))])]), _vm._v(" "), _c('div', {
     staticClass: "panel-right-corner"
   }, [_c('div', {
     staticClass: "action",
     on: {
-      "click": _vm.deleteitem
+      "click": _vm.deleteGroup
     }
   }, [_c('span', {
     staticClass: "glyphicon glyphicon-trash",
@@ -382,29 +301,29 @@ module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-8da1b404", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-586f7940", module.exports)
   }
 }
 
 /***/ }),
 
-/***/ 182:
+/***/ 180:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(165);
+var content = __webpack_require__(163);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(4)("c45ca21e", content, false);
+var update = __webpack_require__(4)("1ede15b4", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-8da1b404!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./TeleworkingPeriod.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-8da1b404!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./TeleworkingPeriod.vue");
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-586f7940!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ProjectGroup.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-586f7940!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ProjectGroup.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -415,10 +334,10 @@ if(false) {
 
 /***/ }),
 
-/***/ 192:
+/***/ 188:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(136);
+module.exports = __webpack_require__(132);
 
 
 /***/ }),
@@ -790,4 +709,4 @@ module.exports = function listToStyles (parentId, list) {
 
 /***/ })
 
-},[192]);
+},[188]);

@@ -1,6 +1,6 @@
 @if(count($contract->teleworking)>0)
 	
-	<div class="table-responsive">
+	<div class="table-responsive col-sm-5">
 
 		<h4>TELEWORKING</h4>
 
@@ -17,11 +17,11 @@
                     <td>{{$tele->start_date}}</td>
                     <td>{{$tele->end_date}}</td>
                     <td>
-	                    {{$tele->monday ? "Monday" : "" }}
-	                    {{$tele->tuesday ? "Tuesday" : "" }}
-	                    {{$tele->wednesday ? "Wednesday" : "" }}
-	                    {{$tele->thursday ? "Thursday" : "" }}
-	                    {{$tele->friday ? "Friday" : "" }}
+	                    {{$tele->monday ? "Monday |" : "" }}
+	                    {{$tele->tuesday ? "Tuesday |" : "" }}
+	                    {{$tele->wednesday ? "Wednesday |" : "" }}
+	                    {{$tele->thursday ? "Thursday |" : "" }}
+	                    {{$tele->friday ? "Friday |" : "" }}
                     </td>
                 </tr>
             </tbody>

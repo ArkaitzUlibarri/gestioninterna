@@ -12,6 +12,40 @@
 
 	<div class="panel panel-primary">
 
+		<div class="panel-heading">
+		    Project Details
+		 </div>
+
+		<div class="panel-body">
+			<div class="row">
+
+				<div class="col-xs-12 col-sm-6">	
+					<label>Project</label>
+					<input class="form-control" type="text" placeholder="{{$project->name}}" readonly>
+				</div>	
+
+				<div class="col-xs-12 col-sm-2">
+					<label>Customer</label>
+					<input class="form-control" type ="text" placeholder="{{strtoupper ($project->customer->name)}}" readonly>
+				</div>	
+
+				<div class="col-xs-12 col-sm-2">
+					<label>Start date</label>
+					<input class="form-control" type ="date" value="{{$project->start_date}}" readonly>
+				</div>	
+
+				<div class="col-xs-12 col-sm-2">
+					<label>End date</label>
+					<input class="form-control" type ="date" value="{{$project->end_date}}" readonly>
+				</div>			
+
+			</div>
+		</div>
+		
+	</div>
+
+	<div class="panel panel-primary">
+
 		  <div class="panel-heading">
 		    	Groups for this project
 		  </div>

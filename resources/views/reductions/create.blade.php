@@ -73,7 +73,7 @@
 					<form class="form-inline">	
 
 						<div class="form-group col-xs-12 col-sm-3">
-							<label>Working Hours</label>
+							<label>Week Working Hours</label>
 							<input type="number" min=0 max=40 class="form-control" placeholder="Time" v-model="newReduction.week_hours">
 						</div>	
 

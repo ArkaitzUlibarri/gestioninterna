@@ -1,6 +1,6 @@
 webpackJsonp([2],{
 
-/***/ 132:
+/***/ 133:
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -16,7 +16,7 @@ webpackJsonp([2],{
 /**
  * Registro los componentes necesarios.
  */
-Vue.component('group-template', __webpack_require__(166));
+Vue.component('group-template', __webpack_require__(169));
 
 var app = new Vue({
 
@@ -184,14 +184,14 @@ var app = new Vue({
 
 /***/ }),
 
-/***/ 137:
+/***/ 138:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 155:
+/***/ 156:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -234,7 +234,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 160:
+/***/ 162:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
@@ -242,18 +242,18 @@ exports.push([module.i, "\n.group-panel {\n    position:relative;\n    border-bo
 
 /***/ }),
 
-/***/ 166:
+/***/ 169:
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(174)
+__webpack_require__(179)
 
 var Component = __webpack_require__(3)(
   /* script */
-  __webpack_require__(155),
+  __webpack_require__(156),
   /* template */
-  __webpack_require__(170),
+  __webpack_require__(174),
   /* scopeId */
   null,
   /* cssModules */
@@ -281,7 +281,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 170:
+/***/ 174:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -321,13 +321,13 @@ if (false) {
 
 /***/ }),
 
-/***/ 174:
+/***/ 179:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(160);
+var content = __webpack_require__(162);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -348,11 +348,11 @@ if(false) {
 
 /***/ }),
 
-/***/ 182:
+/***/ 189:
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(132);
-module.exports = __webpack_require__(137);
+__webpack_require__(133);
+module.exports = __webpack_require__(138);
 
 
 /***/ }),
@@ -724,4 +724,4 @@ module.exports = function listToStyles (parentId, list) {
 
 /***/ })
 
-},[182]);
+},[189]);

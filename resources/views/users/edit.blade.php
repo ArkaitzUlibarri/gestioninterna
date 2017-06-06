@@ -71,5 +71,16 @@
 			@include('layouts.errors')
 		</form>
 
+		<div class ="form-group pull-right">
+	        <a title="Categories" class="btn btn-primary btn-sm" type="button" 
+	           href="{{ url('users/' . $user->id . '/categories') }}">
+	           Categories
+	        </a>
+	        <a title="Groups" class="btn btn-primary btn-sm" type="button" 
+	           href="{{ url('users/' . $user->id . '/groups') }}">
+	            Groups
+	        </a>
+	    </div>
+
 	</div>
 @endsection

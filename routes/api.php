@@ -42,4 +42,8 @@ Route::post('reductions', 'Api\ReductionApiController@store');
 Route::get('reductions', 'Api\ReductionApiController@index');
 Route::delete('reductions/{id}', 'Api\ReductionApiController@destroy');
 
+Route::post('groupsUser', 'Api\GroupUserApiController@store');
+Route::get('groupsUser', 'Api\GroupUserApiController@index');
+Route::delete('groupsUser/{id}', 'Api\GroupUserApiController@destroy');
+
 

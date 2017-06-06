@@ -1,10 +1,10 @@
 @if(count($contract->reductions)>0)
 	
-	<div class="table-responsive">
+	<div class="table-responsive col-sm-5">
 
 		<h4>REDUCTIONS</h4>
 
-        <table class="table table-hover">
+        <table class="table table-hover ">
             <thead>
                 <th>Start date</th>
                 <th>End date</th>   
