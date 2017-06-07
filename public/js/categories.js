@@ -1,11 +1,12 @@
-webpackJsonp([2],{
+webpackJsonp([7],{
 
-/***/ 134:
+/***/ 132:
 /***/ (function(module, exports, __webpack_require__) {
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 /**
- * First we will load all of this project's JavaScript dependencies which
+ * First we will load all of this project_id's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
@@ -16,87 +17,105 @@ webpackJsonp([2],{
 /**
  * Registro los componentes necesarios.
  */
-Vue.component('group-template', __webpack_require__(173));
+Vue.component('category-template', __webpack_require__(172));
 
 var app = new Vue({
 
-	el: '#project',
+	el: '#categories',
 
 	data: {
-		project_id: id,
 
-		groups: [],
+		user: user,
+		categories: categories,
+		categoryList: [],
 
-		editIndex: -1,
-
-		newGroup: {
+		newCategory: {
 			id: -1,
-			project_id: "",
-			name: "",
-			enabled: 0
+			user_id: -1,
+			category_id: -1,
+			category: ''
+		},
+
+		array: []
+	},
+
+	computed: {
+		formFilled: function formFilled() {
+			if (this.newCategory.category != '') {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	},
 
 	created: function created() {
 		var _this = this;
 
-		Event.$on('Delete', function (index, group) {
-			_this.delete(index);
-		});
-
-		Event.$on('Edit', function (index, group) {
-			_this.newGroup = {
-				id: group.id,
-				project_id: group.project_id,
-				name: group.name,
-				enabled: group.enabled
-			};
-
-			_this.editIndex = index;
+		Event.$on('Delete', function (index, item) {
+			if (confirm("You are going to delete this entry,are you sure?")) {
+				_this.delete(index);
+				_this.array.splice(index, 1);
+			}
 		});
 	},
 	mounted: function mounted() {
+		this.newCategory.user_id = this.user.id;
 		this.fetchData();
-		this.newGroup.project_id = this.project_id;
 	},
 
 
 	methods: {
-		saveGroup: function saveGroup() {
+		initialize: function initialize() {
+
+			this.newCategory = {
+				id: -1,
+				user_id: -1,
+				category_id: -1,
+				category: ''
+			};
+		},
+		refreshCategory: function refreshCategory() {
+			var setList = new Set();
+			var vm = this;
+
+			vm.categories.forEach(function (category) {
+				setList.add(category.name + " - " + category.description);
+			});
+
+			vm.array.forEach(function (item) {
+				setList.delete(item.category);
+			});
+
+			vm.categoryList = [].concat(_toConsumableArray(setList));
+		},
+		nameTraduction: function nameTraduction() {
+			//Category
+			for (var key = this.categories.length - 1; key >= 0; key--) {
+				if (this.categories[key].name + " - " + this.categories[key].description == this.newCategory.category) {
+					this.newCategory.category_id = this.categories[key].id;
+				}
+			}
+		},
+		saveCategory: function saveCategory() {
+			this.nameTraduction();
 			this.save();
 		},
-		initializeGroup: function initializeGroup() {
-			this.newGroup = {
-				id: -1,
-				project_id: this.project_id,
-				name: "",
-				enabled: 0
-			};
-
-			this.editIndex = -1;
-		},
 		fetchData: function fetchData() {
-
 			var vm = this;
-			vm.groups = [];
+			vm.array = [];
 
-			axios.get('/api/groups', {
+			axios.get('/api/categories', {
 				params: {
-					project_id: vm.project_id
+					id: vm.user.id
 				}
 			}).then(function (response) {
-				vm.groups = response.data;
-				console.log(response.data);
-				//****************************************************
-				vm.groups.forEach(function (element, index, array) {
-					if (element.name == 'Default') {
-						array.splice(index, 1);
-					}
-				});
-				//****************************************************
+				vm.array = response.data;
+				//console.log(response.data);
+				vm.refreshCategory();
 			}).catch(function (error) {
 				console.log(error);
-				//********************************************
+				//****************************************
 				if (Array.isArray(error.response.data)) {
 					error.response.data.forEach(function (error) {
 						toastr.error(error);
@@ -104,68 +123,42 @@ var app = new Vue({
 				} else {
 					toastr.error(error.response.data);
 				}
-				//**********************************************
+				//****************************************
+			});
+		},
+		delete: function _delete(index) {
+
+			var vm = this;
+
+			axios.delete('/api/categories/' + vm.array[index].id).then(function (response) {
+				console.log(response.data);
+				toastr.success(response.data);
+				vm.refreshCategory();
+			}).catch(function (error) {
+				console.log(error);
+				//****************************************
+				if (Array.isArray(error.response.data)) {
+					error.response.data.forEach(function (error) {
+						toastr.error(error);
+					});
+				} else {
+					toastr.error(error.response.data);
+				}
+				//****************************************
 			});
 		},
 		save: function save() {
 			var vm = this;
 
-			if (vm.newGroup.id != -1) {
-				axios.patch('/api/groups/' + vm.newGroup.id, vm.newGroup).then(function (response) {
-					console.log(response.data);
-					toastr.success("Updated");
-					//---------------------------------------
-					var properties = Object.keys(vm.newGroup);
-
-					for (var i = properties.length - 1; i >= 0; i--) {
-						vm.groups[vm.editIndex][properties[i]] = vm.newGroup[properties[i]];
-					}
-					vm.initializeGroup();
-					//---------------------------------------
-				}).catch(function (error) {
-					console.log(error);
-				});
-				return;
-			} else {
-
-				axios.post('/api/groups', vm.newGroup).then(function (response) {
-					console.log(response.data);
-					toastr.success("Saved");
-					//---------------------------------------
-					vm.newGroup.id = response.data;
-					vm.groups.push(vm.newGroup);
-					vm.initializeGroup();
-					//---------------------------------------
-				}).catch(function (error) {
-					console.log(error);
-					//****************************************
-					if (Array.isArray(error.response.data)) {
-						error.response.data.forEach(function (error) {
-							toastr.error(error);
-						});
-					} else {
-						toastr.error(error.response.data);
-					}
-					//****************************************
-				});
-				return;
-			}
-		},
-		delete: function _delete(index) {
-			var vm = this;
-
-			axios.delete('/api/groups/' + vm.groups[index].id).then(function (response) {
+			axios.post('/api/categories', vm.newCategory).then(function (response) {
 				console.log(response.data);
+				toastr.success("Saved");
 				//---------------------------------------
-				if (response.data) {
-					toastr.success("Deleted");
-					vm.groups.splice(index, 1);
-					vm.initializeGroup();
-				} else {
-					//console.log("No es posible borrar este grupo");
-					toastr.warning("This group cannot be deleted");
-				}
-				//---------------------------------------
+				vm.newCategory.id = response.data;
+				vm.array.push(vm.newCategory);
+				vm.refreshCategory();
+				vm.initialize();
+				//---------------------------------------	
 			}).catch(function (error) {
 				console.log(error);
 				//****************************************
@@ -178,20 +171,14 @@ var app = new Vue({
 				}
 				//****************************************
 			});
+			return;
 		}
 	}
 });
 
 /***/ }),
 
-/***/ 139:
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ 158:
+/***/ 157:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -218,50 +205,47 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    template: '#group-template',
+    template: '#category-template',
 
-    props: ['group', 'index'],
+    props: ['item', 'index'],
 
     methods: {
-        editGroup: function editGroup() {
-            Event.$emit('Edit', this.index, this.group);
-        },
-        deleteGroup: function deleteGroup() {
-            Event.$emit('Delete', this.index, this.group);
+        deleteCategory: function deleteCategory() {
+            Event.$emit('Delete', this.index, this.item);
         }
     }
 });
 
 /***/ }),
 
-/***/ 165:
+/***/ 164:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
-exports.push([module.i, "\n.group-panel {\n    position:relative;\n    border-bottom: 1px solid #ccc;\n    padding: .4em;\n    margin-bottom: .5em;\n}\n.panel-right-corner {\n    position: absolute;\n    right: 2em;\n    top:1em;\n}\n.action {\n    cursor: pointer;\n    //display: block;\n    //margin: auto ;\n}\n.group-enabled{\n    background-color: #b0f2b8;\n}\n\n", ""]);
+exports.push([module.i, "\n.item-panel {\n    position:relative;\n    border-bottom: 1px solid #ccc;\n    padding: .4em;\n    margin-bottom: .5em;\n}\n.panel-right-corner {\n    position: absolute;\n    right: 2em;\n    top:1em;\n}\n.action {\n    cursor: pointer;\n    //display: block;\n    //margin: auto ;\n}\n.item-enabled{\n    background-color: #b0f2b8;\n}\n\n", ""]);
 
 /***/ }),
 
-/***/ 173:
+/***/ 172:
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(185)
+__webpack_require__(184)
 
 var Component = __webpack_require__(3)(
   /* script */
-  __webpack_require__(158),
+  __webpack_require__(157),
   /* template */
-  __webpack_require__(179),
+  __webpack_require__(178),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/home/vagrant/Code/gestioninterna/resources/assets/js/components/Group.vue"
+Component.options.__file = "/home/vagrant/Code/gestioninterna/resources/assets/js/components/Category.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] Group.vue: functional components are not supported with templates, they should use render functions.")}
+if (Component.options.functional) {console.error("[vue-loader] Category.vue: functional components are not supported with templates, they should use render functions.")}
 
 /* hot reload */
 if (false) {(function () {
@@ -270,9 +254,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1a44a115", Component.options)
+    hotAPI.createRecord("data-v-187f5858", Component.options)
   } else {
-    hotAPI.reload("data-v-1a44a115", Component.options)
+    hotAPI.reload("data-v-187f5858", Component.options)
   }
 })()}
 
@@ -281,28 +265,20 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 179:
+/***/ 178:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "col-xs-12"
   }, [_c('div', {
-    staticClass: "group-panel col-sm-4",
-    class: {
-      'group-enabled': _vm.group.enabled
-    }
-  }, [_c('h5', {
-    staticClass: "action",
-    on: {
-      "click": _vm.editGroup
-    }
-  }, [_c('b', [_vm._v(_vm._s(_vm.group.name.toUpperCase().substring(0, 30))), (_vm.group.name.length > 30) ? _c('span', [_vm._v("...")]) : _vm._e()])]), _vm._v(" "), _c('div', {
+    staticClass: "item-panel col-sm-6"
+  }, [_c('h5', [_c('b', [_vm._v(_vm._s(_vm.item.category.replace("-", "|")))])]), _vm._v(" "), _c('div', {
     staticClass: "panel-right-corner"
   }, [_c('div', {
     staticClass: "action",
     on: {
-      "click": _vm.deleteGroup
+      "click": _vm.deleteCategory
     }
   }, [_c('span', {
     staticClass: "glyphicon glyphicon-trash",
@@ -315,29 +291,29 @@ module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-1a44a115", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-187f5858", module.exports)
   }
 }
 
 /***/ }),
 
-/***/ 185:
+/***/ 184:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(165);
+var content = __webpack_require__(164);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(4)("1e74c370", content, false);
+var update = __webpack_require__(4)("adda7b32", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-1a44a115!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Group.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-1a44a115!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Group.vue");
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-187f5858!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Category.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-187f5858!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Category.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -348,11 +324,10 @@ if(false) {
 
 /***/ }),
 
-/***/ 196:
+/***/ 194:
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(134);
-module.exports = __webpack_require__(139);
+module.exports = __webpack_require__(132);
 
 
 /***/ }),
@@ -724,4 +699,4 @@ module.exports = function listToStyles (parentId, list) {
 
 /***/ })
 
-},[196]);
+},[194]);

@@ -155,7 +155,8 @@ const app = new Vue({
 
 		save(){
 			let vm = this;
-				
+			
+			//CHANGE:ARRAY_MERGE
 			if(vm.newReduction.id != -1) {
 				axios.patch('/api/reductions/' + vm.newReduction.id, {
 					contract_start_date: vm.contract.start_date,

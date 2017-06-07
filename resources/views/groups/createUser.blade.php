@@ -95,7 +95,6 @@
 	</div>
 
 	<a class="btn btn-primary" href="{{ url('users') }}">Back</a>
-	<pre>@{{$data.newGroupUser}}</pre>
 </div>
 
 

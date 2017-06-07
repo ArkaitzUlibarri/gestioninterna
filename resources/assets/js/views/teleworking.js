@@ -182,7 +182,8 @@ const app = new Vue({
 
 		save(){
 			let vm = this;
-				
+			
+			//CHANGE:ARRAY_MERGE
 			if(vm.newTeleworking.id != -1) {
 				axios.patch('/api/teleworking/' + vm.newTeleworking.id, {
 					contract_start_date: vm.contract.start_date,

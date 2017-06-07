@@ -11,25 +11,23 @@
 /**
  * Registro los componentes necesarios.
  */
-Vue.component('group-template', require('../components/ProjectGroup.vue'));
+Vue.component('category-template', require('../components/Category.vue'));
 
 const app = new Vue({
 
-	el: '#groups',
+	el: '#categories',
 
 	data: {		
 
 		user: user,
-		groupProjects: groupProjects,
-		projectList: [] ,
-		groupList:[] ,
-		newGroupUser: {
+		categories: categories,
+		categoryList: [] ,
+
+		newCategory: {
 			id: -1,
 			user_id: -1,
-			project_id: -1,
-			project: '',
-			group_id: -1,
-			group: '',
+			category_id: -1,
+			category: '',
 		},
 
 		array: [],
@@ -38,7 +36,7 @@ const app = new Vue({
 
 	computed: {
 		formFilled(){
-			if(this.newGroupUser.group != ''  && this.newGroupUser.project != ''){
+			if(this.newCategory.category != ''){
 				return true;
 			}		
 			else{
@@ -57,61 +55,49 @@ const app = new Vue({
 	},
 
 	mounted() {
-		this.newGroupUser.user_id = this.user.id;
+		this.newCategory.user_id = this.user.id;
 		this.fetchData();
-		this.project();
 	},
 
 	methods: {
-		project() {
-			let setList = new Set();
 
-			this.groupProjects.forEach(function(item) {
-				setList.add(item.project);
-			});
-
-			this.projectList = [...setList];			
-		
-		},
-
-		groupsRefresh(){
-			let vm = this;
-			let setList = new Set();
+		initialize(){
 			
-			vm.groupProjects.forEach(function(item) {						
-				if( vm.newGroupUser.project == item.project){
-					 setList.add(item.group);
-				}				
-			});
-
-			this.groupList = [...setList];
+			this.newCategory = {
+				id: -1,
+				user_id: -1,
+				category_id: -1,
+				category: '',
+			};
 
 		},
 
+		refreshCategory() {
+			let setList = new Set();
+			let vm = this;
+
+			vm.categories.forEach(function(category) {
+				setList.add(category.name + " - " + category.description);
+			});
+
+			vm.array.forEach(function(item) {
+				setList.delete(item.category);
+			});
+			
+			vm.categoryList = [...setList];
+		},
+	
 		nameTraduction(){	
-			//GrupoProyecto
-			for (var key = this.groupProjects.length - 1; key >= 0; key--) {
-				if(this.groupProjects[key].group == this.newGroupUser.group && this.groupProjects[key].project == this.newGroupUser.project){
-					this.newGroupUser.group_id    = this.groupProjects[key].id;
-					this.newGroupUser.project_id  = this.groupProjects[key].project_id;
+			//Category
+			for (var key = this.categories.length - 1; key >= 0; key--) {
+				if((this.categories[key].name +" - "+ this.categories[key].description) == this.newCategory.category){
+					this.newCategory.category_id    = this.categories[key].id;
 				}
 			}
 
 		},
-
-		initialize(){
-			
-			this.newGroupUser = {
-				id: -1,
-				user_id: -1,
-				project_id: -1,
-				project: '',
-				group_id: -1,
-				group: '',
-			};
-		},
-
-		saveGroup(){
+		
+		saveCategory(){
 			this.nameTraduction();
 			this.save();
 		},
@@ -120,7 +106,7 @@ const app = new Vue({
 			let vm   = this;
 			vm.array = [];
 
-			axios.get('/api/groupsUser', {
+			axios.get('/api/categories', {
 				params: {
 					id: vm.user.id,
 				}
@@ -128,6 +114,7 @@ const app = new Vue({
 			.then(function (response) {
 				vm.array = response.data;
 				//console.log(response.data);
+				vm.refreshCategory();
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -148,10 +135,11 @@ const app = new Vue({
 
 			let vm = this;
 				
-			axios.delete('/api/groupsUser/' + vm.array[index].id)
+			axios.delete('/api/categories/' + vm.array[index].id)
 			.then(function (response) {
 				console.log(response.data);
 				toastr.success(response.data);
+				vm.refreshCategory();
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -171,13 +159,14 @@ const app = new Vue({
 		save(){
 			let vm = this;
 
-			axios.post('/api/groupsUser',vm.newGroupUser)
+			axios.post('/api/categories',vm.newCategory)
 			.then(function (response) {
 				console.log(response.data);
 				toastr.success("Saved");
 				//---------------------------------------
-				vm.newGroupUser.id = response.data;
-				vm.array.push(vm.newGroupUser);		
+				vm.newCategory.id = response.data;
+				vm.array.push(vm.newCategory);		
+				vm.refreshCategory();
 				vm.initialize();
 				//---------------------------------------	
 			})
@@ -195,8 +184,7 @@ const app = new Vue({
 				//****************************************
 			});	
 			return;
-
-				
+			
 		}
 
 	}

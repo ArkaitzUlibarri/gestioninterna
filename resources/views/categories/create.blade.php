@@ -47,7 +47,9 @@
 
 		  <div class="panel-body">
 				<div class="row">
-
+					<span v-for="(item, index) in array">
+						<category-template :item="item" :index="index"></category-template>
+					</span>
 				</div>
 		  </div>
 
@@ -58,31 +60,25 @@
 			<div class="panel panel-primary">
 
 				<div class="panel-heading">
-					<span>Adding category to a user</span>		
+					<span>Adding a new category to a user</span>		
 				</div>
 
 				<div class="panel-body">
+					<form class="form-inline">
 
-					<div class="form-group">	
-						<div class="row">	
-							<div class="col-xs-12 col-sm-2">
-								<label>Start date</label>
-								<input id="startdatefield" name="start_date" type ="date" class="form-control" placeholder="yyyy-mm-dd" v-model="newTeleworking.start_date">
-							</div>	
-
-							<div class="col-xs-12 col-sm-2">
-								<label>End date</label>
-								<input id="enddatefield" name="end_date" type ="date" class="form-control" placeholder="yyyy-mm-dd" v-model="newTeleworking.end_date">
-							</div>	
-						</div>
-					</div>
-				
-					<div class="form-group">	
-						<button title="Save" class="btn btn-primary" :disabled="formFilled==false" v-on:click.prevent="save">
+						<label>Category</label>
+						<select class="form-control" v-model="newCategory.category">
+							<option value="">-</option>
+							<template v-for="(category, index) in categoryList">
+								<option :category="category" :index="index">@{{category}}</option>
+							</template>
+						</select>				
+	
+						<button title="Save" class="btn btn-primary" :disabled="formFilled==false" v-on:click.prevent="saveCategory">
 							<span class="glyphicon glyphicon-floppy-disk"></span> Save
 						</button>
-					</div>	
-					
+						
+					</form>	
 				</div>
 			</div>
 		</div>
@@ -96,5 +92,10 @@
 @endsection
 
 @push('script-bottom')
+<script type="text/javascript">
+	var user       = <?php echo json_encode($user);?>;
+	var categories = <?php echo json_encode($categories);?>;
+</script>
 
+<script src="{{ asset('js/categories.js') }}"></script>
 @endpush

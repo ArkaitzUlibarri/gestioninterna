@@ -1,6 +1,6 @@
 webpackJsonp([4],{
 
-/***/ 135:
+/***/ 136:
 /***/ (function(module, exports, __webpack_require__) {
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -17,7 +17,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 /**
  * Registro los componentes necesarios.
  */
-Vue.component('task-template', __webpack_require__(172));
+Vue.component('task-template', __webpack_require__(176));
 
 var app = new Vue({
 
@@ -526,7 +526,7 @@ var app = new Vue({
 
 /***/ }),
 
-/***/ 159:
+/***/ 161:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -589,7 +589,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 166:
+/***/ 169:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
@@ -597,18 +597,18 @@ exports.push([module.i, "\n.panel-right-corner {\n    position: absolute;\n    r
 
 /***/ }),
 
-/***/ 172:
+/***/ 176:
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(183)
+__webpack_require__(189)
 
 var Component = __webpack_require__(3)(
   /* script */
-  __webpack_require__(159),
+  __webpack_require__(161),
   /* template */
-  __webpack_require__(178),
+  __webpack_require__(183),
   /* scopeId */
   null,
   /* cssModules */
@@ -636,7 +636,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 178:
+/***/ 183:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -681,13 +681,13 @@ if (false) {
 
 /***/ }),
 
-/***/ 183:
+/***/ 189:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(166);
+var content = __webpack_require__(169);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -708,10 +708,10 @@ if(false) {
 
 /***/ }),
 
-/***/ 191:
+/***/ 198:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(135);
+module.exports = __webpack_require__(136);
 
 
 /***/ }),
@@ -1083,4 +1083,4 @@ module.exports = function listToStyles (parentId, list) {
 
 /***/ })
 
-},[191]);
+},[198]);
