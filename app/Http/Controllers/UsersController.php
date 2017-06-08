@@ -24,8 +24,9 @@ class UsersController extends Controller
         $users = $this->userRepository->search($request->all(), false);
         $filter = array(    
             'name' => $request->get('name'),
+            'type' => $request->get('type'),
         );
-        
+
     	return view('users.index', compact('users','filter'));
     }
 

@@ -58,7 +58,11 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\Group','group_user');
     }
-
+    
+    //***********************************************************************
+    //FUNCIONES DE AYUDA
+    //***********************************************************************
+    
     /**
      * Check the role of the user
      */

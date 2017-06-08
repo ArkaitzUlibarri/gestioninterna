@@ -2,10 +2,17 @@
 
 	<input type="text" class="form-control" name="name" placeholder="Employee name" value="{{ $filter['name'] }}">
 
-	<select name="type" class="form-control">
-		<option selected="true" value="">Type</option>
+	<select name="contract" class="form-control">
+		<option selected="true" value="">Contract Type</option>
+		@foreach ($contractTypes as $contractType)
+			<option value="{{ $contractType->id }}" {{ $contractType->id == $filter['contract'] ? 'selected' : '' }}>{{ ucfirst($contractType->name) }}</option>
+		@endforeach
+	</select>
+
+	<select name="status" class="form-control">
+		<option selected="true" value="">Status</option>
 		@foreach (config('options.dates') as $date)
-			<option value="{{ $date }}" {{ $date == $filter['type'] ? 'selected' : '' }}>{{ ucfirst($date) }}</option>
+			<option value="{{ $date }}" {{ $date == $filter['status'] ? 'selected' : '' }}>{{ ucfirst($date) }}</option>
 		@endforeach
 	</select>
 

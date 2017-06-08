@@ -12,7 +12,7 @@ class ContractRepository
      * @var array
      */
     protected $filters = [
-        'name', 'type',
+        'name', 'status','contract',
     ];
 	/**
 	 * Devuelve una instancia del modelo del repositorio.
@@ -75,7 +75,7 @@ class ContractRepository
      * @param  [type] $value [description]
      * @return [type]        [description]
      */
-    public function filterByType($q, $value)
+    public function filterByStatus($q, $value)
     {
         if ($value == config('options.dates')[0]){
             $q->where('contracts.end_date', null);
@@ -83,5 +83,17 @@ class ContractRepository
         elseif ($value == config('options.dates')[1]) {
             $q->where('contracts.end_date', '<>', null);
         }
+    }
+
+    /**
+     * Filtro por tipo de contrato
+     * 
+     * @param  [type] $q     [description]
+     * @param  [type] $value [description]
+     * @return [type]        [description]
+     */
+    public function filterByContract($q, $value)
+    {
+        $q->where('contracts.contract_type_id',$value);
     }
 }

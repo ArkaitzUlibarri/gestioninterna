@@ -21,8 +21,9 @@ const app = new Vue({
 
 		user: user,
 		groupProjects: groupProjects,
-		projectList: [] ,
-		groupList:[] ,
+		projectList: [],
+		groupList: [],
+		groupProjectsList: [],
 		newGroupUser: {
 			id: -1,
 			user_id: -1,
@@ -63,6 +64,22 @@ const app = new Vue({
 	},
 
 	methods: {
+		/*
+		groupProjects(){
+			let vm = this;
+			let setList = new Set();
+			
+			vm.groupProjects.forEach(function(item) {						
+				setList.add(item);							
+			});
+
+			vm.array.forEach(function(item) {
+				setList.delete(item.category);
+			});
+
+			this.groupProjectsList = [...setList];
+		},
+		*/
 		project() {
 			let setList = new Set();
 

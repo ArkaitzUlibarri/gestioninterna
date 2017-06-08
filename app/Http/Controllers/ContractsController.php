@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Contract;
+use App\ContractType;
 use App\ContractRepository;
 use Illuminate\Http\Request;
 use App\Http\Requests\ContractFormRequest;
@@ -27,13 +28,15 @@ class ContractsController extends Controller
 	public function index(Request $request)
 	{
 		$contracts = $this->contractRepository->search($request->all(), false);
+		$contractTypes = ContractType::all();
 
 		$filter = array(	
-			'name' => $request->get('name'),
-			'type' => $request->get('type'),
+			'name'     => $request->get('name'),
+			'status'   => $request->get('status'),
+			'contract' => $request->get('contract'),
 		);
 
-    	return view('contracts.index', compact('contracts','filter'));
+    	return view('contracts.index', compact('contracts','filter','contractTypes'));
 	}
 
 	public function create()	
@@ -44,7 +47,7 @@ class ContractsController extends Controller
 		$regionalDays  = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[1]);
 		$localDays     = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[2]);
 		
-		$contractTypes = $this->getContractTypes();
+		$contractTypes = ContractType::all();
 		
 		$users         = $this->getUsers();
 
@@ -53,7 +56,6 @@ class ContractsController extends Controller
 
 	public function show($id)
 	{
-		//$contract = $this->getContractShow($id);
 		$contract = Contract::find($id);
 
 		$bankHolidaysCodes = $this->getBankHolidaysCodes();
@@ -94,7 +96,7 @@ class ContractsController extends Controller
 		$regionalDays = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[1]);
 		$localDays    = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[2]);
 		
-		$contractTypes = $this->getContractTypes();
+		$contractTypes = ContractType::all();
 		
 		$users = $this->getUsers();
 
@@ -146,34 +148,6 @@ class ContractsController extends Controller
 			->select('id', 'type', 'code','name')
 			->get()
 			->toArray();
-	}
-
-	private function getContractTypes()
-	{
-		return DB::table('contract_types')
-			->select('id','name')
-			->get();
-	}
-
-	private function getContractShow($id)
-	{
-		return DB::table('contracts')
-			->join('contract_types','contracts.contract_type_id','=','contract_types.id')
-			->join('users','contracts.user_id','=','users.id')
-			->where('contracts.id',$id)
-			->select(
-				DB::raw("CONCAT(users.name, ' ', users.lastname_1 ) as full_name"),
-				'contracts.id',
-				'contract_types.name as contract_type',	
-				'contracts.start_date',
-				'contracts.estimated_end_date',
-				'contracts.end_date',
-				'contracts.week_hours',
-				'contracts.national_days_id',
-				'contracts.regional_days_id',
-				'contracts.local_days_id'
-			)
-			->first();
 	}
 
 	private function getContractEdit($id)
