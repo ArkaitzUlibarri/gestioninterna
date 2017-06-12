@@ -8,6 +8,7 @@ use App\ContractRepository;
 use Illuminate\Http\Request;
 use App\Http\Requests\ContractFormRequest;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class ContractsController extends Controller
 {
@@ -106,20 +107,62 @@ class ContractsController extends Controller
 	public function store(ContractFormRequest $request)
 	{
 		$contract = new Contract;
-		
-        $contract->fill($request->all());
-
-        $contract->save();
+	    $contract->fill($request->all());
+	    $contract->save();
 
 		return redirect('/contracts');
 	}
 
 	public function update(ContractFormRequest $request, $id)
 	{			
-        $contract = Contract::find($id);
+        try{
+	    	DB::beginTransaction();
+			//******************************************************************************
+        	$contract = Contract::find($id);
 
-        $contract->update($request->all());
+        	$contract->update($request->all());
 
+	        //**************************************************************
+	        //Cierre de contrato->Cerrar Teletrabajo y reduccion
+	        if($request->get('end_date') != null){
+				$reduction  = $contract->reductions->where('end_date',null)->first();
+				if($reduction){
+					DB::table('reductions')
+						->where('id',$reduction->id)
+						->update(['end_date' => $request->get('end_date')]);
+				}
+
+				$teleworking = $contract->teleworking->where('end_date',null)->first();
+				if($teleworking){
+					DB::table('teleworking')
+						->where('id',$teleworking->id)
+						->update(['end_date' => $request->get('end_date')]);
+				}
+			}
+			
+			//******************************************************************************
+			DB::commit();/* Transaction successful. */
+		
+		}catch(\Exception $e){       
+		    DB::rollback(); /* Transaction failed. */ 
+		    throw $e;
+		}
+
+		return redirect('/contracts');
+	}
+
+	/**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+	public function destroy($id)
+	{
+		$contract = Contract::find($id);
+		$contract->delete();
+
+		Session::flash('message', 'The contract has been successfully deleted!');
 		return redirect('/contracts');
 	}
 

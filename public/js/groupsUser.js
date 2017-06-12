@@ -29,6 +29,7 @@ var app = new Vue({
 		groupProjects: groupProjects,
 		projectList: [],
 		groupList: [],
+		groupProjectsList: [],
 		newGroupUser: {
 			id: -1,
 			user_id: -1,
@@ -69,6 +70,20 @@ var app = new Vue({
 
 
 	methods: {
+		/*
+  groupProjects(){
+  	let vm = this;
+  	let setList = new Set();
+  	
+  	vm.groupProjects.forEach(function(item) {						
+  		setList.add(item);							
+  	});
+  			vm.array.forEach(function(item) {
+  		setList.delete(item.category);
+  	});
+  			this.groupProjectsList = [...setList];
+  },
+  */
 		project: function project() {
 			var setList = new Set();
 
@@ -103,7 +118,7 @@ var app = new Vue({
 
 			this.newGroupUser = {
 				id: -1,
-				user_id: -1,
+				user_id: this.user.id,
 				project_id: -1,
 				project: '',
 				group_id: -1,

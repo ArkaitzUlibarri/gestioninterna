@@ -31,7 +31,7 @@
 		@include('groups.showProjects')
 
 		<dl class="dl-horizontal">
-			<dt><a class="btn btn-primary" href="{{ url('projects') }}">Back</a></dt>
+			<dt><a class="btn btn-default" href="{{ url('projects') }}">Back</a></dt>
 		</dl>	
 	</div>
 @endsection

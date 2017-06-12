@@ -24,6 +24,9 @@ var app = new Vue({
 	el: '#report',
 
 	data: {
+		contract: user_contract,
+		expHours: 0,
+
 		user: report_user,
 		role: role,
 		reportdate: reportdate,
@@ -159,6 +162,19 @@ var app = new Vue({
 
 
 	methods: {
+		expectedHours: function expectedHours() {
+			if (this.contract.week_hours == 40) {
+				if (this.reportDayWeek == 'Friday') {
+					this.expHours = 7;
+				} else if (this.reportDayWeek != 'Saturday' && this.reportDayWeek != 'Sunday') {
+					this.expHours = 8.25;
+				} else {
+					this.expHours = 0;
+				}
+			} else {
+				this.expHours = parseInt(this.contract.week_hours / 5);
+			}
+		},
 		dateValidation: function dateValidation() {
 			var today = this.getDate();
 			var datefield = document.getElementById("datefield").value;
@@ -246,6 +262,7 @@ var app = new Vue({
 		initializeTask: function initializeTask() {
 			this.reportDayWeek = this.getDayWeek(this.reportdate);
 			this.week = this.getWeek(1, this.reportdate);
+			this.expectedHours();
 
 			this.newTask = {
 				id: -1,

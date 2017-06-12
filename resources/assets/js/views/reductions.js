@@ -76,6 +76,16 @@ const app = new Vue({
 	},
 
 	methods: {
+
+		hoursValidation(){
+			var hourfield = document.getElementById("hourfield").value;
+
+			if(this.newReduction.week_hours >= this.contract.week_hours) {
+				toastr.error("Reduction hours are greater than contract hours");
+				this.newReduction.week_hours = 0;
+			}
+		},
+
 		setDateLimits(){
 			document.getElementById("startdatefield").setAttribute("min", this.contract.start_date);
 			document.getElementById("enddatefield").setAttribute("min", this.contract.start_date);

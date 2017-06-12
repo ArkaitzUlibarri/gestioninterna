@@ -46,7 +46,6 @@ class GroupApiController extends ApiController
 	 */
 	public function store(GroupApiRequest $request)
 	{
-
 		$array = $request->all();
 
 		unset($array['id']);
@@ -55,7 +54,6 @@ class GroupApiController extends ApiController
 			->insertGetId($array);
 
 		return $this->respond($id);
-
 	}
 
 	/**
@@ -67,7 +65,6 @@ class GroupApiController extends ApiController
 	 */
 	public function update(GroupApiRequest $request, $id)
 	{
-
 		$array = $request->all();
 
 		$group = Group::find($id);
@@ -81,7 +78,6 @@ class GroupApiController extends ApiController
 			->update($array);
 
 		return $this->respond($confirmation);
-
 	}
 
 	/**
@@ -97,7 +93,7 @@ class GroupApiController extends ApiController
 			return $this->respondNotFound();
 		}
 		
-		if($group->name !='-'){
+		if($group->name !='Default'){
 			$reports = DB::table('working_report')
 				->where('group_id',$id)
 				->get()
@@ -113,7 +109,6 @@ class GroupApiController extends ApiController
 		}
 
 		return $this->respond(false);
-
 	}
 
 }

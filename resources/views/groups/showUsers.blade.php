@@ -1,26 +1,31 @@
 @if(count($groups)>0)
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-default">
+
+                <div class="panel-heading"><b>PROJECTS/GROUPS</b></div>
 	
-	<div class="table-responsive">
+            	<div class="table-responsive">
 
-		<h4>PROJECTS/GROUPS</h4>
+                    <table class="table">
 
-        <table class="table table-hover">
+                        <thead>
+                            <th>Project</th>
+                            <th>Group</th>   
+                        </thead>
 
-            <thead>
-                <th>Project</th>
-                <th>Group</th>   
-            </thead>
+                        @foreach($groups as $group)
+                        <tbody>
+                            <tr>                
+                                <td>{{$group->project->name}}</td>      
+                                <td>{{$group->name}}</td>  
+                            </tr>
+                        </tbody>
+                        @endforeach
 
-            @foreach($groups as $group)
-            <tbody>
-                <tr>                
-                    <td>{{$group->project->name}}</td>      
-                    <td>{{$group->name}}</td>  
-                </tr>
-            </tbody>
-            @endforeach
-
-        </table>
-    </div>
-			
+                    </table>
+                </div>
+            </div>
+        </div>        
+	</div>		
 @endif

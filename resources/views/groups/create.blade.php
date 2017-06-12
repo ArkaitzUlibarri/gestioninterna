@@ -100,7 +100,7 @@
 		</div>
 	</div>
 
-	<a class="btn btn-primary" href="{{ url('projects') }}">Back</a>
+	<a class="btn btn-default" href="{{ url('projects') }}">Back</a>
 </div>
 
 @endsection

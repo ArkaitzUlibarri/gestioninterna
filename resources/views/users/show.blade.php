@@ -33,12 +33,23 @@
             <dd>{{ strtoupper($user->role)}}</dd>
         </dl>
 
-        @include('categories.show')
-        @include('groups.showUsers')
+        <div class="row">
+            @include('contracts.showUsers')
+        </div>
+        
+        <div class="row">
+            @include('categories.show')
+        </div>
 
-        <a title="Back" class="btn btn-primary" href="{{ url('users') }}">
-            Back
-        </a>
+        <div class="row">
+            @include('groups.showUsers')
+        </div>
+
+        @if(Auth::user()->isAdmin())
+            <a title="Back" class="btn btn-default" href="{{ url('users') }}">
+                Back
+            </a>
+        @endif
 
     </div>
 @endsection

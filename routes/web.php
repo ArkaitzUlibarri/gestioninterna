@@ -28,12 +28,10 @@ Route::get('users/{user}/categories/', 'CategoriesController@edit');
 Route::get('users/{user}/groups/', 'GroupsController@editUser');
 
 //Contracts
-Route::resource('contracts', 'ContractsController', ['except' => [
-    'destroy'
-]]);
-
 Route::get('contracts/{contract}/teleworking/', 'TeleworkingController@edit');
 Route::get('contracts/{contract}/reductions/', 'ReductionsController@edit');
+Route::resource('contracts', 'ContractsController');
+
 
 //Projects
 Route::resource('projects', 'ProjectsController', ['except' => [

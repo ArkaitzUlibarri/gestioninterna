@@ -79,8 +79,8 @@ class ProjectsController extends Controller
 			DB::commit();/* Transaction successful. */
 		
 		}catch(\Exception $e){       
-
 		    DB::rollback(); /* Transaction failed. */ 
+		    throw $e;
 		}
 
 		return redirect('/projects');
@@ -88,8 +88,36 @@ class ProjectsController extends Controller
 
 	public function update(ProjectFormRequest $request, $id)
 	{
-		$project = Project::find($id);
-		$project->update($request->all());
+		try{
+	    	DB::beginTransaction();
+			//******************************************************************************
+			$project = Project::find($id);
+			$project->update($request->all());
+	        //**************************************************************
+	        //Cierre de proyecto->Deshabilitar grupos
+	        if($request->get('end_date') != null){
+				$groups  = $project->groups->where('enabled','1');
+				if($groups){
+					foreach ($groups as $group) {
+						DB::table('groups')
+							->where('id',$group->id)
+							->update(['enabled' => '0']);
+					}
+				}
+			}
+			else{
+				//Proyecto Abierto->Habilitar Grupos
+				DB::table('groups')
+					->where('project_id',$id)
+					->update(['enabled' => '1']);
+			}
+			//******************************************************************************
+			DB::commit();/* Transaction successful. */
+		
+		}catch(\Exception $e){       
+		    DB::rollback(); /* Transaction failed. */ 
+		    throw $e;
+		}
 
 		return redirect('/projects');
 	}

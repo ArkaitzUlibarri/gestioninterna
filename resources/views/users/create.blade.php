@@ -18,16 +18,12 @@
 							<label>Name:</label>
 							<input name="name" type ="text" class="form-control" placeholder="Name" value="{{ old('name') }}" >
 						</div>
-					</div>
 
-					<div class="row">
 						<div class="form-group col-xs-12 col-sm-4"">
 							<label>Lastname 1:</label>
 							<input name="lastname_1" type ="text" class="form-control" placeholder="Lastname 1" value="{{ old('lastname_1') }}" >
 						</div>
-					</div>
 
-					<div class="row">
 						<div class="form-group col-xs-12 col-sm-4"">
 							<label>Lastname 2:</label>
 							<input name="lastname_2" type ="text" class="form-control" placeholder="Lastname 2" value="{{ old('lastname_2') }}">
@@ -66,8 +62,12 @@
 					</div>
 
 			  		<div class ="form-group">	
-						<a title="Cancel" class="btn btn-primary" href="{{ url('users') }}"><span class="glyphicon glyphicon-arrow-left"></span> Cancel</a>
-						<button type="submit" title="Save" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+						<a title="Cancel" class="btn btn-default" href="{{ url('users') }}">
+							Cancel
+						</a>
+						<button type="submit" title="Save" class="btn btn-primary">
+							<span class="glyphicon glyphicon-floppy-disk"></span> Save
+						</button>
 					</div>
 				</div>
 

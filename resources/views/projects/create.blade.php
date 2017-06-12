@@ -65,8 +65,12 @@
 			</div>
 
 			<div class  ="form-group">	
-				<a class="btn btn-primary" href="{{ url('projects') }}"><span class="glyphicon glyphicon-arrow-left"></span> Cancel</a>
-				<button type ="submit" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+				<a class="btn btn-default" href="{{ url('projects') }}">
+					Cancel
+				</a>
+				<button type ="submit" class="btn btn-primary">
+					<span class="glyphicon glyphicon-floppy-disk"></span> Save
+				</button>
 			</div>	
 		</div>
 	</div>

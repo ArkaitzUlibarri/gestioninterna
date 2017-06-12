@@ -15,7 +15,7 @@ class UsersController extends Controller
     public function __construct(UserRepository $userRepository)
     {
         $this->middleware('auth');
-        $this->middleware('checkrole');
+        $this->middleware('checkrole',['except' => ['index']]);
         $this->userRepository = $userRepository;
     }
 
@@ -41,11 +41,12 @@ class UsersController extends Controller
     public function show($id)
     {
         $user       = User::find($id);
+        $roles      = config('options.roles');
         $categories = $user->categories;
         $groups     = $user->groups->where('enabled',1);
-        $roles      = config('options.roles');
+        $contracts  = $user->contracts;
         
-        return view('users.show',compact('user','roles','categories','groups'));
+        return view('users.show',compact('user','roles','categories','groups','contracts'));
     }
 
     public function create()

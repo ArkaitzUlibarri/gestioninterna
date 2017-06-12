@@ -103,28 +103,37 @@
 						</div>
 					</div>
 
-					<div class ="form-group">
-						<a title="Cancel" class="btn btn-primary" href="{{ url('contracts') }}">
-							<span class="glyphicon glyphicon-arrow-left"></span> Cancel
+					<div class ="form-group pull-right">
+				        <a title="Cancel" class="btn btn-default" href="{{ url('contracts') }}">
+							Cancel
 						</a>
 						<button type="submit" title="Save" class="btn btn-primary">
 							<span class="glyphicon glyphicon-floppy-disk"></span> Save
 						</button>
+					</div>
+					<div class ="form-group pull-left">
+						<a title="Teleworking" class="btn btn-primary" type="button" 
+				           href="{{ url('contracts/' . $contract->id . '/teleworking') }}">
+				           Teleworking
+				        </a>
+				        <a title="Reductions" class="btn btn-primary" type="button" 
+				           href="{{ url('contracts/' . $contract->id . '/reductions') }}">
+				            Reductions
+				        </a>
 					</div>
 				</div>	
 			</div>
 
 			@include('layouts.errors')
 		</form>
-		<div class ="form-group pull-right">
-	        <a title="Teleworking" class="btn btn-primary btn-sm" type="button" 
-	           href="{{ url('contracts/' . $contract->id . '/teleworking') }}">
-	           Teleworking
-	        </a>
-	        <a title="Reductions" class="btn btn-primary btn-sm" type="button" 
-	           href="{{ url('contracts/' . $contract->id . '/reductions') }}">
-	            Reductions
-	        </a>
-	    </div>
+
+		<form method="post" action="{{ url('contracts', $contract->id) }}">
+	        {{ csrf_field() }}
+
+	        {{ method_field('delete') }}
+
+	      	<button class="btn btn-danger" type="submit">Delete</button>
+      	</form>
+
 	</div>
 @endsection

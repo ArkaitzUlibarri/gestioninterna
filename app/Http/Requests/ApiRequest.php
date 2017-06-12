@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Response;
+use Validator;
 
 class ApiRequest extends FormRequest
 {
@@ -34,5 +35,21 @@ class ApiRequest extends FormRequest
     public function authorize()
     {
         return true;
+    }
+
+    public function validator()
+    {
+        $validator = Validator::make(
+            $this->input(),
+            $this->rules(),
+            $this->messages(),
+            $this->attributes()
+        );
+
+        if(method_exists($this, 'moreValidation')){
+            $this->moreValidation($validator);
+        }
+
+        return $validator;
     }
 }

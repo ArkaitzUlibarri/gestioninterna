@@ -39,7 +39,7 @@
                                     </a>
                                     <a class="btn btn-primary btn-sm"
                                        type="button" href="{{ url('projects' . '/' . $project->id . '/addgroup/' . '/') }}">
-                                       Add Group
+                                       Groups
                                     </a>
                                 @else
                                     <a class="btn btn-warning btn-sm"
@@ -55,6 +55,9 @@
             
 
             <div align="right" class="form-group">  
+                <a type="button" class="btn btn-default" href = "{{ url('groups') }}">
+                    Group List
+                </a>
                <a type="button" class="btn btn-default" href="{{ url('/projects/create') }}">
                     Add Project
                </a>

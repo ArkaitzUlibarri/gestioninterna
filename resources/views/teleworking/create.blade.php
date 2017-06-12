@@ -19,9 +19,14 @@
 		<div class="panel-body">
 			<div class="row">
 
-				<div class="col-xs-12 col-sm-6">	
+				<div class="col-xs-12 col-sm-4">	
 					<label>Employee</label>
 					<input class="form-control" type="text" placeholder="{{$contract->user->fullname}}" readonly>
+				</div>	
+
+				<div class="col-xs-12 col-sm-2">
+					<label>Week Working Hours</label>
+					<input class="form-control" type ="text" value="{{$contract->week_hours}}" readonly>
 				</div>	
 
 				<div class="col-xs-12 col-sm-2">

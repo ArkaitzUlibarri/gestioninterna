@@ -29,12 +29,13 @@
                         @if (Auth::guest())
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
-                        @else
+                        @else           
                             @if(Auth::user()->isAdmin())
                                  <li><a href  = "{{ url('users') }}">Users</a></li> 
                                  <li><a href  = "{{ url('contracts') }}">Contracts</a></li>
                                  <li><a href = "{{ url('projects') }}">Projects</a></li>  
-                                 <li><a href = "{{ url('groups') }}">Groups</a></li>  
+                            @else 
+                                <li><a href  = "{{ url('users' . '/' . Auth::user()->id . '/') }}">Profile</a></li>                                                           
                             @endif
                              <li><a href = "{{ url('workingreports') }}">Working Reports</a></li> 
                             

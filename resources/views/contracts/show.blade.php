@@ -47,13 +47,14 @@
 			<dt>Local bank holidays</dt>
 			<dd>{{ $localDayName }}</dd>
 		</dl>
-		
 
-		@include ('teleworking.show')
-		@include ('reductions.show')
+		<div class="row">
+			@include ('teleworking.show')
+			@include ('reductions.show')
+        </div>
 		
 		<dl class="dl-horizontal">
-			<dt><a title="Back" class="btn btn-primary" href="{{ url('contracts') }}">Back</a></dt>
+			<dt><a title="Back" class="btn btn-default" href="{{ url('contracts') }}">Back</a></dt>
 		</dl>	
 
 	</div>

@@ -176,14 +176,15 @@ class ReportApiController extends ApiController
 				)
 				SELECT user_id, :reportdate as created_at, activity, project_id, group_id, category_id ,training_type, course_group_id, absence_id, time_slots, job_type
 				FROM working_report
-				WHERE user_id = :user and created_at = (SELECT MAX(created_at) FROM working_report where created_at <> :report);"
+				WHERE user_id = :user and created_at = (SELECT MAX(created_at) FROM working_report where created_at <> :report and user_id = :userfilter);"
 			), array(
 				'reportdate' => $request['created_at'],
 				'user'       => $request['user_id'],
 				'report'     => $request['created_at'],
+				'userfilter' => $request['user_id'],
 			)
 		);
 
-		return $this->respond("COPIED");	
+		return $this->respond("Copied");	
 	}
 }

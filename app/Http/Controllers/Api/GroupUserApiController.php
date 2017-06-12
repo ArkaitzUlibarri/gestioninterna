@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
+use App\Http\Requests\GroupUserApiRequest;
 use App\User;
 use App\GroupUser;
 use Illuminate\Support\Facades\DB;
@@ -51,20 +52,11 @@ class GroupUserApiController extends ApiController
 	/**
 	 * 
 	 * 
-	 * @param  Request $request
+	 * @param  GroupUserApiRequest $request
 	 * @return json
 	 */
-	public function store(Request $request)
+	public function store(GroupUserApiRequest $request)
 	{
-		$validator = Validator::make($request->all(), [
-			'group_id' => 'required|numeric',
-			'user_id'  => 'required|numeric',
-		]);
-
-		if ($validator->fails()) {
-			return $this->respondNotAcceptable($validator->errors()->all());
-		}
-
 		$array = $request->all();
 
 		unset($array['id']);

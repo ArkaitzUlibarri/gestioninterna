@@ -68,8 +68,9 @@ class WorkingReportController extends Controller
 		$workingreports = $this->getReportsPerDay($user_id,$date);
 		$groupProjects  = $this->getGroupsProjectsByUser($user_id);
 		$categories     = $this->getCategories($user_id);
+		$contract       = $report_user->contracts->first();
 
-		return view('workingreports.edit',compact('date','auth_user','report_user','workingreports','absences','groupProjects','categories'));
+		return view('workingreports.edit',compact('date','auth_user','report_user','workingreports','absences','groupProjects','categories','contract'));
 	}
 
 	private function getReportsPerUserPerDay($user_id , $admin)
@@ -125,6 +126,7 @@ class WorkingReportController extends Controller
 			->join('projects','groups.project_id','=','projects.id')
 			->where('user_id',$user_id)
 			->where('groups.enabled',1)
+			->where('projects.end_date',null)
 			->orderBy('group_id','asc')
 			->get();
 	}

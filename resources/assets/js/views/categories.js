@@ -65,7 +65,7 @@ const app = new Vue({
 			
 			this.newCategory = {
 				id: -1,
-				user_id: -1,
+				user_id: this.user.id,
 				category_id: -1,
 				category: '',
 			};

@@ -1,6 +1,6 @@
 @if(count($contract->teleworking)>0)
 	
-	<div class="table-responsive col-sm-5">
+	<div class="table-responsive col-sm-6">
 
 		<h4>TELEWORKING</h4>
 

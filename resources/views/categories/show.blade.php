@@ -1,29 +1,35 @@
 @if(count($categories)>0)
-	
-	<div class="table-responsive">
+	<div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-default">
 
-		<h4>CATEGORIES</h4>
+                <div class="panel-heading"><b>CATEGORIES</b></div>
 
-        <table class="table table-hover">
-            <thead>
-                <th>Name</th>
-                <th>Code</th>   
-                <th>Description</th>
-            </thead>
+            	<div class="table-responsive">
 
-            @foreach($categories as $category)
-            <tbody>
-                <tr>
-                    <td>{{$category->name}}</td>
-                    <td>{{$category->code}}</td>
-                    <td>
-	                    {{$category->description}}
-                    </td>
-                </tr>
-            </tbody>
-            @endforeach
+                    <table class="table">
+                        <thead>
+                            <th>Name</th>
+                            <th>Code</th>   
+                            <th>Description</th>
+                        </thead>
 
-        </table>
-    </div>
-			
+                        @foreach($categories as $category)
+                        <tbody>
+                            <tr>
+                                <td>{{$category->name}}</td>
+                                <td>{{$category->code}}</td>
+                                <td>
+            	                    {{$category->description}}
+                                </td>
+                            </tr>
+                        </tbody>
+                        @endforeach
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>			
 @endif

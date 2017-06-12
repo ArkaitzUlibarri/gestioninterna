@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ContractFormRequest extends FormRequest
 {
@@ -23,17 +25,75 @@ class ContractFormRequest extends FormRequest
      */
     public function rules()
     {
+        $lastContract = $this->getPreviousContracts();
+        
+        if($lastContract !=[]){
 
-        return [
-            'user_id'            => 'required|exists:users,id',
-            'contract_type_id'   => 'required|exists:contract_types,id',
-            'start_date'         => 'required|date',
-            'estimated_end_date' => 'nullable|date|after:start_date',
-            'end_date'           => 'nullable|date|after:start_date',
-            'national_days_id'   => 'required|exists:bank_holidays_codes,id',
-            'regional_days_id'   => 'required|exists:bank_holidays_codes,id',
-            'local_days_id'      => 'required|exists:bank_holidays_codes,id',
-            'week_hours'         => 'required|numeric|min:0|max:40'
-        ];
+            $end_date = $lastContract->end_date;  
+
+            return [
+                'user_id'            => 'required|exists:users,id',
+                'contract_type_id'   => 'required|exists:contract_types,id',
+                'start_date'         => 'required|date|after:' . Carbon::createFromFormat('Y-m-d', $end_date)->toDateString() . '|date_format:Y-m-d',
+                'estimated_end_date' => 'nullable|date|after:start_date|date_format:Y-m-d',
+                'end_date'           => 'nullable|date|after:start_date|date_format:Y-m-d',
+                'national_days_id'   => 'required|exists:bank_holidays_codes,id',
+                'regional_days_id'   => 'required|exists:bank_holidays_codes,id',
+                'local_days_id'      => 'required|exists:bank_holidays_codes,id',
+                'week_hours'         => 'required|numeric|min:0|max:40'
+            ];
+
+        }
+        else{
+
+            return [
+                'user_id'            => 'required|exists:users,id',
+                'contract_type_id'   => 'required|exists:contract_types,id',
+                'start_date'         => 'required|date|date_format:Y-m-d',
+                'estimated_end_date' => 'nullable|date|after:start_date|date_format:Y-m-d',
+                'end_date'           => 'nullable|date|after:start_date|date_format:Y-m-d',
+                'national_days_id'   => 'required|exists:bank_holidays_codes,id',
+                'regional_days_id'   => 'required|exists:bank_holidays_codes,id',
+                'local_days_id'      => 'required|exists:bank_holidays_codes,id',
+                'week_hours'         => 'required|numeric|min:0|max:40'
+            ];
+
+        }
+
+    }
+
+    /**
+     * Configure the validator instance.
+     *
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return void
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $lastContract = $this->getPreviousContracts();
+            if($lastContract !=[]){
+                $start_date = $lastContract->start_date;
+                $end_date = $lastContract->end_date;  
+
+                if($end_date == null) {
+                    $validator->errors()->add('end_date', "Can't be more than an active contract for this user");
+                }
+            }
+        });
+    }
+
+    private function getPreviousContracts()
+    {
+        $user_id = request()->get('user_id');
+        $id      = request()->get('contract_id');
+
+        $lastContract = DB::table('contracts')
+                            ->where('user_id',$user_id)
+                            ->where('id','<>',$id)
+                            ->orderBy('start_date','desc')
+                            ->first();
+
+        return $lastContract;
     }
 }

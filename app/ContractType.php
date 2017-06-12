@@ -23,4 +23,11 @@ class ContractType extends Model
 	 */
 	public $incrementing = true;
 
+	/**
+     * Get the contract that owns the type.
+     */
+    public function contracts()
+    {
+        return $this->belongsToMany('App\Contract');
+    }
 }

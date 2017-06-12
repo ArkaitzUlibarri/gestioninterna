@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
+use App\Http\Requests\CategoryUserApiRequest;
 use App\User;
 use App\CategoryUser;
 use Illuminate\Support\Facades\DB;
@@ -49,20 +50,11 @@ class CategoryUserApiController extends ApiController
 	/**
 	 * 
 	 * 
-	 * @param  Request $request
+	 * @param  CategoryUserApiRequest $request
 	 * @return json
 	 */
-	public function store(Request $request)
+	public function store(CategoryUserApiRequest $request)
 	{
-		$validator = Validator::make($request->all(), [
-			'category_id' => 'required|numeric',
-			'user_id'  => 'required|numeric',
-		]);
-
-		if ($validator->fails()) {
-			return $this->respondNotAcceptable($validator->errors()->all());
-		}
-
 		$array = $request->all();
 
 		unset($array['id']);

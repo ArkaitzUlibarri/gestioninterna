@@ -20,18 +20,18 @@
 		<div class="panel-body">
 			<div class="row">
 
-				<div class="col-xs-12 col-sm-4">	
+				<div class="col-xs-12 col-sm-3">	
 					<label>Employee</label>
 					<input class="form-control" type="text" placeholder="{{$report_user->fullname}}" readonly>
 				</div>	
 
 				<div class="col-xs-12 col-sm-2">
-					<label>Report date</label>
+					<label>Date</label>
 					<input id="datefield" name="created_at" type ="date" class="form-control" min="2017-01-01" placeholder="yyyy-mm-dd" v-model="reportdate" v-on:blur="dateValidation">
 				</div>				
 
 				<div class="col-xs-12 col-sm-2">
-					<label>Report day</label>
+					<label>Day</label>
 					<input class="form-control" type="text" v-bind:placeholder="reportDayWeek" readonly>
 				</div>	
 
@@ -39,6 +39,13 @@
 					<label>Week</label>
 					<input class="form-control" type="text" v-bind:placeholder="week" readonly>
 				</div>	
+
+				<!--
+				<div class="col-xs-12 col-sm-1">
+					<label>Exp.Hours</label>
+					<input class="form-control" type="text" v-bind:placeholder="expHours" readonly>
+				</div>	
+				-->
 
 				<div class="col-xs-12 col-sm-2" v-if="! validatedTasks">
 					<label>Last tasks</label>
@@ -218,6 +225,7 @@
 		var absences      = <?php echo json_encode($absences);?>;
 		var groupProjects = <?php echo json_encode($groupProjects);?>;
 		var categories    = <?php echo json_encode($categories);?>;
+		var user_contract = <?php echo json_encode($contract);?>;
 	</script>
 	
     <script src="{{ asset('js/reports.js') }}"></script>

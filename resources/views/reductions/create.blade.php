@@ -19,9 +19,14 @@
 		<div class="panel-body">
 			<div class="row">
 
-				<div class="col-xs-12 col-sm-6">	
+				<div class="col-xs-12 col-sm-4">	
 					<label>Employee</label>
 					<input class="form-control" type="text" placeholder="{{$contract->user->fullname}}" readonly>
+				</div>	
+
+				<div class="col-xs-12 col-sm-2">
+					<label>Week Working Hours</label>
+					<input class="form-control" type ="text" value="{{$contract->week_hours}}" readonly>
 				</div>	
 
 				<div class="col-xs-12 col-sm-2">
@@ -74,7 +79,8 @@
 
 						<div class="form-group col-xs-12 col-sm-3">
 							<label>Week Working Hours</label>
-							<input type="number" min=0 max=40 class="form-control" placeholder="Time" v-model="newReduction.week_hours">
+							<input type="number" min=0 max="{{($contract->week_hours)- 1}}" class="form-control" placeholder="Time" v-model="newReduction.week_hours" 
+							v-on:blur="hoursValidation" id="hourfield">
 						</div>	
 
 						<div class="form-group col-xs-12 col-sm-3">
@@ -103,14 +109,14 @@
 		</div>
 	</div>
 
-	<a class="btn btn-primary" href="{{ url('contracts') }}">Back</a>
+	<a class="btn btn-default" href="{{ url('contracts') }}">Back</a>
 </div>
 
 @endsection
 
 @push('script-bottom')
 <script type="text/javascript">
-	var contract    = <?php echo json_encode($contract);?>;
+	var contract = <?php echo json_encode($contract);?>;
 </script>
 
 <script src="{{ asset('js/reductions.js') }}"></script>

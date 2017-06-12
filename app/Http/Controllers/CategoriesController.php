@@ -8,6 +8,12 @@ use App\Category;
 
 class CategoriesController extends Controller
 {
+	public function __construct()
+	{
+		$this->middleware('auth');
+		$this->middleware('checkrole');
+	}
+
     public function edit($user_id)
     {
     	$categories = Category::all();

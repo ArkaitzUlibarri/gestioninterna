@@ -42,7 +42,7 @@
 	<div class="panel panel-primary">
 
 		  <div class="panel-heading">
-		    	Groups for this user
+		    	Actual groups for this user
 		  </div>
 
 		  <div class="panel-body">
