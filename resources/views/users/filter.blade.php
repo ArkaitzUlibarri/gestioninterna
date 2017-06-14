@@ -1,5 +1,8 @@
 <form class="form-inline pull-right" method="GET" action="{{ route('users.index') }}">
 
+	<input type="hidden" name="admin" type="text" value="{{ Auth::user()->isAdmin() }}">
+	<input type="hidden" name="pm" type="text" value="{{ Auth::user()->isPM() }}">
+
 	<input type="text" class="form-control" name="name" placeholder="Employee name" value="{{ $filter['name'] }}">
 
 	<select name="type" class="form-control">

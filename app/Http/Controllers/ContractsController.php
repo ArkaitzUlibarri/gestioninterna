@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\Contract;
 use App\ContractType;
 use App\ContractRepository;
@@ -160,10 +161,17 @@ class ContractsController extends Controller
 	public function destroy($id)
 	{
 		$contract = Contract::find($id);
-		$contract->delete();
+		$user = User::find($contract->id);
+		
+		if($user->workingReports->count() == 0){
+			$contract->delete();
+			Session::flash('message', 'The contract has been successfully deleted!');
+			return redirect('/contracts');
+		}
+		else{
+			return redirect('/contracts')->withErrors(['The contract has reports associated']);		
+		}
 
-		Session::flash('message', 'The contract has been successfully deleted!');
-		return redirect('/contracts');
 	}
 
 	private function filterBankHolidaysByType($array,$type)

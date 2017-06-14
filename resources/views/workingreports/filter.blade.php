@@ -1,7 +1,7 @@
 <form class="form-inline pull-right" method="GET" action="{{ route('workingreports.index') }}">
 
-	<input type="hidden" name="admin" type="text" value="{{ $auth_user->isAdmin() }}">
-	<input type="hidden" name="pm" type="text" value="{{ $auth_user->isPM() }}">
+	<input type="hidden" name="admin" type="text" value="{{ Auth::user()->isAdmin() }}">
+	<input type="hidden" name="pm" type="text" value="{{ Auth::user()->isPM() }}">
 
 	@if(! Auth::user()->isAdmin() && Auth::user()->isPM() && count($projects))
 		<select name="project" class="form-control">

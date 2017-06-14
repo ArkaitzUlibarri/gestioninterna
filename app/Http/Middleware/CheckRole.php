@@ -105,10 +105,21 @@ class CheckRole
 		//Pantalla de reportes
 		elseif (isset($this->parameters['id']) && isset($this->parameters['date'])) {
 			//dd("d"); 	
+			//Su reporte
 			if($this->user->id == intval($this->parameters['id'])){ 
 				return 1; 
 			}
-			//TODO:VER REPORTES DE USUARIOS DE SU PROYECTO
+			//Reportes de los de su proyecto
+			else{
+				$watchedUser = User::find(intval($this->parameters['id']));
+				$groups = $watchedUser->groups;
+
+				foreach ($groups as $group) {		
+					if(array_key_exists($group->project_id, $pmProjects)){
+						return 1;
+					}
+				}
+			}
 		}
 		//Pantalla de proyectos index
 		elseif (strcmp($routeName, "projects.index") === 0) { 

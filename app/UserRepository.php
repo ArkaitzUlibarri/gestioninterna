@@ -3,6 +3,7 @@
 namespace App;
 
 use App\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class UserRepository
@@ -28,9 +29,10 @@ class UserRepository
 
     public function search(array $data = array(), $paginate = false)
     {
+
+        $ids = $this->getIds();
         $data = array_only($data, $this->filters);
         $data = array_filter($data, 'strlen');
-
 
         $q = $this->getModel()
             ->select(
@@ -47,6 +49,7 @@ class UserRepository
                 ON u.user_id = r.user_id AND u.start_date = r.start_date) as t"
             )
             ,'users.id','t.user_id') 
+            
             ->orderBy('users.name','asc');
 
         foreach ($data as $field => $value) {
@@ -54,6 +57,10 @@ class UserRepository
             if(method_exists(get_called_class(), $filterMethod)) {
                 $this->$filterMethod($q, $value);
             }
+        }
+
+        if($ids != []){
+            $q = $q->whereIn('users.id',$ids);//Filtro PM
         }
        
         return $paginate
@@ -92,6 +99,24 @@ class UserRepository
             $q->whereNotNull('t.end_date');//Terminado
             $q->orWhereNull('t.contract_type_id');//Sin contrato
         }
+    }
+
+    private function getIds()
+    {
+        $ids = array();
+        $projectIds = array_keys(Auth::user()->PMProjects());//Proyectos PM
+
+        foreach ($projectIds as $projectId) {
+            $project = Project::find($projectId);
+            $groups = $project->groups;
+            foreach ($groups as $group) {
+                foreach ($group->users as $user) {
+                    $ids [] = $user->id;
+                }
+            }
+        }
+        
+        return array_unique($ids);    
     }
     /* 
     SELECT users.id, users.name, users.lastname_1, users.lastname_2,users.email,t.contract_type_id,t.start_date,t.estimated_end_date,t.end_date

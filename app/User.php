@@ -40,7 +40,7 @@ class User extends Authenticatable
 
     public function workingReports()
     {
-        return $this->hasMany('App\WorkingReport')->orderBy('user','date','desc');
+        return $this->hasMany('App\WorkingReport')->orderBy('user_id','date','desc');
     }
 
     /**

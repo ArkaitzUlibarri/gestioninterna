@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Project;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectRepository
 {
@@ -27,6 +28,7 @@ class ProjectRepository
 
     public function search(array $data = array(), $paginate = false)
     {
+        $ids = array_keys(Auth::user()->PMProjects());//Proyectos PM
         $data = array_only($data, $this->filters);
         $data = array_filter($data, 'strlen');
 
@@ -40,6 +42,7 @@ class ProjectRepository
                 'projects.start_date',
                 'projects.end_date'
             )
+            ->whereIn('projects.id',$ids)//Filtro PM
             ->orderBy('name','asc');
 
         foreach ($data as $field => $value) {

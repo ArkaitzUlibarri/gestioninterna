@@ -187,12 +187,6 @@ class WorkingreportRepository
      */
     public function filterByDate($q, $value)
     {
-        $year       = Carbon::now()->year;
-        $month      = Carbon::now()->month;
-        $day        = Carbon::now()->day;
-        $weekOfYear = Carbon::now()->weekOfYear;
-        $dayOfWeek  = Carbon::now()->dayOfWeek;
-
         if ($value == config('options.periods')[0]){
             // Today
             $Date = Carbon::today();

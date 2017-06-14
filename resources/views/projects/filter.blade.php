@@ -1,5 +1,5 @@
 <form class="form-inline pull-right" method="GET" action="{{ route('projects.index') }}">
-
+	
 	<input type="text" class="form-control" name="name" placeholder="Project name" value="{{ $filter['name'] }}">
 
 	<select name="customer" class="form-control">
