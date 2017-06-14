@@ -1,16 +1,40 @@
 @if(count($project->groups)>0)
 	
-		<h4>GROUPS</h4>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-default">
 
-        <table class="table table-hover">
+                <div class="panel-heading"><b>GROUPS</b></div>
+                <div class="table-responsive">
 
-            @foreach($project->groups as $group)
-            <dl class="dl-horizontal">
-                <dt>{{ $loop->iteration}}</dt>
-                <dd><b>{{ $group->name }}</b> {{ $group->enabled ? '(Enabled)' : '(Disabled)' }} </dd>
-            </dl>
-            @endforeach
+                <table class="table">
+                    <thead>
+                        <th>#</th>
+                        <th>Name</th>   
+                    </thead>
 
-        </table>
+                    @foreach($project->groups as $group)
+                        <tbody>
+                            @if($group->enabled)
+                                <tr class="success">
+                            @else
+                                <tr class="danger">
+                            @endif  
+                                <td>{{ $loop->iteration}}</td>
+                                <td>{{ $group->name }}</td>
+                            </tr>
+                        </tbody>
+                    @endforeach
+
+                </table>
+
+                </div>
+
+            </div>    
+        </div>  
+    </div>
+
+
+
 			
 @endif

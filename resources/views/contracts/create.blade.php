@@ -48,17 +48,17 @@
 					<div class="row">	
 						<div class ="form-group col-xs-12 col-sm-4">
 							<label>Start date:</label>
-							<input name="start_date" type ="date" class="form-control" placeholder="dd/mm/aaaa" value="{{ old('start_date') }}">
+							<input name="start_date" type ="date" class="form-control" placeholder="yyyy-mm-dd" value="{{ old('start_date') }}">
 						</div>
 
 						<div class ="form-group col-xs-12 col-sm-4">
 							<label>Estimated end date:</label>
-							<input name="estimated_end_date" type ="date" class="form-control" placeholder="dd/mm/aaaa" value="{{ old('estimated_end_date') }}">
+							<input name="estimated_end_date" type ="date" class="form-control" placeholder="yyyy-mm-dd" value="{{ old('estimated_end_date') }}">
 						</div>	
 
 						<div class ="form-group col-xs-12 col-sm-4">
 							<label>End date:</label>
-							<input name="end_date" type ="date" class="form-control" placeholder="dd/mm/aaaa" value="{{ old('end_date') }}">
+							<input name="end_date" type ="date" class="form-control" placeholder="yyyy-mm-dd" value="{{ old('end_date') }}">
 						</div>	
 					</div>
 

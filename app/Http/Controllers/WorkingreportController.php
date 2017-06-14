@@ -68,7 +68,7 @@ class WorkingReportController extends Controller
 		$workingreports = $this->getReportsPerDay($user_id,$date);
 		$groupProjects  = $this->getGroupsProjectsByUser($user_id);
 		$categories     = $this->getCategories($user_id);
-		$contract       = $report_user->contracts->first();
+		$contract       = $report_user->contracts->where('end_date',null)->first();
 
 		return view('workingreports.edit',compact('date','auth_user','report_user','workingreports','absences','groupProjects','categories','contract'));
 	}

@@ -108,11 +108,13 @@ class WorkingreportRepository
             ->join('groups','projects.id','=','groups.project_id')
             ->join('group_user','groups.id','=','group_user.group_id')
             ->join('users','group_user.user_id','=','users.id')
+            ->join('contracts','users.id','=','contracts.user_id')
             ->select(
                 'users.id'
             ) 
-            ->where('projects.name',$project)//Proyectos activos
-            ->where('projects.end_date', null)
+            ->where('projects.name',$project)//Filtrar por proyecto
+            ->where('projects.end_date', null)//Proyectos activos
+            ->where('contracts.end_date', null)//Contrato activo para el usuario
             ->groupBy('users.id')
             ->get();
 
@@ -125,11 +127,13 @@ class WorkingreportRepository
             ->join('groups','projects.id','=','groups.project_id')
             ->join('group_user','groups.id','=','group_user.group_id')
             ->join('users','group_user.user_id','=','users.id')
+            ->join('contracts','users.id','=','contracts.user_id')
             ->select(
                 'users.id'
             ) 
-            ->whereIn('projects.name',$projects)
+            ->whereIn('projects.name',$projects)//Filtrar por listado de proyectos
             ->where('projects.end_date', null)//Proyectos activos
+            ->where('contracts.end_date', null)//Contrato activo para el usuario
             ->groupBy('users.id')
             ->get();
 

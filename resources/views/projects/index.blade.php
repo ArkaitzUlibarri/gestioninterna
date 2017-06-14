@@ -39,7 +39,7 @@
                                     </a>
                                     <a class="btn btn-primary btn-sm"
                                        type="button" href="{{ url('projects' . '/' . $project->id . '/addgroup/' . '/') }}">
-                                       Groups
+                                       Add Groups
                                     </a>
                                 @else
                                     <a class="btn btn-warning btn-sm"

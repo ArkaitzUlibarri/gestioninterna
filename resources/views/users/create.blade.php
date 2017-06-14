@@ -13,6 +13,7 @@
 			 	</div>
 
 			 	<div class="panel-body">
+
 					<div class="row">
 						<div class="form-group col-xs-12 col-sm-4"" >
 							<label>Name:</label>
@@ -61,6 +62,24 @@
 						</div>
 					</div>
 
+					<div class="row">
+					    <div class="form-group col-xs-12 col-sm-2 {{ $errors->has('password') ? ' has-error' : '' }}">
+	                        <label for="password">Password:</label>
+                            <input id="password" type="password" class="form-control" name="password" required>
+
+                            @if ($errors->has('password'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('password') }}</strong>
+                                </span>
+                            @endif
+	                    </div>
+
+	                    <div class="form-group col-xs-12 col-sm-2">
+	                        <label for="password-confirm">Confirm Password:</label>
+	                        <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>                   
+	                    </div>
+                    </div>
+
 			  		<div class ="form-group">	
 						<a title="Cancel" class="btn btn-default" href="{{ url('users') }}">
 							Cancel
@@ -69,6 +88,7 @@
 							<span class="glyphicon glyphicon-floppy-disk"></span> Save
 						</button>
 					</div>
+
 				</div>
 
 			</div>

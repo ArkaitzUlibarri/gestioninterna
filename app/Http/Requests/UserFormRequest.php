@@ -23,12 +23,35 @@ class UserFormRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name'       => 'required|alpha',
-            'lastname_1' => 'required|alpha',
-            'lastname_2' => 'nullable|alpha',
-            'role'       => 'required|in:user,admin,tools',
-            'email'      => 'required|email|unique:users,email,' . $this->get('user_id') . ',id'
-        ];
+
+
+        switch($this->method())
+        {
+            case 'GET':
+            case 'DELETE':
+            case 'POST':
+            {
+                return [
+                    'name'       => 'required|string',
+                    'lastname_1' => 'required|string',
+                    'lastname_2' => 'nullable|string',
+                    'role'       => 'required|in:user,admin,tools',
+                    'email'      => 'required|string|email|unique:users,email,' . $this->get('user_id') . ',id',
+                    'password'   => 'required|string|min:6|confirmed'
+                ];
+            }
+            case 'PUT':
+            case 'PATCH':
+            {
+                return [
+                    'name'       => 'required|string',
+                    'lastname_1' => 'required|string',
+                    'lastname_2' => 'nullable|string',
+                    'role'       => 'required|in:user,admin,tools',
+                    'email'      => 'required|string|email|unique:users,email,' . $this->get('user_id') . ',id'
+                ];
+            }
+            default:break;
+        }
     }
 }

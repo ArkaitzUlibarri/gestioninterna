@@ -18,7 +18,11 @@
 
                         @foreach($contracts as $contract)
                         <tbody>
-                            <tr>
+                            @if($contract->end_date)
+                                <tr class="danger">
+                            @else
+                                <tr class="success">
+                            @endif  
                                 <td>{{$contract->contractType->name}}</td>
                                 <td>{{$contract->start_date}}</td>
                                 <td>{{$contract->estimated_end_date}}</td>

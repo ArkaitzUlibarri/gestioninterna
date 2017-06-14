@@ -1,27 +1,35 @@
 @if(count($contract->reductions)>0)
-	
-	<div class="table-responsive col-sm-6">
 
-		<h4>REDUCTIONS</h4>
+	<div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
 
-        <table class="table table-hover ">
-            <thead>
-                <th>Start date</th>
-                <th>End date</th>   
-                <th>Week Hours</th>
-            </thead>
+                <div class="panel-heading"><b>REDUCTIONS</b></div>
+            	<div class="table-responsive">
 
-            @foreach($contract->reductions as $reduction)
-            <tbody>
-                <tr>
-                    <td>{{$reduction->start_date}}</td>
-                    <td>{{$reduction->end_date}}</td>
-                    <td>{{$reduction->week_hours}}</td>
-                </tr>
-            </tbody>
-            @endforeach
+                    <table class="table">
+                        <thead>
+                            <th>Start date</th>
+                            <th>End date</th>   
+                            <th>Week Hours</th>
+                        </thead>
 
-        </table>
+                        @foreach($contract->reductions as $reduction)
+                        <tbody>
+                            <tr>
+                                <td>{{$reduction->start_date}}</td>
+                                <td>{{$reduction->end_date}}</td>
+                                <td>{{$reduction->week_hours}}</td>
+                            </tr>
+                        </tbody>
+                        @endforeach
+
+                    </table>
+
+                </div>
+
+            </div>    
+		</div>	
     </div>
-			
+        
 @endif

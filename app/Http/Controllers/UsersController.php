@@ -15,7 +15,8 @@ class UsersController extends Controller
     public function __construct(UserRepository $userRepository)
     {
         $this->middleware('auth');
-        $this->middleware('checkrole',['except' => ['index']]);
+        //$this->middleware('checkrole',['except' => ['index']]);
+        $this->middleware('checkrole');
         $this->userRepository = $userRepository;
     }
 
@@ -60,7 +61,7 @@ class UsersController extends Controller
     {
         $user = new User;
         $user->fill($request->all());
-        $user->password = bcrypt($request->get('name'));
+        $user->password = bcrypt($request->get('password'));
         $user->remember_token = str_random(10);
         $user->save();
 

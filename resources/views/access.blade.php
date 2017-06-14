@@ -8,7 +8,7 @@
                 <div class="panel-heading"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Access Denied</div>
 
                 <div class="panel-body">
-                    You are not admin
+                    It is required a higher role to access to this page
                 </div>
             </div>
         </div>

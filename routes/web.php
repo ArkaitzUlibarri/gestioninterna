@@ -1,5 +1,5 @@
 <?php
-
+use Carbon\Carbon;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,6 +13,14 @@
 
 Auth::routes();
 
+Route::get('/', function(){
+	if(!empty(Auth::user())){
+		return redirect()->route('workingreports.edit', ['id' => Auth::user()->id, 'date' => Carbon::today()->toDateString()]);
+	}
+	return redirect('login');
+
+});
+
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/access', function(){
@@ -20,12 +28,11 @@ Route::get('/access', function(){
 });
 
 //Users
+Route::get('users/{user}/categories/', 'CategoriesController@edit');
+Route::get('users/{user}/groups/', 'GroupsController@editUser');
 Route::resource('users', 'UsersController', ['except' => [
     'destroy'
 ]]);
-
-Route::get('users/{user}/categories/', 'CategoriesController@edit');
-Route::get('users/{user}/groups/', 'GroupsController@editUser');
 
 //Contracts
 Route::get('contracts/{contract}/teleworking/', 'TeleworkingController@edit');
@@ -34,12 +41,11 @@ Route::resource('contracts', 'ContractsController');
 
 
 //Projects
+Route::get('groups', 'GroupsController@index');
+Route::get('projects/{project}/addgroup/', 'GroupsController@edit');
 Route::resource('projects', 'ProjectsController', ['except' => [
     'destroy'
 ]]);
-
-Route::get('groups', 'GroupsController@index');
-Route::get('projects/{project}/addgroup/', 'GroupsController@edit');
 
 //Working Reports
 Route::get('workingreports', ['as'=> 'workingreports.index','uses'=>'WorkingreportController@index']);

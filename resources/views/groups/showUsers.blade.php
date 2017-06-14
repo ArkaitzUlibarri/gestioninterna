@@ -1,4 +1,5 @@
 @if(count($groups)>0)
+
     <div class="row">
         <div class="col-md-8">
             <div class="panel panel-default">
@@ -16,7 +17,11 @@
 
                         @foreach($groups as $group)
                         <tbody>
-                            <tr>                
+                            @if($group->enabled)
+                                <tr class="success">
+                            @else
+                                <tr class="danger">
+                            @endif                  
                                 <td>{{$group->project->name}}</td>      
                                 <td>{{$group->name}}</td>  
                             </tr>
@@ -24,8 +29,11 @@
                         @endforeach
 
                     </table>
+                    
                 </div>
+
             </div>
         </div>        
-	</div>		
+	</div>	
+
 @endif

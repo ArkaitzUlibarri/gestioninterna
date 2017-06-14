@@ -30,7 +30,13 @@
 
         <dl class="dl-horizontal">
             <dt>Role</dt>
-            <dd>{{ strtoupper($user->role)}}</dd>
+            <dd>
+                @if(! Auth::user()->isAdmin() && Auth::user()->isPM())
+                    PROJECT MANAGER
+                @else
+                    {{ strtoupper($user->role)}}
+                @endif  
+            </dd>
         </dl>
 
         <div class="row">

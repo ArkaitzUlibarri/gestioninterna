@@ -24,6 +24,38 @@
                             </div>
                         </div>
 
+                        <!--New-->
+                        <div class="form-group{{ $errors->has('lastname_1') ? ' has-error' : '' }}">
+                            <label for="lastname_1" class="col-md-4 control-label">Lastname 1</label>
+
+                            <div class="col-md-6">
+                                <input id="lastname_1" type="text" class="form-control" name="lastname_1" value="{{ old('lastname_1') }}" required>
+
+                                @if ($errors->has('lastname_1'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('lastname_1') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                         <div class="form-group{{ $errors->has('lastname_2') ? ' has-error' : '' }}">
+                            <label for="lastname_2" class="col-md-4 control-label">Lastname 2</label>
+
+                            <div class="col-md-6">
+                                <input id="lastname_2" type="text" class="form-control" name="lastname_2" value="{{ old('lastname_2') }}">
+
+                                @if ($errors->has('lastname_2'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('lastname_2') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <input type=hidden name="role" type="text" value="user">
+                        <!--New-->
+
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                             <label for="email" class="col-md-4 control-label">E-Mail Address</label>
 

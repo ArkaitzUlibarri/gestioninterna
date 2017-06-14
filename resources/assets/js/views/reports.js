@@ -162,19 +162,21 @@ const app = new Vue({
 
 	methods: {
 		expectedHours(){
-			if(this.contract.week_hours == 40){
-				if(this.reportDayWeek == 'Friday'){
-					this.expHours = 7;
-				}
-				else if(this.reportDayWeek != 'Saturday' && this.reportDayWeek != 'Sunday'){
-					this.expHours = 8.25;
+			if(this.contract != null){
+				if(this.contract.week_hours == 40){
+					if(this.reportDayWeek == 'Friday'){
+						this.expHours = 7;
+					}
+					else if(this.reportDayWeek != 'Saturday' && this.reportDayWeek != 'Sunday'){
+						this.expHours = 8.25;
+					}
+					else{
+						this.expHours = 0;
+					}
 				}
 				else{
-					this.expHours = 0;
+					this.expHours = parseInt(this.contract.week_hours / 5);
 				}
-			}
-			else{
-				this.expHours = parseInt(this.contract.week_hours / 5);
 			}
 
 		},
@@ -214,8 +216,10 @@ const app = new Vue({
 
 		setMaxDate(){
 			var today = this.getDate();
-
-			document.getElementById("datefield").setAttribute("max", today);
+			
+			if(document.getElementById('datefield') !== null){
+				document.getElementById("datefield").setAttribute("max", today);
+			}	
 		},
 
 		getWeek(dowOffset,stringDate) {

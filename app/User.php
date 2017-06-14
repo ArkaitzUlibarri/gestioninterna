@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'lastname_1', 'lastname_2', 'role',
+        'name', 'email', 'lastname_1', 'lastname_2', 'role', 'password'
     ];
 
     /**
@@ -25,7 +25,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'created_at','updated_at','password', 'remember_token',
+        'created_at', 'updated_at', 'password', 'remember_token',
     ];
 
     protected function getFullNameAttribute()
@@ -98,12 +98,34 @@ class User extends Authenticatable
      */
     public function hasTeleworking()
     {
+        $contracts = $this->contracts; 
+        
+        if(! empty($contracts) ){
+            $active_contract = $this->contracts->where('end_date',null)->first();
+
+             if(! empty($active_contract) ){
+                $teleworkingRegisters = $active_contract->teleworking;
+
+                if(! empty($teleworkingRegisters) ){
+                    $teleworking = $teleworkingRegisters->where('end_date',null)->first();
+
+                    if(! empty($teleworkingRegisters) ){
+                        return 1;
+                    }
+                }
+             }
+        }
+
+        return 0;
+
+        /*
         if($this->contracts->where('end_date',null)->first()->teleworking->where('end_date',null)->first() == [] ){
             return 0; 
         } 
         else{
             return 1;
         }
+        */
     }
 
     /**
@@ -114,13 +136,16 @@ class User extends Authenticatable
         $array = array();
 
         if($this->isPM()){   
-            foreach ($this->groups as $group) {
-                if($group->project->pm_id == $this->id && $group->project->end_date == null){
+            foreach ($this->groups as $group) {              
+                $pm_id = $group->project->pm_id;
+                $project_end_date = $group->project->end_date;
+
+                if($pm_id == $this->id && $project_end_date == null){
                      $array[$group->project->id] = $group->project->name;
                 }
             }
         }
-
+        
         return $array;
     }
 
