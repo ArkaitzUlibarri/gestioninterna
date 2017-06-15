@@ -122,7 +122,7 @@ const app = new Vue({
 			})
 			.then(function (response) {
 				vm.array = response.data;
-				console.log(response.data);
+				//console.log(response.data);
 			})
 			.catch(function (error) {
 				console.log(error);

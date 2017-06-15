@@ -107,10 +107,10 @@
 					</div>
 				
 					<div class="form-group">	
-						<button title="Save" class="btn btn-primary" :disabled="formFilled==false" v-on:click="save">
+						<button title="Save" class="btn btn-primary" :disabled="formFilled==false" v-on:click.prevent="save">
 							<span class="glyphicon glyphicon-floppy-disk"></span> Save
 						</button>
-						<button title="New" class="btn btn-primary" v-show="editIndex!=-1" v-on:click="initialize">
+						<button title="New" class="btn btn-primary" v-show="editIndex!=-1" v-on:click.prevent="initialize">
 							<span class="glyphicon glyphicon-plus-sign"></span> New
 						</button>
 					</div>	
