@@ -42,7 +42,7 @@ class ProjectRepository
                 'projects.start_date',
                 'projects.end_date'
             )
-            ->whereIn('projects.id',$ids)//Filtro PM
+            
             ->orderBy('name','asc');
 
         foreach ($data as $field => $value) {
@@ -50,6 +50,10 @@ class ProjectRepository
             if(method_exists(get_called_class(), $filterMethod)) {
                 $this->$filterMethod($q, $value);
             }
+        }
+
+        if($ids != []){
+            $q = $q->whereIn('projects.id',$ids);//Filtro PM      
         }
        
         return $paginate

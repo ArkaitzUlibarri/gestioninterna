@@ -3,6 +3,7 @@
 namespace App;
 
 use App\User;
+use App\GroupUser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -29,8 +30,6 @@ class UserRepository
 
     public function search(array $data = array(), $paginate = false)
     {
-
-        $ids = $this->getIds();
         $data = array_only($data, $this->filters);
         $data = array_filter($data, 'strlen');
 
@@ -59,8 +58,13 @@ class UserRepository
             }
         }
 
-        if($ids != []){
-            $q = $q->whereIn('users.id',$ids);//Filtro PM
+        //Filtro PM
+        $grouped_ids = $this->getGroupedUsers();
+        $alone_ids   = $this->getAloneUsers();
+        $ids = array_merge($grouped_ids,$alone_ids);
+
+        if($grouped_ids != []){
+            $q = $q->whereIn('users.id',$ids);
         }
        
         return $paginate
@@ -101,7 +105,7 @@ class UserRepository
         }
     }
 
-    private function getIds()
+    private function getGroupedUsers()
     {
         $ids = array();
         $projectIds = array_keys(Auth::user()->PMProjects());//Proyectos PM
@@ -117,6 +121,14 @@ class UserRepository
         }
         
         return array_unique($ids);    
+    }
+
+    private function getAloneUsers()
+    {
+        $groupUser_ids = array_unique(array_pluck(GroupUser::all()->toArray(), 'user_id'));//Ids de usuarios con grupos asignados
+        $users_ids = array_pluck(User::all()->whereNotIn('id',$groupUser_ids)->toArray(), 'id');//Descartamos estos usuarios del total
+
+        return $users_ids;
     }
     /* 
     SELECT users.id, users.name, users.lastname_1, users.lastname_2,users.email,t.contract_type_id,t.start_date,t.estimated_end_date,t.end_date
