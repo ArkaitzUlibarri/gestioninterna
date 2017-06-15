@@ -36,7 +36,8 @@ var app = new Vue({
 			project_id: -1,
 			project: '',
 			group_id: -1,
-			group: ''
+			group: '',
+			enabled: 0
 		},
 
 		array: []
@@ -70,20 +71,6 @@ var app = new Vue({
 
 
 	methods: {
-		/*
-  groupProjects(){
-  	let vm = this;
-  	let setList = new Set();
-  	
-  	vm.groupProjects.forEach(function(item) {						
-  		setList.add(item);							
-  	});
-  			vm.array.forEach(function(item) {
-  		setList.delete(item.category);
-  	});
-  			this.groupProjectsList = [...setList];
-  },
-  */
 		project: function project() {
 			var setList = new Set();
 
@@ -111,6 +98,7 @@ var app = new Vue({
 				if (this.groupProjects[key].group == this.newGroupUser.group && this.groupProjects[key].project == this.newGroupUser.project) {
 					this.newGroupUser.group_id = this.groupProjects[key].id;
 					this.newGroupUser.project_id = this.groupProjects[key].project_id;
+					this.newGroupUser.enabled = this.groupProjects[key].enabled;
 				}
 			}
 		},
@@ -122,7 +110,8 @@ var app = new Vue({
 				project_id: -1,
 				project: '',
 				group_id: -1,
-				group: ''
+				group: '',
+				enabled: 0
 			};
 		},
 		saveGroup: function saveGroup() {
@@ -139,7 +128,7 @@ var app = new Vue({
 				}
 			}).then(function (response) {
 				vm.array = response.data;
-				//console.log(response.data);
+				console.log(response.data);
 			}).catch(function (error) {
 				console.log(error);
 				//****************************************
@@ -297,7 +286,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return _c('div', {
     staticClass: "col-xs-12"
   }, [_c('div', {
-    staticClass: "item-panel col-sm-5"
+    staticClass: "item-panel col-sm-5",
+    class: {
+      'item-enabled': _vm.item.enabled
+    }
   }, [_c('h5', [_c('b', [_vm._v(_vm._s(_vm.item.project) + " | " + _vm._s(_vm.item.group))])]), _vm._v(" "), _c('div', {
     staticClass: "panel-right-corner"
   }, [_c('div', {

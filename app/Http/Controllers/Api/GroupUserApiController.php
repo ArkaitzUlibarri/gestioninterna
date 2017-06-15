@@ -60,6 +60,7 @@ class GroupUserApiController extends ApiController
 		$array = $request->all();
 
 		unset($array['id']);
+		unset($array['enabled']);
 		unset($array['group']);
 		unset($array['project']);
 		unset($array['project_id']);

@@ -132,7 +132,8 @@
 
 	        {{ method_field('delete') }}
 
-	      	<button class="btn btn-danger" type="submit">Delete</button>
+	      	<button class="btn btn-danger" type="submit"><span class="glyphicon glyphicon-trash"></span> Delete</button>
+
       	</form>
 
 	</div>

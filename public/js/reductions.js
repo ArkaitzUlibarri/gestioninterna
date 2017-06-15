@@ -261,7 +261,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     template: '#reduction-template',
 
-    props: ['item', 'index'],
+    props: ['item', 'index', 'prop'],
 
     methods: {
         edititem: function edititem() {
@@ -279,7 +279,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
-exports.push([module.i, "\n.item-panel {\n    position:relative;\n    border-bottom: 1px solid #ccc;\n    padding: .4em;\n    margin-bottom: .5em;\n}\n.panel-right-corner {\n    position: absolute;\n    right: 2em;\n    top:1em;\n}\n.action {\n    cursor: pointer;\n    //display: block;\n    //margin: auto ;\n}\n\n", ""]);
+exports.push([module.i, "\n.item-panel {\n    position:relative;\n    border-bottom: 1px solid #ccc;\n    padding: .4em;\n    //margin-bottom: .5em;\n}\n.panel-right-corner {\n    position: absolute;\n    right: 2em;\n    top:1em;\n}\n.action {\n    cursor: pointer;\n    //display: block;\n    //margin: auto ;\n}\n.selected-item {\n    background-color: lightblue;\n}\n\n", ""]);
 
 /***/ }),
 
@@ -329,7 +329,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return _c('div', {
     staticClass: "col-xs-12"
   }, [_c('div', {
-    staticClass: "item-panel col-sm-6"
+    staticClass: "item-panel col-sm-6",
+    class: {
+      'selected-item': _vm.prop
+    }
   }, [_c('h5', {
     staticClass: "action",
     on: {

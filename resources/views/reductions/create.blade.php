@@ -57,8 +57,13 @@
 
 		  <div class="panel-body">
 				<div class="row">
-					<span v-for="(item, index) in array">
-						<reduction-template :item="item" :index="index"></reduction-template>
+					<span v-for="(item, index) in array">	
+						<span v-if="editIndex == index">
+							<reduction-template :item="item" :index="index" :prop="true"></reduction-template>
+						</span>
+						<span v-else>
+							<reduction-template :item="item" :index="index" :prop="false"></reduction-template>
+						</span>
 					</span>			
 				</div>
 		  </div>

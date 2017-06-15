@@ -31,6 +31,7 @@ const app = new Vue({
 			project: '',
 			group_id: -1,
 			group: '',
+			enabled: 0,
 		},
 
 		array: [],
@@ -64,22 +65,7 @@ const app = new Vue({
 	},
 
 	methods: {
-		/*
-		groupProjects(){
-			let vm = this;
-			let setList = new Set();
-			
-			vm.groupProjects.forEach(function(item) {						
-				setList.add(item);							
-			});
 
-			vm.array.forEach(function(item) {
-				setList.delete(item.category);
-			});
-
-			this.groupProjectsList = [...setList];
-		},
-		*/
 		project() {
 			let setList = new Set();
 
@@ -111,6 +97,7 @@ const app = new Vue({
 				if(this.groupProjects[key].group == this.newGroupUser.group && this.groupProjects[key].project == this.newGroupUser.project){
 					this.newGroupUser.group_id    = this.groupProjects[key].id;
 					this.newGroupUser.project_id  = this.groupProjects[key].project_id;
+					this.newGroupUser.enabled  = this.groupProjects[key].enabled;
 				}
 			}
 
@@ -125,6 +112,7 @@ const app = new Vue({
 				project: '',
 				group_id: -1,
 				group: '',
+				enabled: 0,
 			};
 		},
 
@@ -144,7 +132,7 @@ const app = new Vue({
 			})
 			.then(function (response) {
 				vm.array = response.data;
-				//console.log(response.data);
+				console.log(response.data);
 			})
 			.catch(function (error) {
 				console.log(error);

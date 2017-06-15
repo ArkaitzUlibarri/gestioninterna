@@ -71,7 +71,12 @@
 					<div class="row">
 						<div class="col-xs-12">
 							<span v-for="(task, index) in tasks">
-								<task-template :task="task" :index="index"></task-template>
+								<span v-if="editIndex == index">
+									<task-template :task="task" :index="index" :prop="true"></task-template>
+								</span>
+								<span v-else>
+									<task-template :task="task" :index="index" :prop="false"></task-template>
+								</span>
 							</span>
 						</div>
 					</div>

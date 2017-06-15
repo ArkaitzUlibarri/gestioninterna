@@ -53,8 +53,13 @@
 		  <div class="panel-body">
 				<div class="row">
 					
-					<span v-for="(group, index) in groups">
-						<group-template :group="group" :index="index"></group-template>
+					<span v-for="(group, index) in groups">		
+						<span v-if="editIndex == index">
+							<group-template :group="group" :index="index" :prop="true"></group-template>
+						</span>
+						<span v-else>
+							<group-template :group="group" :index="index" :prop="false"></group-template>
+						</span>
 					</span>
 					
 				</div>

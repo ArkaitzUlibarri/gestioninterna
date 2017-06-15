@@ -589,7 +589,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     template: '#task-template',
 
-    props: ['task', 'index'],
+    props: ['task', 'index', 'prop'],
 
     computed: {
         time: function time() {
@@ -614,7 +614,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
-exports.push([module.i, "\n.panel-right-corner {\n    position: absolute;\n    right: 2em;\n    top:1em;\n}\n.action {\n    cursor: pointer;\n    //display: block;\n    //margin: auto ;\n}\n.task-panel {\n    position:relative;\n    border-bottom: 1px solid #ccc;\n    padding:.4em\n}\n.validated-task {\n    background-color: #b0f2b8;\n}\n.validated-color {\n    color: #21d421;\n}\n\n", ""]);
+exports.push([module.i, "\n.panel-right-corner {\n    position: absolute;\n    right: 2em;\n    top:1em;\n}\n.action {\n    cursor: pointer;\n    //display: block;\n    //margin: auto ;\n}\n.task-panel {\n    position:relative;\n    border-bottom: 1px solid #ccc;\n    padding:.4em\n}\n.validated-task {\n    background-color: #b0f2b8;\n}\n.selected-task {\n    //background-color: lightblue;\n    border-bottom: 1px dashed red;\n    border-top: 1px dashed red;\n}\n.validated-color {\n    color: #21d421;\n}\n\n", ""]);
 
 /***/ }),
 
@@ -664,7 +664,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return _c('div', {
     staticClass: "task-panel",
     class: {
-      'validated-task': _vm.task.admin_validation
+      'validated-task': _vm.task.admin_validation, 'selected-task': _vm.prop
     }
   }, [(!_vm.task.admin_validation) ? _c('div', {
     staticClass: "panel-right-corner"

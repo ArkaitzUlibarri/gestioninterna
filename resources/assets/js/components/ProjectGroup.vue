@@ -1,7 +1,7 @@
 <template id="group-template">
 
     <div class= col-xs-12>
-        <div class="item-panel col-sm-5"> 
+        <div class="item-panel col-sm-5" v-bind:class="{ 'item-enabled': item.enabled }"> 
 
             <h5>
                 <b>{{item.project}} | {{item.group}}</b>

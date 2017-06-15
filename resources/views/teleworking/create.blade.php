@@ -57,8 +57,13 @@
 
 		  <div class="panel-body">
 				<div class="row">
-					<span v-for="(item, index) in array">
-						<teleworking-template :item="item" :index="index"></teleworking-template>
+					<span v-for="(item, index) in array">					
+						<span v-if="editIndex == index">
+							<teleworking-template :item="item" :index="index" :prop="true"></teleworking-template>
+						</span>
+						<span v-else>
+							<teleworking-template :item="item" :index="index" :prop="false"></teleworking-template>
+						</span>
 					</span>
 				</div>
 		  </div>
@@ -115,7 +120,7 @@
 		</div>
 	</div>
 
-	<a class="btn btn-primary" href="{{ url('contracts') }}">Back</a>
+	<a class="btn btn-default" href="{{ url('contracts') }}">Back</a>
 
 </div>
 

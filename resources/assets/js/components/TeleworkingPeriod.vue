@@ -1,7 +1,7 @@
 <template id="teleworking-template">
 
     <div class= col-xs-12>
-        <div class="item-panel col-sm-12"> 
+        <div class="item-panel col-sm-12" v-bind:class="{ 'selected-item':prop }"> 
 
             <h5 class="action"  v-on:click="edititem">
                 <b>From {{item.start_date}} <span v-if="item.end_date">to {{item.end_date}}</span> | </b>
@@ -31,7 +31,7 @@
     export default {
         template:'#teleworking-template',
 
-        props: ['item', 'index'],
+        props: ['item', 'index','prop'],
 
         methods: {     
 
@@ -52,7 +52,7 @@
         position:relative;
         border-bottom: 1px solid #ccc;
         padding: .4em;
-        margin-bottom: .5em;
+        //margin-bottom: .5em;
     }
 
     .panel-right-corner {
@@ -65,6 +65,10 @@
         cursor: pointer;
         //display: block;
         //margin: auto ;
+    }
+
+    .selected-item {
+        background-color: lightblue;
     }
 
 </style>

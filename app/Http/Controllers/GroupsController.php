@@ -35,7 +35,7 @@ class GroupsController extends Controller
     public function editUser($user_id)
     {
         $user = User::find($user_id);
-        $groupProjects = $this->getGroupsProjectsEnabled();
+        $groupProjects = $this->getGroupsProjects();
 
         return view('groups.createUser',compact('user','groupProjects'));
     }
@@ -54,14 +54,15 @@ class GroupsController extends Controller
     		->get();
     }
 
-    private function getGroupsProjectsEnabled()
+    private function getGroupsProjects()
     {
         return DB::table('groups')
             ->select(
                 'groups.project_id',
                 'projects.name as project',
                 'groups.id',
-                'groups.name as group'
+                'groups.name as group',
+                'groups.enabled as enabled'
             )
             ->join('projects','groups.project_id','=','projects.id')
             //->where('groups.enabled',1)

@@ -1,6 +1,6 @@
 <template id="task-template">
     
-    <div class="task-panel" v-bind:class="{ 'validated-task': task.admin_validation }">
+    <div class="task-panel" v-bind:class="{ 'validated-task': task.admin_validation ,'selected-task':prop }">
 
         <div class="panel-right-corner" v-if="! task.admin_validation">
             <div class="validated-color" v-if="task.pm_validation">
@@ -35,7 +35,7 @@
     export default {
         template:'#task-template',
 
-        props: ['task', 'index'],
+        props: ['task', 'index','prop'],
 
         computed: {
             time() {
@@ -78,6 +78,12 @@
 
     .validated-task {
         background-color: #b0f2b8;
+    }
+
+    .selected-task {
+        //background-color: lightblue;
+        border-bottom: 1px dashed red;
+        border-top: 1px dashed red;
     }
 
     .validated-color {

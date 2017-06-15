@@ -1,7 +1,7 @@
 <template id="group-template">
 
     <div class= col-xs-12>
-        <div class="group-panel col-sm-4" v-bind:class="{ 'group-enabled': group.enabled }"> 
+        <div class="group-panel col-sm-4" v-bind:class="{ 'group-enabled': group.enabled ,'selected-item':prop }"> 
 
             <h5 class="action"  v-on:click="editGroup">
                 <b>{{group.name.toUpperCase().substring(0,30)}}<span v-if="group.name.length >30">...</span></b>
@@ -22,7 +22,7 @@
     export default {
         template:'#group-template',
 
-        props: ['group', 'index'],
+        props: ['group', 'index','prop'],
 
         methods: {     
 
@@ -43,7 +43,7 @@
         position:relative;
         border-bottom: 1px solid #ccc;
         padding: .4em;
-        margin-bottom: .5em;
+        //margin-bottom: .5em;
     }
 
     .panel-right-corner {
@@ -60,6 +60,12 @@
 
     .group-enabled{
         background-color: #b0f2b8;
+    }
+
+    .selected-item {
+        //background-color: lightblue;
+        border-bottom: 1px dashed red;
+        border-top: 1px dashed red;
     }
 
 </style>
