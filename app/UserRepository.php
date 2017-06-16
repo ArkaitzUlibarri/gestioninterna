@@ -63,7 +63,7 @@ class UserRepository
         $alone_ids   = $this->getAloneUsers();
         $ids = array_merge($grouped_ids,$alone_ids);
 
-        if($grouped_ids != []){
+        if(! Auth::user()->isAdmin() && Auth::user()->isPM() && $ids != []){
             $q = $q->whereIn('users.id',$ids);
         }
        

@@ -52,7 +52,7 @@ class ProjectRepository
             }
         }
 
-        if($ids != []){
+        if(! Auth::user()->isAdmin() && Auth::user()->isPM() && $ids != []){
             $q = $q->whereIn('projects.id',$ids);//Filtro PM      
         }
        

@@ -59,6 +59,14 @@ class Project extends Model
     {
         return $this->hasOne('App\Customer','id','customer_id');
     }
+
+    /**
+     * Get the pm record associated with the project.
+     */
+    public function pm()
+    {
+        return $this->hasOne('App\User','id','pm_id');
+    }
     
     public function isActive()
     {

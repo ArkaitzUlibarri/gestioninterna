@@ -14,6 +14,11 @@
 		</dl>
 
 		<dl class="dl-horizontal">
+			<dt>Project Manager</dt>
+			<dd>{{ ucfirst($project->pm->fullname)}}</dd>
+		</dl>
+
+		<dl class="dl-horizontal">
 			<dt>Customer</dt>
 			<dd>{{ strtoupper($project->customer->name)}}</dd>
 		</dl>
