@@ -23,6 +23,11 @@ var app = new Vue({
 	el: '#project',
 
 	data: {
+		info: {
+			origin: window.location.origin,
+			serverPath: ""
+		},
+
 		project_id: id,
 
 		groups: [],
@@ -56,12 +61,34 @@ var app = new Vue({
 		});
 	},
 	mounted: function mounted() {
+		this.info.serverPath = this.getPath();
 		this.fetchData();
 		this.newGroup.project_id = this.project_id;
 	},
 
 
 	methods: {
+		getPath: function getPath() {
+			var pathArray = window.location.pathname.split("/");
+			var path = "";
+			var position = 0;
+
+			for (var i = pathArray.length - 1; i >= 0; i--) {
+				if (pathArray[i] == "public") {
+					position = i;
+					break;
+				}
+			}
+
+			if (position != 0) {
+				for (var j = 0; j <= position; j++) {
+					path = path + pathArray[j] + "/";
+				}
+				return path;
+			}
+
+			return "";
+		},
 		saveGroup: function saveGroup() {
 			this.save();
 		},
@@ -80,7 +107,7 @@ var app = new Vue({
 			var vm = this;
 			vm.groups = [];
 
-			axios.get('/api/groups', {
+			axios.get(vm.info.origin + vm.info.serverPath + '/api/groups', {
 				params: {
 					project_id: vm.project_id
 				}
@@ -111,7 +138,7 @@ var app = new Vue({
 			var vm = this;
 
 			if (vm.newGroup.id != -1) {
-				axios.patch('/api/groups/' + vm.newGroup.id, vm.newGroup).then(function (response) {
+				axios.patch(vm.info.origin + vm.info.serverPath + '/api/groups/' + vm.newGroup.id, vm.newGroup).then(function (response) {
 					console.log(response.data);
 					toastr.success("Updated");
 					//---------------------------------------
@@ -128,7 +155,7 @@ var app = new Vue({
 				return;
 			} else {
 
-				axios.post('/api/groups', vm.newGroup).then(function (response) {
+				axios.post(vm.info.origin + vm.info.serverPath + '/api/groups', vm.newGroup).then(function (response) {
 					console.log(response.data);
 					toastr.success("Saved");
 					//---------------------------------------
@@ -154,7 +181,7 @@ var app = new Vue({
 		delete: function _delete(index) {
 			var vm = this;
 
-			axios.delete('/api/groups/' + vm.groups[index].id).then(function (response) {
+			axios.delete(vm.info.origin + vm.info.serverPath + '/api/groups/' + vm.groups[index].id).then(function (response) {
 				console.log(response.data);
 				//---------------------------------------
 				if (response.data) {

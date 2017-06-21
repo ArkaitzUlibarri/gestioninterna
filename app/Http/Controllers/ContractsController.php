@@ -111,7 +111,7 @@ class ContractsController extends Controller
 	    $contract->fill($request->all());
 	    $contract->save();
 
-		return redirect('/contracts');
+		return redirect('contracts');
 	}
 
 	public function update(ContractFormRequest $request, $id)
@@ -149,7 +149,7 @@ class ContractsController extends Controller
 		    throw $e;
 		}
 
-		return redirect('/contracts');
+		return redirect('contracts');
 	}
 
 	/**
@@ -166,10 +166,10 @@ class ContractsController extends Controller
 		if($user->workingReports->count() == 0){
 			$contract->delete();
 			Session::flash('message', 'The contract has been successfully deleted!');
-			return redirect('/contracts');
+			return redirect('contracts');
 		}
 		else{
-			return redirect('/contracts')->withErrors(['The contract has reports associated']);		
+			return redirect('contracts')->withErrors(['The contract has reports associated']);		
 		}
 
 	}

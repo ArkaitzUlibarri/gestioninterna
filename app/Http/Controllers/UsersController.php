@@ -65,7 +65,7 @@ class UsersController extends Controller
         $user->remember_token = str_random(10);
         $user->save();
 
-        return redirect('/users');
+        return redirect('users');
     }
 
     public function update(UserFormRequest $request,$id)
@@ -73,6 +73,6 @@ class UsersController extends Controller
         $user = User::find($id);
         $user->update($request->all());
 
-        return redirect('/users');
+        return redirect('users');
     }
 }

@@ -3,7 +3,7 @@
 @section('content')
 	<div class="container">
 
-		<form method="post" action="/contracts/">
+		<form method="post" action="{{ url('contracts') }}">
 		
 			{{ csrf_field() }}
 

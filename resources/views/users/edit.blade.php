@@ -3,7 +3,7 @@
 @section('content')
 	<div class="container">
 
-		<form method="POST" action="/users/{{ $user->id }}">
+		<form method="POST" action="{{ url('users', $user->id) }}">
 
 			{{ csrf_field() }}
 			{{ method_field('PATCH') }}

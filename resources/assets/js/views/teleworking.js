@@ -18,6 +18,10 @@ const app = new Vue({
 	el: '#teleworking',
 
 	data: {		
+		info:{
+			origin:window.location.origin,
+			serverPath:"",
+		},
 
 		contract: contract,
 		daysWeek: [],
@@ -90,6 +94,7 @@ const app = new Vue({
 	},
 
 	mounted() {
+		this.info.serverPath = this.getPath();
 		this.newTeleworking.contract_id = this.contract.id;
 		this.setDateLimits();
 		this.fetchData();
@@ -97,6 +102,28 @@ const app = new Vue({
 	},
 
 	methods: {
+		getPath(){
+			let pathArray = window.location.pathname.split("/");
+			let path = "";
+			let position = 0;
+
+			for (let i = pathArray.length - 1; i >= 0; i--) {
+				if (pathArray[i] == "public"){
+					position = i;
+					break;
+				}
+			}
+
+			if(position != 0){
+				for (let j = 0; j <= position; j++) {
+					path = path + pathArray[j] + "/";
+				}
+				return path;
+			}	
+
+			return "";
+		},
+		
 		setDateLimits(){
 			document.getElementById("startdatefield").setAttribute("min", this.contract.start_date);
 			document.getElementById("enddatefield").setAttribute("min", this.contract.start_date);
@@ -132,7 +159,7 @@ const app = new Vue({
 
 			vm.initialize();
 
-			axios.get('/api/teleworking', {
+			axios.get(vm.info.origin + vm.info.serverPath + '/api/teleworking', {
 				params: {
 					id: vm.contract.id,
 				}
@@ -160,7 +187,7 @@ const app = new Vue({
 
 			let vm = this;
 				
-			axios.delete('/api/teleworking/' + vm.array[index].id)
+			axios.delete(vm.info.origin + vm.info.serverPath + '/api/teleworking/' + vm.array[index].id)
 			.then(function (response) {
 				console.log(response.data);
 				toastr.success(response.data);
@@ -185,7 +212,7 @@ const app = new Vue({
 			
 			//CHANGE:ARRAY_MERGE
 			if(vm.newTeleworking.id != -1) {
-				axios.patch('/api/teleworking/' + vm.newTeleworking.id, {
+				axios.patch(vm.info.origin + vm.info.serverPath +'/api/teleworking/' + vm.newTeleworking.id, {
 					contract_start_date: vm.contract.start_date,
 					contract_estimated_end_date: vm.contract.estimated_end_date,
 					id: vm.newTeleworking.id,
@@ -229,7 +256,7 @@ const app = new Vue({
 			}
 			else{
 
-				axios.post('/api/teleworking',{
+				axios.post(vm.info.origin + vm.info.serverPath +'/api/teleworking',{
 					contract_start_date: vm.contract.start_date,
 					contract_estimated_end_date: vm.contract.estimated_end_date,
 					id: vm.newTeleworking.id,

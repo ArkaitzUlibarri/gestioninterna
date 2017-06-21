@@ -24,6 +24,11 @@ var app = new Vue({
 	el: '#report',
 
 	data: {
+		info: {
+			origin: window.location.origin,
+			serverPath: ""
+		},
+
 		contract: user_contract,
 		expHours: 0,
 
@@ -154,6 +159,7 @@ var app = new Vue({
 		});
 	},
 	mounted: function mounted() {
+		this.info.serverPath = this.getPath();
 		this.fetchData();
 		this.project();
 		this.categoriesLoad();
@@ -162,6 +168,27 @@ var app = new Vue({
 
 
 	methods: {
+		getPath: function getPath() {
+			var pathArray = window.location.pathname.split("/");
+			var path = "";
+			var position = 0;
+
+			for (var i = pathArray.length - 1; i >= 0; i--) {
+				if (pathArray[i] == "public") {
+					position = i;
+					break;
+				}
+			}
+
+			if (position != 0) {
+				for (var j = 0; j <= position; j++) {
+					path = path + pathArray[j] + "/";
+				}
+				return path;
+			}
+
+			return "";
+		},
 		expectedHours: function expectedHours() {
 			if (this.contract != null) {
 				if (this.contract.week_hours == 40) {
@@ -169,12 +196,10 @@ var app = new Vue({
 						this.expHours = 7;
 					} else if (this.reportDayWeek != 'Saturday' && this.reportDayWeek != 'Sunday') {
 						this.expHours = 8.25;
-					} else {
-						this.expHours = 0;
 					}
-				} else {
-					this.expHours = parseInt(this.contract.week_hours / 5);
+					this.expHours = 0;
 				}
+				this.expHours = parseInt(this.contract.week_hours / 5);
 			}
 		},
 		dateValidation: function dateValidation() {
@@ -424,17 +449,17 @@ var app = new Vue({
 
 			vm.initializeTask();
 
-			axios.get('/api/reports', {
+			axios.get(vm.info.origin + vm.info.serverPath + '/api/reports', {
 				params: {
 					user_id: vm.user.id,
 					created_at: vm.reportdate
 				}
 			}).then(function (response) {
 				vm.tasks = response.data;
-				console.log(response.data);
+				//console.log(response.data);
 			}).catch(function (error) {
-				console.log(error);
-				//****************************************
+				//console.log(error);
+
 				if (Array.isArray(error.response.data)) {
 					error.response.data.forEach(function (error) {
 						toastr.error(error);
@@ -442,14 +467,13 @@ var app = new Vue({
 				} else {
 					toastr.error(error.response.data);
 				}
-				//****************************************
 			});
 		},
 		save: function save() {
 			var vm = this;
 
 			if (vm.newTask.id != -1) {
-				axios.patch('/api/reports/' + vm.newTask.id, vm.newTask).then(function (response) {
+				axios.patch(vm.info.origin + vm.info.serverPath + '/api/reports/' + vm.newTask.id, vm.newTask).then(function (response) {
 					console.log(response.data);
 					toastr.success(response.data);
 					//---------------------------------------
@@ -475,7 +499,7 @@ var app = new Vue({
 				return;
 			} else {
 
-				axios.post('/api/reports', vm.newTask).then(function (response) {
+				axios.post(vm.info.origin + vm.info.serverPath + '/api/reports', vm.newTask).then(function (response) {
 					console.log(response.data);
 					toastr.success("Saved");
 					//---------------------------------------
@@ -501,7 +525,7 @@ var app = new Vue({
 		delete: function _delete(index) {
 			var vm = this;
 
-			axios.delete('/api/reports/' + vm.tasks[index].id).then(function (response) {
+			axios.delete(vm.info.origin + vm.info.serverPath + '/api/reports/' + vm.tasks[index].id).then(function (response) {
 				console.log(response.data);
 				toastr.success(response.data);
 			}).catch(function (error) {
@@ -520,7 +544,7 @@ var app = new Vue({
 		copyTasks: function copyTasks() {
 			var vm = this;
 
-			axios.get('/api/lastreport', {
+			axios.get(vm.info.origin + vm.info.serverPath + '/api/lastreport', {
 				params: {
 					user_id: vm.user.id,
 					created_at: vm.reportdate

@@ -94,7 +94,7 @@
 			@endif
 			<div class="form-group">
 				<a type="button" title="New Report" class="btn btn-default" v-bind:href="'/workingreports/add/'+user_report +'/'+ getDate() +'/'" >
-					New Report
+					New Report {{date('Y')}}
 				</a>
 			</div>
 		</div>

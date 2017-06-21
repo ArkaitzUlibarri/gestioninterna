@@ -33,6 +33,6 @@
                     </tbody>
                 @endforeach
             </table>
-            <!--<a type="button" class="btn btn-success" href="{{ url('/groups/create') }}">Add</a>-->
+            <!--<a type="button" class="btn btn-success" href="{{ url('groups/create') }}">Add</a>-->
     </div>
 @endsection

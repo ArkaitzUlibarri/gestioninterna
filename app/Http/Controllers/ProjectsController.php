@@ -84,7 +84,7 @@ class ProjectsController extends Controller
 		    throw $e;
 		}
 
-		return redirect('/projects');
+		return redirect('projects');
 	}
 
 	public function update(ProjectFormRequest $request, $id)
@@ -120,7 +120,7 @@ class ProjectsController extends Controller
 		    throw $e;
 		}
 
-		return redirect('/projects');
+		return redirect('projects');
 	}
 
 	private function getPMs()

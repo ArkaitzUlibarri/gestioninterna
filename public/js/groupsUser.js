@@ -24,6 +24,10 @@ var app = new Vue({
 	el: '#groups',
 
 	data: {
+		info: {
+			origin: window.location.origin,
+			serverPath: ""
+		},
 
 		user: user,
 		groupProjects: groupProjects,
@@ -64,6 +68,7 @@ var app = new Vue({
 		});
 	},
 	mounted: function mounted() {
+		this.info.serverPath = this.getPath();
 		this.newGroupUser.user_id = this.user.id;
 		this.fetchData();
 		this.project();
@@ -71,6 +76,27 @@ var app = new Vue({
 
 
 	methods: {
+		getPath: function getPath() {
+			var pathArray = window.location.pathname.split("/");
+			var path = "";
+			var position = 0;
+
+			for (var i = pathArray.length - 1; i >= 0; i--) {
+				if (pathArray[i] == "public") {
+					position = i;
+					break;
+				}
+			}
+
+			if (position != 0) {
+				for (var j = 0; j <= position; j++) {
+					path = path + pathArray[j] + "/";
+				}
+				return path;
+			}
+
+			return "";
+		},
 		project: function project() {
 			var setList = new Set();
 
@@ -122,7 +148,7 @@ var app = new Vue({
 			var vm = this;
 			vm.array = [];
 
-			axios.get('/api/groupsUser', {
+			axios.get(vm.info.origin + vm.info.serverPath + '/api/groupsUser', {
 				params: {
 					id: vm.user.id
 				}
@@ -146,7 +172,7 @@ var app = new Vue({
 
 			var vm = this;
 
-			axios.delete('/api/groupsUser/' + vm.array[index].id).then(function (response) {
+			axios.delete(vm.info.origin + vm.info.serverPath + '/api/groupsUser/' + vm.array[index].id).then(function (response) {
 				console.log(response.data);
 				toastr.success(response.data);
 			}).catch(function (error) {
@@ -165,7 +191,7 @@ var app = new Vue({
 		save: function save() {
 			var vm = this;
 
-			axios.post('/api/groupsUser', vm.newGroupUser).then(function (response) {
+			axios.post(vm.info.origin + vm.info.serverPath + '/api/groupsUser', vm.newGroupUser).then(function (response) {
 				console.log(response.data);
 				toastr.success("Saved");
 				//---------------------------------------

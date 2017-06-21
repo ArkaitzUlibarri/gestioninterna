@@ -13,6 +13,11 @@ const app = new Vue({
 	el: '#app',
 
 	data: {		
+		info:{
+			origin:window.location.origin,
+			serverPath:"",
+		},
+
 		role: '',	
 		admin: 0,
 		pm: 0,
@@ -26,6 +31,7 @@ const app = new Vue({
 	},
 
 	mounted() {
+		this.info.serverPath = this.getPath();
 		this.reports     = workingreport;
 		this.role        = auth_user.role;
 		this.admin       = this.role == 'admin' ? 1 : 0 ;
@@ -35,7 +41,28 @@ const app = new Vue({
 	},
 
 	methods: {
+		getPath(){
+			let pathArray = window.location.pathname.split("/");
+			let path = "";
+			let position = 0;
 
+			for (let i = pathArray.length - 1; i >= 0; i--) {
+				if (pathArray[i] == "public"){
+					position = i;
+					break;
+				}
+			}
+
+			if(position != 0){
+				for (let j = 0; j <= position; j++) {
+					path = path + pathArray[j] + "/";
+				}
+				return path;
+			}	
+
+			return "";
+		},
+		
 		getDate() {
 			var today = new Date();
 			var dd    = today.getDate();
@@ -153,7 +180,7 @@ const app = new Vue({
 			let vm   = this;
 			vm.tasks = [];
 
-			axios.get('/api/reports', {
+			axios.get(vm.info.origin + vm.info.serverPath + '/api/reports', {
 				params: {
 					user_id: user_id,
 					created_at: created_at,
@@ -188,7 +215,7 @@ const app = new Vue({
 
 			vm.tasks.forEach(function (item) {
 		
-				axios.patch('/api/reports/' + item.id, item)
+				axios.patch(vm.info.origin + vm.info.serverPath + '/api/reports/' + item.id, item)
 				.then(function (response) {
 					console.log(response.data);					
 					toastr.success(response.data);

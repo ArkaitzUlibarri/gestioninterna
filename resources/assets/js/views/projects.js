@@ -18,7 +18,12 @@ const app = new Vue({
 	
     el: '#project',
 
-    data: {
+    data: {		
+    	info:{
+			origin:window.location.origin,
+			serverPath:"",
+		},
+
     	project_id: id,
 
 		groups: [],
@@ -52,12 +57,34 @@ const app = new Vue({
 	},
 
 	mounted() {
+		this.info.serverPath = this.getPath();
 		this.fetchData();
 		this.newGroup.project_id = this.project_id;
 	},
 
 	methods: {
+		getPath(){
+			let pathArray = window.location.pathname.split("/");
+			let path = "";
+			let position = 0;
 
+			for (let i = pathArray.length - 1; i >= 0; i--) {
+				if (pathArray[i] == "public"){
+					position = i;
+					break;
+				}
+			}
+
+			if(position != 0){
+				for (let j = 0; j <= position; j++) {
+					path = path + pathArray[j] + "/";
+				}
+				return path;
+			}	
+
+			return "";
+		},
+		
 		saveGroup(){
 			this.save();
 		},
@@ -78,7 +105,7 @@ const app = new Vue({
 			let vm = this;
 			vm.groups = [];
 
-			axios.get('/api/groups', {
+			axios.get(vm.info.origin + vm.info.serverPath + '/api/groups', {
 				params: {
 					project_id: vm.project_id,
 				}
@@ -113,7 +140,7 @@ const app = new Vue({
 			let vm = this;
 						
 			if(vm.newGroup.id != -1) {
-				axios.patch('/api/groups/' + vm.newGroup.id, vm.newGroup)
+				axios.patch(vm.info.origin + vm.info.serverPath + '/api/groups/' + vm.newGroup.id, vm.newGroup)
 				.then(function (response) {
 					console.log(response.data);
 					toastr.success("Updated");
@@ -133,7 +160,7 @@ const app = new Vue({
 			}
 			else{
 
-				axios.post('/api/groups', vm.newGroup)
+				axios.post(vm.info.origin + vm.info.serverPath + '/api/groups', vm.newGroup)
 				.then(function (response) {
 					console.log(response.data);
 					toastr.success("Saved");
@@ -164,7 +191,7 @@ const app = new Vue({
 		delete(index){
 			let vm = this;
 				
-			axios.delete('/api/groups/' + vm.groups[index].id)
+			axios.delete(vm.info.origin + vm.info.serverPath + '/api/groups/' + vm.groups[index].id)
 			.then(function (response) {
 				console.log(response.data);
 				//---------------------------------------

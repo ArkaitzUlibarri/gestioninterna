@@ -11,7 +11,7 @@
                     </button>
 
                     <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('http://3dbconsult.com','/home') }}">
+                    <a class="navbar-brand" href="{{ url('http://3dbconsult.com','home') }}">
                         {{ config('app.name','3db Intranet') }}
                     </a>
 
@@ -39,6 +39,7 @@
                                  <li><a href  = "{{ url('users') }}">Users</a></li>   
                                  <li><a href = "{{ url('projects') }}">Projects</a></li>            
                             @endif
+                            <li><a href = "{{ url('validation') }}">Validation</a></li>
                              <li><a href = "{{ url('workingreports') }}">Working Reports</a></li> 
                             
                             <li class="dropdown">

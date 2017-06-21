@@ -15631,7 +15631,7 @@ window.toastr = __webpack_require__(171);
 toastr.options.timeOut = 5000;
 toastr.options.newestOnTop = true;
 toastr.options.progressBar = false;
-toastr.options.positionClass = 'toast-top-center';
+toastr.options.positionClass = 'toast-bottom-center';
 toastr.options.preventDuplicates = true;
 
 /**

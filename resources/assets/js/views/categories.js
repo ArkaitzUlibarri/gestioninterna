@@ -18,6 +18,10 @@ const app = new Vue({
 	el: '#categories',
 
 	data: {		
+		info:{
+			origin:window.location.origin,
+			serverPath:"",
+		},
 
 		user: user,
 		categories: categories,
@@ -55,12 +59,34 @@ const app = new Vue({
 	},
 
 	mounted() {
+		this.info.serverPath = this.getPath();
 		this.newCategory.user_id = this.user.id;
 		this.fetchData();
 	},
 
 	methods: {
+		getPath(){
+			let pathArray = window.location.pathname.split("/");
+			let path = "";
+			let position = 0;
 
+			for (let i = pathArray.length - 1; i >= 0; i--) {
+				if (pathArray[i] == "public"){
+					position = i;
+					break;
+				}
+			}
+
+			if(position != 0){
+				for (let j = 0; j <= position; j++) {
+					path = path + pathArray[j] + "/";
+				}
+				return path;
+			}	
+
+			return "";
+		},
+		
 		initialize(){
 			
 			this.newCategory = {
@@ -106,7 +132,7 @@ const app = new Vue({
 			let vm   = this;
 			vm.array = [];
 
-			axios.get('/api/categories', {
+			axios.get(vm.info.origin + vm.info.serverPath + '/api/categories', {
 				params: {
 					id: vm.user.id,
 				}
@@ -135,7 +161,7 @@ const app = new Vue({
 
 			let vm = this;
 				
-			axios.delete('/api/categories/' + vm.array[index].id)
+			axios.delete(vm.info.origin + vm.info.serverPath + '/api/categories/' + vm.array[index].id)
 			.then(function (response) {
 				console.log(response.data);
 				toastr.success(response.data);
@@ -159,7 +185,7 @@ const app = new Vue({
 		save(){
 			let vm = this;
 
-			axios.post('/api/categories',vm.newCategory)
+			axios.post(vm.info.origin + vm.info.serverPath + '/api/categories',vm.newCategory)
 			.then(function (response) {
 				console.log(response.data);
 				toastr.success("Saved");

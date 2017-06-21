@@ -3,7 +3,7 @@
 @section('content')
 	<div class="container">
 
-		<form method="POST" action="/projects/{{ $project->id }}">
+		<form method="POST" action="{{ url('projects', $project->id) }}">
 
 			{{ csrf_field() }}
 			{{ method_field('PATCH') }}

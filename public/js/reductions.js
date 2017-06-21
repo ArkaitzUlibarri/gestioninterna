@@ -23,6 +23,10 @@ var app = new Vue({
 	el: '#reduction',
 
 	data: {
+		info: {
+			origin: window.location.origin,
+			serverPath: ""
+		},
 
 		contract: contract,
 
@@ -72,6 +76,7 @@ var app = new Vue({
 		});
 	},
 	mounted: function mounted() {
+		this.info.serverPath = this.getPath();
 		this.newReduction.contract_id = this.contract.id;
 		this.setDateLimits();
 		this.fetchData();
@@ -79,6 +84,27 @@ var app = new Vue({
 
 
 	methods: {
+		getPath: function getPath() {
+			var pathArray = window.location.pathname.split("/");
+			var path = "";
+			var position = 0;
+
+			for (var i = pathArray.length - 1; i >= 0; i--) {
+				if (pathArray[i] == "public") {
+					position = i;
+					break;
+				}
+			}
+
+			if (position != 0) {
+				for (var j = 0; j <= position; j++) {
+					path = path + pathArray[j] + "/";
+				}
+				return path;
+			}
+
+			return "";
+		},
 		hoursValidation: function hoursValidation() {
 			var hourfield = document.getElementById("hourfield").value;
 
@@ -114,13 +140,13 @@ var app = new Vue({
 
 			vm.initialize();
 
-			axios.get('/api/reductions', {
+			axios.get(vm.info.origin + vm.info.serverPath + '/api/reductions', {
 				params: {
 					id: vm.contract.id
 				}
 			}).then(function (response) {
 				vm.array = response.data;
-				console.log(response.data);
+				//console.log(response.data);
 			}).catch(function (error) {
 				console.log(error);
 				//****************************************
@@ -138,7 +164,7 @@ var app = new Vue({
 
 			var vm = this;
 
-			axios.delete('/api/reductions/' + vm.array[index].id).then(function (response) {
+			axios.delete(vm.info.origin + vm.info.serverPath + '/api/reductions/' + vm.array[index].id).then(function (response) {
 				console.log(response.data);
 				toastr.success(response.data);
 			}).catch(function (error) {
@@ -159,7 +185,7 @@ var app = new Vue({
 
 			//CHANGE:ARRAY_MERGE
 			if (vm.newReduction.id != -1) {
-				axios.patch('/api/reductions/' + vm.newReduction.id, {
+				axios.patch(vm.info.origin + vm.info.serverPath + '/api/reductions/' + vm.newReduction.id, {
 					contract_start_date: vm.contract.start_date,
 					contract_estimated_end_date: vm.contract.estimated_end_date,
 					id: vm.newReduction.id,
@@ -193,7 +219,7 @@ var app = new Vue({
 				return;
 			} else {
 
-				axios.post('/api/reductions', {
+				axios.post(vm.info.origin + vm.info.serverPath + '/api/reductions', {
 					contract_start_date: vm.contract.start_date,
 					contract_estimated_end_date: vm.contract.estimated_end_date,
 					id: vm.newReduction.id,

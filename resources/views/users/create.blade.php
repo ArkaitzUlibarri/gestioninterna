@@ -3,7 +3,7 @@
 @section('content')
 	<div class="container">
 
-		<form method="post" action="/users">
+		<form method="post" action="{{ url('users') }}">
 			{{ csrf_field() }}
 
 			<div class="panel panel-primary">

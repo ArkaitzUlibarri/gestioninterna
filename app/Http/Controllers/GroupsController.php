@@ -22,14 +22,14 @@ class GroupsController extends Controller
     {  
     	$groups = $this->getGroups();
 
-    	return view('groups.index',compact('groups'));
+    	return view('groups.index', compact('groups'));
     }
 
     public function edit($id)
     {
         $project = Project::find($id);
 
-        return view('groups.create',compact('project'));
+        return view('groups.create', compact('project'));
     }
 
     public function editUser($user_id)

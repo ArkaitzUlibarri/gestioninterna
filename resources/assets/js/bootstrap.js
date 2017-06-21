@@ -64,7 +64,7 @@ window.toastr = require('toastr');
 toastr.options.timeOut = 5000;
 toastr.options.newestOnTop = true;
 toastr.options.progressBar = false;
-toastr.options.positionClass = 'toast-top-center';
+toastr.options.positionClass = 'toast-bottom-center';
 toastr.options.preventDuplicates = true;
 
 /**

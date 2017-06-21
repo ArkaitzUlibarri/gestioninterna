@@ -18,6 +18,11 @@ const app = new Vue({
 	el: '#report',
 
 	data: {		
+		info:{
+			origin:window.location.origin,
+			serverPath:"",
+		},
+
 		contract: user_contract,
 		expHours: 0,
 
@@ -154,6 +159,7 @@ const app = new Vue({
 	},
 
 	mounted() {
+		this.info.serverPath = this.getPath();
 		this.fetchData();
 		this.project();
 		this.categoriesLoad();
@@ -161,6 +167,28 @@ const app = new Vue({
 	},
 
 	methods: {
+		getPath(){
+			let pathArray = window.location.pathname.split("/");
+			let path = "";
+			let position = 0;
+
+			for (let i = pathArray.length - 1; i >= 0; i--) {
+				if (pathArray[i] == "public"){
+					position = i;
+					break;
+				}
+			}
+
+			if(position != 0){
+				for (let j = 0; j <= position; j++) {
+					path = path + pathArray[j] + "/";
+				}
+				return path;
+			}	
+
+			return "";
+		},
+
 		expectedHours(){
 			if(this.contract != null){
 				if(this.contract.week_hours == 40){
@@ -170,13 +198,9 @@ const app = new Vue({
 					else if(this.reportDayWeek != 'Saturday' && this.reportDayWeek != 'Sunday'){
 						this.expHours = 8.25;
 					}
-					else{
-						this.expHours = 0;
-					}
+					this.expHours = 0;
 				}
-				else{
-					this.expHours = parseInt(this.contract.week_hours / 5);
-				}
+				this.expHours = parseInt(this.contract.week_hours / 5);
 			}
 
 		},
@@ -280,7 +304,7 @@ const app = new Vue({
 		
 		initializeTask(){
 			this.reportDayWeek = this.getDayWeek(this.reportdate);
-			this.week          = this.getWeek(1,this.reportdate);
+			this.week = this.getWeek(1,this.reportdate);
 			this.expectedHours();
 
 			this.newTask = {
@@ -306,7 +330,6 @@ const app = new Vue({
 			};
 
 			this.editIndex = -1;
-
 		},
 		
 		refreshForm(){
@@ -452,30 +475,28 @@ const app = new Vue({
 
 			vm.initializeTask();
 
-			axios.get('/api/reports', {
-				params: {
-					user_id: vm.user.id,
-					created_at: vm.reportdate,
-				}
-			})
-			.then(function (response) {
-				vm.tasks = response.data;
-				console.log(response.data);
-			})
-			.catch(function (error) {
-				console.log(error);
-				//****************************************
-				if(Array.isArray(error.response.data)) {
-					error.response.data.forEach( (error) => {
-						toastr.error(error);
-					})
-				}
-				else {
-					toastr.error(error.response.data);
-				}
-				//****************************************
-			});
+			axios.get(vm.info.origin + vm.info.serverPath + '/api/reports', {
+					params: {
+						user_id: vm.user.id,
+						created_at: vm.reportdate,
+					}
+				})
+				.then(function (response) {
+					vm.tasks = response.data;
+					//console.log(response.data);
+				})
+				.catch(function (error) {
+					//console.log(error);
 
+					if(Array.isArray(error.response.data)) {
+						error.response.data.forEach( (error) => {
+							toastr.error(error);
+						})
+					}
+					else {
+						toastr.error(error.response.data);
+					}
+				});
 		},
 
 		save(){
@@ -483,7 +504,7 @@ const app = new Vue({
 			
 			
 			if(vm.newTask.id != -1) {
-				axios.patch('/api/reports/' + vm.newTask.id, vm.newTask)
+				axios.patch(vm.info.origin + vm.info.serverPath + '/api/reports/' + vm.newTask.id, vm.newTask)
 				.then(function (response) {
 					console.log(response.data);
 					toastr.success(response.data);
@@ -513,7 +534,7 @@ const app = new Vue({
 			}
 			else{
 
-				axios.post('/api/reports', vm.newTask)
+				axios.post(vm.info.origin + vm.info.serverPath + '/api/reports', vm.newTask)
 				.then(function (response) {
 					console.log(response.data);
 					toastr.success("Saved");
@@ -544,7 +565,7 @@ const app = new Vue({
 		delete(index){
 			let vm = this;
 				
-			axios.delete('/api/reports/' + vm.tasks[index].id)
+			axios.delete(vm.info.origin + vm.info.serverPath + '/api/reports/' + vm.tasks[index].id)
 			.then(function (response) {
 				console.log(response.data);
 				toastr.success(response.data);
@@ -567,7 +588,7 @@ const app = new Vue({
 		copyTasks(){
 			let vm = this;
 
-			axios.get('/api/lastreport', {
+			axios.get(vm.info.origin + vm.info.serverPath + '/api/lastreport', {
 				params: {
 					user_id: vm.user.id,
 					created_at: vm.reportdate,

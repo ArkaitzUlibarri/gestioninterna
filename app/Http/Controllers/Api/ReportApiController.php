@@ -12,7 +12,6 @@ use Illuminate\Validation\Rule;
 
 class ReportApiController extends ApiController
 {
-
 	/**
 	 * 
 	 * 

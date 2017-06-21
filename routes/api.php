@@ -17,15 +17,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
 /** 
  * Apis
  */
-
+Route::get('reports', 'Api\ReportApiController@index');
+Route::get('lastreport', 'Api\ReportApiController@last');
 Route::patch('reports/{id}', 'Api\ReportApiController@update');
 Route::post('reports', 'Api\ReportApiController@store');
-Route::get('reports', 'Api\ReportApiController@index');
 Route::delete('reports/{id}', 'Api\ReportApiController@destroy');
-Route::get('lastreport', 'Api\ReportApiController@last');
+
 
 Route::patch('groups/{id}', 'Api\GroupApiController@update');
 Route::post('groups', 'Api\GroupApiController@store');
@@ -49,5 +50,3 @@ Route::delete('groupsUser/{id}', 'Api\GroupUserApiController@destroy');
 Route::post('categories', 'Api\CategoryUserApiController@store');
 Route::get('categories', 'Api\CategoryUserApiController@index');
 Route::delete('categories/{id}', 'Api\CategoryUserApiController@destroy');
-
-
