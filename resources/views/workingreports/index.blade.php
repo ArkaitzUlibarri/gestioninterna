@@ -81,6 +81,7 @@
 		</div>
 
 		<div class="form-inline pull-right">
+
 			@if(Auth::user()->isAdmin())
 				<div class="form-group">			
 					<select class="form-control" v-model="user_report">
@@ -92,11 +93,13 @@
 			@else
 				<input class="form-control" type="text" placeholder="{{$auth_user->fullname}}" readonly>
 			@endif
+
 			<div class="form-group">
 				<a type="button" title="New Report" class="btn btn-default" v-bind:href="'/workingreports/add/'+user_report +'/'+ getDate() +'/'" >
-					New Report {{date('Y')}}
+					<strong>New Report</strong>
 				</a>
 			</div>
+
 		</div>
 		
 </div>

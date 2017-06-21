@@ -3,7 +3,7 @@
     <input type="text"
            class="form-control"
            name="name"
-           placeholder="Project name"
+           placeholder="Task name"
            v-model="filter.name">
 
     <select name="validation" class="form-control" v-model="filter.validated" v-on:change="fetchData">

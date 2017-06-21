@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Project;
 use Illuminate\Support\Facades\Validator;
 //use Illuminate\Support\Facades\Auth;
 use Auth;
@@ -13,36 +14,27 @@ use Auth;
 class ValidationApiController extends ApiController
 {
 	/**
+	 * Get reports by users role and projects associated
 	 * 
-	 * 
+	 * @param  Request $request
 	 * @return json
 	 */
 	public function index(Request $request)
 	{
-		if(! Auth::user()->isAdmin() && ! Auth::user()->isPM()) {
-			$data = $this->fetchDataUser(
-				$request->all()
-			);
+		$data = $this->fetchData(
+			$request->all()
+		);
 
-			$data = $this->formatOutput($data);
+		$data = $this->formatOutput($data);
 
-			return $this->respond($data);
-		}
-		else{
-			$data = $this->fetchData(
-				$request->all()
-			);
-
-			$data = $this->formatOutput($data);
-
-			if(Auth::user()->isAdmin()){
-				return $this->respond($data);
-			}
+		//PM
+		if(Auth::user()->isPM() && ! Auth::user()->isAdmin() ){
 			return $this->respond(
-				$this->filterByProject($data, array_values(Auth::user()->PMProjects()))
+				$this->filterByUsersInProject($data, array_values(Auth::user()->PMProjects()))
 			);
 		}
 
+		return $this->respond($data);			
 	}
 
 	/**
@@ -72,7 +64,7 @@ class ValidationApiController extends ApiController
             ->where('user_id', $request->get('user_id'))
             ->whereRaw ("YEAR(created_at) = {$request->get('year')}")
             ->whereRaw ("WEEK(created_at) = {$request->get('week')}")
-            ->update(['admin_validation' => $value]);
+            ->update([$validationField => $value]);
 
  		return $this->respond();
 	}
@@ -84,12 +76,14 @@ class ValidationApiController extends ApiController
 	 */
 	private function fetchData($data)
 	{
+		$date = Carbon::today()->subMonths(3);
+
 		$validationField = Auth::user()->isAdmin()
 			? 'working_report.admin_validation'
 			: 'working_report.pm_validation';
 
-		return DB::table('working_report')
-			->where($validationField, $data['validated'] == 'false' ? false : true)
+		$q = DB::table('working_report')	
+			->whereDate('working_report.created_at','>=',$date)//Filtro de fecha
 			->leftJoin('projects', 'working_report.project_id','=','projects.id')
 			->leftJoin('absences', 'working_report.absence_id','=','absences.id')
 			->leftJoin('users', 'working_report.user_id','=','users.id')
@@ -104,38 +98,25 @@ class ValidationApiController extends ApiController
 				DB::raw('SUM(working_report.time_slots* 0.25) as time_slot')
 			)
 			->groupBy(['user_id', 'date_year', 'date_week', 'working_report.project_id', 'training_type', 'absence_id'])
-			->orderBy('user_id', 'ASC')
-			->get();
-	}
+			->orderBy('user_id', 'ASC');
 
-	/**
-	 * Fetch data for user from database.
-	 * 
-	 * @return array
-	 */
-	private function fetchDataUser($data)
-	{
+			//User
+			if(! Auth::user()->isAdmin() && ! Auth::user()->isPM()){
+				$q = $q->where('working_report.user_id', Auth::id());//Filtro de usuario
+				$q = $q->where('working_report.admin_validation', $data['validated'] == "false" ? false : true);//Filtro de validacion usuario
+			}		
+			else{
+				$q = $q->where($validationField, $data['validated'] == 'false' ? false : true);//Filtro de validacion PM y Admin
 
-		return DB::table('working_report')
-			->where('working_report.user_id', Auth::id())
-			->where('working_report.pm_validation', $data['validated'] == "false" ? false : true)
-			->where('working_report.admin_validation', $data['validated'] == "false" ? false : true)
-			->leftJoin('projects', 'working_report.project_id','=','projects.id')
-			->leftJoin('absences', 'working_report.absence_id','=','absences.id')
-			->leftJoin('users', 'working_report.user_id','=','users.id')
-			->select(
-				'working_report.user_id',
-				DB::raw("concat(users.name, ' ', users.lastname_1) as user_name"),
-				DB::raw('YEAR(working_report.created_at) as date_year'),
-				DB::raw('WEEK(working_report.created_at) as date_week'),
-				DB::raw('UPPER(projects.name) as project'),
-				DB::raw('UPPER(working_report.training_type) as training_type'),
-				DB::raw('UPPER(absences.name) as absences'),
-				DB::raw('SUM(working_report.time_slots* 0.25) as time_slot')
-			)
-			->groupBy(['user_id', 'date_year', 'date_week', 'working_report.project_id', 'training_type', 'absence_id'])
-			->orderBy('user_id', 'ASC')
-			->get();
+				if(Auth::user()->isAdmin()){
+					 $q = $q->where('working_report.pm_validation',true);//Si admin validado por pm
+				}
+				elseif(Auth::user()->isPM()){
+				 $q = $q->where('working_report.admin_validation',false);//Si admin ha validado,pm no puede desvalidar
+				}	
+			}	
+
+			return $q->get();
 	}
 
 	/**
@@ -173,7 +154,6 @@ class ValidationApiController extends ApiController
     	return $response;
 	}
 
-
 	private function filterByProject($reports, $projects)
 	{
 		$response = array();
@@ -185,6 +165,32 @@ class ValidationApiController extends ApiController
 				}
 			}
 		}
+		return $response;
+	}
+
+	private function filterByUsersInProject($reports, $projects)
+	{
+		$ids = array();
+		foreach ($projects as $value) {
+			$project = Project::where('name',$value)->first();
+			$groups = $project->groups;
+			foreach ($groups as $group) {
+				$users = $group->users;
+				foreach ($users as $user) {
+					if(! in_array($user->id,$ids)){
+						array_push($ids, $user->id);
+					}
+				}
+			}
+		}
+
+		$response = array();
+		foreach ($reports as $key => $report) {
+			if(in_array($report['user_id'], $ids)) {
+				$response[$key] = $report;
+			}	
+		}
+		
 		return $response;
 	}
 
