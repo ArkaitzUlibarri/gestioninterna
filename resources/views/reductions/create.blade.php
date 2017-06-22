@@ -75,7 +75,8 @@
 			<div class="panel panel-primary">
 
 				<div class="panel-heading">
-					<span>Adding reduction to a contract</span>	
+					<span v-if="editIndex==-1">Adding reduction to a contract</span>	
+					<span v-if="editIndex!=-1">Editing reduction</span>	
 				</div>
 
 				<div class="panel-body">

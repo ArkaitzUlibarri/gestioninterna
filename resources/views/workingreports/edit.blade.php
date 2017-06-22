@@ -94,7 +94,7 @@
 			<div class="panel panel-primary">
 				<div class="panel-heading">
 					<span v-if="editIndex==-1">Adding a new task</span>	
-					<span v-if="editIndex!=-1">Editing task @{{editIndex +1}}</span>	
+					<span v-if="editIndex!=-1">Editing task</span>	
 				</div>
 			
 				<div class="panel-body">

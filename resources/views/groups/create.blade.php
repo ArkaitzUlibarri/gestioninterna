@@ -73,7 +73,7 @@
 
 				<div class="panel-heading">
 					<span v-if="editIndex==-1">Adding a new group</span>		
-        			<span v-if="editIndex!=-1">Editing group @{{editIndex +1}}</span>	
+        			<span v-if="editIndex!=-1">Editing group</span>	
 				</div>
 
 				<div class="panel-body">

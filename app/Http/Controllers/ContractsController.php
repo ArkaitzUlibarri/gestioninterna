@@ -161,17 +161,28 @@ class ContractsController extends Controller
 	public function destroy($id)
 	{
 		$contract = Contract::find($id);
-		$user = User::find($contract->id);
+		$user = User::find($contract->user_id);
 		
-		if($user->workingReports->count() == 0){
-			$contract->delete();
-			Session::flash('message', 'The contract has been successfully deleted!');
-			return redirect('contracts');
-		}
-		else{
-			return redirect('contracts')->withErrors(['The contract has reports associated']);		
+		if($user->workingReports->count() > 0){
+			if(is_null($contract->estimated_end_date) && is_null($contract->end_date)){
+				$reports_associated = $user->workingReports->where('created_at','>=',$contract->start_date);
+			}
+			if(! is_null($contract->estimated_end_date)){
+				$reports_associated = $user->workingReports->where('created_at','>=',$contract->start_date)->where('created_at','<=',$contract->estimated_end_date);
+			}
+			if(! is_null($contract->end_date)){
+				$reports_associated = $user->workingReports->where('created_at','>=',$contract->start_date)->where('created_at','<=',$contract->end_date);
+			}
+			
+			if ($reports_associated->count() > 0) {
+				return redirect('contracts')->withErrors(['The contract has reports associated']);	
+			}
 		}
 
+		$contract->delete();
+		Session::flash('message', 'The contract has been successfully deleted!');
+		return redirect('contracts');
+			
 	}
 
 	private function filterBankHolidaysByType($array,$type)

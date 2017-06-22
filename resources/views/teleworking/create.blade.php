@@ -76,7 +76,7 @@
 
 				<div class="panel-heading">
 					<span v-if="editIndex==-1">Adding teleworking to a contract</span>	
-					<span v-if="editIndex!=-1">Editing item @{{editIndex +1}}</span>	
+					<span v-if="editIndex!=-1">Editing teleworking</span>	
 				</div>
 
 				<div class="panel-body">
