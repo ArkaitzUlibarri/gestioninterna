@@ -27,6 +27,7 @@ const app = new Vue({
 		expHours: 0,
 
 		user: report_user,
+		teleworking : teleworking,
 		role: role,
 		reportdate: reportdate,
 		reportDayWeek: "",
@@ -192,10 +193,10 @@ const app = new Vue({
 		expectedHours(){
 			if(this.contract != null){
 				if(this.contract.week_hours == 40){
-					if(this.reportDayWeek == 'Friday'){
+					if(this.reportDayWeek == 'friday'){
 						this.expHours = 7;
 					}
-					else if(this.reportDayWeek != 'Saturday' && this.reportDayWeek != 'Sunday'){
+					else if(this.reportDayWeek != 'saturday' && this.reportDayWeek != 'sunday'){
 						this.expHours = 8.25;
 					}
 					this.expHours = 0;
@@ -279,13 +280,13 @@ const app = new Vue({
 			var d = new Date(stringDate);
 
 			var weekday = new Array(7);
-			weekday[0] = "Sunday";
-			weekday[1] = "Monday";
-			weekday[2] = "Tuesday";
-			weekday[3] = "Wednesday";
-			weekday[4] = "Thursday";
-			weekday[5] = "Friday";
-			weekday[6] = "Saturday";
+			weekday[0] = "sunday";
+			weekday[1] = "monday";
+			weekday[2] = "tuesday";
+			weekday[3] = "wednesday";
+			weekday[4] = "thursday";
+			weekday[5] = "friday";
+			weekday[6] = "saturday";
 
 			return weekday[d.getDay()];
 		},

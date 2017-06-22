@@ -120,10 +120,8 @@
 								<option value="">-</option>
 								@foreach(config('options.types') as $type)				
 									<option value="{{$type}}">{{ucfirst($type)}}</option>
-								@endforeach		
-								@if($report_user->hasTeleworking())				
-									<option value="teleworking">Teleworking</option>
-								@endif
+								@endforeach						
+								<option v-if="teleworking[reportDayWeek]" value="teleworking">Teleworking</option>							
 							</select>
 						</div>
 
@@ -243,6 +241,7 @@
 		var reportdate    = '{{ $date }}';
 		var role          = '{{ $auth_user->role }}';
 		var report_user   = <?php echo json_encode($report_user);?>;
+		var teleworking   = <?php echo json_encode($teleworking);?>;
 		var absences      = <?php echo json_encode($absences);?>;
 		var groupProjects = <?php echo json_encode($groupProjects);?>;
 		var categories    = <?php echo json_encode($categories);?>;

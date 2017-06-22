@@ -7,6 +7,7 @@ use App\Category;
 use App\Project;
 use App\User;
 use App\WorkingreportRepository;
+use App\Teleworking;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -70,7 +71,14 @@ class WorkingReportController extends Controller
 		$categories     = $this->getCategories($user_id);
 		$contract       = $report_user->contracts->where('end_date',null)->first();
 
-		return view('workingreports.edit',compact('date','auth_user','report_user','workingreports','absences','groupProjects','categories','contract'));
+		if($contract !=[] ){
+            $teleworking = $contract->teleworking->where('end_date',null)->first();
+            if($teleworking == []){
+            	$teleworking = new Teleworking;
+            }          
+        }
+
+		return view('workingreports.edit',compact('date','auth_user','report_user','workingreports','absences','groupProjects','categories','contract','teleworking'));
 	}
 
 	private function getReportsPerUserPerDay($user_id , $admin)

@@ -17,7 +17,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 /**
  * Registro los componentes necesarios.
  */
-Vue.component('task-template', __webpack_require__(176));
+Vue.component('task-template', __webpack_require__(177));
 
 var app = new Vue({
 
@@ -33,6 +33,7 @@ var app = new Vue({
 		expHours: 0,
 
 		user: report_user,
+		teleworking: teleworking,
 		role: role,
 		reportdate: reportdate,
 		reportDayWeek: "",
@@ -192,9 +193,9 @@ var app = new Vue({
 		expectedHours: function expectedHours() {
 			if (this.contract != null) {
 				if (this.contract.week_hours == 40) {
-					if (this.reportDayWeek == 'Friday') {
+					if (this.reportDayWeek == 'friday') {
 						this.expHours = 7;
-					} else if (this.reportDayWeek != 'Saturday' && this.reportDayWeek != 'Sunday') {
+					} else if (this.reportDayWeek != 'saturday' && this.reportDayWeek != 'sunday') {
 						this.expHours = 8.25;
 					}
 					this.expHours = 0;
@@ -268,13 +269,13 @@ var app = new Vue({
 			var d = new Date(stringDate);
 
 			var weekday = new Array(7);
-			weekday[0] = "Sunday";
-			weekday[1] = "Monday";
-			weekday[2] = "Tuesday";
-			weekday[3] = "Wednesday";
-			weekday[4] = "Thursday";
-			weekday[5] = "Friday";
-			weekday[6] = "Saturday";
+			weekday[0] = "sunday";
+			weekday[1] = "monday";
+			weekday[2] = "tuesday";
+			weekday[3] = "wednesday";
+			weekday[4] = "thursday";
+			weekday[5] = "friday";
+			weekday[6] = "saturday";
 
 			return weekday[d.getDay()];
 		},
@@ -571,7 +572,7 @@ var app = new Vue({
 
 /***/ }),
 
-/***/ 161:
+/***/ 162:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -634,7 +635,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 169:
+/***/ 170:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
@@ -642,18 +643,18 @@ exports.push([module.i, "\n.panel-right-corner {\n    position: absolute;\n    r
 
 /***/ }),
 
-/***/ 176:
+/***/ 177:
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(189)
+__webpack_require__(190)
 
 var Component = __webpack_require__(3)(
   /* script */
-  __webpack_require__(161),
+  __webpack_require__(162),
   /* template */
-  __webpack_require__(183),
+  __webpack_require__(184),
   /* scopeId */
   null,
   /* cssModules */
@@ -681,7 +682,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 183:
+/***/ 184:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -726,13 +727,13 @@ if (false) {
 
 /***/ }),
 
-/***/ 189:
+/***/ 190:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(169);
+var content = __webpack_require__(170);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -753,7 +754,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 198:
+/***/ 199:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(136);
@@ -1128,4 +1129,4 @@ module.exports = function listToStyles (parentId, list) {
 
 /***/ })
 
-},[198]);
+},[199]);

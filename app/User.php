@@ -80,6 +80,32 @@ class User extends Authenticatable
     }
 
     /**
+     * Check if the user has teleworking in his active contract
+     */
+    public function hasTeleworking()
+    {
+        $contracts = $this->contracts; 
+        
+        if($contracts->isNotEmpty()){
+            $active_contract = $this->contracts->where('end_date',null)->first();
+
+             if($active_contract !=[] ){
+                $teleworkingRegisters = $active_contract->teleworking;
+                
+                if($teleworkingRegisters->isNotEmpty()){
+                    $teleworking = $teleworkingRegisters->where('end_date',null)->first();
+
+                    if($teleworking !=[]){
+                        return 1;
+                    }
+                }
+             }
+        }
+
+        return 0;
+    }
+
+    /**
      * Check if the user is ProjectManager
      */
     public function isPM()
@@ -91,41 +117,6 @@ class User extends Authenticatable
         }
 
         return 0;
-    }
-
-    /**
-     * Check if the user has teleworking in his active contract
-     */
-    public function hasTeleworking()
-    {
-        $contracts = $this->contracts; 
-        
-        if(! empty($contracts) ){
-            $active_contract = $this->contracts->where('end_date',null)->first();
-
-             if(! empty($active_contract) ){
-                $teleworkingRegisters = $active_contract->teleworking;
-
-                if(! empty($teleworkingRegisters) ){
-                    $teleworking = $teleworkingRegisters->where('end_date',null)->first();
-
-                    if(! empty($teleworkingRegisters) ){
-                        return 1;
-                    }
-                }
-             }
-        }
-
-        return 0;
-
-        /*
-        if($this->contracts->where('end_date',null)->first()->teleworking->where('end_date',null)->first() == [] ){
-            return 0; 
-        } 
-        else{
-            return 1;
-        }
-        */
     }
 
     /**
@@ -148,6 +139,4 @@ class User extends Authenticatable
         
         return $array;
     }
-
-
 }

@@ -19,9 +19,11 @@
 					<th>Validated (RP)</th>
 					<th>Validated (ADMIN)</th>
 					
+					<!--
 					@if(Auth::user()->isAdmin() || Auth::user()->isPM())
 						<th>Actions</th>
 					@endif
+					-->
 					
 				</thead>
 	   
@@ -30,7 +32,7 @@
 						<td>@{{ item.fullname }}</td>
 						<td>@{{ getWeek(1,item.created_at) }} | @{{ getDayWeek(item.created_at) }}</td>
 						<td>   
-							<a id="ref" v-bind:href="'/workingreports/add/'+item.user_id +'/'+ item.created_at +'/'"  title="Edit" aria-hidden="true">
+							<a id="ref" href="url()" v-bind:href="'workingreports/add/'+item.user_id +'/'+ item.created_at +'/'"  title="Edit" aria-hidden="true">
 								@{{ item.created_at }}
 							</a>               
 						</td>
@@ -51,7 +53,7 @@
 								<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
 							</div>  
 						</td>
-
+						<!--
 						@if(Auth::user()->isAdmin())
 							<td>
 								<button title="Invalidate" class="btn btn-danger btn-xs" v-if="item.horas_validadas_pm == 0 && item.horas_validadas_admin == 0" v-on:click="fetchData(item.user_id, item.created_at, index , 0)">
@@ -73,7 +75,7 @@
 								</button>
 							</td>
 						@endif
-
+						-->
 					</tr>
 				</tbody>
 					 
@@ -95,7 +97,7 @@
 			@endif
 
 			<div class="form-group">
-				<a type="button" title="New Report" class="btn btn-default" v-bind:href="'/workingreports/add/'+user_report +'/'+ getDate() +'/'" >
+				<a type="button" title="New Report" class="btn btn-default" v-bind:href="'workingreports/add/'+user_report +'/'+ getDate() +'/'" >
 					<strong>New Report</strong>
 				</a>
 			</div>
@@ -103,8 +105,6 @@
 		</div>
 		
 </div>
-
-<!--<pre>@{{$data}}</pre>-->
 
 @endsection
 
