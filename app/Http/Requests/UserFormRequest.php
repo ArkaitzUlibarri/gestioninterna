@@ -31,24 +31,24 @@ class UserFormRequest extends FormRequest
             case 'DELETE':
             case 'POST':
             {
+                /*
                 return [
                     'name'       => 'required|string',
-                    'lastname_1' => 'required|string',
-                    'lastname_2' => 'nullable|string',
+                    'lastname'   => 'required|string',
                     'role'       => 'required|in:user,admin,tools',
                     'email'      => 'required|string|email|unique:users,email,' . $this->get('user_id') . ',id',
                     'password'   => 'required|string|min:6|confirmed'
                 ];
+                */
             }
             case 'PUT':
             case 'PATCH':
             {
                 return [
-                    'name'       => 'required|string',
-                    'lastname_1' => 'required|string',
-                    'lastname_2' => 'nullable|string',
+                    //'name'       => 'required|string',
+                    //'lastname'   => 'required|string',
                     'role'       => 'required|in:user,admin,tools',
-                    'email'      => 'required|string|email|unique:users,email,' . $this->get('user_id') . ',id'
+                    //'email'      => 'required|string|email|unique:users,email,' . $this->get('user_id') . ',id'
                 ];
             }
             default:break;

@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'lastname_1', 'lastname_2', 'role', 'password'
+        'username', 'name', 'email', 'lastname', 'role', 'password'
     ];
 
     /**
@@ -30,7 +30,7 @@ class User extends Authenticatable
 
     protected function getFullNameAttribute()
     {
-        return $this->name . ' ' . $this->lastname_1 . ' ' . $this->lastname_2;
+        return $this->name . ' ' . $this->lastname;
     }
 
     public function contracts()

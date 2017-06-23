@@ -1,13 +1,4 @@
 
-/**
- * First we will load all of this project_id's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
-
-//require('../bootstrap');
-
-
 const app = new Vue({
 
 	el: '#app',
@@ -81,6 +72,5 @@ const app = new Vue({
                     console.log(error);
                 });
         }
-
     }
 });

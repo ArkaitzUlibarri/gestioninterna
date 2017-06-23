@@ -35,7 +35,7 @@ class WorkingreportRepository
         $q = $this->getModel()
             ->join('users','working_report.user_id','=','users.id')
             ->select(
-                DB::raw("CONCAT(users.name, ' ', users.lastname_1 ) as fullname"),
+                DB::raw("CONCAT(users.name, ' ', users.lastname ) as fullname"),
                 'working_report.created_at',
                 'working_report.user_id',
                 DB::raw("sum(time_slots)*0.25 as horas_reportadas"),
@@ -159,7 +159,7 @@ class WorkingreportRepository
      */
     public function filterByName($q, $value)
     {
-        $q->where(DB::raw("CONCAT(users.name, ' ', users.lastname_1 )"), 'LIKE', "%{$value}%");
+        $q->where(DB::raw("CONCAT(users.name, ' ', users.lastname )"), 'LIKE', "%{$value}%");
     }
 
     /**

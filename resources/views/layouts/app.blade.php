@@ -29,9 +29,11 @@
     @include('layouts.navbar')
     
     <div id="app">
-        @yield('content')
+        <div class="container">
+            @yield('content')
+        </div>
     </div>
 
-    @stack('script-bottom')<!-- Scripts -->
+    @stack('script-bottom')
 </body>
 </html>

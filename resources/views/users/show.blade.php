@@ -1,61 +1,43 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
 
-        <dl class="dl-horizontal">
-            <dt>Employee ID</dt>
-            <dd>{{ $user->id }}</dd>
-        </dl>
+<div class="row">
+    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+        @include('users.card')
+    </div>
+</div>
 
-        <dl class="dl-horizontal">
-            <dt>Name</dt>
-            <dd>{{ $user->name }}</dd>
-        </dl>
-
-        <dl class="dl-horizontal">
-            <dt>Lastname 1</dt>
-            <dd>{{ $user->lastname_1 }}</dd>
-        </dl>
-
-        <dl class="dl-horizontal">
-            <dt>Lastname 2</dt>
-            <dd>{{ $user->lastname_2 }}</dd>
-        </dl>
-
-        <dl class="dl-horizontal">
-            <dt>Email</dt>
-            <dd>{{ $user->email}}</dd>
-        </dl>
-
-        <dl class="dl-horizontal">
-            <dt>Role</dt>
-            <dd>
-                @if(! Auth::user()->isAdmin() && Auth::user()->isPM())
-                    PROJECT MANAGER
-                @else
-                    {{ strtoupper($user->role)}}
-                @endif  
-            </dd>
-        </dl>
-
-        <div class="row">
+@if (count($contracts) > 0)
+    <div class="row">
+        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
             @include('contracts.showUsers')
         </div>
-        
-        <div class="row">
+    </div>
+@endif
+
+@if (count($categories) > 0)
+    <div class="row">
+        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
             @include('categories.show')
         </div>
+    </div>
+@endif
 
-        <div class="row">
+@if (count($groups) > 0)
+    <div class="row">
+        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
             @include('groups.showUsers')
         </div>
-
-        @if(Auth::user()->isAdmin())
-            <a title="Back" class="btn btn-default" href="{{ url('users') }}">
-                Back
-            </a>
-        @endif
-
     </div>
+@endif
+
+<div class="row">
+    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+        @if(Auth::user()->isAdmin())
+            <a title="Back" class="btn btn-default" href="{{ url('users') }}">Back</a>
+        @endif
+    </div>
+</div>
+
 @endsection

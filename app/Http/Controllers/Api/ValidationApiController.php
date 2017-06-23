@@ -89,7 +89,7 @@ class ValidationApiController extends ApiController
 			->leftJoin('users', 'working_report.user_id','=','users.id')
 			->select(
 				'working_report.user_id',
-				DB::raw("concat(users.name, ' ', users.lastname_1) as user_name"),
+				DB::raw("concat(users.name, ' ', users.lastname) as user_name"),
 				DB::raw('YEAR(working_report.created_at) as date_year'),
 				DB::raw('WEEK(working_report.created_at) as date_week'),
 				DB::raw('UPPER(projects.name) as project'),

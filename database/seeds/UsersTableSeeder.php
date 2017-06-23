@@ -12,75 +12,75 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         factory(App\User::class)->create([
-            'name'       => 'Ivan',
-            'lastname_1' => 'Iglesias',
-            'email'      => 'ivan.iglesias@3dbconsult.com',
-            'role'       => 'tools',
-            //'category'   => 'ds'
+            'username' => 'ivan.iglesias',
+            'name'     => 'Ivan',
+            'lastname' => 'Iglesias',
+            'email'    => 'ivan.iglesias@3dbconsult.com',
+            'role'     => 'tools',
+        ]);
+       
+        factory(App\User::class)->create([
+            'username' => 'arkaitz.ulibarri',
+            'name'     => 'Arkaitz',
+            'lastname' => 'Ulibarri',
+            'email'    => 'arkaitz.ulibarri@3dbconsult.com',
+            'role'     => 'tools',
         ]);
 
         factory(App\User::class)->create([
-            'name'       => 'Arkaitz',
-            'lastname_1' => 'Ulibarri',
-            'email'      => 'arkaitz.ulibarri@3dbconsult.com',
-            'role'       => 'tools',
-            //'category'   => 'ds'
+            'username' => 'paula.corral',
+            'name'     => 'Paula',
+            'lastname' => 'Corral',
+            'email'    => 'paula.corral@3dbconsult.com',
+            'role'     => 'admin',
         ]);
 
         factory(App\User::class)->create([
-            'name'       => 'Paula',
-            'lastname_1' => 'Corral',
-            'email'      => 'paula.corral@3dbconsult.com',
-            'role'       => 'admin',
-            //'category'   => 'ad'
+            'username' => 'argiñe.garcia',
+            'name'     => 'Argiñe',
+            'lastname' => 'Garcia',
+            'email'    => 'argiñe.garcia@3dbconsult.com',
+            'role'     => 'admin',
         ]);
 
         factory(App\User::class)->create([
-            'name'       => 'Argiñe',
-            'lastname_1' => 'Garcia',
-            'email'      => 'argiñe.garcia@3dbconsult.com',
-            'role'       => 'admin',
-            //'category'   => 'ad'
+            'username' => 'luis.sampedro',
+            'name'     => 'Luis',
+            'lastname' => 'Sampedro',
+            'email'    => 'luis.sampedro@3dbconsult.com',
+            'role'     => 'admin',
         ]);
 
         factory(App\User::class)->create([
-            'name'       => 'Luis',
-            'lastname_1' => 'Sampedro',
-            'email'      => 'luis.sampedro@3dbconsult.com',
-            'role'       => 'admin',
-            //'category'   => 'di'
+            'username' => 'javier.vega',
+            'name'     => 'Javier',
+            'lastname' => 'Vega',
+            'email'    => 'javier.vega@3dbconsult.com',
+            'role'     => 'user',
         ]);
 
         factory(App\User::class)->create([
-            'name'       => 'Javier',
-            'lastname_1' => 'Vega',
-            'email'      => 'javier.vega@3dbconsult.com',
-            'role'       => 'user',
-            //'category'   => 'rp'
+            'username' => 'borja.frias',
+            'name'     => 'Borja',
+            'lastname' => 'Frias',
+            'email'    => 'borja.frias@3dbconsult.com',
+            'role'     => 'user',
         ]);
 
         factory(App\User::class)->create([
-            'name'       => 'Borja',
-            'lastname_1' => 'Frias',
-            'email'      => 'borja.frias@3dbconsult.com',
-            'role'       => 'user',
-            //'category'   => 'it'
+            'username' => 'dorleta.sainz',
+            'name'     => 'Dorleta',
+            'lastname' => 'Sainz',
+            'email'    => 'dorleta.sainz@3dbconsult.com',
+            'role'     => 'user',
         ]);
 
         factory(App\User::class)->create([
-            'name'       => 'Dorleta',
-            'lastname_1' => 'Sainz',
-            'email'      => 'dorleta.sainz@3dbconsult.com',
-            'role'       => 'user',
-            //'category'   => 'it'
-        ]);
-
-        factory(App\User::class)->create([
-            'name'       => 'Alvaro',
-            'lastname_1' => 'Gabilondo',
-            'email'      => 'alvaro.gabilondo@3dbconsult.com',
-            'role'       => 'user',
-            //'category'   => 'it'
+            'username' => 'alvaro.gabilondo',
+            'name'     => 'Alvaro',
+            'lastname' => 'Gabilondo',
+            'email'    => 'alvaro.gabilondo@3dbconsult.com',
+            'role'     => 'user',
         ]);
     }
 }

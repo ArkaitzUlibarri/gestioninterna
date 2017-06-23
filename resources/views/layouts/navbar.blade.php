@@ -11,18 +11,13 @@
                     </button>
 
                     <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('http://3dbconsult.com','home') }}">
+                    <a class="navbar-brand" href="{{ url('/') }}">
                         {{ config('app.name','3db Intranet') }}
                     </a>
 
                 </div>
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                    <!-- Left Side Of Navbar 
-                    <ul class="nav navbar-nav">
-                        &nbsp;
-                    </ul> -->
-
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
                         <!-- Authentication Links -->
@@ -30,17 +25,17 @@
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <!--<li><a href="{{ route('register') }}">Register</a></li>-->
                         @else      
-                            <li><a href  = "{{ url('users' . '/' . Auth::user()->id . '/') }}">Profile</a></li>       
+                            <li><a href="{{ url('users' . '/' . Auth::user()->id . '/') }}">Profile</a></li>       
                             @if(Auth::user()->isAdmin())
-                                 <li><a href  = "{{ url('users') }}">Users</a></li> 
-                                 <li><a href  = "{{ url('contracts') }}">Contracts</a></li>
-                                 <li><a href = "{{ url('projects') }}">Projects</a></li>  
+                                 <li><a href="{{ url('users') }}">Users</a></li> 
+                                 <li><a href="{{ url('contracts') }}">Contracts</a></li>
+                                 <li><a href="{{ url('projects') }}">Projects</a></li>  
                             @elseif(Auth::user()->isPM()) 
-                                 <li><a href  = "{{ url('users') }}">Users</a></li>   
-                                 <li><a href = "{{ url('projects') }}">Projects</a></li>            
+                                 <li><a href="{{ url('users') }}">Users</a></li>   
+                                 <li><a href="{{ url('projects') }}">Projects</a></li>            
                             @endif
-                            <li><a href = "{{ url('validation') }}">Validation</a></li>
-                             <li><a href = "{{ url('workingreports') }}">Working Reports</a></li> 
+                            <li><a href="{{ url('validation') }}">Validation</a></li>
+                             <li><a href="{{ url('workingreports') }}">Working Reports</a></li> 
                             
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -60,7 +55,7 @@
                                     <li>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                                             document.getElementById('logout-form').submit();">
                                             <span class="glyphicon glyphicon-log-out"></span> Logout
                                         </a>
 
@@ -69,6 +64,7 @@
                                         </form>
                                     </li>
                                 </ul>
+                                
                             </li>
                         @endif
                     </ul>

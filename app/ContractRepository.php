@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Contract;
+use Illuminate\Support\Facades\DB;
 
 class ContractRepository
 {
@@ -33,9 +34,9 @@ class ContractRepository
             ->join('contract_types','contracts.contract_type_id','=','contract_types.id')
             ->join('users','contracts.user_id','=','users.id')
             ->select(
-                'users.name as name',
-                'users.lastname_1 as lastname_1',
-                'users.lastname_2 as lastname_2',
+                //'users.name as name',
+                //'users.lastname as lastname',
+                DB::raw("concat(users.name, ' ', users.lastname) as full_name"),
                 'contracts.id',
                 'contract_types.name as contract_types',    
                 'contracts.start_date',
@@ -43,7 +44,7 @@ class ContractRepository
                 'contracts.estimated_end_date',
                 'contracts.week_hours'
             )
-            ->orderBy('name', 'asc');
+            ->orderBy('full_name', 'asc');
 
         foreach ($data as $field => $value) {
             $filterMethod = 'filterBy' . studly_case($field);
