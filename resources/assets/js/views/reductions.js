@@ -189,8 +189,6 @@ const app = new Vue({
 			});	
 		},
 
-
-
 		save(){
 			let vm = this;
 			

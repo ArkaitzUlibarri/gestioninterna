@@ -9,6 +9,8 @@ use App\Workingreport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Carbon\Carbon;
+use App\User;
 
 class ReportApiController extends ApiController
 {
@@ -85,7 +87,7 @@ class ReportApiController extends ApiController
 		$id = DB::table('working_report')
 			->insertGetId($array);
 
-		return $this->respond($id);
+		return $this->respond($array);
 
 	}
 
@@ -158,6 +160,8 @@ class ReportApiController extends ApiController
 			return $this->respondNotAcceptable($validator->errors()->all());
 		}
 
+		$dayOfWeek = Carbon::createFromFormat('Y-m-d', $request['created_at'])->dayOfWeek;
+
 		//Query de extracción del último reporte
 		$results = DB::select(DB::raw(
 				"INSERT INTO working_report (
@@ -175,7 +179,7 @@ class ReportApiController extends ApiController
 				)
 				SELECT user_id, :reportdate as created_at, activity, project_id, group_id, category_id ,training_type, course_group_id, absence_id, time_slots, job_type
 				FROM working_report
-				WHERE user_id = :user and created_at = (SELECT MAX(created_at) FROM working_report where created_at <> :report and user_id = :userfilter);"
+				WHERE user_id = :user and created_at = (SELECT MAX(created_at) FROM working_report where created_at < :report and user_id = :userfilter);"
 			), array(
 				'reportdate' => $request['created_at'],
 				'user'       => $request['user_id'],
@@ -183,7 +187,7 @@ class ReportApiController extends ApiController
 				'userfilter' => $request['user_id'],
 			)
 		);
-
-		return $this->respond("Copied");	
+		
+		return $this->respond("Copied");
 	}
 }

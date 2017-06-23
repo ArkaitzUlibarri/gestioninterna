@@ -25,38 +25,30 @@ class ContractFormRequest extends FormRequest
      */
     public function rules()
     {
+        $response = array();
+        $response = [  
+                         'user_id'            => 'required|exists:users,id',
+                         'contract_type_id'   => 'required|exists:contract_types,id',
+                         'estimated_end_date' => 'nullable|date|after:start_date|date_format:Y-m-d',
+                         'end_date'           => 'nullable|date|after:start_date|date_format:Y-m-d',
+                         'national_days_id'   => 'required|exists:bank_holidays_codes,id',
+                         'regional_days_id'   => 'required|exists:bank_holidays_codes,id',
+                         'local_days_id'      => 'required|exists:bank_holidays_codes,id',
+                         'week_hours'         => 'required|numeric|min:0|max:40'
+                    ];
+
         $lastContract = $this->getPreviousContracts();
         
         if($lastContract !=[]){
-
             if($lastContract->end_date){
-
-                return [
-                    'user_id'            => 'required|exists:users,id',
-                    'contract_type_id'   => 'required|exists:contract_types,id',
-                    'start_date'         => 'required|date|after:' . Carbon::createFromFormat('Y-m-d', $lastContract->end_date)->toDateString() . '|date_format:Y-m-d',
-                    'estimated_end_date' => 'nullable|date|after:start_date|date_format:Y-m-d',
-                    'end_date'           => 'nullable|date|after:start_date|date_format:Y-m-d',
-                    'national_days_id'   => 'required|exists:bank_holidays_codes,id',
-                    'regional_days_id'   => 'required|exists:bank_holidays_codes,id',
-                    'local_days_id'      => 'required|exists:bank_holidays_codes,id',
-                    'week_hours'         => 'required|numeric|min:0|max:40'
-                ];
+                $response['start_date'] = 'required|date|after:' . Carbon::createFromFormat('Y-m-d', $lastContract->end_date)->toDateString() . '|date_format:Y-m-d';    
+                return $response;
             }
         }
-        
-        return [
-            'user_id'            => 'required|exists:users,id',
-            'contract_type_id'   => 'required|exists:contract_types,id',
-            'start_date'         => 'required|date|date_format:Y-m-d',
-            'estimated_end_date' => 'nullable|date|after:start_date|date_format:Y-m-d',
-            'end_date'           => 'nullable|date|after:start_date|date_format:Y-m-d',
-            'national_days_id'   => 'required|exists:bank_holidays_codes,id',
-            'regional_days_id'   => 'required|exists:bank_holidays_codes,id',
-            'local_days_id'      => 'required|exists:bank_holidays_codes,id',
-            'week_hours'         => 'required|numeric|min:0|max:40'
-        ];  
 
+        $response['start_date'] = 'start_date'         => 'required|date|date_format:Y-m-d';    
+        return $response;
+         
     }
 
     /**
