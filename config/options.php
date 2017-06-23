@@ -14,11 +14,6 @@ return [
 		'training'
 	],
 
-	'dates' => [
-		'active',
-		'inactive'
-	],
-
 	'holidays' => [
 		'current_year',
 		'last_year',

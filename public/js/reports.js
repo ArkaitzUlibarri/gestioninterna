@@ -403,7 +403,7 @@ var app = new Vue({
 					}
 				}
 				for (var key = this.groupProjects.length - 1; key >= 0; key--) {
-					if (this.groupProjects[key].group == this.newTask.group) {
+					if (this.groupProjects[key].group == this.newTask.group && this.groupProjects[key].project == this.newTask.project) {
 						this.newTask.group_id = this.groupProjects[key].group_id;
 						this.newTask.project_id = this.groupProjects[key].project_id;
 					}

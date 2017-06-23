@@ -11,7 +11,7 @@
 
 	<select name="type" class="form-control">
 		<option selected="true" value="">Status</option>
-		@foreach (config('options.dates') as $date)
+		@foreach (config('options.status') as $date)
 			<option value="{{ $date }}" {{ $date == $filter['type'] ? 'selected' : '' }}>{{ ucfirst($date) }}</option>
 		@endforeach
 	</select>
