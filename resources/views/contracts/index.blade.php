@@ -29,7 +29,7 @@
                         <td>{{ empty($contract->end_date) ? "In progress" : "$contract->end_date"}}</td>          
                         <td>
                             @if (empty($contract->end_date))
-                                <a title="Edit" class="btn btn-primary btn-sm" type="button" 
+                                <a title="Edit" class="btn btn-default btn-sm" type="button" 
                                    href="{{ url('contracts/' . $contract->id . '/edit') }}">
                                    <span class="glyphicon glyphicon-edit"></span> Edit
                                 </a>

@@ -1,14 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">   
-	<h2>Working Reports</h2>
-	<!--<p>Lista con los reportes de los empleados:</p>-->
+<div class="panel panel-primary"> 
 
+	<div class="panel-heading"> 
 		@include('workingreports.filter')
+		<h3 class="panel-title" style="margin-top: 7px;">WORKING REPORTS</h3>
+		<div class="clearfix"></div>
+	</div>
 
-		<div class="clearfix" ></div>
-
+		
+	<div class="panel-body">
 		<div class="table-responsive" style="margin: 2em 0 5em 0;">
 			<table class="table table-hover table-condensed">
 				<thead>
@@ -16,8 +18,8 @@
 					<th>Week | Day</th>
 					<th>Date</th>
 					<th>Stated Hours</th>
-					<th>Validated (RP)</th>
-					<th>Validated (ADMIN)</th>
+					<th>PM</th>
+					<th>ADMIN</th>
 					
 					<!--
 					@if(Auth::user()->isAdmin() || Auth::user()->isPM())
@@ -82,6 +84,8 @@
 			</table>
 		</div>
 
+		<hr>
+
 		<div class="form-inline pull-right">
 
 			@if(Auth::user()->isAdmin())
@@ -97,13 +101,13 @@
 			@endif
 
 			<div class="form-group">
-				<a type="button" title="New Report" class="btn btn-default" v-bind:href="'workingreports/add/'+user_report +'/'+ getDate() +'/'" >
-					<strong>New Report</strong>
+				<a type="button" title="New Report" class="btn btn-success" v-bind:href="'workingreports/add/'+user_report +'/'+ getDate() +'/'" >
+					New Report
 				</a>
 			</div>
 
 		</div>
-		
+	</div>	
 </div>
 
 @endsection

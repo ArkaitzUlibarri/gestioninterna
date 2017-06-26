@@ -5,7 +5,7 @@
 
     <div class="panel-heading">
         @include('users.filter')
-        <h3 class="panel-title" style="margin-top: 7px;">Users</h3>
+        <h3 class="panel-title" style="margin-top: 7px;">USERS</h3>
         <div class="clearfix"></div>
     </div>
 
