@@ -18,17 +18,17 @@ class TeleworkingApiRequest extends ApiRequest
     {
         $response = array();
         $response = [  
-                        'contract_start_date'         => 'required|date|date_format:Y-m-d',
-                        'contract_estimated_end_date' => 'nullable|date|date_format:Y-m-d',
-                        'contract_id'                 => 'required|numeric',
-                        'monday'                      => 'required|boolean',
-                        'tuesday'                     => 'required|boolean',
-                        'wednesday'                   => 'required|boolean',
-                        'thursday'                    => 'required|boolean',
-                        'friday'                      => 'required|boolean',
-                        'saturday'                    => 'required|boolean',
-                        'sunday'                      => 'required|boolean',
-                    ];
+            'contract_start_date'         => 'required|date|date_format:Y-m-d',
+            'contract_estimated_end_date' => 'nullable|date|date_format:Y-m-d',
+            'contract_id'                 => 'required|numeric',
+            'monday'                      => 'required|boolean',
+            'tuesday'                     => 'required|boolean',
+            'wednesday'                   => 'required|boolean',
+            'thursday'                    => 'required|boolean',
+            'friday'                      => 'required|boolean',
+            'saturday'                    => 'required|boolean',
+            'sunday'                      => 'required|boolean',
+        ];
 
         $lastTeleworking = $this->getPreviousTeleworking();
 

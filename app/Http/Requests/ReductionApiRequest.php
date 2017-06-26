@@ -18,11 +18,11 @@ class ReductionApiRequest extends ApiRequest
     {     
         $response = array();
         $response = [  
-                        'contract_start_date'         => 'required|date|date_format:Y-m-d',
-                        'contract_estimated_end_date' => 'nullable|date|date_format:Y-m-d',
-                        'contract_id'                 => 'required|numeric',
-                        'week_hours'                  => 'required|numeric'
-                    ];
+            'contract_start_date'         => 'required|date|date_format:Y-m-d',
+            'contract_estimated_end_date' => 'nullable|date|date_format:Y-m-d',
+            'contract_id'                 => 'required|numeric',
+            'week_hours'                  => 'required|numeric'
+        ];
   
         $lastReduction = $this->getPreviousReductions();
 

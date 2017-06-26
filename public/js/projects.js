@@ -1,6 +1,6 @@
 webpackJsonp([2],{
 
-/***/ 134:
+/***/ 133:
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -16,7 +16,7 @@ webpackJsonp([2],{
 /**
  * Registro los componentes necesarios.
  */
-Vue.component('group-template', __webpack_require__(174));
+Vue.component('group-template', __webpack_require__(172));
 
 var app = new Vue({
 
@@ -218,7 +218,7 @@ var app = new Vue({
 
 /***/ }),
 
-/***/ 159:
+/***/ 158:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -261,7 +261,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 166:
+/***/ 165:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
@@ -269,18 +269,18 @@ exports.push([module.i, "\n.group-panel {\n    position:relative;\n    border-bo
 
 /***/ }),
 
-/***/ 174:
+/***/ 172:
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(186)
+__webpack_require__(182)
 
 var Component = __webpack_require__(3)(
   /* script */
-  __webpack_require__(159),
+  __webpack_require__(158),
   /* template */
-  __webpack_require__(180),
+  __webpack_require__(177),
   /* scopeId */
   null,
   /* cssModules */
@@ -308,7 +308,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 180:
+/***/ 177:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -348,13 +348,13 @@ if (false) {
 
 /***/ }),
 
-/***/ 186:
+/***/ 182:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(166);
+var content = __webpack_require__(165);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -375,10 +375,10 @@ if(false) {
 
 /***/ }),
 
-/***/ 197:
+/***/ 192:
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(134);
+__webpack_require__(133);
 module.exports = __webpack_require__(140);
 
 
@@ -751,4 +751,4 @@ module.exports = function listToStyles (parentId, list) {
 
 /***/ })
 
-},[197]);
+},[192]);

@@ -10,19 +10,16 @@ abstract class ApiController extends Controller
 
 	protected $statusCode = Response::HTTP_OK;
 
-
 	public function getStatusCode()
 	{
 		return $this->statusCode;
 	}
-
 
 	public function setStatusCode($statusCode)
 	{
 		$this->statusCode = $statusCode;
 		return $this;
 	}
-
 
 	/**
 	 * 200. Success!
@@ -34,7 +31,6 @@ abstract class ApiController extends Controller
 	{
 		return response()->json($data, $this->getStatusCode());
 	}
-
 
 	/**
 	 * 400. The request was invalid or cannot be otherwise served.
@@ -50,7 +46,6 @@ abstract class ApiController extends Controller
 		return $this->setStatusCode(Response::HTTP_BAD_REQUEST)->respond($data);
 	}
 
-
 	/**
 	 * 401. Missing or incorrect authentication credentials.
 	 * 
@@ -61,7 +56,6 @@ abstract class ApiController extends Controller
 	{
 		return $this->setStatusCode(Response::HTTP_UNAUTHORIZED)->respond($data);
 	}
-
 
 	/**
 	 * 403.	The request is understood, but it has been refused or access
@@ -74,7 +68,6 @@ abstract class ApiController extends Controller
 	{
 		return $this->setStatusCode(Response::HTTP_FORBIDDEN)->respond($data);
 	}
-
 
 	/**
 	 * 404. The URI requested is invalid or the resource requested, such
@@ -89,7 +82,6 @@ abstract class ApiController extends Controller
 		return $this->setStatusCode(Response::HTTP_NOT_FOUND)->respond($data);
 	}
 
-
 	/**
 	 * 406. Returned by the Search API when an invalid format is specified in the request.
 	 * 
@@ -100,7 +92,6 @@ abstract class ApiController extends Controller
 	{
 		return $this->setStatusCode(Response::HTTP_NOT_ACCEPTABLE)->respond($data);
 	}
-
 
 	/**
 	 * 500. Something is broken.

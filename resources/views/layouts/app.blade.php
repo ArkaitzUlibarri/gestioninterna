@@ -34,6 +34,8 @@
         </div>
     </div>
 
+    @include ('layouts.loader')
+    
     @stack('script-bottom')
 </body>
 </html>

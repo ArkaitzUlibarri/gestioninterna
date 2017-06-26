@@ -5,7 +5,6 @@
 	<div class="col-xs-12 col-sm-offset-1 col-sm-10">
 
 		<form method="post" action="{{ url('projects') }}">
-			
 			{{ csrf_field() }}
 
 			<div class="panel panel-primary">
@@ -63,14 +62,14 @@
 
 					<div align="right" class="form-group">		
 						<a class="btn btn-default" href="{{ url('projects') }}">Cancel</a>
-						<button type ="submit" class="btn btn-success">
+						<button type ="submit" class="btn btn-primary">
 							<span class="glyphicon glyphicon-floppy-disk"></span> Save
 						</button>
 					</div>
-
 				</div>
 			</div>
 		</form>
+
 	</div>
 </div>
 @endsection

@@ -13,7 +13,7 @@ class CategoriesController extends Controller
 		$this->middleware('auth');
 		$this->middleware('checkrole');
 	}
-
+/*
     public function edit($user_id)
     {
     	$categories = Category::all();
@@ -21,4 +21,5 @@ class CategoriesController extends Controller
        
         return view('categories.create',compact('user','categories'));
     }
+    */
 }
