@@ -57,7 +57,14 @@ class UserRepository
                 $this->$filterMethod($q, $value);
             }
         }
-
+     
+        if($data == []){
+            $q = $this->Type($q,"");
+        }
+        elseif(isset($data['type'])){
+            $q = $this->Type($q,$data['type']);
+        }
+        
         //Filtro PM
         $grouped_ids = $this->getGroupedUsers();
         $alone_ids   = $this->getAloneUsers();
@@ -80,8 +87,8 @@ class UserRepository
      */
     public function filterByName($q, $value)
     {
-        $q  ->where('name', 'LIKE', "%{$value}%")
-            ->orWhere('lastname', 'LIKE', "%{$value}%");
+        $q->where('name', 'LIKE', "%{$value}%")
+          ->orWhere('lastname', 'LIKE', "%{$value}%");
     }
 
     /**
@@ -90,18 +97,22 @@ class UserRepository
      * @param  $q
      * @param  $value
      */
-    public function filterByType($q, $value)
-    {
-        //Active
-        if ($value == config('options.dates')[0]){
-            $q->whereNull('t.end_date');//No terminado
-            $q->whereNotNull('t.contract_type_id');//Con contrato
-        }  
-        //Inactive  
-        elseif ($value == config('options.dates')[1]) {
-            $q->whereNotNull('t.end_date');//Terminado
-            $q->orWhereNull('t.contract_type_id');//Sin contrato
+    public function Type($q, $value)
+    { 
+        if ($value == "inactive") {
+            // Terminado sin contrato
+            return $q->whereNotNull('t.end_date')
+                ->orWhereNull('t.contract_type_id');
         }
+        elseif($value == ""){
+            // No terminado con contrato
+            return $q->whereNull('t.end_date')
+                ->whereNotNull('t.contract_type_id');
+        }
+        else{
+            return $q;
+        }
+
     }
 
     private function getGroupedUsers()
