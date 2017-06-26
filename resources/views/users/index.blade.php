@@ -19,7 +19,6 @@
                     <th class="custom-table-action-th">Actions</th>
                 </thead>
                 <tbody>
-
                     @foreach($users as $user)
                     <tr>
                         <td>{{ $user->id }}</td>
@@ -48,6 +47,8 @@
                 </tbody>
             </table>  
         </div>
+
+        {{ $users->links() }}
 
 <!--
         <hr>

@@ -54,7 +54,7 @@ class ContractRepository
         }
        
         return $paginate
-            ? $q->paginate(10)->appends($data)
+            ? $q->paginate(15)->appends($data)
             : $q->get();
     }
 

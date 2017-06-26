@@ -23,13 +23,13 @@ class ProjectsController extends Controller
 
     public function index(Request $request)
     {
-		$projects   = $this->projectRepository->search($request->all(), false);
-		$customers  = Customer::all();
+		$projects = $this->projectRepository->search($request->all(), true);
+		$customers = Customer::all();
 
 		$filter = array(	
-			'name'  => $request->get('name'),
+			'name' => $request->get('name'),
 			'customer' => $request->get('customer'),
-			'type'     => $request->get('type'),
+			'type' => $request->get('type'),
 		);
 
     	return view('projects.index',compact('projects','customers','filter'));

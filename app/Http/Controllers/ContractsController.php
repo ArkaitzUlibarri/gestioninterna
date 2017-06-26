@@ -29,7 +29,7 @@ class ContractsController extends Controller
 
 	public function index(Request $request)
 	{
-		$contracts = $this->contractRepository->search($request->all(), false);
+		$contracts = $this->contractRepository->search($request->all(), true);
 
 		$contractTypes = ContractType::all();
 

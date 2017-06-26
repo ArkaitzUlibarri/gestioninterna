@@ -9,8 +9,8 @@
         <div class="clearfix"></div>
     </div>
 
-    <div class="panel-body">            
-        <table class="table table-hover table-condensed" style="margin: 2em 0 5em 0;">
+    <div class="panel-body">
+        <table class="table table-hover table-condensed">
             <thead>
                 <th>#</th>
                 <th>Project</th>
@@ -49,6 +49,8 @@
                 @endforeach
             </tbody>
         </table>
+
+        {{ $projects->links() }}
 
         <hr>
         

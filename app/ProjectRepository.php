@@ -28,7 +28,7 @@ class ProjectRepository
 
     public function search(array $data = array(), $paginate = false)
     {
-        $ids = array_keys(Auth::user()->PMProjects());//Proyectos PM
+        $ids = array_keys(Auth::user()->PMProjects());
         $data = array_only($data, $this->filters);
         $data = array_filter($data, 'strlen');
 
@@ -42,7 +42,6 @@ class ProjectRepository
                 'projects.start_date',
                 'projects.end_date'
             )
-            
             ->orderBy('name','asc');
 
         foreach ($data as $field => $value) {
@@ -53,11 +52,11 @@ class ProjectRepository
         }
 
         if(! Auth::user()->isAdmin() && Auth::user()->isPM() && $ids != []){
-            $q = $q->whereIn('projects.id',$ids);//Filtro PM      
+            $q = $q->whereIn('projects.id',$ids);
         }
        
         return $paginate
-            ? $q->paginate(10)->appends($data)
+            ? $q->paginate(15)->appends($data)
             : $q->get();
     }
 
