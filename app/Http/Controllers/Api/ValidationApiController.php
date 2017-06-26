@@ -94,7 +94,7 @@ class ValidationApiController extends ApiController
 				DB::raw('WEEK(working_report.created_at) as date_week'),
 				DB::raw('UPPER(projects.name) as project'),
 				DB::raw('UPPER(working_report.training_type) as training_type'),
-				DB::raw('UPPER(absences.name) as absences'),
+				DB::raw('UPPER(absences.name) as absence'),
 				DB::raw('SUM(working_report.time_slots* 0.25) as time_slot')
 			)
 			->groupBy(['user_id', 'date_year', 'date_week', 'working_report.project_id', 'training_type', 'absence_id'])
@@ -202,7 +202,7 @@ class ValidationApiController extends ApiController
 	 */
 	private function activity($data)
 	{
-		foreach (['project', 'absences', 'training_type'] as $activity) {
+		foreach (['project', 'absence', 'training_type'] as $activity) {
 			if($data->$activity != null) {
 				return $data->$activity;
 			}

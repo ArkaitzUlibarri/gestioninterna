@@ -198,7 +198,7 @@
 							<span class="glyphicon glyphicon-floppy-disk"></span> Save
 						</button>
 						<button title="Update Task" class="btn btn-primary" :disabled="formTaskFilled==false" v-on:click="editTask" v-show="editIndex!=-1">
-							<span class="glyphicon glyphicon-floppy-disk"></span> Save
+							<span class="glyphicon glyphicon-floppy-disk"></span> Update
 						</button>
 						<button title="New Task" class="btn btn-primary" v-show="editIndex!=-1" v-on:click="initializeTask">
 							New Task

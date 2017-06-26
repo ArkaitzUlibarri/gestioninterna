@@ -56,7 +56,9 @@ class GroupsController extends Controller
 
     private function getGroupsProjects()
     {
-        return DB::table('groups')
+        $projects = Auth::user()->PMProjects();
+
+        $q = DB::table('groups')
             ->select(
                 'groups.project_id',
                 'projects.name as project',
@@ -67,8 +69,13 @@ class GroupsController extends Controller
             ->join('projects','groups.project_id','=','projects.id')
             //->where('groups.enabled',1)
             ->where('projects.end_date',null)
-            ->orderBy('project_id','asc')
-            ->get();
+            ->orderBy('project_id','asc');
+
+            if(!Auth::user()->isAdmin()){
+                $q = $q->whereIn('projects.name',$projects);
+            }
+            
+            return $q->get();
     }
 
 }

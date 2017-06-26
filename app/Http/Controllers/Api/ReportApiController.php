@@ -9,6 +9,8 @@ use App\Workingreport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Carbon\Carbon;
+use App\User;
 
 class ReportApiController extends ApiController
 {
@@ -85,7 +87,7 @@ class ReportApiController extends ApiController
 		$id = DB::table('working_report')
 			->insertGetId($array);
 
-		return $this->respond($id);
+		return $this->respond($array);
 
 	}
 
@@ -158,6 +160,8 @@ class ReportApiController extends ApiController
 			return $this->respondNotAcceptable($validator->errors()->all());
 		}
 
+		$teleworking = $this->teleworking( $request['created_at'],$request['user_id']);
+
 		//Query de extracción del último reporte
 		$results = DB::select(DB::raw(
 				"INSERT INTO working_report (
@@ -173,17 +177,41 @@ class ReportApiController extends ApiController
 					time_slots,
 					job_type
 				)
-				SELECT user_id, :reportdate as created_at, activity, project_id, group_id, category_id ,training_type, course_group_id, absence_id, time_slots, job_type
+				SELECT user_id, :reportdate as created_at, activity, project_id, group_id, category_id ,training_type, course_group_id, absence_id, time_slots, 
+				CASE activity  
+				  when 'project' then :teleworking  
+				  when 'absence' then null  
+				  when 'training' then 'on site work'  
+				end as job_type 
 				FROM working_report
-				WHERE user_id = :user and created_at = (SELECT MAX(created_at) FROM working_report where created_at <> :report and user_id = :userfilter);"
+				WHERE user_id = :user and created_at = (
+					SELECT MAX(created_at) FROM working_report where created_at < :report and user_id = :userfilter
+				);"
 			), array(
-				'reportdate' => $request['created_at'],
-				'user'       => $request['user_id'],
-				'report'     => $request['created_at'],
-				'userfilter' => $request['user_id'],
+				'reportdate'  => $request['created_at'],
+				'teleworking' => $teleworking,
+				'user'        => $request['user_id'],
+				'report'      => $request['created_at'],
+				'userfilter'  => $request['user_id'],
 			)
 		);
 
-		return $this->respond("Copied");	
+		return $this->respond("COPIED");
+	}
+
+	private function teleworking($date,$user_id)
+	{
+		//Teleworking
+		$dayOfWeek = Carbon::createFromFormat('Y-m-d', $date)->dayOfWeek;
+		$day = config('options.daysWeek')[$dayOfWeek - 1];
+
+		$user = User::find($user_id);
+		
+		if ($user->hasTeleworking()) {
+			$data = $user->contracts->where('end_date',null)->first()->teleworking->where('end_date',null)->first();
+			return $data[$day] ? "teleworking": "on site work";
+		}
+
+		return null;
 	}
 }

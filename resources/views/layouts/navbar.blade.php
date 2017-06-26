@@ -25,7 +25,6 @@
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <!--<li><a href="{{ route('register') }}">Register</a></li>-->
                         @else      
-                            <li><a href="{{ url('users' . '/' . Auth::user()->id . '/') }}">Profile</a></li>       
                             @if(Auth::user()->isAdmin())
                                  <li><a href="{{ url('users') }}">Users</a></li> 
                                  <li><a href="{{ url('contracts') }}">Contracts</a></li>
@@ -53,6 +52,9 @@
 
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
+                                        <a href  = "{{ url('users' . '/' . Auth::user()->id . '/') }}">
+                                            <span class="glyphicon glyphicon-user"></span> Profile
+                                        </a>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
                                              document.getElementById('logout-form').submit();">
