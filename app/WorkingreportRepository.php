@@ -27,7 +27,7 @@ class WorkingreportRepository
 		return new Workingreport;
 	}
 
-    public function search(array $data = array(), $user_id, $projects)
+    public function search(array $data = array(), $user_id, $projects , $paginate = false)
     {
         $data = array_only($data, $this->filters);
         $data = array_filter($data, 'strlen');
@@ -57,28 +57,24 @@ class WorkingreportRepository
         //Filtro por Admin,PM y Proyecto
         //**********************************************************************
         if($data != []){
-            if(! $data['admin']){             
-                if($data['pm']){
-                    //Project Manager
-                    if(isset($data['project'])){
-                        if ($data['project'] == "All") {
-                            $users = $this->usersByProjects($projects);                             
-                        }
-                        else{
-                            $users = $this->usersByProject($data['project']);                                 
-                        }
-                        $q = $q->whereIn('user_id',$users);
+            if(! $data['admin'] && $data['pm']){//Project Manager           
+                //++++++++++++++++++++++++++++++++++++++++++++++
+                if(isset($data['project'])){
+                    if ($data['project'] == "All") {
+                        $users = $this->usersByProjects($projects);                             
                     }
                     else{
-                        $this->filterByUser($q,$user_id);
-                  }
+                        $users = $this->usersByProject($data['project']);                                 
+                    }
+                    $q = $q->whereIn('user_id',$users);
                 }
-                else{//User
-                     $this->filterByUser($q,$user_id);
+                else{
+                    $this->filterByUser($q,$user_id);
                 }
-
+                //++++++++++++++++++++++++++++++++++++++++++++++
             }
-            else{//Admin
+            elseif($data['admin']){//Admin
+                //++++++++++++++++++++++++++++++++++++++++++++++
                 if(isset($data['project'])){
                     if($data['project'] == "All"){
                         $projects = array_pluck($projects, ['name']);
@@ -90,8 +86,12 @@ class WorkingreportRepository
                     $q = $q->whereIn('user_id',$users);
                 }  
                 else{
-                        $this->filterByUser($q,$user_id);
-                }           
+                    $this->filterByUser($q,$user_id);
+                }  
+                //++++++++++++++++++++++++++++++++++++++++++++++
+            }
+            else{//User
+                $this->filterByUser($q,$user_id);
             }
         }
         else{

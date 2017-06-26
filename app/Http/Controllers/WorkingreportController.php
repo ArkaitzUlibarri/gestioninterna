@@ -48,7 +48,8 @@ class WorkingReportController extends Controller
 		$pm        = $auth_user->isPM();
 		$projects  = $admin ? Project::all()->where('end_date', null) : $auth_user->PMProjects();
 
-		$workingreports = $this->workingreportRepository->search($request->all(), $auth_user->id, $projects);//$workingreports = $this->getReportsPerUserPerDay($user_id,$admin);
+		$workingreports = $this->workingreportRepository->search($request->all(), $auth_user->id, $projects,true);
+		//$workingreports = $this->getReportsPerUserPerDay($user_id,$admin);
 		
 		$filter = array(	
 			'project'    => $request->get('project'),

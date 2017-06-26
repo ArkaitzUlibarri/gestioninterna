@@ -5,12 +5,13 @@
 
 	<input type="text" class="form-control input-sm" name="name" placeholder="Employee name" value="{{ $filter['name'] }}">
 
-	<select name="type" class="form-control input-sm">
-		<option selected="true" value="">Status</option>
-		@foreach (config('options.status') as $date)
-			<option value="{{ $date }}" {{ $date == $filter['type'] ? 'selected' : '' }}>{{ ucfirst($date) }}</option>
-		@endforeach
-	</select>
+	@if(Auth::user()->isAdmin())
+		<select name="type" class="form-control input-sm">
+			<option value="" {{ "" == $filter['type'] ? 'selected' : '' }}>Active</option>			
+			<option value="inactive" {{ "inactive" == $filter['type'] ? 'selected' : '' }}>Inactive</option>
+			<option value="all" {{ "all" == $filter['type'] ? 'selected' : '' }}>All</option>	
+		</select>
+	@endif
 
 	<button type="submit" title="Search" class="btn btn-default btn-sm">
 		<span class="glyphicon glyphicon-filter"></span> Filter
