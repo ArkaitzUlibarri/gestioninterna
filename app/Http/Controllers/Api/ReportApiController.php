@@ -203,6 +203,8 @@ class ReportApiController extends ApiController
 	{
 		//Teleworking
 		$dayOfWeek = Carbon::createFromFormat('Y-m-d', $date)->dayOfWeek;
+		$dayOfWeek = $dayOfWeek ==0 ? 7 : $dayOfWeek;//Convertir Domingo
+		
 		$day = config('options.daysWeek')[$dayOfWeek - 1];
 
 		$user = User::find($user_id);

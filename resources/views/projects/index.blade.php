@@ -29,11 +29,11 @@
                         <td>{{ empty($project->end_date) ? "In progress" : $project->end_date }}</td>
                         <td>
                             @if(empty($project->end_date))
-                                <a class="btn btn-primary btn-sm"
+                                <a class="btn btn-default btn-sm"
                                    type="button" href="{{ url('projects' . '/' . $project->id . '/' . 'edit') }}">
                                    <span class="glyphicon glyphicon-edit"></span> Edit
                                 </a>
-                                <a class="btn btn-primary btn-sm"
+                                <a class="btn btn-default btn-sm"
                                    type="button" href="{{ url('projects' . '/' . $project->id . '/addgroup/' . '/') }}">
                                    Add Groups
                                 </a>

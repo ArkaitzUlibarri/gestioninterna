@@ -9,7 +9,7 @@
 			<h2>{{ ucfirst($user->fullname) }}</h2>				
 		</div>
 	</div>
-
+	<!--
 	<div class="panel panel-primary">
 
 		<div class="panel-heading">
@@ -38,7 +38,7 @@
 		</div>
 		
 	</div>
-
+	-->
 	<div class="panel panel-primary">
 
 		  <div class="panel-heading">

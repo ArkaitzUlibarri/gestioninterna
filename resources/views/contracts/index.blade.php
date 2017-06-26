@@ -29,7 +29,7 @@
                         <td>{{ empty($contract->end_date) ? "In progress" : "$contract->end_date"}}</td>          
                         <td>
                             @if (empty($contract->end_date))
-                                <a title="Edit" class="btn btn-primary btn-sm" type="button" 
+                                <a title="Edit" class="btn btn-default btn-sm" type="button" 
                                    href="{{ url('contracts/' . $contract->id . '/edit') }}">
                                    <span class="glyphicon glyphicon-edit"></span> Edit
                                 </a>
@@ -53,7 +53,7 @@
         @include('layouts.errors')
 
         <div align="right" class="form-group">  
-            <a type="button" title="Add Contract" class="btn btn-default" href="{{ url('contracts/create') }}">
+            <a type="button" title="Add Contract" class="btn btn-success" href="{{ url('contracts/create') }}">
                 Add Contract
             </a>
         </div>
