@@ -20,11 +20,9 @@ class WorkingReportTableSeeder extends Seeder
 		$users           = $this->users();
 		$projects        = $this->projects();
 		$absences        = $this->absences();
-		
 		$activities      = config('options.activities');
 		$jobTypes        = config('options.typeOfJob');
 		$trainingOptions = config('options.training');
-		
 		$today           = SeederConfig::TODAY();
 		$timeSlots       = SeederConfig::TIME_SLOTS;
 
@@ -32,10 +30,10 @@ class WorkingReportTableSeeder extends Seeder
 
 			//Validaciones
 			$pmValidation = $faker->boolean(75);
-			if($pmValidation){
+			if($pmValidation) {
 				$adminValidation = $faker->boolean(40);
 			}
-			else{
+			else {
 				$adminValidation = false;
 			}
 			
@@ -47,7 +45,6 @@ class WorkingReportTableSeeder extends Seeder
 					$group          = $faker->randomElement($groups);
 					$categoriesUser = $this->categoryUser($user);
 					$category       = $faker->randomElement($categoriesUser);
-					
 					$projectId      = $project;
 					$groupId        = $group;	
 					$categoryId     = $category;

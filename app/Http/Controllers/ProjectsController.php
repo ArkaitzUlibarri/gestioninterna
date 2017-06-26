@@ -23,13 +23,13 @@ class ProjectsController extends Controller
 
     public function index(Request $request)
     {
-		$projects   = $this->projectRepository->search($request->all(), false);
-		$customers  = Customer::all();
+		$projects = $this->projectRepository->search($request->all(), true);
+		$customers = Customer::all();
 
 		$filter = array(	
-			'name'  => $request->get('name'),
+			'name' => $request->get('name'),
 			'customer' => $request->get('customer'),
-			'type'     => $request->get('type'),
+			'type' => $request->get('type'),
 		);
 
     	return view('projects.index',compact('projects','customers','filter'));
@@ -37,9 +37,9 @@ class ProjectsController extends Controller
 
     public function edit($id)
     {
-		$project     = Project::find($id);
-		$customers   = Customer::all();
-		$PM_Users    = $this->getPMs();
+		$project = Project::find($id);
+		$customers = Customer::all();
+		$PM_Users = $this->getPMs();
 
     	return view('projects.edit',compact('project','customers','PM_Users'));
     }
@@ -135,10 +135,9 @@ class ProjectsController extends Controller
 				'categories.description as description',*/
 				'category_user.user_id as id',
 				'users.name as username',
-				'users.lastname_1 as lastname_1',
-				'users.lastname_2 as lastname_2',
+				'users.lastname as lastname',
 				'users.role as role',
-				DB::raw("CONCAT(users.name, ' ', users.lastname_1) as fullname")
+				DB::raw("CONCAT(users.name, ' ', users.lastname) as fullname")
 			)
 			->where('code','RP')
 			->orWhere('code','RTP')

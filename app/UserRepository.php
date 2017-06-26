@@ -35,7 +35,7 @@ class UserRepository
 
         $q = $this->getModel()
             ->select(
-                DB::raw("users.id, users.name, users.lastname_1, users.lastname_2,users.email,t.contract_type_id,t.start_date,t.estimated_end_date,t.end_date")
+                DB::raw("users.id, users.name, users.lastname, users.email, t.contract_type_id, t.start_date, t.estimated_end_date, t.end_date")
             )
             ->LeftJoin(DB::raw(
                 "(SELECT u.user_id,u.contract_type_id,r.start_date, u.estimated_end_date, u.end_date
@@ -68,7 +68,7 @@ class UserRepository
         }
        
         return $paginate
-            ? $q->paginate(10)->appends($data)
+            ? $q->paginate(15)->appends($data)
             : $q->get();
     }
 
@@ -81,8 +81,7 @@ class UserRepository
     public function filterByName($q, $value)
     {
         $q  ->where('name', 'LIKE', "%{$value}%")
-            ->orWhere('lastname_1', 'LIKE', "%{$value}%")
-            ->orWhere('lastname_2', 'LIKE', "%{$value}%");
+            ->orWhere('lastname', 'LIKE', "%{$value}%");
     }
 
     /**
@@ -131,7 +130,7 @@ class UserRepository
         return $users_ids;
     }
     /* 
-    SELECT users.id, users.name, users.lastname_1, users.lastname_2,users.email,t.contract_type_id,t.start_date,t.estimated_end_date,t.end_date
+    SELECT users.id, users.name, users.lastname,users.email,t.contract_type_id,t.start_date,t.estimated_end_date,t.end_date
     FROM users 
     LEFT JOIN (
            SELECT u.user_id,u.contract_type_id,r.start_date, u.estimated_end_date, u.end_date

@@ -31,7 +31,7 @@ Route::get('/access', function(){
 Route::get('users/{user}/categories/', 'CategoriesController@edit');
 Route::get('users/{user}/groups/', 'GroupsController@editUser');
 Route::resource('users', 'UsersController', ['except' => [
-    'destroy'
+    'destroy', 'create', 'store'
 ]]);
 
 //Contracts

@@ -88,7 +88,7 @@
 				<div class="form-group">			
 					<select class="form-control" v-model="user_report">
 						@foreach($users as $user)				
-						<option value="{{$user->id}}">{{ucfirst($user->name)}} {{ucfirst($user->lastname_1)}}</option>
+						<option value="{{$user->id}}">{{ucfirst($user->name)}} {{ucfirst($user->lastname)}}</option>
 						@endforeach
 					</select>
 				</div>

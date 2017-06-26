@@ -85,7 +85,7 @@ class WorkingReportController extends Controller
 		$query = DB::table('working_report')
 			->join('users','working_report.user_id','=','users.id') 
 			->select(
-				DB::raw("CONCAT(users.name, ' ', users.lastname_1 ) as fullname"),
+				DB::raw("CONCAT(users.name, ' ', users.lastname) as fullname"),
 				'working_report.created_at',
 				'working_report.user_id',
 				DB::raw("sum(time_slots)*0.25 as horas_reportadas"),
@@ -106,7 +106,7 @@ class WorkingReportController extends Controller
 	{
 		return DB::table('working_report')
 			->select(
-				DB::raw("CONCAT(users.name, ' ', users.lastname_1 ) as fullname"),
+				DB::raw("CONCAT(users.name, ' ', users.lastname) as fullname"),
 				'working_report.created_at',
 				'working_report.user_id',
 				DB::raw("sum(time_slots)*0.25 as horas_reportadas")
@@ -160,8 +160,8 @@ class WorkingReportController extends Controller
 			->select(
 				'category_user.user_id',
 				'users.name as username',
-				'users.lastname_1',
-				DB::raw("CONCAT(users.name, ' ', users.lastname_1) as fullname"),
+				'users.lastname',
+				DB::raw("CONCAT(users.name, ' ', users.lastname) as fullname"),
 				'category_user.category_id',
 				'categories.code as code',
 				'categories.name as category',

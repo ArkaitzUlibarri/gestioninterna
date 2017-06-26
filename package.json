@@ -12,9 +12,8 @@
     "cross-env": "^3.2.3",
     "jquery": "^3.1.1",
     "laravel-mix": "^0.8.3",
+    "moment": "^2.18.1",
+    "toastr": "^2.1.2",
     "vue": "^2.2.4"
-  },
-  "dependencies": {
-    "toastr": "^2.1.2"
   }
 }

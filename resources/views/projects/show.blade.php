@@ -1,42 +1,25 @@
 @extends('layouts.app')
 
 @section('content')
-	<div class="container">
 
-		<dl class="dl-horizontal">
-			<dt>Project name</dt>
-			<dd>{{ strtoupper($project->name) }}</dd>
-		</dl>
+<div class="row">
+    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+        @include('projects.card')
+    </div>
+</div>
 
-		<dl class="dl-horizontal">
-			<dt>Description</dt>
-			<dd>{{ $project->description }}</dd>
-		</dl>
-
-		<dl class="dl-horizontal">
-			<dt>Project Manager</dt>
-			<dd>{{ ucfirst($project->pm->fullname)}}</dd>
-		</dl>
-
-		<dl class="dl-horizontal">
-			<dt>Customer</dt>
-			<dd>{{ strtoupper($project->customer->name)}}</dd>
-		</dl>
-
-		<dl class="dl-horizontal">
-			<dt>Start date</dt>
-			<dd>{{ $project->start_date}}</dd>
-		</dl>
-
-		<dl class="dl-horizontal">
-			<dt>End date</dt>
-			<dd>{{empty($project->end_date) ? "In progress" : $project->end_date}}</dd>
-		</dl>	
-
-		@include('groups.showProjects')
-
-		<dl class="dl-horizontal">
-			<dt><a class="btn btn-default" href="{{ url('projects') }}">Back</a></dt>
-		</dl>	
+@if(count($project->groups)>0)
+	<div class="row">
+		<div class="col-xs-12 col-sm-offset-1 col-sm-10">
+			@include('groups.showProjects')
+		</div>
 	</div>
+@endif
+
+<div class="row">
+    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+        <a title="Back" class="btn btn-default" href="{{ url('projects') }}">Back</a>
+    </div>
+</div>
+
 @endsection

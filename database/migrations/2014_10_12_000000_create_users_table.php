@@ -18,12 +18,11 @@ class CreateUsersTable extends Migration
          */
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('username')->unique();
+            $table->enum('role', config('options.roles'))->default('user');
             $table->string('name');
-            $table->string('lastname_1');
-            $table->string('lastname_2')->nullable();
-            //$table->string('DNI',9)->unique();
-            $table->enum('role',config('options.roles'));
-            $table->string('email')->unique();
+            $table->string('lastname');
+            $table->string('email');
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

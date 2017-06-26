@@ -29,7 +29,8 @@ class ContractsController extends Controller
 
 	public function index(Request $request)
 	{
-		$contracts = $this->contractRepository->search($request->all(), false);
+		$contracts = $this->contractRepository->search($request->all(), true);
+
 		$contractTypes = ContractType::all();
 
 		$filter = array(	
@@ -198,7 +199,7 @@ class ContractsController extends Controller
 			->select(
 				'id',
 				'name',
-				DB::raw("CONCAT(name, ' ', lastname_1) as full_name")
+				DB::raw("CONCAT(name, ' ', lastname) as full_name")
 			)
 			->orderBy('full_name', 'ASC')
 			->get();
@@ -219,9 +220,9 @@ class ContractsController extends Controller
 			->join('users','contracts.user_id','=','users.id')
 			->where('contracts.id',$id)
 			->select(
-				'users.name as name',
-				'users.lastname_1 as lastname_1',
-				'users.lastname_2 as lastname_2',
+				//'users.name as name',
+				//'users.lastname as lastname',
+				DB::raw("concat(users.name, ' ', users.lastname) as full_name"),
 				'contracts.id',
 				'contract_types.name as contract_type',	
 				'contracts.start_date',

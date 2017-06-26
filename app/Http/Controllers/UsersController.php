@@ -22,7 +22,8 @@ class UsersController extends Controller
 
     public function index(Request $request)
     {
-        $users = $this->userRepository->search($request->all(), false);
+        $users = $this->userRepository->search($request->all(), true);
+
         $filter = array(    
             'name' => $request->get('name'),
             'type' => $request->get('type'),
@@ -50,6 +51,8 @@ class UsersController extends Controller
         return view('users.show',compact('user','roles','categories','groups','contracts'));
     }
 
+
+/*
     public function create()
     {
         $roles = config('options.roles');
@@ -67,7 +70,7 @@ class UsersController extends Controller
 
         return redirect('users');
     }
-
+*/
     public function update(UserFormRequest $request,$id)
     {
         $user = User::find($id);

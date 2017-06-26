@@ -1,9 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container" style="margin-bottom: 100px;">
-
-    
+<div style="margin-bottom: 100px;">
+ 
     <div class="row form-inline">
         @include('validation.filter')
     </div>

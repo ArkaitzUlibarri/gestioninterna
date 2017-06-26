@@ -14,7 +14,7 @@
 
 		<div class="panel-heading">
 		    User Details
-		 </div>
+		</div>
 
 		<div class="panel-body">
 			<div class="row">
