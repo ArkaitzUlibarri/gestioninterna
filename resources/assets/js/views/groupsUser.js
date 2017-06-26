@@ -66,7 +66,6 @@ const app = new Vue({
 		this.info.serverPath = this.getPath();
 		this.newGroupUser.user_id = this.user.id;
 		this.fetchData();
-		this.project();
 	},
 
 	methods: {
@@ -159,6 +158,16 @@ const app = new Vue({
 			.then(function (response) {
 				vm.array = response.data;
 				console.log(response.data);
+				//****************************************
+				vm.project();
+
+				for (let i = vm.array.length - 1; i >= 0; i--) {
+					if(vm.projectList.indexOf(vm.array[i].project) == -1){	
+						vm.array.splice(i,1);								
+					}	
+				}
+						
+				//****************************************
 			})
 			.catch(function (error) {
 				console.log(error);
