@@ -1831,7 +1831,7 @@ function loadLocale(name) {
             module && module.exports) {
         try {
             oldLocale = globalLocale._abbr;
-            __webpack_require__(171)("./" + name);
+            __webpack_require__(170)("./" + name);
             // because defineLocale currently also sets the global locale, we
             // want to undo that for lazy loaded locales
             getSetGlobalLocale(oldLocale);
@@ -4466,7 +4466,7 @@ return hooks;
 
 })));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(193)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(189)(module)))
 
 /***/ }),
 /* 1 */,
@@ -15565,8 +15565,11 @@ return zhTw;
 
 /***/ }),
 /* 131 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_Loading__ = __webpack_require__(163);
 
 
 /**
@@ -15600,6 +15603,25 @@ window.axios = __webpack_require__(9);
 window.axios.defaults.headers.common['X-CSRF-TOKEN'] = window.Laravel.csrfToken;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
+
+
+// Add a request interceptor
+window.axios.interceptors.request.use(function (config) {
+  __WEBPACK_IMPORTED_MODULE_0__core_Loading__["a" /* default */].show();
+  return config;
+}, function (error) {
+  return Promise.reject(error);
+});
+
+// Add a response interceptor
+window.axios.interceptors.response.use(function (response) {
+  __WEBPACK_IMPORTED_MODULE_0__core_Loading__["a" /* default */].hide();
+  return response;
+}, function (error) {
+  __WEBPACK_IMPORTED_MODULE_0__core_Loading__["a" /* default */].hide();
+  return Promise.reject(error);
+});
+
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
@@ -15627,11 +15649,11 @@ window.moment.locale('en');
  * toastr is a Javascript library for non-blocking notifications. jQuery is required.
  */
 
-window.toastr = __webpack_require__(172);
-toastr.options.timeOut = 5000;
+window.toastr = __webpack_require__(171);
+toastr.options.timeOut = 3000;
 toastr.options.newestOnTop = true;
 toastr.options.progressBar = false;
-toastr.options.positionClass = 'toast-bottom-center';
+toastr.options.positionClass = 'toast-bottom-right';
 toastr.options.preventDuplicates = true;
 
 /**
@@ -15671,7 +15693,37 @@ window.Event = new Vue();
 /* 160 */,
 /* 161 */,
 /* 162 */,
-/* 163 */,
+/* 163 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Loading = function () {
+    function Loading() {
+        _classCallCheck(this, Loading);
+    }
+
+    _createClass(Loading, null, [{
+        key: 'show',
+        value: function show() {
+            document.body.className += ' loading';
+        }
+    }, {
+        key: 'hide',
+        value: function hide() {
+            document.body.className = document.body.className.replace('loading', '');
+        }
+    }]);
+
+    return Loading;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (Loading);
+
+/***/ }),
 /* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18061,8 +18113,7 @@ if (typeof jQuery === 'undefined') {
 /* 167 */,
 /* 168 */,
 /* 169 */,
-/* 170 */,
-/* 171 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -18311,10 +18362,10 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 171;
+webpackContext.id = 170;
 
 /***/ }),
-/* 172 */
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -18746,10 +18797,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
         })();
     }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-}(__webpack_require__(191)));
+}(__webpack_require__(187)));
 
 
 /***/ }),
+/* 172 */,
 /* 173 */,
 /* 174 */,
 /* 175 */,
@@ -18764,11 +18816,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
 /* 184 */,
 /* 185 */,
 /* 186 */,
-/* 187 */,
-/* 188 */,
-/* 189 */,
-/* 190 */,
-/* 191 */
+/* 187 */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -18777,8 +18825,8 @@ module.exports = function() {
 
 
 /***/ }),
-/* 192 */,
-/* 193 */
+/* 188 */,
+/* 189 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -18806,11 +18854,11 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 194 */
+/* 190 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(131);
 
 
 /***/ })
-],[194]);
+],[190]);

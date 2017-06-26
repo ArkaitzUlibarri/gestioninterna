@@ -27,15 +27,15 @@ class ContractFormRequest extends FormRequest
     {
         $response = array();
         $response = [  
-                         'user_id'            => 'required|exists:users,id',
-                         'contract_type_id'   => 'required|exists:contract_types,id',
-                         'estimated_end_date' => 'nullable|date|after:start_date|date_format:Y-m-d',
-                         'end_date'           => 'nullable|date|after:start_date|date_format:Y-m-d',
-                         'national_days_id'   => 'required|exists:bank_holidays_codes,id',
-                         'regional_days_id'   => 'required|exists:bank_holidays_codes,id',
-                         'local_days_id'      => 'required|exists:bank_holidays_codes,id',
-                         'week_hours'         => 'required|numeric|min:0|max:40'
-                    ];
+             'user_id'            => 'required|exists:users,id',
+             'contract_type_id'   => 'required|exists:contract_types,id',
+             'estimated_end_date' => 'nullable|date|after:start_date|date_format:Y-m-d',
+             'end_date'           => 'nullable|date|after:start_date|date_format:Y-m-d',
+             'national_days_id'   => 'required|exists:bank_holidays_codes,id',
+             'regional_days_id'   => 'required|exists:bank_holidays_codes,id',
+             'local_days_id'      => 'required|exists:bank_holidays_codes,id',
+             'week_hours'         => 'required|numeric|min:0|max:40'
+        ];
 
         $lastContract = $this->getPreviousContracts();
         

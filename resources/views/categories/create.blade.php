@@ -12,35 +12,6 @@
 
 	<div class="panel panel-primary">
 
-		<div class="panel-heading">
-		    User Details
-		 </div>
-
-		<div class="panel-body">
-			<div class="row">
-
-				<div class="col-xs-12 col-sm-6">	
-					<label>Employee</label>
-					<input class="form-control" type="text" placeholder="{{$user->fullname}}" readonly>
-				</div>	
-
-				<div class="col-xs-12 col-sm-4">
-					<label>Email</label>
-					<input class="form-control" type ="text" placeholder="{{$user->email}}" readonly>
-				</div>	
-
-				<div class="col-xs-12 col-sm-2">
-					<label>Role</label>
-					<input class="form-control" type ="text" placeholder="{{$user->role}}" readonly>
-				</div>				
-
-			</div>
-		</div>
-		
-	</div>
-
-	<div class="panel panel-primary">
-
 		  <div class="panel-heading">
 		    	Categories for this user
 		  </div>
@@ -84,7 +55,7 @@
 		</div>
 	</div>
 
-	<a class="btn btn-default" href="{{ url('users') }}">Back</a>
+	<a class="btn btn-default" href="{{ url('users'.'/'.$user->id.'/'.'edit') }}">Back</a>
 
 </div>
 
@@ -93,7 +64,7 @@
 
 @push('script-bottom')
 <script type="text/javascript">
-	var user       = <?php echo json_encode($user);?>;
+	var user = <?php echo json_encode($user);?>;
 	var categories = <?php echo json_encode($categories);?>;
 </script>
 

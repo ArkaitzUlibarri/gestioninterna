@@ -13,11 +13,12 @@ const { mix } = require('laravel-mix');
 
 mix.js('resources/assets/js/views/projects.js', 'public/js')
    .js('resources/assets/js/views/reports.js', 'public/js')
+   .js('resources/assets/js/views/user.js', 'public/js')
    .js('resources/assets/js/views/validate.js', 'public/js')
    .js('resources/assets/js/views/teleworking.js', 'public/js')
    .js('resources/assets/js/views/reductions.js', 'public/js')
    .js('resources/assets/js/views/groupsUser.js', 'public/js')
-   .js('resources/assets/js/views/categories.js', 'public/js')
+   //.js('resources/assets/js/views/categories.js', 'public/js')
    .js('resources/assets/js/views/weeklyValidation.js', 'public/js')
    .js('resources/assets/js/bootstrap.js', 'public/js')
    .sass('resources/assets/sass/app.scss', 'public/css')

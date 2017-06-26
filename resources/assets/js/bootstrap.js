@@ -33,6 +33,25 @@ window.axios = require('axios');
 window.axios.defaults.headers.common['X-CSRF-TOKEN'] = window.Laravel.csrfToken;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
+import Loading from './core/Loading';
+
+// Add a request interceptor
+window.axios.interceptors.request.use(function (config) {
+		Loading.show();
+		return config;
+	}, function (error) {
+		return Promise.reject(error);
+	});
+
+// Add a response interceptor
+window.axios.interceptors.response.use(function (response) {
+		Loading.hide();
+		return response;
+	}, function (error) {
+		Loading.hide();
+		return Promise.reject(error);
+	});
+
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
@@ -61,10 +80,10 @@ window.moment.locale('en');
  */
 
 window.toastr = require('toastr');
-toastr.options.timeOut = 5000;
+toastr.options.timeOut = 3000;
 toastr.options.newestOnTop = true;
 toastr.options.progressBar = false;
-toastr.options.positionClass = 'toast-bottom-center';
+toastr.options.positionClass = 'toast-bottom-right';
 toastr.options.preventDuplicates = true;
 
 /**

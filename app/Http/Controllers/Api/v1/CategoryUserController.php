@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
@@ -10,7 +10,7 @@ use App\CategoryUser;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class CategoryUserApiController extends ApiController
+class CategoryUserController extends ApiController
 {
 
 	/**
@@ -21,7 +21,7 @@ class CategoryUserApiController extends ApiController
 	public function index(Request $request)
 	{
 		$validator = Validator::make($request->all(), [
-			'id'    => 'required|numeric',
+			'id' => 'required|numeric',
 		]);
 
 		if ($validator->fails()) {
@@ -34,8 +34,6 @@ class CategoryUserApiController extends ApiController
 				'category_user.id as id',
 				'category_user.user_id as user_id',
 				'category_user.category_id as category_id',
-				//'categories.name as name',
-				//'categories.description as description',
 				DB::raw("CONCAT(categories.name, ' - ', categories.description ) as category")
 
 			)

@@ -7,8 +7,8 @@
   "/js/reports.js": "/js/reports.js",
   "/js/reductions.js": "/js/reductions.js",
   "/js/groupsUser.js": "/js/groupsUser.js",
-  "/js/categories.js": "/js/categories.js",
   "/js/weeklyValidation.js": "/js/weeklyValidation.js",
   "/js/validate.js": "/js/validate.js",
+  "/js/user.js": "/js/user.js",
   "/js/manifest.js": "/js/manifest.js"
 }

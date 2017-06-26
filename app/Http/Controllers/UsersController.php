@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
 use App\User;
 use App\UserRepository;
-use App\Http\Requests\UserFormRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class UsersController extends Controller
 {
@@ -15,11 +14,16 @@ class UsersController extends Controller
     public function __construct(UserRepository $userRepository)
     {
         $this->middleware('auth');
-        //$this->middleware('checkrole',['except' => ['index']]);
         $this->middleware('checkrole');
         $this->userRepository = $userRepository;
     }
 
+    /**
+     * Show all users
+     * 
+     * @param  Request $request
+     * @return View
+     */
     public function index(Request $request)
     {
         $users = $this->userRepository->search($request->all(), true);
@@ -32,50 +36,33 @@ class UsersController extends Controller
     	return view('users.index', compact('users','filter'));
     }
 
-    public function edit($id)
+    /**
+     * User's edit view
+     * 
+     * @param  User
+     * @return View
+     */
+    public function edit(User $user)
     {
-        $user  = User::find($id);
+        $categories = Category::all();
         $roles = config('options.roles');
-		
-    	return view('users.edit',compact('user','roles'));
+        
+    	return view('users.edit', compact('user', 'roles', 'categories'));
     }
 
-    public function show($id)
+    /**
+     * Show user profile
+     * 
+     * @param  User
+     * @return View
+     */
+    public function show(User $user)
     {
-        $user       = User::find($id);
-        $roles      = config('options.roles');
+        $roles = config('options.roles');
         $categories = $user->categories;
-        $groups     = $user->groups->where('enabled',1);
-        $contracts  = $user->contracts;
+        $groups = $user->groups->where('enabled', 1);
+        $contracts = $user->contracts;
         
-        return view('users.show',compact('user','roles','categories','groups','contracts'));
-    }
-
-
-/*
-    public function create()
-    {
-        $roles = config('options.roles');
-        
-        return view('users.create',compact('roles'));
-    }
-
-    public function store(UserFormRequest $request)
-    {
-        $user = new User;
-        $user->fill($request->all());
-        $user->password = bcrypt($request->get('password'));
-        $user->remember_token = str_random(10);
-        $user->save();
-
-        return redirect('users');
-    }
-*/
-    public function update(UserFormRequest $request,$id)
-    {
-        $user = User::find($id);
-        $user->update($request->all());
-
-        return redirect('users');
+        return view('users.show', compact('user', 'roles', 'categories', 'groups', 'contracts'));
     }
 }

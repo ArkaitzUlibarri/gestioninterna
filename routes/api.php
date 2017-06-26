@@ -18,35 +18,35 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-/** 
- * Apis
- */
-Route::get('reports', 'Api\ReportApiController@index');
-Route::get('lastreport', 'Api\ReportApiController@last');
-Route::patch('reports/{id}', 'Api\ReportApiController@update');
-Route::post('reports', 'Api\ReportApiController@store');
-Route::delete('reports/{id}', 'Api\ReportApiController@destroy');
+
+Route::get('reports', 'Api\v1\ReportController@index');
+Route::get('lastreport', 'Api\v1\ReportController@last');
+Route::patch('reports/{id}', 'Api\v1\ReportController@update');
+Route::post('reports', 'Api\v1\ReportController@store');
+Route::delete('reports/{id}', 'Api\v1\ReportController@destroy');
+
+Route::patch('groups/{id}', 'Api\v1\GroupController@update');
+Route::post('groups', 'Api\v1\GroupController@store');
+Route::get('groups', 'Api\v1\GroupController@index');
+Route::delete('groups/{id}', 'Api\v1\GroupController@destroy');
+
+Route::patch('teleworking/{id}', 'Api\v1\TeleworkingController@update');
+Route::post('teleworking', 'Api\v1\TeleworkingController@store');
+Route::get('teleworking', 'Api\v1\TeleworkingController@index');
+Route::delete('teleworking/{id}', 'Api\v1\TeleworkingController@destroy');
+
+Route::patch('reductions/{id}', 'Api\v1\ReductionController@update');
+Route::post('reductions', 'Api\v1\ReductionController@store');
+Route::get('reductions', 'Api\v1\ReductionController@index');
+Route::delete('reductions/{id}', 'Api\v1\ReductionController@destroy');
+
+Route::post('groupsUser', 'Api\v1\GroupUserController@store');
+Route::get('groupsUser', 'Api\v1\GroupUserController@index');
+Route::delete('groupsUser/{id}', 'Api\v1\GroupUserController@destroy');
+
+Route::post('categories', 'Api\v1\CategoryUserController@store');
+Route::get('categories', 'Api\v1\CategoryUserController@index');
+Route::delete('categories/{id}', 'Api\v1\CategoryUserController@destroy');
 
 
-Route::patch('groups/{id}', 'Api\GroupApiController@update');
-Route::post('groups', 'Api\GroupApiController@store');
-Route::get('groups', 'Api\GroupApiController@index');
-Route::delete('groups/{id}', 'Api\GroupApiController@destroy');
-
-Route::patch('teleworking/{id}', 'Api\TeleworkingApiController@update');
-Route::post('teleworking', 'Api\TeleworkingApiController@store');
-Route::get('teleworking', 'Api\TeleworkingApiController@index');
-Route::delete('teleworking/{id}', 'Api\TeleworkingApiController@destroy');
-
-Route::patch('reductions/{id}', 'Api\ReductionApiController@update');
-Route::post('reductions', 'Api\ReductionApiController@store');
-Route::get('reductions', 'Api\ReductionApiController@index');
-Route::delete('reductions/{id}', 'Api\ReductionApiController@destroy');
-
-Route::post('groupsUser', 'Api\GroupUserApiController@store');
-Route::get('groupsUser', 'Api\GroupUserApiController@index');
-Route::delete('groupsUser/{id}', 'Api\GroupUserApiController@destroy');
-
-Route::post('categories', 'Api\CategoryUserApiController@store');
-Route::get('categories', 'Api\CategoryUserApiController@index');
-Route::delete('categories/{id}', 'Api\CategoryUserApiController@destroy');
+Route::patch('users/{id}', 'Api\v1\UsersController@update');

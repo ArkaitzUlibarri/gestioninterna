@@ -1,21 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
-	<div class="container">
-
+<div class="row">
+	<div class="col-xs-12 col-sm-offset-1 col-sm-10">
 		<form method="post" action="{{ url('contracts') }}">
-		
 			{{ csrf_field() }}
 
 			<div class="panel panel-primary">
-
-				<div class="panel-heading">
-			    	Creating a Contract
-			 	</div>
+				<div class="panel-heading">NEW CONTRACT</div>
 
 			 	<div class="panel-body">
 					<div class="row">
-						<div class ="form-group col-xs-12 col-sm-4">
+						<div class="form-group col-xs-12 col-sm-6 col-md-4">
 							<label>Employee:</label>
 							<select name="user_id" class="form-control">
 								<option value="">-</option>	
@@ -24,10 +20,8 @@
 								@endforeach	  
 							</select>
 						</div>
-					</div>
-						
-					<div class="row">
-						<div class ="form-group col-xs-12 col-sm-4">
+
+						<div class="form-group col-xs-12 col-sm-6 col-md-5">
 							<label>Type of contract:</label>
 							<select name="contract_type_id" class="form-control">
 								<option value="">-</option>	
@@ -36,10 +30,8 @@
 								@endforeach			  
 							</select>
 						</div>
-					</div>
 
-					<div class="row">
-						<div class ="form-group col-xs-12 col-sm-2">
+						<div class="form-group col-xs-12 col-sm-6 col-md-3">
 							<label>Weekly working hours:</label>
 							<input name="week_hours" type ="number" min="0" max="40" class="form-control" placeholder="Hours" value="{{old('week_hours')}}">
 						</div>	
@@ -94,19 +86,19 @@
 						</div>
 					</div>
 
-					<div class ="form-group">
-						<a title="Cancel" class="btn btn-default" href="{{ url('contracts') }}">
-							Cancel
-						</a>
-						<button type="submit" title="Save" class="btn btn-primary">
+					@include('layouts.errors')
+
+					<hr>
+
+					<div align="right" class="form-group">		
+						<a class="btn btn-default" href="{{ url('contracts') }}">Cancel</a>
+						<button type ="submit" class="btn btn-primary">
 							<span class="glyphicon glyphicon-floppy-disk"></span> Save
 						</button>
 					</div>
 				</div>	
-			</div>
-				
-			@include('layouts.errors')
+			</div>		
 		</form>
-
 	</div>
+</div>
 @endsection

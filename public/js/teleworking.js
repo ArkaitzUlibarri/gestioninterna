@@ -1,6 +1,6 @@
 webpackJsonp([3],{
 
-/***/ 137:
+/***/ 136:
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -16,7 +16,7 @@ webpackJsonp([3],{
 /**
  * Registro los componentes necesarios.
  */
-Vue.component('teleworking-template', __webpack_require__(178));
+Vue.component('teleworking-template', __webpack_require__(176));
 
 var app = new Vue({
 
@@ -279,7 +279,7 @@ var app = new Vue({
 
 /***/ }),
 
-/***/ 163:
+/***/ 162:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -331,7 +331,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 169:
+/***/ 168:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
@@ -339,18 +339,18 @@ exports.push([module.i, "\n.item-panel {\n    position:relative;\n    border-bot
 
 /***/ }),
 
-/***/ 178:
+/***/ 176:
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(189)
+__webpack_require__(185)
 
 var Component = __webpack_require__(3)(
   /* script */
-  __webpack_require__(163),
+  __webpack_require__(162),
   /* template */
-  __webpack_require__(183),
+  __webpack_require__(180),
   /* scopeId */
   null,
   /* cssModules */
@@ -378,7 +378,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 183:
+/***/ 180:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -418,13 +418,13 @@ if (false) {
 
 /***/ }),
 
-/***/ 189:
+/***/ 185:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(169);
+var content = __webpack_require__(168);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -442,6 +442,14 @@ if(false) {
  // When the module is disposed, remove the <style> tags
  module.hot.dispose(function() { update(); });
 }
+
+/***/ }),
+
+/***/ 195:
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(136);
+
 
 /***/ }),
 
@@ -498,14 +506,6 @@ module.exports = function() {
 	};
 	return list;
 };
-
-
-/***/ }),
-
-/***/ 200:
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(137);
 
 
 /***/ }),
@@ -820,4 +820,4 @@ module.exports = function listToStyles (parentId, list) {
 
 /***/ })
 
-},[200]);
+},[195]);

@@ -2,57 +2,73 @@
 
 @section('content')
 
-<form method="POST" action="{{ url('users', $user->id) }}">
-	{{ csrf_field() }}
-	{{ method_field('PATCH') }}
+<div class="panel panel-primary">
 
-	<input type=hidden name="user_id" type="text" value="{{ $user->id }}">
+	<div class="panel-heading">Edit User</div>
 
-	<div class="panel panel-primary">
+ 	<div class="panel-body">
 
-		<div class="panel-heading">Editing a User</div>
+ 		@include('users.card')
 
-	 	<div class="panel-body">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<div class="form-inline">
+					<div class="form-group">
+						<label>Role:</label>
+						<select name="role"
+								class="form-control input-sm"
+								v-model="role"
+								v-on:change="updateRole(role)">
 
-	 		@include('users.card')
+							@foreach ($roles as $role)
+								<option value="{{ $role }}">{{ ucfirst($role) }}</option>				
+							@endforeach
 
-			<div class="panel panel-default">
-				<div class="panel-body">
-					<div class="form-inline col-xs-12 col-sm-6">
-						<div class="form-group">
-							<label>Role:</label>
-							<select name="role" style="width: 110px;" class="form-control input-sm">
-								@foreach ($roles as $role)
-									<option value="{{ $role }}" {{ $role==$user->role ? "selected" : "" }}>{{ ucfirst($role) }}</option>				
-								@endforeach
-							</select>
-						</div>
+						</select>
 					</div>
-
 				</div>
 			</div>
-
-	  		<div class ="form-group pull-left">
-                <a title="Categories"
-                   class="btn btn-primary"
-                   type="button"
-                   href="{{ url('users/' . $user->id . '/categories') }}">Categories
-            	</a>
-            </div>
-
-            <div class ="form-group pull-right">
-				<a title="Cancel" class="btn btn-default" href="{{ url('users') }}">Cancel</a>
-
-				<button type="submit" title="Save" class="btn btn-success">
-					<span class="glyphicon glyphicon-floppy-disk"></span> Save
-				</button>
-		 	</div>
-
 		</div>
 	</div>
-	
-	@include('layouts.errors')
 
-</form>
+</div>
+
+<div class="panel panel-primary">
+	<div class="panel-body">
+		<div class="form-inline">
+			<select class="form-control input-sm" v-model="idxCategory">
+				<option value="-1">Select category</option>
+				<option :value="index" v-for="(category, index) in categoryList">@{{ category.name }} - @{{ category.description }}</option>
+			</select>
+
+			<button class="btn btn-primary btn-sm"
+					:disabled="idxCategory==-1"
+					v-on:click.prevent="addCategory"> Add</button>
+			<hr style="margin-top: 10px; margin-bottom: 10px;">
+
+			<ul class="list-group">
+				<li class="list-group-item" v-for="(item, index) in categories">
+					@{{ item.category }}
+					<div class="pull-right" style="cursor: pointer;" v-on:click="deleteCategory(item.id)">
+						<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class ="form-group pull-right">
+	<a title="Cancel" class="btn btn-default" href="{{ url('users') }}">Back</a>
+</div>
 
 @endsection
+
+@push('script-bottom')
+	<script type="text/javascript">
+		var user = <?php echo json_encode($user);?>;
+		var categories = <?php echo json_encode($categories);?>;
+	</script>
+
+	<script src="{{ asset('js/user.js') }}"></script>
+@endpush

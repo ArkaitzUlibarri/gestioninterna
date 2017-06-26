@@ -28,11 +28,8 @@ Route::get('/access', function(){
 });
 
 //Users
-Route::get('users/{user}/categories/', 'CategoriesController@edit');
 Route::get('users/{user}/groups/', 'GroupsController@editUser');
-Route::resource('users', 'UsersController', ['except' => [
-    'destroy', 'create', 'store'
-]]);
+Route::resource('users', 'UsersController', ['only' => ['index', 'show', 'edit']]);
 
 //Contracts
 Route::get('contracts/{contract}/teleworking/', 'TeleworkingController@edit');
