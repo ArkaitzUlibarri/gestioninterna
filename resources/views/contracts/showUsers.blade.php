@@ -1,8 +1,6 @@
-<div class="panel panel-default">
+<div class="panel panel-primary">
     
-    <div class="panel-heading">
-        <strong>CONTRACTS</strong>
-    </div>
+    <div class="panel-heading">Contracts</div>
 	
     <div class="table-responsive">
         <table class="table">

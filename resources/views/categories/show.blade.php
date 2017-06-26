@@ -1,8 +1,6 @@
-<div class="panel panel-default">
+<div class="panel panel-primary">
     
-    <div class="panel-heading">
-        <strong>CATEGORIES</strong>
-    </div>
+    <div class="panel-heading">Categories</div>
 	
     <div class="table-responsive">
         <table class="table">

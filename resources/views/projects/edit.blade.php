@@ -63,8 +63,8 @@
 					<hr>
 
 					<div align="right" class="form-group">		
-						<a class="btn btn-default" href="{{ url('projects') }}">Cancel</a>
-						<button type ="submit" class="btn btn-success">
+						<a class="btn btn-default btn-sm" href="{{ url('projects') }}">Cancel</a>
+						<button type ="submit" class="btn btn-primary btn-sm">
 							<span class="glyphicon glyphicon-floppy-disk"></span> Save
 						</button>
 					</div>

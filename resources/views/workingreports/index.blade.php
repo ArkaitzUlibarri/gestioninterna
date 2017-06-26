@@ -8,7 +8,6 @@
 		<h3 class="panel-title" style="margin-top: 7px;">WORKING REPORTS</h3>
 		<div class="clearfix"></div>
 	</div>
-
 		
 	<div class="panel-body">
 		<div class="table-responsive" style="margin: 2em 0 5em 0;">
@@ -20,13 +19,6 @@
 					<th>Stated Hours</th>
 					<th>PM</th>
 					<th>ADMIN</th>
-					
-					<!--
-					@if(Auth::user()->isAdmin() || Auth::user()->isPM())
-						<th>Actions</th>
-					@endif
-					-->
-					
 				</thead>
 	   
 				<tbody>
@@ -90,21 +82,21 @@
 
 			@if(Auth::user()->isAdmin())
 				<div class="form-group">			
-					<select class="form-control" v-model="user_report">
+					<select class="form-control input-sm" v-model="user_report">
 						@foreach($users as $user)				
-						<option value="{{$user->id}}">{{ucfirst($user->name)}} {{ucfirst($user->lastname)}}</option>
+							<option value="{{$user->id}}">{{ucfirst($user->name)}} {{ucfirst($user->lastname)}}</option>
 						@endforeach
 					</select>
 				</div>
 			@else
-				<input class="form-control" type="text" placeholder="{{$auth_user->fullname}}" readonly>
+				<input class="form-control input-sm" type="text" placeholder="{{$auth_user->fullname}}" readonly>
 			@endif
 
 			<div class="form-group">
-				<a type="button" title="New Report" class="btn btn-success" v-bind:href="'workingreports/add/'+user_report +'/'+ getDate() +'/'" >
-					New Report
-				</a>
-			</div>
+	            <a type="button" class="btn btn-success btn-sm" v-bind:href="'workingreports/add/'+user_report +'/'+ getDate() +'/'">
+	                <span class="glyphicon glyphicon-plus"></span> New Report
+	            </a>
+            </div>
 
 		</div>
 	</div>	
@@ -115,9 +107,9 @@
 @push('script-bottom')
 	<script type = "text/javascript">
 		var workingreport = <?php echo json_encode($workingreports);?>;
-		var auth_user     = <?php echo json_encode($auth_user);?>;
-		var users         = <?php echo json_encode($users);?>;
-		var pm            = '{{ $auth_user->isPM() }}';
+		var auth_user = <?php echo json_encode($auth_user);?>;
+		var users = <?php echo json_encode($users);?>;
+		var pm = '{{ $auth_user->isPM() }}';
 	</script>
 
 	<script src="{{ asset('js/validate.js') }}"></script>

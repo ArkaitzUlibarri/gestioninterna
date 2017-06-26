@@ -46,9 +46,8 @@ class ContractFormRequest extends FormRequest
             }
         }
 
-        $response['start_date'] = 'start_date'         => 'required|date|date_format:Y-m-d';    
+        $response['start_date'] = 'required|date|date_format:Y-m-d';    
         return $response;
-         
     }
 
     /**
