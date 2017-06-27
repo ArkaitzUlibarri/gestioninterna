@@ -1,40 +1,18 @@
 
 /**
- * First we will load all of this project_id's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
-
-//require('../bootstrap');
-
-
-/**
  * Registro los componentes necesarios.
  */
 Vue.component('reduction-template', require('../components/Reduction.vue'));
 
 const app = new Vue({
-
 	el: '#reduction',
 
 	data: {		
-		info:{
-			origin:window.location.origin,
-			serverPath:"",
-		},
+		url: url,
 
 		contract: contract,
-
 		editIndex: -1,
-
-		newReduction: {
-			id: -1,
-			contract_id: -1,
-			start_date: '',
-			end_date: '',
-			week_hours: 0,
-		},
-
+		newReduction: {	id: -1,	contract_id: -1, start_date: '', end_date: '', week_hours: 0 },
 		array: [],
 	},
 
@@ -74,35 +52,12 @@ const app = new Vue({
 	},
 
 	mounted() {
-		this.info.serverPath = this.getPath();
 		this.newReduction.contract_id = this.contract.id;
 		this.setDateLimits();
 		this.fetchData();
 	},
 
 	methods: {
-		getPath(){
-			let pathArray = window.location.pathname.split("/");
-			let path = "";
-			let position = 0;
-
-			for (let i = pathArray.length - 1; i >= 0; i--) {
-				if (pathArray[i] == "public"){
-					position = i;
-					break;
-				}
-			}
-
-			if(position != 0){
-				for (let j = 0; j <= position; j++) {
-					path = path + pathArray[j] + "/";
-				}
-				return path;
-			}	
-
-			return "";
-		},
-
 		hoursValidation(){
 			var hourfield = document.getElementById("hourfield").value;
 
@@ -123,7 +78,6 @@ const app = new Vue({
 		},
 
 		initialize(){
-			
 			this.newReduction = {
 				id: -1,
 				contract_id: this.contract.id,
@@ -141,52 +95,29 @@ const app = new Vue({
 
 			vm.initialize();
 
-			axios.get(vm.info.origin + vm.info.serverPath + '/api/reductions', {
-				params: {
-					id: vm.contract.id,
-				}
-			})
-			.then(function (response) {
-				vm.array = response.data;
-				//console.log(response.data);
-			})
-			.catch(function (error) {
-				console.log(error);
-				//****************************************
-				if(Array.isArray(error.response.data)) {
-					error.response.data.forEach( (error) => {
-						toastr.error(error);
-					})
-				}
-				else {
-					toastr.error(error.response.data);
-				}
-				//****************************************
-			});
+			axios.get(vm.url + '/api/reductions', {
+					params: {
+						id: vm.contract.id,
+					}
+				})
+				.then(function (response) {
+					vm.array = response.data;
+				})
+				.catch(function (error) {
+					vm.showErrors(error.response.data)
+				});
 		},
 
 		delete(index){
-
 			let vm = this;
 				
-			axios.delete(vm.info.origin + vm.info.serverPath + '/api/reductions/' + vm.array[index].id)
-			.then(function (response) {
-				console.log(response.data);
-				toastr.success(response.data);
-			})
-			.catch(function (error) {
-				console.log(error);
-				//****************************************
-				if(Array.isArray(error.response.data)) {
-					error.response.data.forEach( (error) => {
-						toastr.error(error);
-					})
-				}
-				else {
-					toastr.error(error.response.data);
-				}
-				//****************************************
-			});	
+			axios.delete(vm.url + '/api/reductions/' + vm.array[index].id)
+				.then(function (response) {
+					toastr.success(response.data);
+				})
+				.catch(function (error) {
+					vm.showErrors(error.response.data)
+				});	
 		},
 
 		save(){
@@ -194,78 +125,64 @@ const app = new Vue({
 			
 			//CHANGE:ARRAY_MERGE
 			if(vm.newReduction.id != -1) {
-				axios.patch(vm.info.origin + vm.info.serverPath + '/api/reductions/' + vm.newReduction.id, {
-					contract_start_date: vm.contract.start_date,
-					contract_estimated_end_date: vm.contract.estimated_end_date,
-					id: vm.newReduction.id,
-					contract_id: vm.newReduction.contract_id,
-					start_date: vm.newReduction.start_date,
-					end_date: vm.newReduction.end_date,
-					week_hours: vm.newReduction.week_hours,
-				})
-				.then(function (response) {
-					console.log(response.data);
-					toastr.success(response.data);
-					//---------------------------------------
-					let properties = Object.keys(vm.newReduction);
+				axios.patch(vm.url + '/api/reductions/' + vm.newReduction.id, {
+						contract_start_date: vm.contract.start_date,
+						contract_estimated_end_date: vm.contract.estimated_end_date,
+						id: vm.newReduction.id,
+						contract_id: vm.newReduction.contract_id,
+						start_date: vm.newReduction.start_date,
+						end_date: vm.newReduction.end_date,
+						week_hours: vm.newReduction.week_hours,
+					})
+					.then(function (response) {
+						toastr.success(response.data);
+						let properties = Object.keys(vm.newReduction);
 
-					for (let i = properties.length - 1; i >= 0; i--) {
-						vm.array[vm.editIndex][properties[i]] = vm.newReduction[properties[i]];
-					}
-					vm.initialize();
-					//---------------------------------------
-				})
-				.catch(function (error) {
-					console.log(error);
-					//****************************************
-					if(Array.isArray(error.response.data)) {
-						error.response.data.forEach( (error) => {
-							toastr.error(error);
-						})
-					}
-					else {
-						toastr.error(error.response.data);
-					}
-					//****************************************
-				});
+						for (let i = properties.length - 1; i >= 0; i--) {
+							vm.array[vm.editIndex][properties[i]] = vm.newReduction[properties[i]];
+						}
+						vm.initialize();
+					})
+					.catch(function (error) {
+						vm.showErrors(error.response.data)
+					});
 				return;
 			}
 			else{
 
-				axios.post(vm.info.origin + vm.info.serverPath + '/api/reductions',{
-					contract_start_date: vm.contract.start_date,
-					contract_estimated_end_date: vm.contract.estimated_end_date,
-					id: vm.newReduction.id,
-					contract_id: vm.newReduction.contract_id,
-					start_date: vm.newReduction.start_date,
-					end_date: vm.newReduction.end_date,
-					week_hours: vm.newReduction.week_hours,
-				})
-				.then(function (response) {
-					console.log(response.data);
-					toastr.success("Saved");
-					//---------------------------------------
-					vm.newReduction.id = response.data;
-					vm.array.push(vm.newReduction);
-					vm.initialize();	
-					//---------------------------------------	
-				})
-				.catch(function (error) {
-					console.log(error);
-					//****************************************
-					if(Array.isArray(error.response.data)) {
-						error.response.data.forEach( (error) => {
-							toastr.error(error);
-						})
-					}
-					else {
-						toastr.error(error.response.data);
-					}
-					//****************************************
-				});	
-				return;
-
+				axios.post(vm.url + '/api/reductions',{
+						contract_start_date: vm.contract.start_date,
+						contract_estimated_end_date: vm.contract.estimated_end_date,
+						id: vm.newReduction.id,
+						contract_id: vm.newReduction.contract_id,
+						start_date: vm.newReduction.start_date,
+						end_date: vm.newReduction.end_date,
+						week_hours: vm.newReduction.week_hours,
+					})
+					.then(function (response) {
+						toastr.success("Saved");
+						vm.newReduction.id = response.data;
+						vm.array.push(vm.newReduction);
+						vm.initialize();	
+					})
+					.catch(function (error) {
+						vm.showErrors(error.response.data)
+					});	
 			}	
+		},
+
+		/**
+		 * Visualizo mensajes de error
+		 */
+		showErrors(errors) {
+			if(Array.isArray(errors)) {
+				errors.forEach( (error) => {
+					toastr.error(error);
+				})
+			}
+			else {
+				toastr.error(errors);
+			}
 		}
 
 	}

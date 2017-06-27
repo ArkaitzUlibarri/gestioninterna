@@ -20,7 +20,6 @@ var app = new Vue({
 	},
 
 	mounted: function mounted() {
-		this.info.serverPath = this.getPath();
 		this.fetchUserCategories();
 	},
 

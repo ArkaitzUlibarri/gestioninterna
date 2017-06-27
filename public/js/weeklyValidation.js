@@ -5,18 +5,17 @@ webpackJsonp([7],{
 
 
 var app = new Vue({
-
     el: '#app',
-
-    mounted: function mounted() {
-        this.fetchData();
-    },
-
 
     data: {
         filter: { name: '', validated: 'false' },
         reports: []
     },
+
+    mounted: function mounted() {
+        this.fetchData();
+    },
+
 
     computed: {
         /**

@@ -5,14 +5,10 @@
 Vue.component('task-template', require('../components/Task.vue'));
 
 const app = new Vue({
-
 	el: '#app',
 
 	data: {		
-		info:{
-			origin:window.location.origin,
-			serverPath:"",
-		},
+		url: url,
 
 		contract: user_contract,
 		expHours: 0,
@@ -160,7 +156,6 @@ const app = new Vue({
 	},
 
 	mounted() {
-		this.info.serverPath = this.getPath();
 		this.fetchData();
 		this.project();
 		this.categoriesLoad();
@@ -168,28 +163,6 @@ const app = new Vue({
 	},
 
 	methods: {
-		getPath(){
-			let pathArray = window.location.pathname.split("/");
-			let path = "";
-			let position = 0;
-
-			for (let i = pathArray.length - 1; i >= 0; i--) {
-				if (pathArray[i] == "public"){
-					position = i;
-					break;
-				}
-			}
-
-			if(position != 0){
-				for (let j = 0; j <= position; j++) {
-					path = path + pathArray[j] + "/";
-				}
-				return path;
-			}	
-
-			return "";
-		},
-
 		expectedHours(){
 			if(this.contract != null){
 				if(this.contract.week_hours == 40){
@@ -376,11 +349,9 @@ const app = new Vue({
 			});
 
 			this.groupList = [...setList];
-
 		},
 
 		categoriesLoad(){
-			
 			let vm = this;
 			let setList = new Set();
 			
@@ -423,7 +394,6 @@ const app = new Vue({
 					}
 				}
 			}
-
 		},
 
 		idTraduction(){
@@ -468,7 +438,7 @@ const app = new Vue({
 
 			vm.initializeTask();
 
-			axios.get(vm.info.origin + vm.info.serverPath + '/api/reports', {
+			axios.get(vm.url + '/api/reports', {
 					params: {
 						user_id: vm.user.id,
 						created_at: vm.reportdate,
@@ -478,7 +448,7 @@ const app = new Vue({
 					vm.tasks = response.data;
 				})
 				.catch(function (error) {
-					vm.showErrors(error);
+					vm.showErrors(error.response.data)
 				});
 		},
 
@@ -486,7 +456,7 @@ const app = new Vue({
 			let vm = this;
 			
 			if(vm.newTask.id != -1) {
-				axios.patch(vm.info.origin + vm.info.serverPath + '/api/reports/' + vm.newTask.id, vm.newTask)
+				axios.patch(vm.url + '/api/reports/' + vm.newTask.id, vm.newTask)
 					.then(function (response) {
 						toastr.success(response.data);
 						let properties = Object.keys(vm.newTask);
@@ -497,11 +467,11 @@ const app = new Vue({
 						vm.initializeTask();
 					})
 					.catch(function (error) {
-						vm.showErrors(error);
+						vm.showErrors(error.response.data)
 					});
 			}
 			else{
-				axios.post(vm.info.origin + vm.info.serverPath + '/api/reports', vm.newTask)
+				axios.post(vm.url + '/api/reports', vm.newTask)
 					.then(function (response) {
 						toastr.success("Saved");
 						vm.newTask.id = response.data;
@@ -509,7 +479,7 @@ const app = new Vue({
 						vm.initializeTask();	
 					})
 					.catch(function (error) {
-						vm.showErrors(error);
+						vm.showErrors(error.response.data)
 					});	
 			}	
 		},
@@ -517,19 +487,19 @@ const app = new Vue({
 		delete(index){
 			let vm = this;
 				
-			axios.delete(vm.info.origin + vm.info.serverPath + '/api/reports/' + vm.tasks[index].id)
+			axios.delete(vm.url + '/api/reports/' + vm.tasks[index].id)
 				.then(function (response) {
 					toastr.success(response.data);
 				})
 				.catch(function (error) {
-					vm.showErrors(error);
+					vm.showErrors(error.response.data)
 				});	
 		},
 
 		copyTasks(){
 			let vm = this;
 
-			axios.get(vm.info.origin + vm.info.serverPath + '/api/lastreport', {
+			axios.get(vm.url + '/api/lastreport', {
 					params: {
 						user_id: vm.user.id,
 						created_at: vm.reportdate,
@@ -540,7 +510,7 @@ const app = new Vue({
 					vm.fetchData();
 				})
 				.catch(function (error) {
-					vm.showErrors(error);
+					vm.showErrors(error.response.data)
 				});	
 		},
 

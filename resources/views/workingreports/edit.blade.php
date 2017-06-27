@@ -36,6 +36,7 @@
 
 @push('script-bottom')
 	<script type = "text/javascript">
+		var url = "{{ url('/') }}";
 		var reportdate = '{{ $date }}';
 		var role = '{{ $auth_user->role }}';
 		var report_user = <?php echo json_encode($report_user);?>;

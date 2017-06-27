@@ -1,6 +1,6 @@
 
 const app = new Vue({
-		el: '#app',
+	el: '#app',
 
 	data: {
 		url: url,
@@ -15,7 +15,6 @@ const app = new Vue({
 	},
 
 	mounted() {
-		this.info.serverPath = this.getPath();
 		this.fetchUserCategories();
 	},
 

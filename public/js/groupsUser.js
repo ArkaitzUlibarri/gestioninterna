@@ -6,28 +6,15 @@ webpackJsonp([6],{
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 /**
- * First we will load all of this project_id's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
-
-//require('../bootstrap');
-
-
-/**
  * Registro los componentes necesarios.
  */
 Vue.component('group-template', __webpack_require__(173));
 
 var app = new Vue({
-
 	el: '#groups',
 
 	data: {
-		info: {
-			origin: window.location.origin,
-			serverPath: ""
-		},
+		url: url,
 
 		user: user,
 		groupProjects: groupProjects,
@@ -68,34 +55,12 @@ var app = new Vue({
 		});
 	},
 	mounted: function mounted() {
-		this.info.serverPath = this.getPath();
 		this.newGroupUser.user_id = this.user.id;
 		this.fetchData();
 	},
 
 
 	methods: {
-		getPath: function getPath() {
-			var pathArray = window.location.pathname.split("/");
-			var path = "";
-			var position = 0;
-
-			for (var i = pathArray.length - 1; i >= 0; i--) {
-				if (pathArray[i] == "public") {
-					position = i;
-					break;
-				}
-			}
-
-			if (position != 0) {
-				for (var j = 0; j <= position; j++) {
-					path = path + pathArray[j] + "/";
-				}
-				return path;
-			}
-
-			return "";
-		},
 		project: function project() {
 			var setList = new Set();
 
@@ -128,7 +93,6 @@ var app = new Vue({
 			}
 		},
 		initialize: function initialize() {
-
 			this.newGroupUser = {
 				id: -1,
 				user_id: this.user.id,
@@ -147,14 +111,12 @@ var app = new Vue({
 			var vm = this;
 			vm.array = [];
 
-			axios.get(vm.info.origin + vm.info.serverPath + '/api/groupsUser', {
+			axios.get(vm.url + '/api/groupsUser', {
 				params: {
 					id: vm.user.id
 				}
 			}).then(function (response) {
 				vm.array = response.data;
-				console.log(response.data);
-				//****************************************
 				vm.project();
 
 				for (var i = vm.array.length - 1; i >= 0; i--) {
@@ -162,65 +124,44 @@ var app = new Vue({
 						vm.array.splice(i, 1);
 					}
 				}
-
-				//****************************************
 			}).catch(function (error) {
-				console.log(error);
-				//****************************************
-				if (Array.isArray(error.response.data)) {
-					error.response.data.forEach(function (error) {
-						toastr.error(error);
-					});
-				} else {
-					toastr.error(error.response.data);
-				}
-				//****************************************
+				vm.showErrors(error.response.data);
 			});
 		},
 		delete: function _delete(index) {
-
 			var vm = this;
 
-			axios.delete(vm.info.origin + vm.info.serverPath + '/api/groupsUser/' + vm.array[index].id).then(function (response) {
-				console.log(response.data);
+			axios.delete(vm.url + '/api/groupsUser/' + vm.array[index].id).then(function (response) {
 				toastr.success(response.data);
 			}).catch(function (error) {
-				console.log(error);
-				//****************************************
-				if (Array.isArray(error.response.data)) {
-					error.response.data.forEach(function (error) {
-						toastr.error(error);
-					});
-				} else {
-					toastr.error(error.response.data);
-				}
-				//****************************************
+				vm.showErrors(error.response.data);
 			});
 		},
 		save: function save() {
 			var vm = this;
 
-			axios.post(vm.info.origin + vm.info.serverPath + '/api/groupsUser', vm.newGroupUser).then(function (response) {
-				console.log(response.data);
+			axios.post(vm.url + '/api/groupsUser', vm.newGroupUser).then(function (response) {
 				toastr.success("Saved");
-				//---------------------------------------
 				vm.newGroupUser.id = response.data;
 				vm.array.push(vm.newGroupUser);
 				vm.initialize();
-				//---------------------------------------	
 			}).catch(function (error) {
-				console.log(error);
-				//****************************************
-				if (Array.isArray(error.response.data)) {
-					error.response.data.forEach(function (error) {
-						toastr.error(error);
-					});
-				} else {
-					toastr.error(error.response.data);
-				}
-				//****************************************
+				vm.showErrors(error.response.data);
 			});
-			return;
+		},
+
+
+		/**
+   * Visualizo mensajes de error
+   */
+		showErrors: function showErrors(errors) {
+			if (Array.isArray(errors)) {
+				errors.forEach(function (error) {
+					toastr.error(error);
+				});
+			} else {
+				toastr.error(errors);
+			}
 		}
 	}
 });

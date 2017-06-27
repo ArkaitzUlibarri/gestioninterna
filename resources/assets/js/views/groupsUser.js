@@ -1,27 +1,14 @@
 
 /**
- * First we will load all of this project_id's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
-
-//require('../bootstrap');
-
-
-/**
  * Registro los componentes necesarios.
  */
 Vue.component('group-template', require('../components/ProjectGroup.vue'));
 
 const app = new Vue({
-
 	el: '#groups',
 
 	data: {		
-		info:{
-			origin:window.location.origin,
-			serverPath:"",
-		},
+		url: url,
 
 		user: user,
 		groupProjects: groupProjects,
@@ -63,34 +50,11 @@ const app = new Vue({
 	},
 
 	mounted() {
-		this.info.serverPath = this.getPath();
 		this.newGroupUser.user_id = this.user.id;
 		this.fetchData();
 	},
 
-	methods: {
-		getPath(){
-			let pathArray = window.location.pathname.split("/");
-			let path = "";
-			let position = 0;
-
-			for (let i = pathArray.length - 1; i >= 0; i--) {
-				if (pathArray[i] == "public"){
-					position = i;
-					break;
-				}
-			}
-
-			if(position != 0){
-				for (let j = 0; j <= position; j++) {
-					path = path + pathArray[j] + "/";
-				}
-				return path;
-			}	
-
-			return "";
-		},
-		
+	methods: {	
 		project() {
 			let setList = new Set();
 
@@ -98,8 +62,7 @@ const app = new Vue({
 				setList.add(item.project);
 			});
 
-			this.projectList = [...setList];			
-		
+			this.projectList = [...setList];
 		},
 
 		groupsRefresh(){
@@ -113,7 +76,6 @@ const app = new Vue({
 			});
 
 			this.groupList = [...setList];
-
 		},
 
 		nameTraduction(){	
@@ -125,11 +87,9 @@ const app = new Vue({
 					this.newGroupUser.enabled  = this.groupProjects[key].enabled;
 				}
 			}
-
 		},
 
 		initialize(){
-			
 			this.newGroupUser = {
 				id: -1,
 				user_id: this.user.id,
@@ -150,93 +110,65 @@ const app = new Vue({
 			let vm   = this;
 			vm.array = [];
 
-			axios.get(vm.info.origin + vm.info.serverPath + '/api/groupsUser', {
-				params: {
-					id: vm.user.id,
-				}
-			})
-			.then(function (response) {
-				vm.array = response.data;
-				console.log(response.data);
-				//****************************************
-				vm.project();
+			axios.get(vm.url + '/api/groupsUser', {
+					params: {
+						id: vm.user.id,
+					}
+				})
+				.then(function (response) {
+					vm.array = response.data;
+					vm.project();
 
-				for (let i = vm.array.length - 1; i >= 0; i--) {
-					if(vm.projectList.indexOf(vm.array[i].project) == -1){	
-						vm.array.splice(i,1);								
-					}	
-				}
-						
-				//****************************************
-			})
-			.catch(function (error) {
-				console.log(error);
-				//****************************************
-				if(Array.isArray(error.response.data)) {
-					error.response.data.forEach( (error) => {
-						toastr.error(error);
-					})
-				}
-				else {
-					toastr.error(error.response.data);
-				}
-				//****************************************
-			});
+					for (let i = vm.array.length - 1; i >= 0; i--) {
+						if(vm.projectList.indexOf(vm.array[i].project) == -1){	
+							vm.array.splice(i,1);								
+						}	
+					}
+				})
+				.catch(function (error) {
+					vm.showErrors(error.response.data)
+				});
 		},
 
 		delete(index){
-
 			let vm = this;
 				
-			axios.delete(vm.info.origin + vm.info.serverPath + '/api/groupsUser/' + vm.array[index].id)
-			.then(function (response) {
-				console.log(response.data);
-				toastr.success(response.data);
-			})
-			.catch(function (error) {
-				console.log(error);
-				//****************************************
-				if(Array.isArray(error.response.data)) {
-					error.response.data.forEach( (error) => {
-						toastr.error(error);
-					})
-				}
-				else {
-					toastr.error(error.response.data);
-				}
-				//****************************************
-			});	
+			axios.delete(vm.url + '/api/groupsUser/' + vm.array[index].id)
+				.then(function (response) {
+					toastr.success(response.data);
+				})
+				.catch(function (error) {
+					vm.showErrors(error.response.data)
+				});	
 		},
 
 		save(){
 			let vm = this;
 
-			axios.post(vm.info.origin + vm.info.serverPath + '/api/groupsUser',vm.newGroupUser)
-			.then(function (response) {
-				console.log(response.data);
-				toastr.success("Saved");
-				//---------------------------------------
-				vm.newGroupUser.id = response.data;
-				vm.array.push(vm.newGroupUser);		
-				vm.initialize();
-				//---------------------------------------	
-			})
-			.catch(function (error) {
-				console.log(error);
-				//****************************************
-				if(Array.isArray(error.response.data)) {
-					error.response.data.forEach( (error) => {
-						toastr.error(error);
-					})
-				}
-				else {
-					toastr.error(error.response.data);
-				}
-				//****************************************
-			});	
-			return;
+			axios.post(vm.url + '/api/groupsUser',vm.newGroupUser)
+				.then(function (response) {
+					toastr.success("Saved");
+					vm.newGroupUser.id = response.data;
+					vm.array.push(vm.newGroupUser);		
+					vm.initialize();
+				})
+				.catch(function (error) {
+					vm.showErrors(error.response.data)
+				});	
+		},
 
-				
+		/**
+		 * Visualizo mensajes de error
+		 */
+		showErrors(errors) {
+			if(Array.isArray(errors)) {
+				errors.forEach( (error) => {
+					toastr.error(error);
+				})
+			}
+			else {
+				toastr.error(errors);
+			}
 		}
 
 	}

@@ -1,22 +1,9 @@
 
-/**
- * First we will load all of this project_id's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
-
-//require('../bootstrap');
-
-
 const app = new Vue({
-
 	el: '#app',
 
 	data: {		
-		info:{
-			origin:window.location.origin,
-			serverPath:"",
-		},
+		url: url,
 
 		role: '',	
 		admin: 0,
@@ -31,7 +18,6 @@ const app = new Vue({
 	},
 
 	mounted() {
-		this.info.serverPath = this.getPath();
 		this.reports = workingreport;
 		this.role = auth_user.role;
 		this.admin = this.role == 'admin' ? 1 : 0 ;
@@ -45,30 +31,7 @@ const app = new Vue({
 			if (data != null) {
 				return url + '/' + data.join('/');
 			}
-
 			return url;
-		},
-
-		getPath(){
-			let pathArray = window.location.pathname.split("/");
-			let path = "";
-			let position = 0;
-
-			for (let i = pathArray.length - 1; i >= 0; i--) {
-				if (pathArray[i] == "public"){
-					position = i;
-					break;
-				}
-			}
-
-			if(position != 0){
-				for (let j = 0; j <= position; j++) {
-					path = path + pathArray[j] + "/";
-				}
-				return path;
-			}	
-
-			return "";
 		},
 		
 		getDate() {
@@ -89,14 +52,12 @@ const app = new Vue({
 		},
 
 		getWeek(dowOffset,stringDate) {
-
 			var d = new Date(stringDate);
-
-			dowOffset   = typeof(dowOffset) == 'number' ? dowOffset : 0; //default dowOffset to zero
+			dowOffset = typeof(dowOffset) == 'number' ? dowOffset : 0; //default dowOffset to zero
 			var newYear = new Date(d.getFullYear(),0,1);
-			var day     = newYear.getDay() - dowOffset; //the day of week the year begins on
-			day         = (day >= 0 ? day : day + 7);
-			var daynum  = Math.floor((d.getTime() - newYear.getTime() - 
+			var day = newYear.getDay() - dowOffset; //the day of week the year begins on
+			day = (day >= 0 ? day : day + 7);
+			var daynum = Math.floor((d.getTime() - newYear.getTime() - 
 		    (d.getTimezoneOffset()-newYear.getTimezoneOffset())*60000)/86400000) + 1;
 		    var weeknum;
 		    //if the year starts before the middle of a week
@@ -188,62 +149,35 @@ const app = new Vue({
 			let vm   = this;
 			vm.tasks = [];
 
-			axios.get(vm.info.origin + vm.info.serverPath + '/api/reports', {
-				params: {
-					user_id: user_id,
-					created_at: created_at,
-				}
-			})
-			.then(function (response) {
-				vm.tasks = response.data;
-				console.log(response.data);
-				//toastr.info(response.data);
-				if(vm.validate(flag)){
-					vm.save();
-					vm.updateReport(index,flag);
-				}			
-			})
-			.catch(function (error) {
-				console.log(error);
-				//******************************************
-				if(Array.isArray(error.response.data)) {
-					error.response.data.forEach( (error) => {
-						toastr.error(error);
-					})
-				}
-				else {
-					toastr.error(error.response.data);
-				}
-				//********************************************
-			});
+			axios.get(vm.url + '/api/reports', {
+					params: {
+						user_id: user_id,
+						created_at: created_at,
+					}
+				})
+				.then(function (response) {
+					vm.tasks = response.data;
+					if(vm.validate(flag)){
+						vm.save();
+						vm.updateReport(index,flag);
+					}			
+				})
+				.catch(function (error) {
+					vm.showErrors(error.response.data)
+				});
 		},
 
 		save(){
 			let vm = this;
-
 			vm.tasks.forEach(function (item) {
-		
-				axios.patch(vm.info.origin + vm.info.serverPath + '/api/reports/' + item.id, item)
-				.then(function (response) {
-					console.log(response.data);					
-					toastr.success(response.data);
-				})
-				.catch(function (error) {
-					console.log(error);
-					//********************************************
-					if(Array.isArray(error.response.data)) {
-						error.response.data.forEach( (error) => {
-							toastr.error(error);
-						})
-					}
-					else {
-						toastr.error(error.response.data);
-					}
-					//**********************************************
-				});
-
+				axios.patch(vm.url + '/api/reports/' + item.id, item)
+					.then(function (response) {			
+						toastr.success(response.data);
+					})
+					.catch(function (error) {
+						vm.showErrors(error.response.data)
+					});
 			});
-
 		},
 
 		updateReport(index,flag){
@@ -264,5 +198,19 @@ const app = new Vue({
 				}		
 			}
 		},
+
+		/**
+		 * Visualizo mensajes de error
+		 */
+		showErrors(errors) {
+			if(Array.isArray(errors)) {
+				errors.forEach( (error) => {
+					toastr.error(error);
+				})
+			}
+			else {
+				toastr.error(errors);
+			}
+		}
 	}
 });

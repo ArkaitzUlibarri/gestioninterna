@@ -5,41 +5,19 @@ webpackJsonp([5],{
 
 
 /**
- * First we will load all of this project_id's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
-
-//require('../bootstrap');
-
-
-/**
  * Registro los componentes necesarios.
  */
 Vue.component('reduction-template', __webpack_require__(174));
 
 var app = new Vue({
-
 	el: '#reduction',
 
 	data: {
-		info: {
-			origin: window.location.origin,
-			serverPath: ""
-		},
+		url: url,
 
 		contract: contract,
-
 		editIndex: -1,
-
-		newReduction: {
-			id: -1,
-			contract_id: -1,
-			start_date: '',
-			end_date: '',
-			week_hours: 0
-		},
-
+		newReduction: { id: -1, contract_id: -1, start_date: '', end_date: '', week_hours: 0 },
 		array: []
 	},
 
@@ -76,7 +54,6 @@ var app = new Vue({
 		});
 	},
 	mounted: function mounted() {
-		this.info.serverPath = this.getPath();
 		this.newReduction.contract_id = this.contract.id;
 		this.setDateLimits();
 		this.fetchData();
@@ -84,27 +61,6 @@ var app = new Vue({
 
 
 	methods: {
-		getPath: function getPath() {
-			var pathArray = window.location.pathname.split("/");
-			var path = "";
-			var position = 0;
-
-			for (var i = pathArray.length - 1; i >= 0; i--) {
-				if (pathArray[i] == "public") {
-					position = i;
-					break;
-				}
-			}
-
-			if (position != 0) {
-				for (var j = 0; j <= position; j++) {
-					path = path + pathArray[j] + "/";
-				}
-				return path;
-			}
-
-			return "";
-		},
 		hoursValidation: function hoursValidation() {
 			var hourfield = document.getElementById("hourfield").value;
 
@@ -123,7 +79,6 @@ var app = new Vue({
 			}
 		},
 		initialize: function initialize() {
-
 			this.newReduction = {
 				id: -1,
 				contract_id: this.contract.id,
@@ -140,44 +95,23 @@ var app = new Vue({
 
 			vm.initialize();
 
-			axios.get(vm.info.origin + vm.info.serverPath + '/api/reductions', {
+			axios.get(vm.url + '/api/reductions', {
 				params: {
 					id: vm.contract.id
 				}
 			}).then(function (response) {
 				vm.array = response.data;
-				//console.log(response.data);
 			}).catch(function (error) {
-				console.log(error);
-				//****************************************
-				if (Array.isArray(error.response.data)) {
-					error.response.data.forEach(function (error) {
-						toastr.error(error);
-					});
-				} else {
-					toastr.error(error.response.data);
-				}
-				//****************************************
+				vm.showErrors(error.response.data);
 			});
 		},
 		delete: function _delete(index) {
-
 			var vm = this;
 
-			axios.delete(vm.info.origin + vm.info.serverPath + '/api/reductions/' + vm.array[index].id).then(function (response) {
-				console.log(response.data);
+			axios.delete(vm.url + '/api/reductions/' + vm.array[index].id).then(function (response) {
 				toastr.success(response.data);
 			}).catch(function (error) {
-				console.log(error);
-				//****************************************
-				if (Array.isArray(error.response.data)) {
-					error.response.data.forEach(function (error) {
-						toastr.error(error);
-					});
-				} else {
-					toastr.error(error.response.data);
-				}
-				//****************************************
+				vm.showErrors(error.response.data);
 			});
 		},
 		save: function save() {
@@ -185,7 +119,7 @@ var app = new Vue({
 
 			//CHANGE:ARRAY_MERGE
 			if (vm.newReduction.id != -1) {
-				axios.patch(vm.info.origin + vm.info.serverPath + '/api/reductions/' + vm.newReduction.id, {
+				axios.patch(vm.url + '/api/reductions/' + vm.newReduction.id, {
 					contract_start_date: vm.contract.start_date,
 					contract_estimated_end_date: vm.contract.estimated_end_date,
 					id: vm.newReduction.id,
@@ -194,32 +128,20 @@ var app = new Vue({
 					end_date: vm.newReduction.end_date,
 					week_hours: vm.newReduction.week_hours
 				}).then(function (response) {
-					console.log(response.data);
 					toastr.success(response.data);
-					//---------------------------------------
 					var properties = Object.keys(vm.newReduction);
 
 					for (var i = properties.length - 1; i >= 0; i--) {
 						vm.array[vm.editIndex][properties[i]] = vm.newReduction[properties[i]];
 					}
 					vm.initialize();
-					//---------------------------------------
 				}).catch(function (error) {
-					console.log(error);
-					//****************************************
-					if (Array.isArray(error.response.data)) {
-						error.response.data.forEach(function (error) {
-							toastr.error(error);
-						});
-					} else {
-						toastr.error(error.response.data);
-					}
-					//****************************************
+					vm.showErrors(error.response.data);
 				});
 				return;
 			} else {
 
-				axios.post(vm.info.origin + vm.info.serverPath + '/api/reductions', {
+				axios.post(vm.url + '/api/reductions', {
 					contract_start_date: vm.contract.start_date,
 					contract_estimated_end_date: vm.contract.estimated_end_date,
 					id: vm.newReduction.id,
@@ -228,26 +150,27 @@ var app = new Vue({
 					end_date: vm.newReduction.end_date,
 					week_hours: vm.newReduction.week_hours
 				}).then(function (response) {
-					console.log(response.data);
 					toastr.success("Saved");
-					//---------------------------------------
 					vm.newReduction.id = response.data;
 					vm.array.push(vm.newReduction);
 					vm.initialize();
-					//---------------------------------------	
 				}).catch(function (error) {
-					console.log(error);
-					//****************************************
-					if (Array.isArray(error.response.data)) {
-						error.response.data.forEach(function (error) {
-							toastr.error(error);
-						});
-					} else {
-						toastr.error(error.response.data);
-					}
-					//****************************************
+					vm.showErrors(error.response.data);
 				});
-				return;
+			}
+		},
+
+
+		/**
+   * Visualizo mensajes de error
+   */
+		showErrors: function showErrors(errors) {
+			if (Array.isArray(errors)) {
+				errors.forEach(function (error) {
+					toastr.error(error);
+				});
+			} else {
+				toastr.error(errors);
 			}
 		}
 	}

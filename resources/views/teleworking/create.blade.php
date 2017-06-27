@@ -119,8 +119,10 @@
 			</div>
 		</div>
 	</div>
-
-	<a class="btn btn-default" href="{{ url('contracts') }}">Back</a>
+	
+	<div class ="form-group pull-right">
+		<a class="btn btn-default custom-btn-width" href="{{ url('contracts') }}">Back</a>
+	</div>
 
 </div>
 
@@ -129,8 +131,9 @@
 
 @push('script-bottom')
 <script type="text/javascript">
-	var contract    = <?php echo json_encode($contract);?>;
-	var daysWeek    = <?php echo json_encode(config('options.daysWeek'));?>;
+	var url = "{{ url('/') }}";
+	var contract = <?php echo json_encode($contract);?>;
+	var daysWeek = <?php echo json_encode(config('options.daysWeek'));?>;
 </script>
 
 <script src="{{ asset('js/teleworking.js') }}"></script>

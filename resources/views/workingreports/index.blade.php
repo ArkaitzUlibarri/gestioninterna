@@ -106,6 +106,7 @@
 
 @push('script-bottom')
 	<script type = "text/javascript">
+		var url = "{{ url('/') }}";
 		var workingreport = <?php echo json_encode($workingreports);?>;
 		var auth_user = <?php echo json_encode($auth_user);?>;
 		var users = <?php echo json_encode($users);?>;

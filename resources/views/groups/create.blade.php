@@ -112,6 +112,7 @@
 
 @push('script-bottom')
 <script type="text/javascript">
+	var url = "{{ url('/') }}";
 	var id = '{{ $project->id }}';
 </script>
 

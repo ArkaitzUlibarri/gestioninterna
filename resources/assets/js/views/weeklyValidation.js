@@ -1,15 +1,14 @@
 
 const app = new Vue({
-
 	el: '#app',
-
-    mounted() {
-        this.fetchData();
-    },
 
     data: {
         filter: { name: '', validated: 'false' },
         reports: [],
+    },
+
+    mounted() {
+        this.fetchData();
     },
 
     computed: {

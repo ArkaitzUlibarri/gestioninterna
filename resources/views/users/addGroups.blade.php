@@ -104,6 +104,7 @@
 
 @push('script-bottom')
 <script type="text/javascript">
+	var url = "{{ url('/') }}";
 	var user = <?php echo json_encode($user);?>;
 	var groupProjects = <?php echo json_encode($groupProjects);?>;
 </script>

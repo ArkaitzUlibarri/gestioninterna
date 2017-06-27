@@ -5,34 +5,19 @@ webpackJsonp([3],{
 
 
 /**
- * First we will load all of this project_id's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
-
-//require('../bootstrap');
-
-
-/**
  * Registro los componentes necesarios.
  */
 Vue.component('teleworking-template', __webpack_require__(176));
 
 var app = new Vue({
-
 	el: '#teleworking',
 
 	data: {
-		info: {
-			origin: window.location.origin,
-			serverPath: ""
-		},
+		url: url,
 
 		contract: contract,
 		daysWeek: [],
-
 		editIndex: -1,
-
 		newTeleworking: {
 			id: -1,
 			contract_id: -1,
@@ -89,7 +74,6 @@ var app = new Vue({
 		});
 	},
 	mounted: function mounted() {
-		this.info.serverPath = this.getPath();
 		this.newTeleworking.contract_id = this.contract.id;
 		this.setDateLimits();
 		this.fetchData();
@@ -98,27 +82,6 @@ var app = new Vue({
 
 
 	methods: {
-		getPath: function getPath() {
-			var pathArray = window.location.pathname.split("/");
-			var path = "";
-			var position = 0;
-
-			for (var i = pathArray.length - 1; i >= 0; i--) {
-				if (pathArray[i] == "public") {
-					position = i;
-					break;
-				}
-			}
-
-			if (position != 0) {
-				for (var j = 0; j <= position; j++) {
-					path = path + pathArray[j] + "/";
-				}
-				return path;
-			}
-
-			return "";
-		},
 		setDateLimits: function setDateLimits() {
 			document.getElementById("startdatefield").setAttribute("min", this.contract.start_date);
 			document.getElementById("enddatefield").setAttribute("min", this.contract.start_date);
@@ -129,7 +92,6 @@ var app = new Vue({
 			}
 		},
 		initialize: function initialize() {
-
 			this.newTeleworking = {
 				id: -1,
 				contract_id: this.contract.id,
@@ -152,44 +114,24 @@ var app = new Vue({
 
 			vm.initialize();
 
-			axios.get(vm.info.origin + vm.info.serverPath + '/api/teleworking', {
+			axios.get(vm.url + '/api/teleworking', {
 				params: {
 					id: vm.contract.id
 				}
 			}).then(function (response) {
 				vm.array = response.data;
-				console.log(response.data);
 			}).catch(function (error) {
-				console.log(error);
-				//****************************************
-				if (Array.isArray(error.response.data)) {
-					error.response.data.forEach(function (error) {
-						toastr.error(error);
-					});
-				} else {
-					toastr.error(error.response.data);
-				}
-				//****************************************
+				vm.showErrors(error.response.data);
 			});
 		},
 		delete: function _delete(index) {
 
 			var vm = this;
 
-			axios.delete(vm.info.origin + vm.info.serverPath + '/api/teleworking/' + vm.array[index].id).then(function (response) {
-				console.log(response.data);
+			axios.delete(vm.url + '/api/teleworking/' + vm.array[index].id).then(function (response) {
 				toastr.success(response.data);
 			}).catch(function (error) {
-				console.log(error);
-				//****************************************
-				if (Array.isArray(error.response.data)) {
-					error.response.data.forEach(function (error) {
-						toastr.error(error);
-					});
-				} else {
-					toastr.error(error.response.data);
-				}
-				//****************************************
+				vm.showErrors(error.response.data);
 			});
 		},
 		save: function save() {
@@ -197,7 +139,7 @@ var app = new Vue({
 
 			//CHANGE:ARRAY_MERGE
 			if (vm.newTeleworking.id != -1) {
-				axios.patch(vm.info.origin + vm.info.serverPath + '/api/teleworking/' + vm.newTeleworking.id, {
+				axios.patch(vm.url + '/api/teleworking/' + vm.newTeleworking.id, {
 					contract_start_date: vm.contract.start_date,
 					contract_estimated_end_date: vm.contract.estimated_end_date,
 					id: vm.newTeleworking.id,
@@ -212,32 +154,18 @@ var app = new Vue({
 					saturday: vm.newTeleworking.saturday,
 					sunday: vm.newTeleworking.sunday
 				}).then(function (response) {
-					console.log(response.data);
 					toastr.success(response.data);
-					//---------------------------------------
 					var properties = Object.keys(vm.newTeleworking);
-
 					for (var i = properties.length - 1; i >= 0; i--) {
 						vm.array[vm.editIndex][properties[i]] = vm.newTeleworking[properties[i]];
 					}
 					vm.initialize();
-					//---------------------------------------
 				}).catch(function (error) {
-					console.log(error);
-					//****************************************
-					if (Array.isArray(error.response.data)) {
-						error.response.data.forEach(function (error) {
-							toastr.error(error);
-						});
-					} else {
-						toastr.error(error.response.data);
-					}
-					//****************************************
+					vm.showErrors(error.response.data);
 				});
 				return;
 			} else {
-
-				axios.post(vm.info.origin + vm.info.serverPath + '/api/teleworking', {
+				axios.post(vm.url + '/api/teleworking', {
 					contract_start_date: vm.contract.start_date,
 					contract_estimated_end_date: vm.contract.estimated_end_date,
 					id: vm.newTeleworking.id,
@@ -252,26 +180,27 @@ var app = new Vue({
 					saturday: vm.newTeleworking.saturday,
 					sunday: vm.newTeleworking.sunday
 				}).then(function (response) {
-					console.log(response.data);
 					toastr.success("Saved");
-					//---------------------------------------
 					vm.newTeleworking.id = response.data;
 					vm.array.push(vm.newTeleworking);
 					vm.initialize();
-					//---------------------------------------	
 				}).catch(function (error) {
-					console.log(error);
-					//****************************************
-					if (Array.isArray(error.response.data)) {
-						error.response.data.forEach(function (error) {
-							toastr.error(error);
-						});
-					} else {
-						toastr.error(error.response.data);
-					}
-					//****************************************
+					vm.showErrors(error.response.data);
 				});
-				return;
+			}
+		},
+
+
+		/**
+   * Visualizo mensajes de error
+   */
+		showErrors: function showErrors(errors) {
+			if (Array.isArray(errors)) {
+				errors.forEach(function (error) {
+					toastr.error(error);
+				});
+			} else {
+				toastr.error(errors);
 			}
 		}
 	}

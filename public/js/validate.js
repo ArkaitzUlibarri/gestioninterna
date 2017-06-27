@@ -4,24 +4,11 @@ webpackJsonp([8],{
 /***/ (function(module, exports) {
 
 
-/**
- * First we will load all of this project_id's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
-
-//require('../bootstrap');
-
-
 var app = new Vue({
-
 	el: '#app',
 
 	data: {
-		info: {
-			origin: window.location.origin,
-			serverPath: ""
-		},
+		url: url,
 
 		role: '',
 		admin: 0,
@@ -36,7 +23,6 @@ var app = new Vue({
 	},
 
 	mounted: function mounted() {
-		this.info.serverPath = this.getPath();
 		this.reports = workingreport;
 		this.role = auth_user.role;
 		this.admin = this.role == 'admin' ? 1 : 0;
@@ -53,29 +39,7 @@ var app = new Vue({
 			if (data != null) {
 				return url + '/' + data.join('/');
 			}
-
 			return url;
-		},
-		getPath: function getPath() {
-			var pathArray = window.location.pathname.split("/");
-			var path = "";
-			var position = 0;
-
-			for (var i = pathArray.length - 1; i >= 0; i--) {
-				if (pathArray[i] == "public") {
-					position = i;
-					break;
-				}
-			}
-
-			if (position != 0) {
-				for (var j = 0; j <= position; j++) {
-					path = path + pathArray[j] + "/";
-				}
-				return path;
-			}
-
-			return "";
 		},
 		getDate: function getDate() {
 			var today = new Date();
@@ -94,9 +58,7 @@ var app = new Vue({
 			return today;
 		},
 		getWeek: function getWeek(dowOffset, stringDate) {
-
 			var d = new Date(stringDate);
-
 			dowOffset = typeof dowOffset == 'number' ? dowOffset : 0; //default dowOffset to zero
 			var newYear = new Date(d.getFullYear(), 0, 1);
 			var day = newYear.getDay() - dowOffset; //the day of week the year begins on
@@ -183,51 +145,28 @@ var app = new Vue({
 			var vm = this;
 			vm.tasks = [];
 
-			axios.get(vm.info.origin + vm.info.serverPath + '/api/reports', {
+			axios.get(vm.url + '/api/reports', {
 				params: {
 					user_id: user_id,
 					created_at: created_at
 				}
 			}).then(function (response) {
 				vm.tasks = response.data;
-				console.log(response.data);
-				//toastr.info(response.data);
 				if (vm.validate(flag)) {
 					vm.save();
 					vm.updateReport(index, flag);
 				}
 			}).catch(function (error) {
-				console.log(error);
-				//******************************************
-				if (Array.isArray(error.response.data)) {
-					error.response.data.forEach(function (error) {
-						toastr.error(error);
-					});
-				} else {
-					toastr.error(error.response.data);
-				}
-				//********************************************
+				vm.showErrors(error.response.data);
 			});
 		},
 		save: function save() {
 			var vm = this;
-
 			vm.tasks.forEach(function (item) {
-
-				axios.patch(vm.info.origin + vm.info.serverPath + '/api/reports/' + item.id, item).then(function (response) {
-					console.log(response.data);
+				axios.patch(vm.url + '/api/reports/' + item.id, item).then(function (response) {
 					toastr.success(response.data);
 				}).catch(function (error) {
-					console.log(error);
-					//********************************************
-					if (Array.isArray(error.response.data)) {
-						error.response.data.forEach(function (error) {
-							toastr.error(error);
-						});
-					} else {
-						toastr.error(error.response.data);
-					}
-					//**********************************************
+					vm.showErrors(error.response.data);
 				});
 			});
 		},
@@ -244,6 +183,20 @@ var app = new Vue({
 				} else if (this.pm) {
 					this.reports[index].horas_validadas_pm = this.reports[index].horas_reportadas;
 				}
+			}
+		},
+
+
+		/**
+   * Visualizo mensajes de error
+   */
+		showErrors: function showErrors(errors) {
+			if (Array.isArray(errors)) {
+				errors.forEach(function (error) {
+					toastr.error(error);
+				});
+			} else {
+				toastr.error(errors);
 			}
 		}
 	}
