@@ -92,10 +92,10 @@ class ProjectRepository
      */
     public function filterByType($q, $value)
     {
-        if ($value == config('options.dates')[0]){
+        if ($value == config('options.status')[0]){
             $q->where('projects.end_date', null);
         }    
-        elseif ($value == config('options.dates')[1]) {
+        elseif ($value == config('options.status')[1]) {
             $q->where('projects.end_date', '<>', null);
         }
     }
