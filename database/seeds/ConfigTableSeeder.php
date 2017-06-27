@@ -99,6 +99,19 @@ class ConfigTableSeeder extends Seeder
 			['type' =>'local','name'=>'Barcelona','code'=>'ba'],
 			['type' =>'others','name'=>'adjustment','code'=>'adjustment'],
 		];
+
+		/*
+		$bank_holidays_codes = [
+			['type' =>'national','name'=>'Spain','code'=>'ne'],
+			['type' =>'regional','name'=>'Basque Country','code'=>'pv'],
+			['type' =>'regional','name'=>'Community of Madrid','code'=>'cmad'],
+			['type' =>'regional','name'=>'Catalonia','code'=>'cat'],
+			['type' =>'local','name'=>'Bilbao','code'=>'bi'],
+			['type' =>'local','name'=>'Madrid','code'=>'mad'],
+			['type' =>'local','name'=>'Barcelona','code'=>'ba'],
+			['type' =>'others','name'=>'adjustment','code'=>'adjustment'],
+		];
+		*/
 	   
 		$categories = [
 			['name' =>'DI', 'code' => 'DI', 'description' => 'Director'],
@@ -135,6 +148,18 @@ class ConfigTableSeeder extends Seeder
 			['code' =>'bce','name'=>'Beca cooperación educativa','holidays'=>15],
 			['code' =>'fp','name'=>'Prácticas formación profesional','holidays'=>0],
 		];  
+
+		/*
+		$contract_types = [
+			['code' =>'100','name'=>'Indefinite','holidays'=>22],
+			['code' =>'401','name'=>'Work or service','holidays'=>22],
+			['code' =>'402','name'=>'Eventual (production circumstances)','holidays'=>22],
+			['code' =>'420','name'=>'Apprenticeship','holidays'=>22],
+			['code' =>'bl','name'=>'Lanbide's grant,'holidays'=>0],   
+			['code' =>'bce','name'=>'Educative cooperation Grant','holidays'=>15],
+			['code' =>'fp','name'=>'Profesional formation internship','holidays'=>0],
+		];  
+		*/
 
 		$customers = [
 			['name'=>'3db'],
