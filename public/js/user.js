@@ -8,6 +8,8 @@ var app = new Vue({
 	el: '#app',
 
 	data: {
+		url: url,
+
 		user: user,
 		roleBackup: user.role,
 		role: user.role,
@@ -18,6 +20,7 @@ var app = new Vue({
 	},
 
 	mounted: function mounted() {
+		this.info.serverPath = this.getPath();
 		this.fetchUserCategories();
 	},
 
@@ -48,8 +51,7 @@ var app = new Vue({
 			var vm = this;
 			vm.categories = [];
 
-			// axios.get(vm.info.origin + vm.info.serverPath + '/api/categories', {
-			axios.get('/api/categories?id=' + vm.user.id).then(function (response) {
+			axios.get(vm.url + '/api/categories?id=' + vm.user.id).then(function (response) {
 				vm.categories = response.data;
 			}).catch(function (error) {
 				vm.showErrors(error.response.data);
@@ -63,7 +65,7 @@ var app = new Vue({
 		saveCategory: function saveCategory(category) {
 			var vm = this;
 
-			axios.post('/api/categories', {
+			axios.post(vm.url + '/api/categories', {
 				user_id: vm.user.id,
 				category_id: category.category_id
 			}).then(function (response) {
@@ -82,7 +84,7 @@ var app = new Vue({
 		updateRole: function updateRole(role) {
 			var vm = this;
 
-			axios.patch('/api/users/' + vm.user.id, {
+			axios.patch(vm.url + '/api/users/' + vm.user.id, {
 				role: vm.role
 			}).then(function (response) {
 				vm.roleBackup = vm.role;
@@ -99,7 +101,7 @@ var app = new Vue({
 		deleteCategory: function deleteCategory(id) {
 			var vm = this;
 
-			axios.delete('/api/categories/' + id).then(function (response) {
+			axios.delete(vm.url + '/api/categories/' + id).then(function (response) {
 				vm.deleteCategoryFromArray(id);
 			}).catch(function (error) {
 				vm.showErrors(error.response.data);

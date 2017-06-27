@@ -47,6 +47,15 @@ var app = new Vue({
 
 
 	methods: {
+		makeUrl: function makeUrl(url) {
+			var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+			if (data != null) {
+				return url + '/' + data.join('/');
+			}
+
+			return url;
+		},
 		getPath: function getPath() {
 			var pathArray = window.location.pathname.split("/");
 			var path = "";

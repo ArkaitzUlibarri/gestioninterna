@@ -60,6 +60,7 @@
 
 @push('script-bottom')
 	<script type="text/javascript">
+		var url = "{{ url('/') }}";
 		var user = <?php echo json_encode($user);?>;
 		var categories = <?php echo json_encode($categories);?>;
 	</script>

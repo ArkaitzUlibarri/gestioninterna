@@ -32,15 +32,23 @@ const app = new Vue({
 
 	mounted() {
 		this.info.serverPath = this.getPath();
-		this.reports     = workingreport;
-		this.role        = auth_user.role;
-		this.admin       = this.role == 'admin' ? 1 : 0 ;
-		this.pm          = pm;
-		this.user_id     = auth_user.id;
+		this.reports = workingreport;
+		this.role = auth_user.role;
+		this.admin = this.role == 'admin' ? 1 : 0 ;
+		this.pm = pm;
+		this.user_id = auth_user.id;
 		this.user_report = auth_user.id;
 	},
 
 	methods: {
+		makeUrl(url, data = null) {
+			if (data != null) {
+				return url + '/' + data.join('/');
+			}
+
+			return url;
+		},
+
 		getPath(){
 			let pathArray = window.location.pathname.split("/");
 			let path = "";
