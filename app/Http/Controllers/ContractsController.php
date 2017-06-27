@@ -92,18 +92,16 @@ class ContractsController extends Controller
 	public function edit($id)
 	{
 		$contract = $this->getContractEdit($id);
-
 		$bankHolidaysCodes = $this->getBankHolidaysCodes();
-
 		$nationalDays = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[0]);
 		$regionalDays = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[1]);
 		$localDays    = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[2]);
-		
+
 		$contractTypes = ContractType::all();
 		
 		$users = $this->getUsers();
 
-		return view('contracts.edit', compact('contract','users', 'contractTypes', 'nationalDays', 'regionalDays', 'localDays'));
+		return view('contracts.edit', compact('contract', 'users', 'contractTypes', 'nationalDays', 'regionalDays', 'localDays'));
 	}
 
 	public function store(ContractFormRequest $request)

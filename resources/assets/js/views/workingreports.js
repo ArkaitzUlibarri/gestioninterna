@@ -1,21 +1,12 @@
 
 /**
- * First we will load all of this project_id's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
-
-//require('../bootstrap');
-
-
-/**
  * Registro los componentes necesarios.
  */
 Vue.component('task-template', require('../components/Task.vue'));
 
 const app = new Vue({
 
-	el: '#report',
+	el: '#app',
 
 	data: {		
 		info:{
@@ -72,7 +63,6 @@ const app = new Vue({
 	computed: {
 
 		validatedTasks(){
-
 			let output = true;
 
 			if (this.tasks.length > 0) {
@@ -103,15 +93,25 @@ const app = new Vue({
 		},
 
 		formTaskFilled(){
-			if(this.newTask.pm_validation == 0 && this.newTask.admin_validation == 0){
+			if(this.newTask.pm_validation == 0 && this.newTask.admin_validation == 0) {
 				if (this.newTask.activity != "" && this.newTask.time != 0) {
-					if(this.newTask.activity == 'project' && this.newTask.project != "" && this.newTask.group != "" && this.newTask.category != "" && this.newTask.job_type != ""){
+					
+					if (this.newTask.activity == 'project'
+						&& this.newTask.project != ""
+						&& this.newTask.group != ""
+						&& this.newTask.category != ""
+						&& this.newTask.job_type != "") {
 						return true;
 					}
-					if(this.newTask.activity == 'absence' && this.newTask.absence != ""){
+
+					if (this.newTask.activity == 'absence'
+						&& this.newTask.absence != "") {
 						return true;
 					}
-					if(this.newTask.activity == 'training' && this.newTask.training_type != "" && this.newTask.job_type != ""){
+
+					if (this.newTask.activity == 'training'
+						&& this.newTask.training_type != ""
+						&& this.newTask.job_type != "") {
 						return true;
 					}
 				}
@@ -203,7 +203,6 @@ const app = new Vue({
 				}
 				this.expHours = parseInt(this.contract.week_hours / 5);
 			}
-
 		},
 
 		dateValidation() {
@@ -228,20 +227,19 @@ const app = new Vue({
 			var mm    = today.getMonth() + 1; //January is 0!
 			var yyyy  = today.getFullYear();
 
-			if(dd < 10){
+			if(dd < 10) {
 				dd ='0'+dd
 			} 
-			if(mm < 10){
-				mm ='0'+mm
-			} 
-			today = yyyy +'-'+ mm +'-'+ dd;
 
-			return today;
+			if(mm < 10) {
+				mm ='0'+mm
+			}
+
+			return yyyy +'-'+ mm +'-'+ dd;
 		},
 
 		setMaxDate(){
 			var today = this.getDate();
-			
 			if(document.getElementById('datefield') !== null){
 				document.getElementById("datefield").setAttribute("max", today);
 			}	
@@ -291,18 +289,12 @@ const app = new Vue({
 			return weekday[d.getDay()];
 		},
 
-		addTask() {
+		addUpdateTask() {
 			this.newTask.time_slots = this.newTask.time*4;
 			this.nameTraduction();
 			this.save();
 		},
 
-		editTask() {
-			this.newTask.time_slots = this.newTask.time*4;
-			this.nameTraduction();
-			this.save();
-		},
-		
 		initializeTask(){
 			this.reportDayWeek = this.getDayWeek(this.reportdate);
 			this.week = this.getWeek(1,this.reportdate);
@@ -484,82 +476,41 @@ const app = new Vue({
 				})
 				.then(function (response) {
 					vm.tasks = response.data;
-					//console.log(response.data);
 				})
 				.catch(function (error) {
-					//console.log(error);
-
-					if(Array.isArray(error.response.data)) {
-						error.response.data.forEach( (error) => {
-							toastr.error(error);
-						})
-					}
-					else {
-						toastr.error(error.response.data);
-					}
+					vm.showErrors(error);
 				});
 		},
 
 		save(){
 			let vm = this;
 			
-			
 			if(vm.newTask.id != -1) {
 				axios.patch(vm.info.origin + vm.info.serverPath + '/api/reports/' + vm.newTask.id, vm.newTask)
-				.then(function (response) {
-					console.log(response.data);
-					toastr.success(response.data);
-					//---------------------------------------
-					let properties = Object.keys(vm.newTask);
+					.then(function (response) {
+						toastr.success(response.data);
+						let properties = Object.keys(vm.newTask);
 
-					for (let i = properties.length - 1; i >= 0; i--) {
-						vm.tasks[vm.editIndex][properties[i]] = vm.newTask[properties[i]];
-					}
-					vm.initializeTask();
-					//---------------------------------------
-				})
-				.catch(function (error) {
-					console.log(error);
-					//****************************************
-					if(Array.isArray(error.response.data)) {
-						error.response.data.forEach( (error) => {
-							toastr.error(error);
-						})
-					}
-					else {
-						toastr.error(error.response.data);
-					}
-					//****************************************
-				});
-				return;
+						for (let i = properties.length - 1; i >= 0; i--) {
+							vm.tasks[vm.editIndex][properties[i]] = vm.newTask[properties[i]];
+						}
+						vm.initializeTask();
+					})
+					.catch(function (error) {
+						vm.showErrors(error);
+					});
 			}
 			else{
-
 				axios.post(vm.info.origin + vm.info.serverPath + '/api/reports', vm.newTask)
-				.then(function (response) {
-					console.log(response.data);
-					toastr.success("Saved");
-					//---------------------------------------
-					vm.newTask.id = response.data;
-					vm.tasks.push(vm.newTask);
-					vm.initializeTask();	
-					//---------------------------------------	
-				})
-				.catch(function (error) {
-					console.log(error);
-					//****************************************
-					if(Array.isArray(error.response.data)) {
-						error.response.data.forEach( (error) => {
-							toastr.error(error);
-						})
-					}
-					else {
-						toastr.error(error.response.data);
-					}
-					//****************************************
-				});	
-				return;
-
+					.then(function (response) {
+						toastr.success("Saved");
+						vm.newTask.id = response.data;
+						vm.tasks.push(vm.newTask);
+						vm.initializeTask();	
+					})
+					.catch(function (error) {
+						vm.showErrors(error);
+					});	
 			}	
 		},
 
@@ -567,52 +518,44 @@ const app = new Vue({
 			let vm = this;
 				
 			axios.delete(vm.info.origin + vm.info.serverPath + '/api/reports/' + vm.tasks[index].id)
-			.then(function (response) {
-				console.log(response.data);
-				toastr.success(response.data);
-			})
-			.catch(function (error) {
-				console.log(error);
-				//****************************************
-				if(Array.isArray(error.response.data)) {
-					error.response.data.forEach( (error) => {
-						toastr.error(error);
-					})
-				}
-				else {
-					toastr.error(error.response.data);
-				}
-				//****************************************
-			});	
+				.then(function (response) {
+					toastr.success(response.data);
+				})
+				.catch(function (error) {
+					vm.showErrors(error);
+				});	
 		},
 
 		copyTasks(){
 			let vm = this;
 
 			axios.get(vm.info.origin + vm.info.serverPath + '/api/lastreport', {
-				params: {
-					user_id: vm.user.id,
-					created_at: vm.reportdate,
-				}
-			})
-			.then(function (response) {
-				console.log(response.data);
-				toastr.success(response.data);
-				vm.fetchData();
-			})
-			.catch(function (error) {
-				console.log(error);
-				//****************************************
-				if(Array.isArray(error.response.data)) {
-					error.response.data.forEach( (error) => {
-						toastr.error(error);
-					})
-				}
-				else {
-					toastr.error(error.response.data);
-				}
-				//****************************************
-			});	
+					params: {
+						user_id: vm.user.id,
+						created_at: vm.reportdate,
+					}
+				})
+				.then(function (response) {
+					toastr.success(response.data);
+					vm.fetchData();
+				})
+				.catch(function (error) {
+					vm.showErrors(error);
+				});	
+		},
+
+		/**
+		 * Visualizo mensajes de error
+		 */
+		showErrors(errors) {
+			if(Array.isArray(errors)) {
+				errors.forEach( (error) => {
+					toastr.error(error);
+				})
+			}
+			else {
+				toastr.error(errors);
+			}
 		}
 	}
 });

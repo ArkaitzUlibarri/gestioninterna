@@ -34,9 +34,10 @@
 				<option :value="index" v-for="(category, index) in categoryList">@{{ category.name }} - @{{ category.description }}</option>
 			</select>
 
-			<button class="btn btn-primary btn-sm"
+			<button class="btn btn-primary btn-sm custom-btn-width"
 					:disabled="idxCategory==-1"
 					v-on:click.prevent="addCategory"> Add</button>
+					
 			<hr style="margin-top: 10px; margin-bottom: 10px;">
 
 			<ul class="list-group">
@@ -52,7 +53,7 @@
 </div>
 
 <div class ="form-group pull-right">
-	<a title="Cancel" class="btn btn-default" href="{{ url('users') }}">Back</a>
+	<a class="btn btn-default custom-btn-width" href="{{ url('users') }}">Back</a>
 </div>
 
 @endsection

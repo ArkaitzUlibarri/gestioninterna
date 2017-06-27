@@ -1,4 +1,5 @@
-<div class="panel panel-default">
+<div class="panel panel-primary">
+    <div class="panel-heading">Profile</div>
     <div class="panel-body">
         <p class="col-xs-12 col-sm-6"><strong>Project name: </strong> {{ strtoupper($project->name) }}</p>
         <p class="col-xs-12 col-sm-6"><strong>Customer: </strong> {{ strtoupper($project->customer->name) }}</p>
@@ -8,8 +9,8 @@
     </div>
 </div>
 
-<div class="panel panel-default">
-    <div class="panel-heading"><strong>Description</strong></div>
+<div class="panel panel-primary">
+    <div class="panel-heading">Description</div>
     <div class="panel-body">
         {{ $project->description }}
     </div>

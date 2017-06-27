@@ -157,14 +157,6 @@ var app = new Vue({
 				//****************************************
 				vm.project();
 
-				/*
-    let borrar = [];
-    vm.array.forEach(function(element,index,array) {								
-    	if(vm.projectList.indexOf(element.project) == -1){						
-    		borrar.push(index);
-    	}		
-    });
-    */
 				for (var i = vm.array.length - 1; i >= 0; i--) {
 					if (vm.projectList.indexOf(vm.array[i].project) == -1) {
 						vm.array.splice(i, 1);

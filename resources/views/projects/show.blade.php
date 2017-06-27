@@ -18,7 +18,9 @@
 
 <div class="row">
     <div class="col-xs-12 col-sm-offset-1 col-sm-10">
-        <a title="Back" class="btn btn-default" href="{{ url('projects') }}">Back</a>
+        <div class ="form-group pull-right">
+            <a class="btn btn-default custom-btn-width" href="{{ url('projects') }}">Back</a>
+        </div>
     </div>
 </div>
 

@@ -25,6 +25,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
 </head>
+
 <body>
     @include('layouts.navbar')
     
@@ -38,4 +39,5 @@
     
     @stack('script-bottom')
 </body>
+
 </html>
