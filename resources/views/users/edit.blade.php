@@ -2,35 +2,28 @@
 
 @section('content')
 
-<div class="panel panel-primary">
+@include('users.card')
 
-	<div class="panel-heading">Edit User</div>
+<div class="panel panel-primary">
+	<div class="panel-heading">Configuration</div>
 
  	<div class="panel-body">
+		<div class="form-inline">
+			<div class="form-group">
+				<label>Role:</label>
+				<select name="role"
+						class="form-control input-sm"
+						v-model="role"
+						v-on:change="updateRole(role)">
 
- 		@include('users.card')
+					@foreach ($roles as $role)
+						<option value="{{ $role }}">{{ ucfirst($role) }}</option>				
+					@endforeach
 
-		<div class="panel panel-default">
-			<div class="panel-body">
-				<div class="form-inline">
-					<div class="form-group">
-						<label>Role:</label>
-						<select name="role"
-								class="form-control input-sm"
-								v-model="role"
-								v-on:change="updateRole(role)">
-
-							@foreach ($roles as $role)
-								<option value="{{ $role }}">{{ ucfirst($role) }}</option>				
-							@endforeach
-
-						</select>
-					</div>
-				</div>
+				</select>
 			</div>
 		</div>
 	</div>
-
 </div>
 
 <div class="panel panel-primary">

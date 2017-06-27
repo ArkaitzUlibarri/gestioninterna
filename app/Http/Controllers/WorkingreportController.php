@@ -64,20 +64,22 @@ class WorkingReportController extends Controller
 
 	public function edit($user_id,$date)
 	{
-		$auth_user      = Auth::user();
-		$report_user    = User::find($user_id);
-		$absences       = Absence::all();
+		$auth_user = Auth::user();
+		$report_user = User::find($user_id);
+		$absences = Absence::all();
 		$workingreports = $this->getReportsPerDay($user_id,$date);
-		$groupProjects  = $this->getGroupsProjectsByUser($user_id);
-		$categories     = $this->getCategories($user_id);
-		$contract       = $report_user->contracts->where('end_date',null)->first();
+		$groupProjects = $this->getGroupsProjectsByUser($user_id);
+		$categories = $this->getCategories($user_id);
+		$contract = $report_user->contracts->where('end_date', null)->first();
 
-		if($contract !=[] ){
-            $teleworking = $contract->teleworking->where('end_date',null)->first();
-            if($teleworking == []){
-            	$teleworking = new Teleworking;
-            }          
+		$teleworking = null;
+		if($contract != null ){
+            $teleworking = $contract->teleworking->where('end_date', null)->first();
         }
+
+        if($teleworking == null){
+			$teleworking = new Teleworking;
+		}  
 
 		return view('workingreports.edit',compact('date','auth_user','report_user','workingreports','absences','groupProjects','categories','contract','teleworking'));
 	}

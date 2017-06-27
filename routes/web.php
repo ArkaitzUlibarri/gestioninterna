@@ -51,7 +51,6 @@ Route::get('workingreports/add/{id}/{date}/',['as'=> 'workingreports.edit','uses
 Route::get('validation', 'ValidationController@index');
 
 
-
 /**
  * API, mirar autenticacion token o passport en el api.php
  */

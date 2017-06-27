@@ -32,12 +32,14 @@
     </div>
 @endif
 
-<div class="row">
-    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
-        @if(Auth::user()->isAdmin())
-            <a title="Back" class="btn btn-default" href="{{ url('users') }}">Back</a>
-        @endif
+@if(Auth::user()->isAdmin())
+    <div class="row">
+        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+            <div class="pull-right">
+                <a title="Back" class="btn btn-default" href="{{ url('users') }}">Back</a>
+            </div>
+        </div>
     </div>
-</div>
+ @endif
 
 @endsection
