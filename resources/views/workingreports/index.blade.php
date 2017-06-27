@@ -93,17 +93,10 @@
 			@endif
 
 			<div class="form-group">
-<<<<<<< HEAD
-				<a type="button" title="New Report" class="btn btn-success" v-bind:href="'/workingreports/add/'+user_report +'/'+ getDate()" >
+				<a type="button" title="New Report" class="btn btn-success btn-sm" v-bind:href="'/workingreports/add/'+user_report +'/'+ getDate()" >
 					New Report
 				</a>
 			</div>
-=======
-	            <a type="button" class="btn btn-success btn-sm" v-bind:href="'workingreports/add/'+user_report +'/'+ getDate() +'/'">
-	                <span class="glyphicon glyphicon-plus"></span> New Report
-	            </a>
-            </div>
->>>>>>> ec5e9bf1b16ade4f83cd4fd8fbcc7b24f0856feb
 
 		</div>
 	</div>	
