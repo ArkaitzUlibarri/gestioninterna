@@ -42,8 +42,9 @@ class UsersController extends Controller
      * @param  User
      * @return View
      */
-    public function edit(User $user)
+    public function edit($id)
     {
+        $user = User::find($id);
         $categories = Category::all();
         $roles = config('options.roles');
         
@@ -56,8 +57,9 @@ class UsersController extends Controller
      * @param  User
      * @return View
      */
-    public function show(User $user)
+    public function show($id)
     {
+        $user = User::find($id);
         $roles = config('options.roles');
         $categories = $user->categories;
         $groups = $user->groups->where('enabled', 1);
