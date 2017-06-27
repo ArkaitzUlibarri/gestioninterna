@@ -41,9 +41,7 @@
 	-->
 	<div class="panel panel-primary">
 
-		  <div class="panel-heading">
-		    	Actual groups for this user
-		  </div>
+		  <div class="panel-heading">Groups</div>
 
 		  <div class="panel-body">
 				<div class="row">
@@ -68,7 +66,7 @@
 					<form class="form-inline">	
 			
 						<label>Project</label>
-						<select class="form-control" v-on:change="groupsRefresh" v-model="newGroupUser.project">
+						<select class="form-control input-sm" v-on:change="groupsRefresh" v-model="newGroupUser.project">
 							<option value="">-</option>
 							<template v-for="(project, index) in projectList">
 								<option :project="project" :index="index">@{{project}}</option>
@@ -76,14 +74,14 @@
 						</select>			
 					
 						<label>Group</label>
-						<select class="form-control" v-model="newGroupUser.group">
+						<select class="form-control input-sm" v-model="newGroupUser.group">
 							<option value="">-</option>
 							<template v-for="(group, index) in groupList">
 								<option :group="group" :index="index">@{{group}}</option>
 							</template>	
 						</select>			
 					
-						<button title="Save" class="btn btn-primary" :disabled="formFilled==false" v-on:click.prevent="saveGroup">
+						<button title="Save" class="btn btn-primary btn-sm" :disabled="formFilled==false" v-on:click.prevent="saveGroup">
 							<span class="glyphicon glyphicon-floppy-disk"></span> Save
 						</button>
 							
@@ -94,7 +92,10 @@
 		</div>
 	</div>
 
-	<a class="btn btn-default" href="{{ url('users') }}">Back</a>
+	<div class ="form-group pull-right">
+		<a class="btn btn-default custom-btn-width" href="{{ url('users') }}">Back</a>
+	</div>
+
 </div>
 
 
@@ -103,7 +104,7 @@
 
 @push('script-bottom')
 <script type="text/javascript">
-	var user          = <?php echo json_encode($user);?>;
+	var user = <?php echo json_encode($user);?>;
 	var groupProjects = <?php echo json_encode($groupProjects);?>;
 </script>
 
