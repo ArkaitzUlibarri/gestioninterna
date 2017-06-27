@@ -37,7 +37,7 @@ class GroupsController extends Controller
         $user = User::find($user_id);
         $groupProjects = $this->getGroupsProjects();
 
-        return view('groups.createUser',compact('user','groupProjects'));
+        return view('users.addGroups',compact('user','groupProjects'));
     }
     
     private function getGroups()

@@ -26,7 +26,7 @@
 						<td>@{{ item.fullname }}</td>
 						<td>@{{ getWeek(1,item.created_at) }} | @{{ getDayWeek(item.created_at) }}</td>
 						<td>   
-							<a id="ref" href="url()" v-bind:href="'workingreports/add/'+item.user_id +'/'+ item.created_at +'/'"  title="Edit" aria-hidden="true">
+							<a id="ref" href="url()" v-bind:href="'/workingreports/add/'+item.user_id +'/'+ item.created_at"  title="Edit" aria-hidden="true">
 								@{{ item.created_at }}
 							</a>               
 						</td>
@@ -93,10 +93,10 @@
 			@endif
 
 			<div class="form-group">
-	            <a type="button" class="btn btn-success btn-sm" v-bind:href="'workingreports/add/'+user_report +'/'+ getDate() +'/'">
-	                <span class="glyphicon glyphicon-plus"></span> New Report
-	            </a>
-            </div>
+				<a type="button" title="New Report" class="btn btn-success btn-sm" v-bind:href="'/workingreports/add/'+user_report +'/'+ getDate()" >
+					New Report
+				</a>
+			</div>
 
 		</div>
 	</div>	

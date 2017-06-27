@@ -11,7 +11,7 @@
     @if(count($contract->teleworking)>0)
     <div class="row">
         <div class="col-xs-12 col-sm-offset-1 col-sm-10">
-            @include('teleworking.show')
+            @include('contracts.teleworking')
         </div>
     </div>
 	@endif
@@ -19,7 +19,7 @@
 	@if(count($contract->reductions)>0)
     <div class="row">
         <div class="col-xs-12 col-sm-offset-1 col-sm-10">
-            @include('reductions.show')
+            @include('contracts.reductions')
         </div>
     </div>
 	@endif
