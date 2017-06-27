@@ -55,5 +55,5 @@ Route::get('validation', 'ValidationController@index');
 /**
  * API, mirar autenticacion token o passport en el api.php
  */
-Route::get('api/validate','Api\ValidationApiController@index');
-Route::patch('api/validate','Api\ValidationApiController@update');
+Route::get('api/validate','Api\v1\ValidationController@index');
+Route::patch('api/validate','Api\v1\ValidationController@update');
