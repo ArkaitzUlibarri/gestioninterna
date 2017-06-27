@@ -4,7 +4,7 @@
 <div class="panel panel-primary"> 
 
 	<div class="panel-heading"> 
-		@include('workingreports.filter')
+		@include('workingreports.partials.filter')
 		<h3 class="panel-title" style="margin-top: 7px;">WORKING REPORTS</h3>
 		<div class="clearfix"></div>
 	</div>

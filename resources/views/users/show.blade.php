@@ -36,7 +36,7 @@
     <div class="row">
         <div class="col-xs-12 col-sm-offset-1 col-sm-10">
             <div class="pull-right">
-                <a title="Back" class="btn btn-default" href="{{ url('users') }}">Back</a>
+                <a class="btn btn-default custom-btn-width" href="{{ url('users') }}">Back</a>
             </div>
         </div>
     </div>

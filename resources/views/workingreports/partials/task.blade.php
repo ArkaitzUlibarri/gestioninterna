@@ -1,4 +1,3 @@
-
 <div class="panel panel-primary">
 
 	<div class="panel-heading">
@@ -11,7 +10,7 @@
 		<div class="row">
 			<div class="form-group col-xs-12 col-sm-3">
 				<label>Activity</label>
-				<select class="form-control" v-model="newTask.activity" v-on:change="refreshForm" v-bind:disabled="validatedTasks">
+				<select class="form-control input-sm" v-model="newTask.activity" v-on:change="refreshForm" v-bind:disabled="validatedTasks">
 					<option value="">-</option>
 					@foreach(config('options.activities') as $activity)				
 						<option value="{{$activity}}">{{ucfirst($activity)}}</option>
@@ -21,12 +20,12 @@
 
 			<div class="form-group col-xs-12 col-sm-3">
 				<label>Time (Hours)</label>
-				<input type="number" min=0 max=8.25 step="0.25" class="form-control" placeholder="Time" v-model="newTask.time" v-bind:disabled="validatedTasks">
+				<input type="number" min=0 max=8.25 step="0.25" class="form-control input-sm" placeholder="Time" v-model="newTask.time" v-bind:disabled="validatedTasks">
 			</div>
 
 			<div class="form-group col-xs-12 col-sm-3 ">
 				<label>Type</label>
-				<select class="form-control" v-model="newTask.job_type" v-bind:disabled="validatedTasks">
+				<select class="form-control input-sm" v-model="newTask.job_type" v-bind:disabled="validatedTasks">
 					<option value="">-</option>
 					@foreach(config('options.types') as $type)				
 						<option value="{{$type}}">{{ucfirst($type)}}</option>
@@ -39,7 +38,7 @@
 		<div class="row">
 			<div class="form-group col-xs-12 col-sm-6 " v-show="newTask.activity == 'project'">
 				<label>Project</label>
-				<select class="form-control" v-on:change="groupsRefresh" v-model="newTask.project" v-bind:disabled="validatedTasks">
+				<select class="form-control input-sm" v-on:change="groupsRefresh" v-model="newTask.project" v-bind:disabled="validatedTasks">
 					<option value="">-</option>
 					<template v-for="(element, index) in projectList">
 						<option :project="element" :index="index">@{{element}}</option>
@@ -49,7 +48,7 @@
 
 			<div class="form-group col-xs-12 col-sm-3" v-show="newTask.project != ''">
 				<label>Group</label>
-				<select class="form-control" v-model="newTask.group" v-bind:disabled="validatedTasks">
+				<select class="form-control input-sm" v-model="newTask.group" v-bind:disabled="validatedTasks">
 					<option value="">-</option>
 					<template v-for="(group, index) in groupList">
 						<option :group="group" :index="index">@{{group}}</option>
@@ -57,9 +56,9 @@
 				</select>
 			</div>
 
-			<div class="form-group col-xs-12 col-sm-3" v-show=" newTask.group != '' ">
+			<div class="form-group col-xs-12 col-sm-3" v-show=" newTask.group != ''">
 				<label>Level Position</label>
-				<select class="form-control" v-model="newTask.category" v-bind:disabled="validatedTasks">
+				<select class="form-control input-sm" v-model="newTask.category" v-bind:disabled="validatedTasks">
 					<option value="">-</option>
 					<template v-for="(element, index) in categoryList">
 						<option :category="element" :index="index">@{{element}}</option>
@@ -69,7 +68,7 @@
 
 			<div class="form-group col-xs-12 col-sm-3" v-show="newTask.activity == 'absence'">
 				<label>Absence</label>
-				<select class="form-control" v-model="newTask.absence" v-bind:disabled="validatedTasks">
+				<select class="form-control input-sm" v-model="newTask.absence" v-bind:disabled="validatedTasks">
 					<option value="">-</option>
 					@foreach($absences as $absence)				
 						<option value="{{$absence->name}}">{{ucfirst($absence->name)}}</option>
@@ -79,7 +78,7 @@
 
 			<div class="form-group col-xs-12 col-sm-3" v-show="newTask.activity == 'training'">
 				<label>Training</label>
-				<select class="form-control" v-model="newTask.training_type" v-bind:disabled="validatedTasks">
+				<select class="form-control input-sm" v-model="newTask.training_type" v-bind:disabled="validatedTasks">
 					<option value="">-</option>
 					@foreach(config('options.training') as $training)				
 						<option value="{{$training}}">{{ucfirst($training)}}</option>
@@ -89,7 +88,7 @@
 
 			<div class="form-group col-xs-12 col-sm-3" v-show="newTask.training_type == 'course'">
 				<label>Course</label>
-				<select class="form-control" disabled>
+				<select class="form-control input-sm" disabled>
 					<option value="">-</option>
 				</select>
 			</div>
@@ -100,13 +99,10 @@
 		</div>
 		
 		<div class="form-group" v-if="! validatedTasks">	
-			<button title="Save Task" class="btn btn-primary" :disabled="formTaskFilled==false" v-on:click="addTask" v-show="editIndex==-1">
+			<button class="btn btn-primary btn-sm" v-on:click="addUpdateTask" :disabled="formTaskFilled==false">
 				<span class="glyphicon glyphicon-floppy-disk"></span> Save
 			</button>
-			<button title="Update Task" class="btn btn-primary" :disabled="formTaskFilled==false" v-on:click="editTask" v-show="editIndex!=-1">
-				<span class="glyphicon glyphicon-floppy-disk"></span> Update
-			</button>
-			<button title="New Task" class="btn btn-primary" v-show="editIndex!=-1" v-on:click="initializeTask">
+			<button title="New Task" class="btn btn-primary btn-sm" v-on:click="initializeTask" v-show="editIndex!=-1">
 				New Task
 			</button>
 		</div>

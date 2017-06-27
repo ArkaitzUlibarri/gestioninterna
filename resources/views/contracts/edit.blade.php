@@ -4,7 +4,6 @@
 	<div class="container">
 
 		<form method="POST" action="{{ url('contracts', $contract->id) }}">
-
 			{{ csrf_field() }}
 			{{ method_field('PATCH') }}
 
@@ -23,9 +22,9 @@
 							<label>Employee:</label>
 							<select name="user_id" class="form-control">
 								@foreach ($users as $user)
-									<option value="{{ $user->id }}" {{ $contract->name==$user->name ? "selected" : "" }}>
+									<option value="{{ $user->id }}" {{ $contract->full_name==$user->full_name ? "selected" : "" }}>
 										{{ $user->full_name }}
-									</option>		
+									</option>
 								@endforeach	  
 							</select>
 						</div>
@@ -103,23 +102,25 @@
 						</div>
 					</div>
 
+					<hr>
+
 					<div class ="form-group pull-right">
-				        <a title="Cancel" class="btn btn-default" href="{{ url('contracts') }}">
-							Cancel
-						</a>
+
+				        <a class="btn btn-default" href="{{ url('contracts') }}">Cancel</a>
+
 						<button type="submit" title="Save" class="btn btn-primary">
 							<span class="glyphicon glyphicon-floppy-disk"></span> Save
 						</button>
+
 					</div>
 					<div class ="form-group pull-left">
-						<a title="Teleworking" class="btn btn-primary" type="button" 
-				           href="{{ url('contracts/' . $contract->id . '/teleworking') }}">
-				           Teleworking
-				        </a>
-				        <a title="Reductions" class="btn btn-primary" type="button" 
-				           href="{{ url('contracts/' . $contract->id . '/reductions') }}">
-				            Reductions
-				        </a>
+
+						<a class="btn btn-primary" type="button" 
+				           href="{{ url('contracts/' . $contract->id . '/teleworking') }}">Teleworking</a>
+
+				        <a class="btn btn-primary" type="button" 
+				           href="{{ url('contracts/' . $contract->id . '/reductions') }}">Reductions</a>
+
 					</div>
 				</div>	
 			</div>
@@ -129,7 +130,6 @@
 
 		<form method="post" action="{{ url('contracts', $contract->id) }}">
 	        {{ csrf_field() }}
-
 	        {{ method_field('delete') }}
 
 	      	<button class="btn btn-danger" type="submit"><span class="glyphicon glyphicon-trash"></span> Delete</button>

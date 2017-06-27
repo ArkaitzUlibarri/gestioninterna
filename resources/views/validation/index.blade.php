@@ -3,7 +3,6 @@
 @section('content')
 <div class="panel panel-primary">
     
-     
         <div class="panel-heading">
             @include('validation.filter')
             <h3 class="panel-title" style="margin-top: 7px;">VALIDATION</h3>
@@ -13,8 +12,8 @@
         <div class="panel-body">
             <div class="row">
 
-                <div v-if="reports.length==0">
-                    <h4>No reports available...</h4>
+                <div v-if="reports.length==0" class="col-xs-12 col-md-4">
+                    <h5>No reports available...</h5>
                 </div>
 
                 <div v-else class="col-xs-12 col-md-4" v-for="report in filtered_reports">
