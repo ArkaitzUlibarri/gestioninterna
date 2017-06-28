@@ -33,8 +33,8 @@ class ProjectFormRequest extends FormRequest
                     'name'        => 'required|string|unique:projects,name,' . $this->get('name') . ',id,customer_id,'. $this->customer_id,
                     'description' => 'required|string',
                     'customer_id' => 'required|exists:customers,id',
-                    'start_date'  => 'required|date',
-                    'end_date'    => 'nullable|date|after:start_date',
+                    'start_date'  => 'required|date|date_format:Y-m-d',
+                    'end_date'    => 'nullable|date|after:start_date|date_format:Y-m-d',
                     'pm_id'       => 'required|string'
                 ];
             }
@@ -50,8 +50,8 @@ class ProjectFormRequest extends FormRequest
                          
                     'description' => 'required|string',
                     'customer_id' => 'required|exists:customers,id',
-                    'start_date'  => 'required|date',
-                    'end_date'    => 'nullable|date|after:start_date',
+                    'start_date'  => 'required|date|date_format:Y-m-d',
+                    'end_date'    => 'nullable|date|after:start_date|date_format:Y-m-d',
                     'pm_id'       => 'required|string'
                 ];
             }
