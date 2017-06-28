@@ -31,12 +31,12 @@
 
 				<div class="col-xs-12 col-sm-2">
 					<label>Start date</label>
-					<input class="form-control" type ="date" value="{{$project->start_date}}" readonly>
+					<input class="form-control" type ="date" placeholder="yyyy-mm-dd" value="{{$project->start_date}}" readonly>
 				</div>	
 
 				<div class="col-xs-12 col-sm-2">
 					<label>End date</label>
-					<input class="form-control" type ="date" value="{{$project->end_date}}" readonly>
+					<input class="form-control" type ="date" placeholder="yyyy-mm-dd" value="{{$project->end_date}}" readonly>
 				</div>			
 
 			</div>
@@ -83,7 +83,7 @@
 						<div class="form-group col-lg-4">
 							<div class="input-group">
 								<span class="input-group-addon">
-									<input type="checkbox" v-model="newGroup.enabled">
+									<input type="checkbox" v-bind:title="[newGroup.enabled ? 'Enabled':'Disabled']" v-model="newGroup.enabled">
 								</span>
 								<input type="text" class="form-control" placeholder="Group Name" v-model="newGroup.name">
 							</div>
