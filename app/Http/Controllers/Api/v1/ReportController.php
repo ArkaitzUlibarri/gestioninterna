@@ -161,50 +161,69 @@ class ReportController extends ApiController
 		}
 
 		$teleworking = $this->teleworking( $request['created_at'],$request['user_id']);
-
-		//Query de extracción del último reporte
-		$results = DB::select(DB::raw(
-				"INSERT INTO working_report (
-					user_id,
-					created_at,
-					activity,
-					project_id,
-					group_id,
+		$reportableGroups = $this->reportingGroups($request['user_id']);
+		$date = $this-> lastReportDate($request['created_at'], $request['user_id']);
+	
+		//Seleccion de los datos
+		$results = DB::table('working_report')
+			->select(
+				DB::raw(
+					"user_id,
+					'" . $date . "' as created_at, 
+					activity, 
+					project_id, 
+					group_id, 
 					category_id,
-					training_type,
-					course_group_id,
-					absence_id,
+					training_type, 
+					course_group_id, 
+					absence_id, 
 					time_slots,
-					job_type
-				)
-				SELECT user_id, :reportdate as created_at, activity, project_id, group_id, category_id ,training_type, course_group_id, absence_id, time_slots, 
-				CASE activity  
-				  when 'project' then :teleworking  
-				  when 'absence' then null  
-				  when 'training' then 'on site work'  
-				end as job_type 
-				FROM working_report
-				WHERE user_id = :user and created_at = (
-					SELECT MAX(created_at) FROM working_report where created_at < :report and user_id = :userfilter
-				);"
-			), array(
-				'reportdate'  => $request['created_at'],
-				'teleworking' => $teleworking,
-				'user'        => $request['user_id'],
-				'report'      => $request['created_at'],
-				'userfilter'  => $request['user_id'],
-			)
-		);
+					CASE activity  
+					  when 'project' then '". $teleworking ."' 
+					  when 'absence' then null  
+					  when 'training' then 'on site work'  
+					end as job_type"
+				))
+			->where('user_id',$request['user_id'])
+			->where('created_at',$date);
 
-		return $this->respond("COPIED");
+		$results = $results->get()->toArray();
+
+		$dataset = [];
+		foreach ($results as $row) {
+			$dataset[] = [
+				'user_id'         => $row->user_id,
+				'created_at'      => $request['created_at'],
+				'activity'        => $row->activity,
+				'project_id'      => $row->project_id,
+				'group_id'        => $row->group_id,
+				'category_id'     => $row->category_id,
+				'training_type'   => $row->training_type,
+				'course_group_id' => $row->course_group_id,
+				'absence_id'      => $row->absence_id,
+				'time_slots'      => $row->time_slots,
+				'job_type'        => $row->job_type
+			];
+		}
+
+		
+		$filtered = array_filter($dataset, function($item) use ($reportableGroups){
+			if(in_array($item['group_id'], $reportableGroups) || ($item['activity'] == 'training') || ($item['activity'] == 'absence')){
+				return true;
+			}
+		});
+		
+		//DB::table('working_report')->insert($dataset);
+		Workingreport::insert($filtered);
+
+		return  $this->respond("COPIED");
 	}
 
 	private function teleworking($date,$user_id)
 	{
-		//Teleworking
+		//Obtener dia
 		$dayOfWeek = Carbon::createFromFormat('Y-m-d', $date)->dayOfWeek;
-		$dayOfWeek = $dayOfWeek ==0 ? 7 : $dayOfWeek;//Convertir Domingo
-		
+		$dayOfWeek = $dayOfWeek == 0 ? 7 : $dayOfWeek;//Convertir Domingo
 		$day = config('options.daysWeek')[$dayOfWeek - 1];
 
 		$user = User::find($user_id);
@@ -214,6 +233,40 @@ class ReportController extends ApiController
 			return $data[$day] ? "teleworking": "on site work";
 		}
 
-		return null;
+		return "null";
+	}
+
+	private function reportingGroups($user_id)
+	{
+		$ids = array();
+
+		$user = User::find($user_id);
+		$groups = $user->groups;
+
+	    foreach ($groups as $group) {
+	    	if( $group->enabled){
+	    		$ids [] = $group->id;  
+	    	}       
+        }
+
+		return $ids;
+	}
+
+	/**
+	 * Fecha último reporte
+	 * 
+	 * @param  $user_id
+	 * @param  $created-at
+	 * @return string
+	 */
+	private function lastReportDate ($created_at,$user_id)
+	{
+		return DB::table('working_report')
+			->select('created_at')
+			->where('created_at','<',$created_at)
+			->where('user_id',$user_id)
+			->orderBy('created_at','desc')
+			->first()
+			->created_at;
 	}
 }

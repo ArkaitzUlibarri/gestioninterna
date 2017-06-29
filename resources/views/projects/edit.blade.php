@@ -35,7 +35,7 @@
 							<label>Project Manager:</label>
 							<select name="pm_id" class="form-control">	
 								@foreach ($PM_Users as $user)
-									<option {{$user->id==$project->pm_id ? 'selected' : ''}} value="{{ $user->id }}">{{ strtoupper($user->fullname) }}</option>
+									<option {{$user->id==$project->pm_id ? 'selected' : ''}} value="{{ $user->id }}">{{ ucfirst($user->fullname) }}</option>
 								@endforeach	  
 							</select>
 						</div>
