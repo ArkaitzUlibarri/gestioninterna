@@ -5,8 +5,8 @@
 <div id="groups" class ="container">
 
 	<div class="row">
-		<div class ="form-group col-xs-12 col-sm-4">
-			<h2>{{ ucfirst($user->fullname) }}</h2>				
+		<div class ="form-group col-xs-12 col-sm-6">
+			<h2>{{ ucwords($user->fullname) }}</h2>				
 		</div>
 	</div>
 	<!--

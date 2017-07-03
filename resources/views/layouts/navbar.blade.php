@@ -38,14 +38,15 @@
                             
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    {{ ucfirst(Auth::user()->name) }}
                                     @if(Auth::user()->isAdmin())
-                                        {{ Auth::user()->name }} {{ Auth::user()->lastname_1 }} (Admin)
+                                        (Admin)
                                     @elseif(Auth::user()->isPM())
-                                        {{ Auth::user()->name }} {{ Auth::user()->lastname_1 }} (PM)
+                                        (PM)
                                     @elseif(Auth::user()->isRole('tools'))
-                                        {{ Auth::user()->name }} {{ Auth::user()->lastname_1 }} (Tools)
+                                        (Tools)
                                     @else
-                                        {{ Auth::user()->name }} {{ Auth::user()->lastname_1 }} (User)
+                                        (User)
                                     @endif
                                     <span class="caret"></span>
                                 </a>

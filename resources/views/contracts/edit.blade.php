@@ -23,7 +23,7 @@
 							<select name="user_id" class="form-control">
 								@foreach ($users as $user)
 									<option value="{{ $user->id }}" {{ $contract->full_name==$user->full_name ? "selected" : "" }}>
-										{{ $user->full_name }}
+										{{ ucwords($user->full_name) }}
 									</option>
 								@endforeach	  
 							</select>
@@ -36,7 +36,7 @@
 							<select name="contract_type_id" class="form-control">
 								@foreach ($contractTypes as $contractType)		
 									<option value="{{ $contractType->id }}" {{$contractType->name==$contract->contract_type ? "selected" : "" }}>
-										{{$contractType->name}}
+										{{ ucfirst($contractType->name) }}
 									</option>					
 								@endforeach			  
 							</select>
@@ -73,7 +73,7 @@
 							<select name="national_days_id" class="form-control">
 								@foreach ($nationalDays as $nationalDay)	
 									<option value="{{ $nationalDay->id }}" {{$nationalDay->id==$contract->national_days_id ? "selected" : "" }}>
-										{{$nationalDay->name}}
+										{{ ucwords($nationalDay->name) }}
 									</option>			
 								@endforeach			  
 							</select>
@@ -84,7 +84,7 @@
 							<select name="regional_days_id" class="form-control">
 								@foreach ($regionalDays as $regionalDay)	
 									<option value="{{ $regionalDay->id }}" {{$regionalDay->id==$contract->regional_days_id ? "selected" : "" }}>
-										{{$regionalDay->name}}
+										{{ ucwords($regionalDay->name) }}
 									</option>							
 								@endforeach			  
 							</select>
@@ -95,7 +95,7 @@
 							<select name="local_days_id" class="form-control">
 								@foreach ($localDays as $localDay)		
 									<option value="{{ $localDay->id }}" {{$localDay->id==$contract->local_days_id ? "selected" : "" }}>
-										{{$localDay->name}}
+										{{ ucwords($localDay->name) }}
 									</option>
 								@endforeach			  
 							</select>

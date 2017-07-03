@@ -3,7 +3,7 @@
 		<div class="form-inline">
 			
 			<span style="padding-right: 1em">
-				<strong>{{ $report_user->fullname }}</strong>
+				<strong>{{ ucwords($report_user->fullname) }}</strong>
 			</span>
 
 			Report Day: 
@@ -17,7 +17,7 @@
 				   v-model="reportdate"
 				   v-on:blur="dateValidation">
 
-			W@{{ week }}-@{{ reportDayWeek }}
+			W@{{ week }}-@{{ reportDayWeek.toUpperCase() }}
 
 			<button class="btn btn-primary btn-sm pull-right"
 					v-on:click="copyTasks"

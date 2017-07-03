@@ -6,7 +6,7 @@
 
 	<div class="row">
 		<div class ="form-group col-xs-12 col-sm-4">
-			<h2>{{ strtoupper($project->name) }}</h2>				
+			<h2>{{ ucwords($project->name) }}</h2>				
 		</div>
 	</div>
 
@@ -21,7 +21,7 @@
 
 				<div class="col-xs-12 col-sm-6">	
 					<label>Project</label>
-					<input class="form-control" type="text" placeholder="{{$project->name}}" readonly>
+					<input class="form-control" type="text" placeholder="{{ ucwords($project->name) }}" readonly>
 				</div>	
 
 				<div class="col-xs-12 col-sm-2">
@@ -105,7 +105,9 @@
 		</div>
 	</div>
 
-	<a class="btn btn-default" href="{{ url('projects') }}">Back</a>
+	<div class ="form-group pull-right">
+		<a class="btn btn-default custom-btn-width" href="{{ url('projects') }}">Back</a>
+	</div>
 </div>
 
 @endsection

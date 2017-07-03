@@ -9,8 +9,8 @@
                 <strong>Main</strong>
             </div>
             <div class="panel-body">
-                <p class="col-xs-12 col-sm-4"><strong>Employee: </strong> {{ $contract->user->fullname }}</p>
-                <p class="col-xs-12 col-sm-5"><strong>Type of contract: </strong> {{ $contract->contractType->name }}</p>
+                <p class="col-xs-12 col-sm-4"><strong>Employee: </strong> {{ ucwords($contract->user->fullname) }}</p>
+                <p class="col-xs-12 col-sm-5"><strong>Type of contract: </strong> {{ ucfirst($contract->contractType->name) }}</p>
                 <p class="col-xs-12 col-sm-3"><strong>Week working hours: </strong> {{ $contract->week_hours}}</p>
             </div>
         </div>
@@ -31,9 +31,9 @@
                 <strong>Location</strong>
             </div>
             <div class="panel-body">
-                <p class="col-xs-12 col-sm-4"><strong>Country: </strong> {{ $nationalDayName }}</p>
-                <p class="col-xs-12 col-sm-4"><strong>Region: </strong> {{ $regionalDayName }}</p>
-                <p class="col-xs-12 col-sm-4"><strong>City: </strong> {{ $localDayName }}</p>
+                <p class="col-xs-12 col-sm-4"><strong>Country: </strong> {{ ucwords($nationalDayName) }}</p>
+                <p class="col-xs-12 col-sm-4"><strong>Region: </strong> {{ ucwords($regionalDayName) }}</p>
+                <p class="col-xs-12 col-sm-4"><strong>City: </strong> {{ ucwords($localDayName) }}</p>
             </div>
         </div>
 

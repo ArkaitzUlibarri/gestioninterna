@@ -11,8 +11,8 @@
             <tbody>
                 @foreach($groups as $group)
                     <tr class="{{ $group->enabled ? 'success' : 'danger' }}">              
-                        <td>{{ $group->project->name }}</td>
-                        <td>{{ $group->name }}</td> 
+                        <td>{{ ucwords($group->project->name) }}</td>
+                        <td>{{ ucwords($group->name) }}</td> 
                     </tr>
                 @endforeach
             </tbody>

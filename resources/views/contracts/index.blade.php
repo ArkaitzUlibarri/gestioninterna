@@ -22,8 +22,8 @@
             <tbody>
                 @foreach($contracts as $contract)
                     <tr>
-                        <td><a title="Show" href="{{ url('contracts/' . $contract->id) }}">{{ $contract->full_name }}</a></td>
-                        <td>{{ $contract->contract_types}}</td>
+                        <td><a title="Show" href="{{ url('contracts/' . $contract->id) }}">{{ ucwords($contract->full_name) }}</a></td>
+                        <td>{{ ucfirst($contract->contract_types) }}</td>
                         <td>{{ $contract->start_date}}</td>
                         <td>{{ empty($contract->estimated_end_date) ? "None" : "$contract->estimated_end_date"}}</td>    
                         <td>{{ empty($contract->end_date) ? "In progress" : "$contract->end_date"}}</td>          

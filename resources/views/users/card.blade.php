@@ -13,8 +13,8 @@
         </p>
         <p class="col-xs-12 col-sm-6"><strong>Username: </strong> {{ $user->username }}</p>
         <p class="col-xs-12 col-sm-6"><strong>Email: </strong> {{ $user->email }}</p>
-        <p class="col-xs-12 col-sm-6"><strong>Name: </strong> {{ $user->name }}</p>
-        <p class="col-xs-12 col-sm-6"><strong>Lastname: </strong> {{ $user->lastname }}</p>
+        <p class="col-xs-12 col-sm-6"><strong>Name: </strong> {{ ucfirst($user->name) }}</p>
+        <p class="col-xs-12 col-sm-6"><strong>Lastname: </strong> {{ ucwords($user->lastname) }}</p>
         
     </div>
 </div>

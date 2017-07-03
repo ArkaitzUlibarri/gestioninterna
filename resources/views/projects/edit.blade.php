@@ -19,7 +19,7 @@
 			 		<div class="row">
 						<div class="form-group col-xs-12 col-sm-6 col-md-4">
 							<label>Project name:</label>
-							<input name="name" type ="text" class="form-control" placeholder="Project name" value="{{ strtoupper($project->name) }}">
+							<input name="name" type ="text" class="form-control" placeholder="Project name" value="{{ ucwords($project->name) }}">
 						</div>
 
 						<div class="form-group col-xs-12 col-sm-6 col-md-4">
@@ -35,7 +35,7 @@
 							<label>Project Manager:</label>
 							<select name="pm_id" class="form-control">	
 								@foreach ($PM_Users as $user)
-									<option {{$user->id==$project->pm_id ? 'selected' : ''}} value="{{ $user->id }}">{{ ucfirst($user->fullname) }}</option>
+									<option {{$user->id==$project->pm_id ? 'selected' : ''}} value="{{ $user->id }}">{{ ucwords($user->fullname) }}</option>
 								@endforeach	  
 							</select>
 						</div>
@@ -55,7 +55,7 @@
 
 					<div class="form-group">
 						<label>Description:</label>
-						<textarea name="description" class="form-control" placeholder="Description" rows=5 >{{ $project->description }}</textarea>
+						<textarea name="description" class="form-control" placeholder="Description" rows=5 >{{ ucfirst($project->description) }}</textarea>
 					</div>
 
 					@include('layouts.errors')

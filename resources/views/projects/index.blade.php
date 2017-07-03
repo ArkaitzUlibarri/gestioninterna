@@ -23,7 +23,7 @@
                 @foreach($projects as $project)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td><a a title="Show" href="{{ url('projects' . '/' . $project->id . '/') }}">{{ $project->name }}</a></td>
+                        <td><a a title="Show" href="{{ url('projects' . '/' . $project->id . '/') }}">{{ strtoupper($project->name) }}</a></td>
                         <td>{{ strtoupper($project->customer) }}</td>
                         <td>{{ $project->start_date }}</td>
                         <td>{{ empty($project->end_date) ? "In progress" : $project->end_date }}</td>

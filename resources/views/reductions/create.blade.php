@@ -6,7 +6,7 @@
 
 	<div class="row">
 		<div class ="form-group col-xs-12 col-sm-4">
-			<h2>{{ ucfirst($contract->user->full_name) }}</h2>				
+			<h2>{{ ucwords($contract->user->full_name) }}</h2>				
 		</div>
 	</div>
 
@@ -21,7 +21,7 @@
 
 				<div class="col-xs-12 col-sm-4">	
 					<label>Employee</label>
-					<input class="form-control" type="text" placeholder="{{$contract->user->fullname}}" readonly>
+					<input class="form-control" type="text" placeholder="{{ ucwords($contract->user->fullname) }}" readonly>
 				</div>	
 
 				<div class="col-xs-12 col-sm-2">
