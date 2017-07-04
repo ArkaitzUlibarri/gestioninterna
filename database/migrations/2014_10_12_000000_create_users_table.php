@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->enum('role', config('options.roles'))->default('user');
             $table->string('name');
             $table->string('lastname');
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
