@@ -14,7 +14,7 @@
             <tbody>
                 @foreach($contracts as $contract)
                 <tr class="{{ $contract->end_date ? 'danger' : 'success' }}">
-                    <td>{{$contract->contractType->name}}</td>
+                    <td>{{ucwords($contract->contractType->name)}}</td>
                     <td>{{$contract->start_date}}</td>
                     <td>{{$contract->estimated_end_date}}</td>
                     <td>{{$contract->end_date}}</td>

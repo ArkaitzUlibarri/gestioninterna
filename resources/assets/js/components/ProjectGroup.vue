@@ -4,7 +4,7 @@
         <div class="item-panel col-sm-5" v-bind:class="{ 'item-enabled': item.enabled }"> 
 
             <h5>
-                <b>{{item.project}} | {{item.group}}</b>
+                <b>{{item.project.toUpperCase()}} | {{item.group.toUpperCase()}}</b>
             </h5> 
             
             <div class="panel-right-corner">

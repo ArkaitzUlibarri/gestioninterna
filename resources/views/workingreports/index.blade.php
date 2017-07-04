@@ -23,7 +23,7 @@
 	   
 				<tbody>
 					<tr v-for="(item, index) in reports">
-						<td>@{{ item.fullname }}</td>
+						<td>@{{ item.fullname.toUpperCase() }}</td>
 						<td>@{{ getWeek(1,item.created_at) }} | @{{ getDayWeek(item.created_at) }}</td>
 						<td>   
 							<a id="ref" v-bind:href="makeUrl('{{ url('workingreports/add/') }}', [item.user_id, item.created_at])"  title="Edit" aria-hidden="true">
@@ -61,12 +61,12 @@
 				<div class="form-group">			
 					<select class="form-control input-sm" v-model="user_report">
 						@foreach($users as $user)				
-							<option value="{{$user->id}}">{{ucfirst($user->name)}} {{ucfirst($user->lastname)}}</option>
+							<option value="{{$user->id}}">{{ucwords($user->fullname)}}</option>
 						@endforeach
 					</select>
 				</div>
 			@else
-				<input class="form-control input-sm" type="text" placeholder="{{ Auth::user()->fullname }}" readonly>
+				<input class="form-control input-sm" type="text" placeholder="{{ ucwords(Auth::user()->fullname) }}" readonly>
 			@endif
 
 			<div class="form-group">

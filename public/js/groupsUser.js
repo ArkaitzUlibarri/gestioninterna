@@ -266,7 +266,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     class: {
       'item-enabled': _vm.item.enabled
     }
-  }, [_c('h5', [_c('b', [_vm._v(_vm._s(_vm.item.project) + " | " + _vm._s(_vm.item.group))])]), _vm._v(" "), _c('div', {
+  }, [_c('h5', [_c('b', [_vm._v(_vm._s(_vm.item.project.toUpperCase()) + " | " + _vm._s(_vm.item.group.toUpperCase()))])]), _vm._v(" "), _c('div', {
     staticClass: "panel-right-corner"
   }, [_c('div', {
     staticClass: "action",

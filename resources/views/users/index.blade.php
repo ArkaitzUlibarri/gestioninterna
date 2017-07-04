@@ -22,7 +22,7 @@
                     @foreach($users as $user)
                     <tr>
                         <td>{{ $user->id }}</td>
-                        <td><a href="{{ url('users'.'/'.$user->id.'/') }}" title="Show"> {{ $user->fullname }}</a></td>
+                        <td><a href="{{ url('users'.'/'.$user->id.'/') }}" title="Show"> {{ ucwords($user->fullname) }}</a></td>
                         <td>{{ $user->email }}</td>
                         <td>
                             @if (Auth::user()->primaryRole() == 'admin')

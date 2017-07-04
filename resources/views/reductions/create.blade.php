@@ -6,7 +6,7 @@
 
 	<div class="row">
 		<div class ="form-group col-xs-12 col-sm-4">
-			<h2>{{ ucfirst($contract->user->full_name) }}</h2>				
+			<h2>{{ ucwords($contract->user->full_name) }}</h2>				
 		</div>
 	</div>
 
@@ -21,7 +21,7 @@
 
 				<div class="col-xs-12 col-sm-4">	
 					<label>Employee</label>
-					<input class="form-control" type="text" placeholder="{{$contract->user->fullname}}" readonly>
+					<input class="form-control" type="text" placeholder="{{ ucwords($contract->user->fullname) }}" readonly>
 				</div>	
 
 				<div class="col-xs-12 col-sm-2">
@@ -31,17 +31,17 @@
 
 				<div class="col-xs-12 col-sm-2">
 					<label>Start date</label>
-					<input class="form-control" type ="date" value="{{$contract->start_date}}" readonly>
+					<input class="form-control" type ="date" placeholder="yyyy-mm-dd" value="{{$contract->start_date}}" readonly>
 				</div>	
 
 				<div class="col-xs-12 col-sm-2">
 					<label>Estimated end date</label>
-					<input class="form-control" type ="date" value="{{$contract->estimated_end_date}}" readonly>
+					<input class="form-control" type ="date" placeholder="yyyy-mm-dd" value="{{$contract->estimated_end_date}}" readonly>
 				</div>	
 
 				<div class="col-xs-12 col-sm-2">
 					<label>End date</label>
-					<input class="form-control" type ="date" value="{{$contract->end_date}}" readonly>
+					<input class="form-control" type ="date" placeholder="yyyy-mm-dd" value="{{$contract->end_date}}" readonly>
 				</div>			
 
 			</div>

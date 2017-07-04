@@ -28,7 +28,6 @@ class ProjectRepository
 
     public function search(array $data = array(), $paginate = false)
     {
-        $ids = array_keys(Auth::user()->PMProjects());
         $data = array_only($data, $this->filters);
         $data = array_filter($data, 'strlen');
 
@@ -51,8 +50,9 @@ class ProjectRepository
             }
         }
 
-        if(! Auth::user()->isAdmin() && Auth::user()->isPM() && $ids != []){
-            $q = $q->whereIn('projects.id',$ids);
+        if(Auth::user()->primaryRole() == 'manager') {
+            $ids = array_keys(Auth::user()->activeProjects());
+            if ($ids != []) $q->whereIn('projects.id',$ids);
         }
        
         return $paginate

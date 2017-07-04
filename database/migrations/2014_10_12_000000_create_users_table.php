@@ -151,6 +151,7 @@ class CreateUsersTable extends Migration
         /**
          * Tabla con el registro de los días de vacaciones solicitados y su validación
          */
+        /*
         Schema::create('calendar_holidays', function (Blueprint $table) {
             $table->integer('user_id')->unsigned();
             $table->date('date');
@@ -165,6 +166,7 @@ class CreateUsersTable extends Migration
 
             $table->primary(['user_id','date']);      
         });
+        */
 
         /**
          * Tabla con los datos de los dias festivos por region geografica

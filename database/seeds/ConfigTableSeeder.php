@@ -147,6 +147,7 @@ class ConfigTableSeeder extends Seeder
 			['code' =>'bl','name'=>'Beca lanbide','holidays'=>0],   
 			['code' =>'bce','name'=>'Beca cooperación educativa','holidays'=>15],
 			['code' =>'fp','name'=>'Prácticas formación profesional','holidays'=>0],
+			['code' =>'so','name'=>'Socio','holidays'=>22],
 		];  
 
 		/*

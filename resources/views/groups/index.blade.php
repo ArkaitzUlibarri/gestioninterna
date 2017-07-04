@@ -20,19 +20,13 @@
                             <tr>
                                 @if($group->enabled)
                                     <td>{{$loop->iteration}}</td>
-                                    <td>{{$group->project}}</td>
-                                    <td>{{$group->name}}</td>  
+                                    <td>{{ strtoupper($group->project) }}</td>
+                                    <td>{{ ucfirst($group->name) }}</td>  
                                 @else
                                     <td><s>{{$loop->iteration}}</s></td>
-                                    <td><s>{{$group->project}}</s></td>
-                                    <td><s>{{$group->name}}</s></td>  
+                                    <td><s>{{ strtoupper($group->project) }}</s></td>
+                                    <td><s>{{ ucfirst($group->name) }}</s></td>  
                                 @endif        
-                                <!--
-                                <td>
-                                    <a class="btn btn-default" type="button" href="{{ url('groups/' . $group->id) }}">Show</a>
-                                    <a class="btn btn-default" type="button" href="{{ url('groups/' . $group->id . '/edit') }}">Edit</a>
-                                </td>
-                                -->
                             </tr>
                          @endforeach
                     </tbody>

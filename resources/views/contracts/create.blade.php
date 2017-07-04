@@ -16,7 +16,7 @@
 							<select name="user_id" class="form-control">
 								<option value="">-</option>	
 								@foreach ($users as $user)
-									<option value="{{ $user->id }}" {{ (old('user_id') == $user->id ? "selected":"") }}>{{ $user->full_name }}</option>		
+									<option value="{{ $user->id }}" {{ (old('user_id') == $user->id ? "selected":"") }}>{{ ucwords($user->full_name) }}</option>		
 								@endforeach	  
 							</select>
 						</div>
@@ -26,7 +26,7 @@
 							<select name="contract_type_id" class="form-control">
 								<option value="">-</option>	
 								@foreach ($contractTypes as $contractType)
-									<option value="{{ $contractType->id }}" {{ (old('contract_type_id') == $contractType->id ? "selected":"") }}>{{$contractType->name}}</option>
+									<option value="{{ $contractType->id }}" {{ (old('contract_type_id') == $contractType->id ? "selected":"") }}>{{ ucfirst($contractType->name )}}</option>
 								@endforeach			  
 							</select>
 						</div>
@@ -60,7 +60,7 @@
 							<select name="national_days_id" class="form-control">
 								<option value="">-</option>	
 								@foreach ($nationalDays as $nationalDay)
-									<option value="{{ $nationalDay->id }}" {{ (old('national_days_id') == $nationalDay->id ? "selected":"") }}>{{$nationalDay->name}}</option>	
+									<option value="{{ $nationalDay->id }}" {{ (old('national_days_id') == $nationalDay->id ? "selected":"") }}>{{ ucwords($nationalDay->name) }}</option>	
 								@endforeach			  
 							</select>
 						</div>
@@ -70,7 +70,7 @@
 							<select name="regional_days_id" class="form-control">
 								<option value="">-</option>	
 								@foreach ($regionalDays as $regionalDay)
-									<option value="{{ $regionalDay->id }}" {{ (old('regional_days_id') == $regionalDay->id ? "selected":"") }}>{{$regionalDay->name}}</option>	
+									<option value="{{ $regionalDay->id }}" {{ (old('regional_days_id') == $regionalDay->id ? "selected":"") }}>{{ ucwords($regionalDay->name) }}</option>	
 								@endforeach			  
 							</select>
 						</div>
@@ -80,7 +80,7 @@
 							<select name="local_days_id" class="form-control">
 								<option value="">-</option>	
 								@foreach ($localDays as $localDay)
-									<option value="{{ $localDay->id }}" {{ (old('local_days_id') == $localDay->id ? "selected":"") }}>{{$localDay->name}}</option>		
+									<option value="{{ $localDay->id }}" {{ (old('local_days_id') == $localDay->id ? "selected":"") }}>{{ ucwords($localDay->name) }}</option>		
 								@endforeach			  
 							</select>
 						</div>

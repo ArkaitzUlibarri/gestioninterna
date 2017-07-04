@@ -6,7 +6,7 @@
 
 	<div class="row">
 		<div class ="form-group col-xs-12 col-sm-4">
-			<h2>{{ strtoupper($project->name) }}</h2>				
+			<h2>{{ ucwords($project->name) }}</h2>				
 		</div>
 	</div>
 
@@ -21,7 +21,7 @@
 
 				<div class="col-xs-12 col-sm-6">	
 					<label>Project</label>
-					<input class="form-control" type="text" placeholder="{{$project->name}}" readonly>
+					<input class="form-control" type="text" placeholder="{{ ucwords($project->name) }}" readonly>
 				</div>	
 
 				<div class="col-xs-12 col-sm-2">
@@ -31,12 +31,12 @@
 
 				<div class="col-xs-12 col-sm-2">
 					<label>Start date</label>
-					<input class="form-control" type ="date" value="{{$project->start_date}}" readonly>
+					<input class="form-control" type ="date" placeholder="yyyy-mm-dd" value="{{$project->start_date}}" readonly>
 				</div>	
 
 				<div class="col-xs-12 col-sm-2">
 					<label>End date</label>
-					<input class="form-control" type ="date" value="{{$project->end_date}}" readonly>
+					<input class="form-control" type ="date" placeholder="yyyy-mm-dd" value="{{$project->end_date}}" readonly>
 				</div>			
 
 			</div>
@@ -83,7 +83,7 @@
 						<div class="form-group col-lg-4">
 							<div class="input-group">
 								<span class="input-group-addon">
-									<input type="checkbox" v-model="newGroup.enabled">
+									<input type="checkbox" v-bind:title="[newGroup.enabled ? 'Enabled':'Disabled']" v-model="newGroup.enabled">
 								</span>
 								<input type="text" class="form-control" placeholder="Group Name" v-model="newGroup.name">
 							</div>
@@ -105,7 +105,9 @@
 		</div>
 	</div>
 
-	<a class="btn btn-default" href="{{ url('projects') }}">Back</a>
+	<div class ="form-group pull-right">
+		<a class="btn btn-default custom-btn-width" href="{{ url('projects') }}">Back</a>
+	</div>
 </div>
 
 @endsection
