@@ -92,6 +92,7 @@ class CreateUsersTable extends Migration
         /**
          * Tabla para las vacaciones del usuario
          */
+        /*
         Schema::create('user_holidays', function (Blueprint $table) {
             $table->integer('contract_id')->unsigned();
             $table->smallInteger('year')->unsigned();           
@@ -109,6 +110,7 @@ class CreateUsersTable extends Migration
 
             $table->primary(['contract_id','year']);       
         });
+        */
 
         /**
          * Tabla con los datos de las reducciones de jornada en los contratos de los empleados
