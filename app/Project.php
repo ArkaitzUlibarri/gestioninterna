@@ -57,7 +57,7 @@ class Project extends Model
      */
     public function customer()
     {
-        return $this->hasOne('App\Customer','id','customer_id');
+        return $this->hasOne('App\Customer', 'id', 'customer_id');
     }
 
     /**
@@ -65,7 +65,7 @@ class Project extends Model
      */
     public function pm()
     {
-        return $this->hasOne('App\User','id','pm_id');
+        return $this->hasOne('App\User', 'id', 'pm_id');
     }
     
     public function isActive()

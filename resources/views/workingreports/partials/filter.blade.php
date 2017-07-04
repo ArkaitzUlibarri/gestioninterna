@@ -1,29 +1,26 @@
 <form class="form-inline pull-right-sm" method="GET" action="{{ route('workingreports.index') }}">
 
-	<input type="hidden" name="admin" type="text" value="{{ Auth::user()->isAdmin() }}">
-	<input type="hidden" name="pm" type="text" value="{{ Auth::user()->isPM() }}">
-
-	@if(! Auth::user()->isAdmin() && Auth::user()->isPM() && count($projects))
+	@if(Auth::user()->primaryRole() == 'manager' && count($projects))
 		<select name="project" class="form-control input-sm">
 			<option selected="true" disabled="disabled" value="">Project</option>
-			@foreach ($projects as $project)
-				<option value="{{ $project }}" {{ $project == $filter['project'] ? 'selected' : '' }} >{{ strtoupper($project) }}</option>
+			@foreach ($projects as $id => $project)
+				<option value="{{ $id }}" {{ $project == $filter['project'] ? 'selected' : '' }} >{{ strtoupper($project) }}</option>
 			@endforeach
-			<option value="All" {{ "All" == $filter['project'] ? 'selected' : '' }}>All</option>
+			<option value="all" {{ "All" == $filter['project'] ? 'selected' : '' }}>All</option>
 		</select>
 	@endif
 
-	@if(Auth::user()->isAdmin() && count($projects))
+	@if(Auth::user()->primaryRole() == 'admin' && count($projects))
 		<select name="project" class="form-control input-sm">
 			<option selected="true" value="">Project</option>
 			@foreach ($projects as $project)
-				<option value="{{ $project->name }}" {{ $project->name == $filter['project'] ? 'selected' : '' }} >{{ strtoupper($project->name) }}</option>
+				<option value="{{ $project->id }}" {{ $project->name == $filter['project'] ? 'selected' : '' }} >{{ strtoupper($project->name) }}</option>
 			@endforeach
-			<option value="All" {{ "All" == $filter['project'] ? 'selected' : '' }} >All</option>
+			<option value="all" {{ "All" == $filter['project'] ? 'selected' : '' }} >All</option>
 		</select>
 	@endif
 
-	@if(Auth::user()->isAdmin() || Auth::user()->isPM())
+	@if(Auth::user()->primaryRole() == 'admin' || Auth::user()->primaryRole() == 'manager')
 		<input name="name" type="text" class="form-control input-sm"  placeholder="Employee name" value="{{ $filter['name'] }}">
 	@endif
 

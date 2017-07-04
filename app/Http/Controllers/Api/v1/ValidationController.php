@@ -3,15 +3,28 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Api\ApiController;
+use App\Project;
+use App\User;
+use App\WorkingreportRepository;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
-use App\Project;
 use Illuminate\Support\Facades\Validator;
-use Auth;
 
 class ValidationController extends ApiController
 {
+    protected $reportRepository;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(WorkingreportRepository $reportRepository)
+    {
+        $this->reportRepository = $reportRepository;
+    }
+
 	/**
 	 * Get reports by users role and projects associated
 	 * 
@@ -20,20 +33,18 @@ class ValidationController extends ApiController
 	 */
 	public function index(Request $request)
 	{
-		$data = $this->fetchData(
-			$request->all()
-		);
+		$validator = Validator::make($request->all(), [
+			'year' => 'required|numeric|between:2017,2030',
+			'week' => 'required|numeric|between:1,53'
+		]);
 
-		$data = $this->formatOutput($data);
-
-		//PM
-		if(Auth::user()->isPM() && ! Auth::user()->isAdmin() ){
-			return $this->respond(
-				$this->filterByUsersInProject($data, array_values(Auth::user()->PMProjects()))
-			);
+		if ($validator->fails()) {
+			return $this->respondNotAcceptable($validator->errors()->all());
 		}
 
-		return $this->respond($data);			
+		return $this->respond($this->reportRepository->formatOutput(
+            $this->reportRepository->fetchData($request->all())
+        ));
 	}
 
 	/**
@@ -45,166 +56,114 @@ class ValidationController extends ApiController
 	public function update(Request $request)
 	{
 		$validator = Validator::make($request->all(), [
-			'user_id' => 'required|numeric',
-			'year'    => 'required|numeric',
-			'week'    => 'required|numeric',
-			'value'   => 'required|in:true,false',
+			'user_id'          => 'required|numeric',
+			'day'              => 'required|date',
+			'admin_validation' => 'required|boolean',
+			'pm_validation'    => 'required|boolean'
 		]);
 
 		if ($validator->fails()) {
 			return $this->respondNotAcceptable($validator->errors()->all());
 		}
 
-		$validationField = Auth::user()->isAdmin() ? 'admin_validation' : 'pm_validation';
+		if (($user = User::find($request['user_id'])) == null) {
+			return $this->respondNotFound('User not found.');
+		}
 
-		$value = $request->get('value') == 'false' ? true : false;
+		$currentValues = DB::table('working_report as wr')
+			->leftJoin('users as u', 'wr.manager_id','=','u.id')
+			->where('wr.user_id', $request->get('user_id'))
+			->where('wr.created_at', $request->get('day'))
+			->select('wr.admin_validation', 'wr.pm_validation', 'wr.manager_id', 'u.name as manager')
+			->first();
 
-		DB::table('working_report')
-            ->where('user_id', $request->get('user_id'))
-            ->whereRaw ("YEAR(created_at) = {$request->get('year')}")
-            ->whereRaw ("WEEK(created_at) = {$request->get('week')}")
-            ->update([$validationField => $value]);
+		if (Auth::user()->primaryRole() != 'admin' &&
+			($request['admin_validation'] != $currentValues->admin_validation || $request['pm_validation'] != $currentValues->pm_validation)) {
+			return $this->respondInternalError('Refresh the browser to update the status of the tasks.');
+		}
 
- 		return $this->respond();
+		if ($currentValues == null) {
+			return $this->respondInternalError('Could not get the validation status.');
+		}
+
+		$newValues = $this->getValuesToUpdate(
+			$user->primaryRole(),
+			$currentValues->admin_validation,
+			$currentValues->pm_validation,
+			$currentValues->manager_id
+		);
+
+		if ($newValues != []) {
+			DB::table('working_report')
+	            ->where('user_id', $request->get('user_id'))
+	            ->where('created_at', $request->get('day'))
+	            ->update($newValues);
+
+	        $newValues['manager_id'] = $this->getManager($newValues, $currentValues->manager);
+
+	        return $this->respond($newValues);
+		}
+
+ 		return $this->respond([]);
 	}
 
 	/**
-	 * Fetch data from database.
+	 * Get the name of the person who has validated the day.
 	 * 
-	 * @return array
-	 */
-	private function fetchData($data)
-	{
-		$date = Carbon::today()->subMonths(3);
-
-		$validationField = Auth::user()->isAdmin()
-			? 'working_report.admin_validation'
-			: 'working_report.pm_validation';
-
-		$q = DB::table('working_report')	
-			->whereDate('working_report.created_at','>=',$date)//Filtro de fecha
-			->leftJoin('projects', 'working_report.project_id','=','projects.id')
-			->leftJoin('absences', 'working_report.absence_id','=','absences.id')
-			->leftJoin('users', 'working_report.user_id','=','users.id')
-			->select(
-				'working_report.user_id',
-				DB::raw("concat(users.name, ' ', users.lastname) as user_name"),
-				DB::raw('YEAR(working_report.created_at) as date_year'),
-				DB::raw('WEEK(working_report.created_at) as date_week'),
-				DB::raw('UPPER(projects.name) as project'),
-				DB::raw('UPPER(working_report.training_type) as training_type'),
-				DB::raw('UPPER(absences.name) as absence'),
-				DB::raw('SUM(working_report.time_slots* 0.25) as time_slot')
-			)
-			->groupBy(['user_id', 'date_year', 'date_week', 'working_report.project_id', 'training_type', 'absence_id'])
-			->orderBy('user_id', 'ASC');
-
-			//User
-			if(! Auth::user()->isAdmin() && ! Auth::user()->isPM()){
-				$q = $q->where('working_report.user_id', Auth::id());//Filtro de usuario
-				$q = $q->where('working_report.admin_validation', $data['validated'] == "false" ? false : true);//Filtro de validacion usuario
-			}		
-			else{
-				$q = $q->where($validationField, $data['validated'] == 'false' ? false : true);//Filtro de validacion PM y Admin
-
-				if(Auth::user()->isAdmin()){
-					 $q = $q->where('working_report.pm_validation',true);//Si admin validado por pm
-				}
-				elseif(Auth::user()->isPM()){
-				 $q = $q->where('working_report.admin_validation',false);//Si admin ha validado,pm no puede desvalidar
-				}	
-			}	
-
-			return $q->get();
-	}
-
-	/**
-	 * Format data.
-	 * 
-	 * @param  array
-	 * @return array
-	 */
-	private function formatOutput($data)
-	{
-		$response = array();
-
-		foreach ($data as $value) {
-			$key = $value->user_id . '|' . $value->date_year . '|' . $value->date_week;
-
-			if(! isset($response[$key])) {
-				$response[$key] = [
-					'user_id' => $value->user_id,
-					'user_name' => $value->user_name,
-					'date_year' => $value->date_year,
-					'date_week' => $value->date_week,
-					'items' => [],
-					'total' => 0
-				];
-    		}
-
-    		$response[$key]['total'] += $value->time_slot;
-
-    		$response[$key]['items'][] = [
-    			'name' => $this->activity($value),
-    			'time_slot' => $value->time_slot
-    		];
-    	}
-
-    	return $response;
-	}
-
-	private function filterByProject($reports, $projects)
-	{
-		$response = array();
-		foreach ($reports as $key => $report) {
-			foreach ($report['items'] as $item) {
-				if(in_array($item['name'], $projects)) {
-					$response[$key] = $report;
-					break;
-				}
-			}
-		}
-		return $response;
-	}
-
-	private function filterByUsersInProject($reports, $projects)
-	{
-		$ids = array();
-		foreach ($projects as $value) {
-			$project = Project::where('name',$value)->first();
-			$groups = $project->groups;
-			foreach ($groups as $group) {
-				$users = $group->users;
-				foreach ($users as $user) {
-					if(! in_array($user->id,$ids)){
-						array_push($ids, $user->id);
-					}
-				}
-			}
-		}
-
-		$response = array();
-		foreach ($reports as $key => $report) {
-			if(in_array($report['user_id'], $ids)) {
-				$response[$key] = $report;
-			}	
-		}
-		
-		return $response;
-	}
-
-	/**
-	 * Get activity.
-	 * 
-	 * @param  $data
+	 * @param  $newValues
+	 * @param  $oldManager
 	 * @return string
 	 */
-	private function activity($data)
+	protected function getManager($newValues, $oldManager)
 	{
-		foreach (['project', 'absence', 'training_type'] as $activity) {
-			if($data->$activity != null) {
-				return $data->$activity;
-			}
+		if (! isset($newValues['manager_id']) || $newValues['manager_id'] == null) {
+			return $newValues['manager_id'] = '';
 		}
+
+		if ($newValues['manager_id'] == Auth::user()->id) {
+			return Auth::user()->name;
+		}
+
+		return $oldManager;
+	}
+
+	/**
+	 * Get array with values to update.
+	 * 
+	 * @param  $userRole
+	 * @param  $valueAdmin
+	 * @param  $valueManager
+	 * @param  $managerId
+	 * @return array
+	 */
+	protected function getValuesToUpdate($userRole, $valueAdmin, $valueManager, $managerId)
+	{
+		if (Auth::user()->primaryRole() == 'admin') {
+
+			$managerId = $managerId != null ? $managerId : Auth::user()->id;
+
+			// Admin validates another admin or tools user
+			if ($userRole == 'admin' || $userRole == 'tools') {
+				$valueAdmin = $valueAdmin == false ? true : false;
+				return [
+					'admin_validation' => $valueAdmin,
+					'pm_validation' => $valueAdmin,
+					'manager_id' => $valueAdmin == true ? $managerId : null
+				];
+			}
+
+			// Admin validates a user
+			if ($valueAdmin == false) {
+				return ['admin_validation' => true, 'pm_validation' => true, 'manager_id' => $managerId];
+			}
+
+			return ['admin_validation' => false, 'manager_id' => $managerId];
+		}
+
+		// Project Manager
+		$valueManager = $valueManager == false ? true : false;
+		return $valueAdmin == false
+			? ['pm_validation' => $valueManager, 'manager_id' => $valueManager == true ? Auth::user()->id : null]
+			: [];
 	}
 }

@@ -48,8 +48,9 @@ Route::resource('projects', 'ProjectsController', ['except' => [
 Route::get('workingreports', ['as'=> 'workingreports.index','uses'=>'WorkingreportController@index']);
 Route::get('workingreports/add/{id}/{date}/',['as'=> 'workingreports.edit','uses'=>'WorkingreportController@edit']);
 
-Route::get('validation', 'ValidationController@index');
 
+Route::get('validation', 'ValidationController@index');
+Route::get('validation/download', 'ValidationController@download');
 
 /**
  * API, mirar autenticacion token o passport en el api.php

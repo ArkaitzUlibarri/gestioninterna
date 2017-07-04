@@ -59,19 +59,16 @@ class UserRepository
         }
      
         if($data == []){
-            $q = $this->Type($q,"");
+            $q = $this->Type($q, "");
         }
         elseif(isset($data['type'])){
-            $q = $this->Type($q,$data['type']);
+            $q = $this->Type($q, $data['type']);
         }
         
-        //Filtro PM
-        $grouped_ids = $this->getGroupedUsers();
-        $alone_ids   = $this->getAloneUsers();
-        $ids = array_merge($grouped_ids,$alone_ids);
-
-        if(! Auth::user()->isAdmin() && Auth::user()->isPM() && $ids != []){
-            $q = $q->whereIn('users.id',$ids);
+        if(Auth::user()->primaryRole() == 'manager'){
+            $groupedIds = $this->getGroupedUsers();
+            $aloneIds = $this->getAloneUsers();
+            $q = $q->whereIn('users.id', array_merge($groupedIds, $aloneIds));
         }
        
         return $paginate
@@ -118,7 +115,7 @@ class UserRepository
     private function getGroupedUsers()
     {
         $ids = array();
-        $projectIds = array_keys(Auth::user()->PMProjects());//Proyectos PM
+        $projectIds = array_keys(Auth::user()->activeProjects());
 
         foreach ($projectIds as $projectId) {
             $project = Project::find($projectId);
@@ -135,27 +132,12 @@ class UserRepository
 
     private function getAloneUsers()
     {
-        $groupUser_ids = array_unique(array_pluck(GroupUser::all()->toArray(), 'user_id'));//Ids de usuarios con grupos asignados
-        $users_ids = array_pluck(User::all()->whereNotIn('id',$groupUser_ids)->toArray(), 'id');//Descartamos estos usuarios del total
+        //Ids de usuarios con grupos asignados
+        $groupUser_ids = array_unique(array_pluck(GroupUser::all()->toArray(), 'user_id'));
+
+        //Descartamos estos usuarios del total
+        $users_ids = array_pluck(User::all()->whereNotIn('id', $groupUser_ids)->toArray(), 'id');
 
         return $users_ids;
     }
-    /* 
-    SELECT users.id, users.name, users.lastname,users.email,t.contract_type_id,t.start_date,t.estimated_end_date,t.end_date
-    FROM users 
-    LEFT JOIN (
-           SELECT u.user_id,u.contract_type_id,r.start_date, u.estimated_end_date, u.end_date
-            FROM (
-                SELECT contracts.user_id, MAX(contracts.start_date) as start_date 
-                FROM contracts 
-                GROUP BY user_id
-            ) r
-            INNER JOIN contracts u
-            ON u.user_id = r.user_id AND u.start_date = r.start_date
-    ) as t ON users.id=t.user_id
-
-    where users.name like "%k%"
-    where t.end_date is null and t.contract_type_id is not null //Active
-    where t.end_date is not null OR t.contract_type_id is null //Inactive
-     */
 }

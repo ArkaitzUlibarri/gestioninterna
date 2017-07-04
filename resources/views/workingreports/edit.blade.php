@@ -38,8 +38,8 @@
 	<script type = "text/javascript">
 		var url = "{{ url('/') }}";
 		var reportdate = '{{ $date }}';
-		var role = '{{ $auth_user->role }}';
-		var report_user = <?php echo json_encode($report_user);?>;
+		var role = '{{ Auth::user()->role }}';
+		var report_user = <?php echo json_encode($reportUser);?>;
 		var teleworking = <?php echo json_encode($teleworking);?>;
 		var absences = <?php echo json_encode($absences);?>;
 		var groupProjects = <?php echo json_encode($groupProjects);?>;

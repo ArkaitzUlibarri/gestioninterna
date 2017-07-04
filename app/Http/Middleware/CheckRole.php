@@ -25,21 +25,20 @@ class CheckRole
 		$this->user = User::find($request->user()->id);
 		$this->parameters = $request->route()->parameters();
 
-		//PM
-		if(! $this->user->isAdmin() && $this->user->isPM()) {
-			if(! $this->validateProyectManager()){
+		if ($this->user->primaryRole() == 'manager') {
+			// Project Manager
+			if (! $this->validateProyectManager()){
 				return redirect('/access'); 
 			}
 		}
-		//User o Tools
-		elseif($this->user->isRole('user') || $this->user->isRole('tools')) {
-			if(! $this->validateUser()){
+		elseif ($this->user->primaryRole() == 'user' || $this->user->primaryRole() == 'tools') {
+			//User o Tools
+			if (! $this->validateUser()){
 				return redirect('/access'); 
 			}
 		}
 
 		return $next($request);
-   
 	}
 
 	private function validateUser()
@@ -69,17 +68,16 @@ class CheckRole
 
 	private function validateProyectManager()
 	{
-		$pmProjects = $this->user->PMProjects();
+		$projects = $this->user->activeProjects();
 		$routeName = Route::currentRouteName();
-		//dd($routeName);
+
 		//Pantalla de proyectos index
 		if (strcmp($routeName, "users.index") === 0) { 
-			//dd("a");
 			return 1;
 		}
+
 		//Pantalla de grupos a usuarios
 		elseif(isset($this->parameters['user']) && strpos($this->url, 'groups') !== false) { 
-			//dd("b");
 			$watchedUser = User::find(intval($this->parameters['user']));
 			$groups = $watchedUser->groups;
 
@@ -88,23 +86,21 @@ class CheckRole
 			}
 			else{
 				foreach ($groups as $group) {		
-					if(array_key_exists($group->project_id, $pmProjects)){
+					if(array_key_exists($group->project_id, $projects)){
 						return 1;
 					}
 				}
-
 			}
 		}
+
 		//Pantalla de usuarios
 		elseif (isset($this->parameters['user'])) {
-			//dd("c");
 			if($this->user->id == intval($this->parameters['user'])){
 				return 1; 
 			}
 		}	                    			 
 		//Pantalla de reportes
 		elseif (isset($this->parameters['id']) && isset($this->parameters['date'])) {
-			//dd("d"); 	
 			//Su reporte
 			if($this->user->id == intval($this->parameters['id'])){ 
 				return 1; 
@@ -115,7 +111,7 @@ class CheckRole
 				$groups = $watchedUser->groups;
 
 				foreach ($groups as $group) {		
-					if(array_key_exists($group->project_id, $pmProjects)){
+					if(array_key_exists($group->project_id, $projects)){
 						return 1;
 					}
 				}
@@ -123,18 +119,15 @@ class CheckRole
 		}
 		//Pantalla de proyectos index
 		elseif (strcmp($routeName, "projects.index") === 0) { 
-			//dd("e");
 			return 1;
 		}
 		//Pantalla de proyectos
 		elseif(isset($this->parameters['project']))	{
-			//dd("f");
-	   		if(array_key_exists(intval($this->parameters['project']), $pmProjects)){
+	   		if(array_key_exists(intval($this->parameters['project']), $projects)){
 				return 1;
 			}
 		}
-		//dd("fin");
+
 		return 0;
-		
 	}
 }

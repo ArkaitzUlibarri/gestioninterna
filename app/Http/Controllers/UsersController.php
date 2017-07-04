@@ -46,9 +46,8 @@ class UsersController extends Controller
     {
         $user = User::find($id);
         $categories = Category::all();
-        $roles = config('options.roles');
         
-    	return view('users.edit', compact('user', 'roles', 'categories'));
+    	return view('users.edit', compact('user', 'categories'));
     }
 
     /**
@@ -60,11 +59,10 @@ class UsersController extends Controller
     public function show($id)
     {
         $user = User::find($id);
-        $roles = config('options.roles');
         $categories = $user->categories;
         $groups = $user->groups->where('enabled', 1);
         $contracts = $user->contracts;
         
-        return view('users.show', compact('user', 'roles', 'categories', 'groups', 'contracts'));
+        return view('users.show', compact('user', 'categories', 'groups', 'contracts'));
     }
 }

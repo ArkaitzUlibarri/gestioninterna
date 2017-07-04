@@ -32,7 +32,7 @@
     </div>
 @endif
 
-@if(Auth::user()->isAdmin())
+@if(Auth::user()->primaryRole() == 'admin')
     <div class="row">
         <div class="col-xs-12 col-sm-offset-1 col-sm-10">
             <div class="pull-right">

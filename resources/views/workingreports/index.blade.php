@@ -47,29 +47,6 @@
 								<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
 							</div>  
 						</td>
-						<!--
-						@if(Auth::user()->isAdmin())
-							<td>
-								<button title="Invalidate" class="btn btn-danger btn-xs" v-if="item.horas_validadas_pm == 0 && item.horas_validadas_admin == 0" v-on:click="fetchData(item.user_id, item.created_at, index , 0)">
-									<span class="glyphicon glyphicon-remove"></span>
-								</button>
-								<button title="Validate" class="btn btn-success btn-xs" v-if="item.horas_validadas_pm == 0 && item.horas_validadas_admin != 0" v-on:click="fetchData(item.user_id, item.created_at, index, 1)">
-									<span class="glyphicon glyphicon-ok"></span>
-								</button>
-							</td>
-						@endif
-
-						@if(!(Auth::user()->isAdmin()) && Auth::user()->isPM())
-							<td>
-								<button title="Invalidate" class="btn btn-danger btn-xs" v-if="item.horas_validadas_admin != 0 && item.horas_validadas_pm == 0" v-on:click="fetchData(item.user_id, item.created_at, index , 0)">
-									<span class="glyphicon glyphicon-remove"></span>
-								</button>
-								<button title="Validate" class="btn btn-success btn-xs" v-if="item.horas_validadas_admin != 0 && item.horas_validadas_pm != 0" v-on:click="fetchData(item.user_id, item.created_at, index, 1)">
-									<span class="glyphicon glyphicon-ok"></span>
-								</button>
-							</td>
-						@endif
-						-->
 					</tr>
 				</tbody>
 					 
@@ -80,7 +57,7 @@
 
 		<div class="form-inline pull-right">
 
-			@if(Auth::user()->isAdmin())
+			@if(Auth::user()->primaryRole() == 'admin')
 				<div class="form-group">			
 					<select class="form-control input-sm" v-model="user_report">
 						@foreach($users as $user)				
@@ -89,7 +66,7 @@
 					</select>
 				</div>
 			@else
-				<input class="form-control input-sm" type="text" placeholder="{{$auth_user->fullname}}" readonly>
+				<input class="form-control input-sm" type="text" placeholder="{{ Auth::user()->fullname }}" readonly>
 			@endif
 
 			<div class="form-group">
@@ -108,9 +85,9 @@
 	<script type = "text/javascript">
 		var url = "{{ url('/') }}";
 		var workingreport = <?php echo json_encode($workingreports);?>;
-		var auth_user = <?php echo json_encode($auth_user);?>;
+		var auth_user = <?php echo json_encode(Auth::user());?>;
 		var users = <?php echo json_encode($users);?>;
-		var pm = '{{ $auth_user->isPM() }}';
+		var pm = "Auth::user()->primaryRole() == 'manager' ? 1 : 0";
 	</script>
 
 	<script src="{{ asset('js/validate.js') }}"></script>

@@ -31,8 +31,7 @@ class WorkingReportController extends Controller
 	public function index(Request $request)
 	{
 		$users = User::all()->sortBy('name');
-		$users = $users->filter(function($user)
-		{
+		$users = $users->filter(function($user)	{
 			$output = false;
 			foreach ($user->contracts as $contract) {	
 				if($contract->isActive()){
@@ -40,37 +39,40 @@ class WorkingReportController extends Controller
 					return $output;
 				}
 			}
-			if($output){
+			if ($output) {
 				return $user;
 			}			
 		});
-		$auth_user = Auth::user();
-		$admin     = $auth_user->isAdmin();
-		$pm        = $auth_user->isPM();
-		$projects  = $admin ? Project::all()->where('end_date', null) : $auth_user->PMProjects();
 
-		$workingreports = $this->workingreportRepository->search($request->all(), $auth_user->id, $projects,true);
-		//$workingreports = $this->getReportsPerUserPerDay($user_id,$admin);
-		
-		$filter = array(	
-			'project'    => $request->get('project'),
-			'name'       => $request->get('name'),
-			'date'       => $request->get('date'),
-			'validation' => $request->get('validation'),
+		$projects = Auth::user()->primaryRole() == 'admin'
+			? Project::whereNull('end_date')->get()
+			: Auth::user()->activeProjects();
+
+		$workingreports = $this->workingreportRepository->search(
+			$request->all(),
+			Auth::user()->id,
+			$projects,
+			true
 		);
 		
-		return view('workingreports.index', compact('workingreports','users','auth_user','projects','filter'));
+		$filter = array(	
+			'project'    => $request['project'],
+			'name'       => $request['name'],
+			'date'       => $request['date'],
+			'validation' => $request['validation'],
+		);
+		
+		return view('workingreports.index', compact('workingreports', 'users', 'projects', 'filter'));
 	}
 
-	public function edit($user_id,$date)
+	public function edit($userId, $date)
 	{
-		$auth_user = Auth::user();
-		$report_user = User::find($user_id);
+		$reportUser = User::find($userId);
 		$absences = Absence::all();
-		$workingreports = $this->getReportsPerDay($user_id,$date);
-		$groupProjects = $this->getGroupsProjectsByUser($user_id);
-		$categories = $this->getCategories($user_id);
-		$contract = $report_user->contracts->where('end_date', null)->first();
+		$workingreports = $this->getReportsPerDay($userId, $date);
+		$groupProjects = $this->getGroupsProjectsByUser($userId);
+		$categories = $this->getCategories($userId);
+		$contract = $reportUser->contracts->where('end_date', null)->first();
 
 		$teleworking = null;
 		if($contract != null ){
@@ -81,32 +83,32 @@ class WorkingReportController extends Controller
 			$teleworking = new Teleworking;
 		}  
 
-		return view('workingreports.edit',compact('date','auth_user','report_user','workingreports','absences','groupProjects','categories','contract','teleworking'));
+		return view('workingreports.edit',compact('date','reportUser','workingreports','absences','groupProjects','categories','contract','teleworking'));
 	}
 
-	private function getReportsPerUserPerDay($user_id , $admin)
+	private function getReportsPerUserPerDay($userId , $admin)
 	{
 		$query = DB::table('working_report')
-			->join('users','working_report.user_id','=','users.id') 
+			->join('users','working_report.userId','=','users.id') 
 			->select(
 				DB::raw("CONCAT(users.name, ' ', users.lastname) as fullname"),
 				'working_report.created_at',
-				'working_report.user_id',
+				'working_report.userId',
 				DB::raw("sum(time_slots)*0.25 as horas_reportadas"),
 				DB::raw("SUM(case when pm_validation = 0 then time_slots else 0 end)*0.25 as horas_validadas_pm"),
 				DB::raw("SUM(case when admin_validation = 0 then time_slots else 0 end)*0.25 as horas_validadas_admin")
 			)
-			->groupBy('user_id','created_at')
+			->groupBy('userId','created_at')
 			->orderBy('created_at','desc');
 				
 		if(! $admin) {
-			$query = $query->where('user_id',$user_id);
+			$query = $query->where('user_id',$userId);
 		}
 
 		return $query->get();		
 	}
 
-	private function getReportsPerDay($user_id,$created)
+	private function getReportsPerDay($userId,$created)
 	{
 		return DB::table('working_report')
 			->select(
@@ -116,14 +118,14 @@ class WorkingReportController extends Controller
 				DB::raw("sum(time_slots)*0.25 as horas_reportadas")
 			)
 			->join('users','working_report.user_id','=','users.id')
-			->where('working_report.user_id',$user_id)
+			->where('working_report.user_id',$userId)
 			->where('working_report.created_at',$created)
 			->groupBy('user_id','created_at')
 			->orderBy('created_at','asc')
 			->get();
 	}
 
-	private function getGroupsProjectsByUser($user_id)
+	private function getGroupsProjectsByUser($userId)
 	{
 		return DB::table('group_user')
 			->select(
@@ -135,14 +137,14 @@ class WorkingReportController extends Controller
 			->join('users','group_user.user_id','=','users.id')
 			->join('groups','group_user.group_id','=','groups.id')
 			->join('projects','groups.project_id','=','projects.id')
-			->where('user_id',$user_id)
+			->where('user_id',$userId)
 			->where('groups.enabled',1)
 			->where('projects.end_date',null)
 			->orderBy('group_id','asc')
 			->get();
 	}
 
-	private function getCategories($user_id)
+	private function getCategories($userId)
 	{
 		return DB::table('category_user')
 			->select(
@@ -154,7 +156,7 @@ class WorkingReportController extends Controller
 			)
 			->LeftJoin('users','category_user.user_id','=','users.id')
 			->LeftJoin('categories','category_user.category_id','=','categories.id')
-			->where('user_id',$user_id)
+			->where('user_id',$userId)
 			->get();
 	}
 

@@ -25,7 +25,7 @@
                         <td><a href="{{ url('users'.'/'.$user->id.'/') }}" title="Show"> {{ $user->fullname }}</a></td>
                         <td>{{ $user->email }}</td>
                         <td>
-                            @if (Auth::user()->isAdmin())
+                            @if (Auth::user()->primaryRole() == 'admin')
                                 <a title="Edit"
                                    href = "{{ url('users' . '/' . $user->id . '/' . 'edit') }}" 
                                    class="btn btn-default btn-sm"
@@ -34,7 +34,7 @@
                                 </a>
                             @endif
 
-                            @if (Auth::user()->isAdmin() || Auth::user()->isPM())
+                            @if (Auth::user()->primaryRole() == 'admin' || Auth::user()->primaryRole() == 'manager')
                             <a title="Groups"
                                href="{{ url('users/' . $user->id . '/groups') }}"
                                class="btn btn-default btn-sm"

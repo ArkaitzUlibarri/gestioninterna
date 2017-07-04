@@ -3,7 +3,7 @@
 		<div class="form-inline">
 			
 			<span style="padding-right: 1em">
-				<strong>{{ $report_user->fullname }}</strong>
+				<strong>{{ $reportUser->fullname }}</strong>
 			</span>
 
 			Report Day: 

@@ -73,7 +73,7 @@ window.axios.interceptors.response.use(function (response) {
  */
 
 window.moment = require('moment');
-window.moment.locale('en');
+window.moment.locale('es');
 
 /**
  * toastr is a Javascript library for non-blocking notifications. jQuery is required.

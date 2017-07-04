@@ -15,7 +15,7 @@ class GroupsController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('checkrole',['except' => ['index']]);
+        $this->middleware('checkrole', ['except' => ['index']]);
     }
 
     public function index()
@@ -43,7 +43,7 @@ class GroupsController extends Controller
     private function getGroups()
     {
     	return DB::table('groups')
-    		->join('projects','groups.project_id','=','projects.id')
+    		->join('projects', 'groups.project_id','=','projects.id')
     		->select(
     			'projects.name as project',
     			'groups.id',
@@ -56,8 +56,6 @@ class GroupsController extends Controller
 
     private function getGroupsProjects()
     {
-        $projects = Auth::user()->PMProjects();
-
         $q = DB::table('groups')
             ->select(
                 'groups.project_id',
@@ -67,12 +65,11 @@ class GroupsController extends Controller
                 'groups.enabled as enabled'
             )
             ->join('projects','groups.project_id','=','projects.id')
-            //->where('groups.enabled',1)
-            ->where('projects.end_date',null)
+            ->whereNull('projects.end_date')
             ->orderBy('project_id','asc');
 
-            if(!Auth::user()->isAdmin()){
-                $q = $q->whereIn('projects.name',$projects);
+            if (Auth::user()->primaryRole() == 'manager'){
+                $q = $q->whereIn('projects.name', Auth::user()->activeProjects());
             }
             
             return $q->get();

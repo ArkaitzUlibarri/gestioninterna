@@ -25,11 +25,11 @@
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <!--<li><a href="{{ route('register') }}">Register</a></li>-->
                         @else      
-                            @if(Auth::user()->isAdmin())
+                            @if(Auth::user()->primaryRole() == 'admin')
                                  <li><a href="{{ url('users') }}">Users</a></li> 
                                  <li><a href="{{ url('contracts') }}">Contracts</a></li>
                                  <li><a href="{{ url('projects') }}">Projects</a></li>  
-                            @elseif(Auth::user()->isPM()) 
+                            @elseif(Auth::user()->primaryRole() == 'manager') 
                                  <li><a href="{{ url('users') }}">Users</a></li>   
                                  <li><a href="{{ url('projects') }}">Projects</a></li>            
                             @endif
@@ -38,14 +38,14 @@
                             
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    @if(Auth::user()->isAdmin())
-                                        {{ Auth::user()->name }} {{ Auth::user()->lastname_1 }} (Admin)
-                                    @elseif(Auth::user()->isPM())
-                                        {{ Auth::user()->name }} {{ Auth::user()->lastname_1 }} (PM)
-                                    @elseif(Auth::user()->isRole('tools'))
-                                        {{ Auth::user()->name }} {{ Auth::user()->lastname_1 }} (Tools)
+                                    @if(Auth::user()->primaryRole() == 'admin')
+                                        {{ Auth::user()->full_name }} (Admin)
+                                    @elseif(Auth::user()->primaryRole() == 'manager')
+                                        {{ Auth::user()->full_name }} (PM)
+                                    @elseif(Auth::user()->role == 'tools')
+                                        {{ Auth::user()->full_name }} (Tools)
                                     @else
-                                        {{ Auth::user()->name }} {{ Auth::user()->lastname_1 }} (User)
+                                        {{ Auth::user()->full_name }} (User)
                                     @endif
                                     <span class="caret"></span>
                                 </a>

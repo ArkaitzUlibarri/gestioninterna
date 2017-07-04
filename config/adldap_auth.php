@@ -238,7 +238,7 @@ return [
     */
 
     'sync_attributes' => [
-        'email'    => 'userprincipalname',
+        'email'    => 'userprincipalname', //'mail',
         'name'     => 'givenname',
         'lastname' => 'sn',
         'username' => 'samaccountname',

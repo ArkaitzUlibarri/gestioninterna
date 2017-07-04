@@ -91,7 +91,7 @@ class CreateGeneralTable extends Migration
             $table->foreign('pm_id')
                   ->references('id')
                   ->on('users')
-                  ->onDelete('cascade');  
+                  ->onDelete('cascade');
 
             $table->unique(['name', 'customer_id']);        
         });
@@ -164,8 +164,14 @@ class CreateGeneralTable extends Migration
             //Validacion
             $table->boolean('pm_validation')->default(false);
             $table->boolean('admin_validation')->default(false);
+            $table->integer('manager_id')->unsigned()->nullable();
 
             $table->foreign('user_id')
+                  ->references('id')
+                  ->on('users')
+                  ->onDelete('cascade');
+
+            $table->foreign('manager_id')
                   ->references('id')
                   ->on('users')
                   ->onDelete('cascade');
