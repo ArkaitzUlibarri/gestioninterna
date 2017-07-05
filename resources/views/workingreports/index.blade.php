@@ -65,8 +65,6 @@
 						@endforeach
 					</select>
 				</div>
-			@else
-				<input class="form-control input-sm" type="text" placeholder="{{ ucwords(Auth::user()->fullname) }}" readonly>
 			@endif
 
 			<div class="form-group">

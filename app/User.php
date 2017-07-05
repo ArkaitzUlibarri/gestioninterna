@@ -86,6 +86,23 @@ class User extends Authenticatable
     }
 
     /**
+     * Return the projects which a user is manager.
+     */
+    public function managerProjects()
+    {
+        $projects = $this->projects()
+            ->select('id', 'name')
+            ->get();
+
+        $array = [];
+        foreach ($projects as $project) {
+            $array[$project->id] = $project->name;
+        }
+
+        return $array;
+    }
+
+    /**
      * Get the main role of the user
      */
     public function primaryRole()

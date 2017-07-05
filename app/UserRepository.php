@@ -33,23 +33,35 @@ class UserRepository
         $data = array_only($data, $this->filters);
         $data = array_filter($data, 'strlen');
 
+        $last = DB::table('contracts')->select('user_id', DB::raw('MAX(start_date) as start_date'))->groupBy('user_id');//Last contract by user
+        
+        //Filter by Type
+        if($data == [] || ! isset($data['type'])){
+            $last = $this->Type($last, "");
+        }
+        elseif(isset($data['type'])){
+            $last = $this->Type($last, $data['type']);
+        }
+
+        $sql = $last->toSql();
+
+        //Obtener info del contrato
+        $sql2 = DB::table(DB::raw("($sql) AS r")) 
+            ->join("contracts as u",function($join){
+                $join->on("u.user_id","=","r.user_id")
+                    ->on("u.start_date","=","r.start_date");
+            })
+            ->select('u.user_id','u.contract_type_id','r.start_date','u.estimated_end_date','u.end_date')
+            ->toSql();
+        
+        //Obtener info del usuario
         $q = $this->getModel()
+            ->RightJoin(DB::raw("($sql2) AS t"),'users.id','t.user_id')  
             ->select(
                 DB::raw("users.id, users.name, users.lastname, users.email, t.contract_type_id, t.start_date, t.estimated_end_date, t.end_date")
             )
-            ->LeftJoin(DB::raw(
-                "(SELECT u.user_id,u.contract_type_id,r.start_date, u.estimated_end_date, u.end_date
-                FROM (
-                    SELECT contracts.user_id, MAX(contracts.start_date) as start_date 
-                    FROM contracts 
-                    GROUP BY user_id
-                ) r
-                INNER JOIN contracts u
-                ON u.user_id = r.user_id AND u.start_date = r.start_date) as t"
-            )
-            ,'users.id','t.user_id') 
-            
             ->orderBy('users.name','asc');
+
 
         foreach ($data as $field => $value) {
             $filterMethod = 'filterBy' . studly_case($field);
@@ -57,20 +69,13 @@ class UserRepository
                 $this->$filterMethod($q, $value);
             }
         }
-     
-        if($data == []){
-            $q = $this->Type($q, "");
-        }
-        elseif(isset($data['type'])){
-            $q = $this->Type($q, $data['type']);
-        }
         
         if(Auth::user()->primaryRole() == 'manager'){
             $groupedIds = $this->getGroupedUsers();
             $aloneIds = $this->getAloneUsers();
             $q = $q->whereIn('users.id', array_merge($groupedIds, $aloneIds));
         }
-       
+        
         return $paginate
             ? $q->paginate(15)->appends($data)
             : $q->get();
@@ -98,13 +103,11 @@ class UserRepository
     { 
         if ($value == "inactive") {
             // Terminado sin contrato
-            return $q->whereNotNull('t.end_date')
-                ->orWhereNull('t.contract_type_id');
+            return $q->where('end_date','<>', null);
         }
         elseif($value == ""){
             // No terminado con contrato
-            return $q->whereNull('t.end_date')
-                ->whereNotNull('t.contract_type_id');
+            return $q->where('end_date', null);
         }
         else{
             return $q;

@@ -39,8 +39,8 @@
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
 
-                                    {{ Auth::user()->full_name }}
-
+                                    {{ ucwords(Auth::user()->name) }}
+                                    
                                     @if(Auth::user()->primaryRole() == 'admin')
                                         (Admin)
                                     @elseif(Auth::user()->primaryRole() == 'manager')
@@ -50,6 +50,7 @@
                                     @else
                                         (User)
                                     @endif
+                                    
                                     <span class="caret"></span>
                                 </a>
 

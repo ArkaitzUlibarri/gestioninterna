@@ -202,7 +202,7 @@ class WorkingreportRepository
     }
 
     /**
-     * Fetch dat for validation view.
+     * Fetch data for validation view.
      * 
      * @param  array
      * @return array
@@ -237,6 +237,10 @@ class WorkingreportRepository
             $q->whereIn('wr.user_id', $this->usersByProjects(
                 array_keys(Auth::user()->activeProjects())
             ));
+        }
+        else if (Auth::user()->primaryRole() == 'user' || 
+                 Auth::user()->primaryRole() == 'tools') {
+            $q->where('wr.user_id', Auth::user()->id);
         }
 
         if (isset($data['year'])) {

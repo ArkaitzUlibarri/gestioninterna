@@ -93,25 +93,28 @@ class ProjectsController extends Controller
 	    	DB::beginTransaction();
 			//******************************************************************************
 			$project = Project::find($id);
+			$end = $project->end_date;//Anterior
 			$project->update($request->all());
 	        //**************************************************************
-	        //Cierre de proyecto->Deshabilitar grupos
-	        if($request->get('end_date') != null){
-				$groups  = $project->groups->where('enabled','1');
-				if($groups){
-					foreach ($groups as $group) {
-						DB::table('groups')
-							->where('id',$group->id)
-							->update(['enabled' => '0']);
+	        if($end != $request->get('end_date')){
+		       	//Cierre de proyecto->Deshabilitar grupos
+		        if($request->get('end_date') != null){
+					$groups  = $project->groups->where('enabled','1');
+					if($groups){
+						foreach ($groups as $group) {
+							DB::table('groups')
+								->where('id',$group->id)
+								->update(['enabled' => '0']);
+						}
 					}
 				}
-			}
-			else{
-				//Proyecto Abierto->Habilitar Grupos
-				DB::table('groups')
-					->where('project_id',$id)
-					->update(['enabled' => '1']);
-			}
+				else{
+					//Proyecto Abierto->Habilitar Grupos
+					DB::table('groups')
+						->where('project_id',$id)
+						->update(['enabled' => '1']);
+				}
+	        }
 			//******************************************************************************
 			DB::commit();/* Transaction successful. */
 		

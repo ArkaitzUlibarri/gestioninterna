@@ -68,7 +68,7 @@ class CheckRole
 
 	private function validateProyectManager()
 	{
-		$projects = $this->user->activeProjects();
+		$projects = $this->user->managerProjects();
 		$routeName = Route::currentRouteName();
 
 		//Pantalla de proyectos index

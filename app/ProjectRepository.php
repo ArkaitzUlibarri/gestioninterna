@@ -50,9 +50,9 @@ class ProjectRepository
             }
         }
 
-        if(Auth::user()->primaryRole() == 'manager') {
-            $ids = array_keys(Auth::user()->activeProjects());
-            if ($ids != []) $q->whereIn('projects.id',$ids);
+        if(Auth::user()->primaryRole() == 'manager') {  
+            $ids = array_keys(Auth::user()->managerProjects());
+            $q->whereIn('projects.id',$ids);
         }
        
         return $paginate

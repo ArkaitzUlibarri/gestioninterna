@@ -163,7 +163,7 @@ class ReportController extends ApiController
 		$teleworking = $this->teleworking( $request['created_at'],$request['user_id']);
 		$reportableGroups = $this->reportingGroups($request['user_id']);
 		$date = $this-> lastReportDate($request['created_at'], $request['user_id']);
-	
+		
 		//Seleccion de los datos
 		$results = DB::table('working_report')
 			->select(
@@ -213,7 +213,6 @@ class ReportController extends ApiController
 			}
 		});
 		
-		//DB::table('working_report')->insert($dataset);
 		Workingreport::insert($filtered);
 
 		return  $this->respond("COPIED");
@@ -233,7 +232,7 @@ class ReportController extends ApiController
 			return $data[$day] ? "teleworking": "on site work";
 		}
 
-		return "null";
+		return "on site work";
 	}
 
 	private function reportingGroups($user_id)
@@ -261,12 +260,16 @@ class ReportController extends ApiController
 	 */
 	private function lastReportDate ($created_at,$user_id)
 	{
-		return DB::table('working_report')
+		$q = DB::table('working_report')
 			->select('created_at')
 			->where('created_at','<',$created_at)
 			->where('user_id',$user_id)
-			->orderBy('created_at','desc')
-			->first()
-			->created_at;
+			->orderBy('created_at','desc');
+
+		if(is_null($q->first())){
+			return null;
+		}
+		
+		return $q->first()->created_at;
 	}
 }

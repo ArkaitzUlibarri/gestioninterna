@@ -10,8 +10,8 @@
             </div>
             <div class="panel-body">
                 <p class="col-xs-12 col-sm-4"><strong>Employee: </strong> {{ ucwords($contract->user->fullname) }}</p>
-                <p class="col-xs-12 col-sm-5"><strong>Type of contract: </strong> {{ ucfirst($contract->contractType->name) }}</p>
-                <p class="col-xs-12 col-sm-3"><strong>Week working hours: </strong> {{ $contract->week_hours}}</p>
+                <p class="col-xs-12 col-sm-4"><strong>Type of contract: </strong> {{ ucfirst($contract->contractType->name) }}</p>
+                <p class="col-xs-12 col-sm-4"><strong>Week working hours: </strong> {{ $contract->week_hours}}</p>
             </div>
         </div>
 
