@@ -59,7 +59,7 @@ class ValidationController extends ApiController
 			'user_id'          => 'required|numeric',
 			'day'              => 'required|date',
 			'admin_validation' => 'required|boolean',
-			'pm_validation'    => 'required|boolean'
+			'pm_validation'    => 'required|boolean',
 		]);
 
 		if ($validator->fails()) {
@@ -138,8 +138,18 @@ class ValidationController extends ApiController
 	 */
 	protected function getValuesToUpdate($userRole, $valueAdmin, $valueManager, $managerId)
 	{
+		//Admin
 		if (Auth::user()->primaryRole() == 'admin') {
 
+			//Mismo validador,Validado totalmente		
+			if($managerId == Auth::user()->id && $valueAdmin == true && $valueManager == true){
+				return [
+					'admin_validation' => ! $valueAdmin,
+					'pm_validation' => ! $valueAdmin,
+					'manager_id' => null
+				];
+			}
+	
 			$managerId = $managerId != null ? $managerId : Auth::user()->id;
 
 			// Admin validates another admin or tools user
@@ -154,10 +164,18 @@ class ValidationController extends ApiController
 
 			// Admin validates a user
 			if ($valueAdmin == false) {
-				return ['admin_validation' => true, 'pm_validation' => true, 'manager_id' => $managerId];
+				return [
+					'admin_validation' => true, 
+					'pm_validation' => true, 
+					'manager_id' => $managerId
+				];
 			}
 
-			return ['admin_validation' => false, 'manager_id' => $managerId];
+			return [
+				'admin_validation' => false, 
+				'manager_id' => $managerId
+			];
+			
 		}
 
 		// Project Manager

@@ -11,7 +11,7 @@
 
     <div class="panel-body">
 
-        <table v-show="reports!=null">
+        <table v-show="filtered_reports!=null">
             <thead>
                 <tr>
                     <th>Employee</th>
@@ -33,15 +33,15 @@
                         <div v-if="hasCard(user['id'], day)"
                              v-on:click="validate(user['id']+'|'+day)"
                              class="card"
-                             v-bind:class="getCardColor(reports[user['id']+'|'+day].admin_validation, reports[user['id']+'|'+day].pm_validation)">
+                             v-bind:class="getCardColor(filtered_reports[user['id']+'|'+day].admin_validation, filtered_reports[user['id']+'|'+day].pm_validation)">
 
-                            <div v-for="item in reports[user['id']+'|'+day].items">
+                            <div v-for="item in filtered_reports[user['id']+'|'+day].items">
                                 <p>- @{{ item.name }}, @{{ item.time_slot }}h</p>
                             </div>
 
                             <div style="margin-top: 10px;padding-top: 10px;border-top: 1px solid #9e9e9e;">
-                                <strong>Total Hours:</strong> @{{ reports[user['id']+'|'+day].total }}
-                                <span><div class="pull-right">@{{ reports[user['id']+'|'+day].manager }}</div></span>
+                                <strong>Total Hours:</strong> @{{ filtered_reports[user['id']+'|'+day].total }}
+                                <span><div class="pull-right">@{{ filtered_reports[user['id']+'|'+day].manager }}</div></span>
                             </div>
 
                         </div>
@@ -49,7 +49,7 @@
                 </tr>
             </tbody>
         </table>
-        <div  style="text-align: center; margin-top: 50px; margin-bottom: 50px" v-show="reports==null">
+        <div  style="text-align: center; margin-top: 50px; margin-bottom: 50px" v-show="filtered_reports==null">
             No data available...
         </div> 
 
@@ -126,7 +126,7 @@ var app = new Vue({
         role: '{!! Auth()->user()->primaryRole() !!}',
 
         // Filter options
-        filter: { user: '', year: moment().year(), week: moment().week() },
+        filter: { activity:'', user: '', year: moment().year(), week: moment().week() },
 
         // Data for the table of cards
         users: [],
@@ -139,6 +139,29 @@ var app = new Vue({
         this.fetchData();
     },
 
+    computed:{
+        /**
+         * Filter database request by project name.
+         */
+        filtered_reports() {
+            let filtered = [];
+
+            if(this.reports == null){
+                return null;
+            }
+
+            for (let key in this.reports) {
+                for(let i in this.reports[key].items) {
+                    if(this.reports[key].items[i].name.toLowerCase().includes(this.filter.activity.toLowerCase())) {
+                        //filtered.push(this.reports[key]);
+                        filtered[key] = this.reports[key];
+                        break;
+                    }
+                }               
+            }
+            return filtered;
+        }
+    },
 
     methods: {
         /**
@@ -161,7 +184,7 @@ var app = new Vue({
                     user_id: this.reports[key].user_id,
                     day: this.reports[key].created_at,
                     admin_validation: vm.reports[key].admin_validation,
-                    pm_validation: vm.reports[key].pm_validation
+                    pm_validation: vm.reports[key].pm_validation,
                 }).then(function (response) {
                     if ('admin_validation' in response.data)
                         vm.reports[key].admin_validation = response.data.admin_validation
@@ -279,7 +302,7 @@ var app = new Vue({
          * Check if current user has reported any task on current day.
          */
         hasCard(user, day) {
-            return (user + '|' + day) in this.reports
+            return (user + '|' + day) in this.filtered_reports
                 ? true
                 : false;
         },

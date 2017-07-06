@@ -20,9 +20,11 @@
                placeholder="Week number"
                v-model="filter.week">
 
-        <!--<select name="proyect" class="form-control input-sm">
-          
-        </select>-->
+    <input type="text"
+           class="form-control input-sm"
+           name="name"
+           placeholder="Activity name"
+           v-model="filter.activity">
 
         <input type="text"
                name="user"
