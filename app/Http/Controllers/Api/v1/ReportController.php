@@ -87,7 +87,7 @@ class ReportController extends ApiController
 		$id = DB::table('working_report')
 			->insertGetId($array);
 
-		return $this->respond($array);
+		return $this->respond($id);
 
 	}
 

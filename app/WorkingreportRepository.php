@@ -54,30 +54,44 @@ class WorkingreportRepository
             }
         }
 
-        if ($data != []) {
-            // Admin or Project Manager
-            if (Auth::user()->primaryRole() == 'manager' || Auth::user()->primaryRole() == 'admin') {
+        // Admin or Project Manager
+        if (Auth::user()->primaryRole() == 'manager' || Auth::user()->primaryRole() == 'admin') {
+            if ($data != []) {
 
                 if (isset($data['project'])) {
-
-                    if (Auth::user()->primaryRole() == 'manager') {
-                        //Project Manager
-                        $users = $data['project'] == "all"
-                            ? $this->usersByProjects(array_keys($projects))
-                            : $this->usersByProjects([$data['project']]);
+                    if($data['project'] =="user"){
+                        //My user
+                        return $q->where('user_id', $user_id)->get();
                     }
-                    else {
-                        //Admin
-                        $users = $data['project'] == "all"
-                            ? $this->usersByProjects(array_pluck($projects, ['id']))
-                            : $this->usersByProjects([$data['project']]);
-                    }
+                    else{
+                        if (Auth::user()->primaryRole() == 'manager') {
+                            //Project Manager
+                            $users = $data['project'] == "all"
+                                ? $this->usersByProjects(array_keys($projects))
+                                : $this->usersByProjects([$data['project']]);
+                        }
+                        else {
+                            //Admin
+                            $users = $data['project'] == "all"
+                                ? $this->usersByProjects(array_pluck($projects, ['id']))
+                                : $this->usersByProjects([$data['project']]);
+                        }
 
-                    return $q->whereIn('user_id', $users)->get();
+                        return $q->whereIn('user_id', $users)->get();
+                    }
                 }
+
+            }
+            else{
+                //Por defecto todos los reportes
+                $users = Auth::user()->primaryRole() == 'manager'
+                    ? $this->usersByProjects(array_keys($projects))
+                    : $this->usersByProjects(array_pluck($projects, ['id']));
+
+                return $q->whereIn('user_id', $users)->get();
             }
         }
-
+        
         return $q->where('user_id', $user_id)->get();
     }
 

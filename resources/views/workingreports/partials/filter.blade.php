@@ -2,21 +2,22 @@
 
 	@if(Auth::user()->primaryRole() == 'manager' && count($projects))
 		<select name="project" class="form-control input-sm">
-			<option selected="true" disabled="disabled" value="">Project</option>
+			<option value="all" {{ "all" == $filter['project'] ? 'selected' : '' }}>All Projects</option>
+			<option value="user" {{ "user" == $filter['project'] ? 'selected' : '' }} >My user</option>
 			@foreach ($projects as $id => $project)
-				<option value="{{ $id }}" {{ $project == $filter['project'] ? 'selected' : '' }} >{{ strtoupper($project) }}</option>
-			@endforeach
-			<option value="all" {{ "All" == $filter['project'] ? 'selected' : '' }}>All</option>
+				<option value="{{ $id }}" {{ $id == $filter['project'] ? 'selected' : '' }} >{{ strtoupper($project) }}</option>
+			@endforeach	
 		</select>
 	@endif
 
 	@if(Auth::user()->primaryRole() == 'admin' && count($projects))
 		<select name="project" class="form-control input-sm">
-			<option selected="true" value="">Project</option>
+			<option value="all" {{ "all" == $filter['project'] ? 'selected' : '' }} >All Projects</option>
+			<option value="user" {{ "user" == $filter['project'] ? 'selected' : '' }} >My user</option>
 			@foreach ($projects as $project)
-				<option value="{{ $project->id }}" {{ $project->name == $filter['project'] ? 'selected' : '' }} >{{ strtoupper($project->name) }}</option>
+				<option value="{{ $project->id }}" {{ $project->id == $filter['project'] ? 'selected' : '' }} >{{ strtoupper($project->name) }}</option>
 			@endforeach
-			<option value="all" {{ "All" == $filter['project'] ? 'selected' : '' }} >All</option>
+			
 		</select>
 	@endif
 

@@ -6,6 +6,7 @@
 
     <div class="pull-right">
         <select name="year" class="form-control input-sm" v-model="filter.year">
+            <option value="2018">2018</option>
             <option value="2017">2017</option>
             <option value="2016">2016</option>
         </select>
@@ -18,6 +19,10 @@
                class="form-control input-sm"
                placeholder="Week number"
                v-model="filter.week">
+
+        <!--<select name="proyect" class="form-control input-sm">
+          
+        </select>-->
 
         <input type="text"
                name="user"

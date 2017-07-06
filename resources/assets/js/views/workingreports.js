@@ -121,6 +121,7 @@ const app = new Vue({
 	created() {
 		Event.$on('DeleteTask', (index, task) => {
 			this.delete(index);
+			this.initializeTask();
 			this.tasks.splice(index, 1);
 		});
 
