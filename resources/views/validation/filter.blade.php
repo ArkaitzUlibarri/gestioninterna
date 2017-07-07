@@ -1,5 +1,9 @@
 <div class="form-inline">
 
+    <button class="btn btn-default btn-sm custom-btn-width" v-on:mouseover="upHere=true" v-on:mouseleave="upHere=false">
+      <span class="glyphicon glyphicon-info-sign"></span> Info
+    </button>
+
     <a href="{{ url('validation/download') }}" class="btn btn-success btn-sm custom-btn-width">
         <span class="glyphicon glyphicon-download-alt"></span> Export
     </a>

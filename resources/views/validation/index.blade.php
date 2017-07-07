@@ -70,7 +70,7 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row front" v-show="upHere">
     <div class="col-xs-12 col-sm-1">
        <div class="panel panel-primary ">
 
@@ -184,7 +184,10 @@ var app = new Vue({
         users: [],
         days: [],
         reports: null,
-        weekdaysShort : ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']
+        weekdaysShort : ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
+
+        //Hover variable
+        upHere : false
     },
 
     mounted() {
