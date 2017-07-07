@@ -35,6 +35,7 @@
         <button class="btn btn-default btn-sm custom-btn-width" v-on:click="fetchData">
             <span class="glyphicon glyphicon-filter"></span> Filter
         </button>
+
     </div>
 
 </div> 

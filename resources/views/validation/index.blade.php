@@ -31,17 +31,31 @@
                     <td v-for="day in days">
 
                         <div v-if="hasCard(user['id'], day)"
-                             v-on:click="validate(user['id']+'|'+day)"
                              class="card"
                              v-bind:class="getCardColor(filtered_reports[user['id']+'|'+day].admin_validation, filtered_reports[user['id']+'|'+day].pm_validation)">
+
+                            <button
+                                style="position:relative; top:-12%; right:-5%;" 
+                                title="See Report"
+                                class="btn btn-default btn-xs pull-right"
+                                v-on:click="validate(user['id']+'|'+day)">
+                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                            </button> 
+                            <a type="button" 
+                                title="(In)validate"
+                                style="position:relative; top:-12%; right:-5%;" 
+                                class="btn btn-default btn-xs pull-right"
+                                v-bind:href="makeUrl('{{ url('workingreports/add/') }}', [user['id'], day])">
+                                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                            </a> 
 
                             <div v-for="item in filtered_reports[user['id']+'|'+day].items">
                                 <p>- @{{ item.name }}, @{{ item.time_slot }}h</p>
                             </div>
 
                             <div style="margin-top: 10px;padding-top: 10px;border-top: 1px solid #9e9e9e;">
-                                <strong>Total Hours:</strong> @{{ filtered_reports[user['id']+'|'+day].total }}
-                                <span><div class="pull-right">@{{ filtered_reports[user['id']+'|'+day].manager }}</div></span>
+                                <strong>Total Hours:</strong> @{{ filtered_reports[user['id']+'|'+day].total }}   
+                                <span><div class="pull-right">@{{ filtered_reports[user['id']+'|'+day].manager }}</div></span>                                             
                             </div>
 
                         </div>
@@ -55,6 +69,34 @@
 
     </div>
 </div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-1">
+       <div class="panel panel-primary ">
+
+            <div class="panel-heading">
+                <strong>Key Colors</strong> 
+            </div>
+
+            <div class="panel-body">
+                <div>
+                    <label class="legend">PM:
+                        <div class="cuadrado validated"></div>
+                    </label>              
+                </div>
+
+                <div>
+                    <label class="legend">Admin:
+                        <div class="cuadrado full-validated"></div>
+                    </label>              
+                </div>
+            </div>
+
+        </div> 
+    </div>
+</div>
+
+
 
 @endsection
 
@@ -106,6 +148,16 @@ table .card {
 
 .full-validated {
     background: #c5e1a5;
+}
+
+.legend{
+    font-style: italic;
+}
+
+.cuadrado{
+    width: 15px; 
+    height: 15px; 
+    display: inline-block;
 }
 
 /*
@@ -164,6 +216,13 @@ var app = new Vue({
     },
 
     methods: {
+        makeUrl(url, data = null) {
+            if (data != null) {
+                return url + '/' + data.join('/');
+            }
+            return url;
+        },
+
         /**
          * Validate a single day tasks.
          */
