@@ -36,14 +36,14 @@
 
                             <button
                                 style="position:relative; top:-12%; right:-5%;" 
-                                title="See Report"
+                                title="(In)validate"
                                 class="btn btn-default btn-xs pull-right"
                                 v-on:click="validate(user['id']+'|'+day)">
                                 <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                             </button> 
-                            <a type="button" 
-                                title="(In)validate"
+                            <a type="button"     
                                 style="position:relative; top:-12%; right:-5%;" 
+                                title="See Report"
                                 class="btn btn-default btn-xs pull-right"
                                 v-bind:href="makeUrl('{{ url('workingreports/add/') }}', [user['id'], day])">
                                 <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
@@ -71,7 +71,7 @@
 </div>
 
 <div class="row front" v-show="upHere">
-    <div class="col-xs-12 col-sm-1">
+    <div class="col-xs-12 col-sm-2">
        <div class="panel panel-primary ">
 
             <div class="panel-heading">

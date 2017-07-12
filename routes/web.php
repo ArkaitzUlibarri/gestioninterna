@@ -52,8 +52,14 @@ Route::get('workingreports/add/{id}/{date}/',['as'=> 'workingreports.edit','uses
 Route::get('validation', 'ValidationController@index');
 Route::get('validation/download', 'ValidationController@download');
 
+//Holidays
+Route::get('holidays','CalendarHolidaysController@index');
+
 /**
  * API, mirar autenticacion token o passport en el api.php
  */
 Route::get('api/validate','Api\v1\ValidationController@index');
 Route::patch('api/validate','Api\v1\ValidationController@update');
+
+Route::get('api/calendar','Api\v1\CalendarController@index');
+Route::get('api/calendar/bank','Api\v1\CalendarController@BankHolidays');

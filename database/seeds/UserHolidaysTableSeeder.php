@@ -15,82 +15,78 @@ class UserHolidaysTableSeeder extends Seeder
      */
     public function run()
     {
-
-		$faker         = Faker::create();
-		$contractTypes = $this->contractTypes();
-		$contracts     = $this->contracts();
-
+		$faker = Faker::create();
+		$contracts = $this->contracts();
+	
        	for ($j = 1; $j <= count($contracts); $j++) { 
-       		for ($i = 1; $i <= count($contractTypes) ; $i++) { 
-   			   	if($i == $contracts[$j]['contract_type_id']){
+       		
+		   	//Vacaciones por contrato
+			$contractHolidays = $contracts[$j]['holidays'];
 
-   			   		//Vacaciones por contrato
-   					$contractHolidays = $contractTypes[$i];
+			//Datos del contrato
+			$startDate = $contracts[$j]['start_date'];
+			$estimatedEndDate = $contracts[$j]['estimated_end_date'];
 
-   					//Datos del contrato
-					$startDate        = $contracts[$j]['start_date'];
-					$estimatedEndDate = $contracts[$j]['estimated_end_date'];
+			//Años
+			$actualYear = intval(date('Y'));
+			$daysOfYear = Carbon::createFromDate($actualYear, 12, 31)->dayOfYear;
+			$startDateYear = Carbon::createFromFormat('Y-m-d',$startDate)->year;
+			if(is_null($estimatedEndDate)){
+				$estimatedEndDateYear = null;
+			}
+			else{
+				$estimatedEndDateYear = Carbon::createFromFormat('Y-m-d',$estimatedEndDate)->year;
+			}
+		
+			//Indefinido o fin de obra empezado otro año
+			if(is_null($estimatedEndDate)){
+				if($startDateYear != $actualYear)
+				{
+					$holidays = $contractHolidays;
+					$lastYear = $faker->numberBetween(0,5);
+					$extras = $faker->numberBetween(0,2);
+				}
+				else{
+					$days = Carbon::createFromFormat('Y-m-d',$startDate)->dayOfYear;
 
-   					//Años de los contratos
-					$startDateYear = Carbon::createFromFormat('Y-m-d',$startDate)->year;
-					$actualYear    = intval(date('Y'));
+					$holidays =	round(($days/$daysOfYear)*$contractHolidays);
+					$lastYear = 0;
+					$extras = 0;
+				}
+			}
+			else{
+				if($estimatedEndDateYear == $actualYear && $startDateYear != $actualYear ){
+					$days = Carbon::createFromFormat('Y-m-d',$estimatedEndDate)->dayOfYear;
 
-   					for ($k = $startDateYear; $k <=$actualYear ; $k++) { 
-						$endOfYear   = Carbon::createFromDate($k, 12, 31);
-						$startOfYear = Carbon::createFromDate($k, 1, 1);
-						$daysOfYear  = ($endOfYear->copy()->dayOfYear)+1;
+					$holidays =	round(($days/$daysOfYear)*$contractHolidays);
+					$lastYear = $faker->numberBetween(0,5);
+					$extras = $faker->numberBetween(0,2);
+				}	
+				else{
+					$startDay = Carbon::createFromFormat('Y-m-d',$startDate)->dayOfYear;
+					$estimatedEndDay = Carbon::createFromFormat('Y-m-d',$estimatedEndDate)->dayOfYear;
 
-	   					if(intval($startDateYear) == $actualYear){
+					$holidays =	round((($estimatedEndDay - $estimatedEndDay) /$daysOfYear)*$contractHolidays);
+					$lastYear = 0;
+					$extras = 0;
+				}	
+			}
 
-							if(! is_null($estimatedEndDate)){
-								$days = (Carbon::createFromFormat('Y-m-d',$startDate)->diffInDays(Carbon::createFromFormat('Y-m-d',$estimatedEndDate)))+1;
-							}
-							else{
-								$days = (Carbon::createFromFormat('Y-m-d',$startDate)->diffInDays($endOfYear))+1;
-							}
-							$holidays = round(($days/$daysOfYear)*$contractHolidays);	
-							$used     = round($holidays*0.2);
-							
-							$lastYear = $faker->numberBetween(0,5);
-							$extras   = $faker->numberBetween(0,2);
-	   					}
-	   					else{
-	   						if($k == $actualYear){
-	   							if(! is_null($estimatedEndDate)){
-		   							$days = (Carbon::createFromDate($k, 1, 1)->diffInDays(Carbon::createFromFormat('Y-m-d',$estimatedEndDate)))+1;
-	   							}
-	   							else{
-									$days = (Carbon::createFromDate($k, 1, 1)->diffInDays($endOfYear))+1;
-								}
-								$holidays =	round(($days/$daysOfYear)*$contractHolidays);	
-								$used     = round($holidays*0.2);
-								$lastYear = $faker->numberBetween(0,5);
-								$extras   = $faker->numberBetween(0,2);
-	   						}
-							else{
-								$days     = (Carbon::createFromFormat('Y-m-d',$startDate)->diffInDays($endOfYear))+1;
-								
-								$holidays = round(($days/$daysOfYear)*$contractHolidays);	
-								$used     = $holidays;
-								$lastYear = 0;
-								$extras   = 0;
-							}
+			$used = round($holidays*0.2, 0);		
 
-	   					}
-	   					
-	   					DB::table('user_holidays')->insert([
-							'contract_id'       => $j,
-							'year'              => $k,
-							'current_year'      => $holidays,
-							'used_current_year' => $used,
-							'last_year'         => $lastYear,
-							'used_last_year'    => $lastYear,
-							'extras'            => $extras,
-							'used_extras'       => $extras,
-						]); 					
-   					}
-       			}
-       		}
+			$array = [
+				'contract_id'       => $j,
+				'year'              => $actualYear,
+				'current_year'      => $holidays,
+				'used_current_year' => $used,
+				'last_year'         => $lastYear,
+				'used_last_year'    => $lastYear,
+				'extras'            => $extras,
+				'used_extras'       => $extras,
+			];
+
+			DB::table('user_holidays')->insert($array); 			 			       		
 		}
+	
     }
 }

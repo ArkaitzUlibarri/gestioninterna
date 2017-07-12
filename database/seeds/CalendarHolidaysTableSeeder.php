@@ -17,7 +17,6 @@ class CalendarHolidaysTableSeeder extends Seeder
     {        
         $faker        = Faker::create();
         $userHolidays = $this->userHolidays();
-        $contracts    = $this->contracts();
 
         $k = 0;
 
@@ -26,15 +25,19 @@ class CalendarHolidaysTableSeeder extends Seeder
             $usedLastYear     = $userHolidays[$i]['used_last_year'];
             $usedExtras       = $userHolidays[$i]['used_extras'];
             $contractID       = $userHolidays[$i]['contract_id'];
-            
-            $user             = $contracts[$contractID]['user_id'];
-            $startDate        = $contracts[$contractID]['start_date'];
-            $estimatedEndDate = $contracts[$contractID]['estimated_end_date']; 
-            
+            $user             = $userHolidays[$i]['user_id'];
+            $startDate        = $userHolidays[$i]['start_date'];
+            $estimatedEndDate = $userHolidays[$i]['estimated_end_date'];
+       
             $startDateYear    = Carbon::createFromFormat('Y-m-d',$startDate)->year;
+            $actualYear = intval(date('Y'));
+
+            if($startDateYear != $actualYear){
+                $startDate = Carbon::createFromDate($actualYear, 01, 01);
+            }
 
             if(is_null($estimatedEndDate)){
-                $endDate = Carbon::createFromDate(2017, 12, 31)->copy();
+                $endDate = Carbon::createFromDate($actualYear, 12, 31)->copy();
             }
             else{
                 $endDate = Carbon::createFromFormat('Y-m-d',$estimatedEndDate);
@@ -52,20 +55,24 @@ class CalendarHolidaysTableSeeder extends Seeder
             foreach ($types as $type) {
 
                 $quantityType = $quantities[$type];
-                
+               
                 for ($j = 1; $j <= $quantityType ; $j++) {  
 
-                    DB::table('calendar_holidays')->insert([
+                    $array = [
                         'user_id'   => $user,    
                         'date'      => $date->copy()->addDays($k),
                         'type'      => $type,
-                        'comments'  => $faker->text(140),
-                        'validated' => $faker->boolean(100),
-                    ]);      
+                        'comments'  => $faker->text(20),
+                        'validated' => $faker->boolean(80),
+                    ];
+
+                    DB::table('calendar_holidays')->insert($array);      
                                    
                     $k++;
                 }
+
             }
         }
+        
     }
 }

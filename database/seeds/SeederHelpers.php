@@ -154,32 +154,15 @@ trait SeederHelpers
 	}
 
 	/**
-	 * Obtengo un array de los ids de los planes
-	 * @return  array 
-	 */
-	private function contractTypes()
-	{
-		$array = DB::table('contract_types')
-			->select('id','holidays')
-			->get();
-
-		$contractTypes=array();
-
-		foreach ($array as $contractType) {
-	         $contractTypes[$contractType->id] = $contractType->holidays;
-        }	
-
-		return $contractTypes;	
-	}
-
-	/**
 	 * Obtengo un array de la informacion de los contratos
 	 * @return  array 
 	 */
 	private function contracts()
 	{
-		$array = DB::table('contracts')
-			->select('id','user_id','start_date','estimated_end_date','end_date','week_hours','contract_type_id')
+		$array = DB::table('contracts as c')
+			->join('contract_types','c.contract_type_id','contract_types.id')
+			->select('c.id','c.user_id','c.start_date','c.estimated_end_date','c.end_date','c.week_hours','c.contract_type_id','contract_types.holidays')
+			->orderBy('c.user_id','asc')
 			->get();
 
 		$contracts = array();
@@ -191,9 +174,11 @@ trait SeederHelpers
 				'estimated_end_date' => $contract->estimated_end_date,
 				'end_date'           => $contract->end_date,
 				'week_hours'         => $contract->week_hours,
-				'contract_type_id'   => $contract->contract_type_id
+				'contract_type_id'   => $contract->contract_type_id,
+				'holidays'           => $contract->holidays
 	         ];
         }	
+
 		return $contracts;	
 	}
 
@@ -203,8 +188,9 @@ trait SeederHelpers
 	 */
 	private function userHolidays()
 	{
-		$array = DB::table('user_holidays')
-			->select('contract_id','used_current_year','used_last_year','used_extras')
+		$array = DB::table('user_holidays as uh')
+			->join('contracts','uh.contract_id','contracts.id')
+			->select('contracts.user_id','contracts.start_date','contracts.estimated_end_date','uh.contract_id','uh.used_current_year','uh.used_last_year','uh.used_extras')
 			->get();
 
 		$holidays = array();
@@ -212,10 +198,13 @@ trait SeederHelpers
 		foreach ($array as $holiday) {
 			$i++;
 	         $holidays[$i] = [
-				'contract_id'       => $holiday->contract_id,
-				'used_current_year' => $holiday->used_current_year,
-				'used_last_year'    => $holiday->used_last_year,
-				'used_extras'       => $holiday->used_extras,
+				'user_id'            => $holiday->user_id,
+				'contract_id'        => $holiday->contract_id,
+				'start_date'         => $holiday->start_date,
+				'estimated_end_date' => $holiday->estimated_end_date,
+				'used_current_year'  => $holiday->used_current_year,
+				'used_last_year'     => $holiday->used_last_year,
+				'used_extras'        => $holiday->used_extras,
 	         ];
         }	
 		return $holidays;	

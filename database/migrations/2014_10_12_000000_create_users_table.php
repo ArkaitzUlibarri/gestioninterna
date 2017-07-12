@@ -92,14 +92,16 @@ class CreateUsersTable extends Migration
         /**
          * Tabla para las vacaciones del usuario
          */
-        /*
         Schema::create('user_holidays', function (Blueprint $table) {
             $table->integer('contract_id')->unsigned();
-            $table->smallInteger('year')->unsigned();           
+            $table->smallInteger('year')->unsigned();     
+
             $table->tinyInteger('current_year')->unsigned()->default(0);
             $table->tinyInteger('used_current_year')->unsigned()->default(0);
+
             $table->tinyInteger('last_year')->unsigned()->default(0);
             $table->tinyInteger('used_last_year')->unsigned()->default(0);
+
             $table->tinyInteger('extras')->unsigned()->default(0);
             $table->tinyInteger('used_extras')->unsigned()->default(0);
                
@@ -110,7 +112,6 @@ class CreateUsersTable extends Migration
 
             $table->primary(['contract_id','year']);       
         });
-        */
 
         /**
          * Tabla con los datos de las reducciones de jornada en los contratos de los empleados
@@ -153,7 +154,6 @@ class CreateUsersTable extends Migration
         /**
          * Tabla con el registro de los días de vacaciones solicitados y su validación
          */
-        /*
         Schema::create('calendar_holidays', function (Blueprint $table) {
             $table->integer('user_id')->unsigned();
             $table->date('date');
@@ -168,7 +168,6 @@ class CreateUsersTable extends Migration
 
             $table->primary(['user_id','date']);      
         });
-        */
 
         /**
          * Tabla con los datos de los dias festivos por region geografica

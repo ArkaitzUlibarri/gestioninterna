@@ -21,6 +21,7 @@ try {
  */
 
 window.Vue = require('vue');
+Vue.use(require('vue-full-calendar'));
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
