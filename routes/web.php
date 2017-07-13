@@ -62,4 +62,4 @@ Route::get('api/validate','Api\v1\ValidationController@index');
 Route::patch('api/validate','Api\v1\ValidationController@update');
 
 Route::get('api/calendar','Api\v1\CalendarController@index');
-Route::get('api/calendar/bank','Api\v1\CalendarController@BankHolidays');
+

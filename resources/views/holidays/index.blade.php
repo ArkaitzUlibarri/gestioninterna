@@ -32,10 +32,13 @@
 
 <div id="app">
     <div id='calendar'></div>
+
+    <pre>
+        @{{ $data.holidays }}
+    </pre>
+    
 </div>
     
-
-
 <script>
 
 //VUE
@@ -47,20 +50,11 @@ const app = new Vue({
         year: 2017,
         today: new Date(),
         holidays: [],
-        bankHolidays: []
-        // User's data
-        //user_id: '{!! Auth()->user()->id !!}',
-        //role: '{!! Auth()->user()->primaryRole() !!}',
-
-        // Filter options
-        //filter: { year: moment().year(), month: moment().month(), week: moment().week() },
-
-        //weekdaysShort : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        totalHolidays: 22,
     },
 
     mounted() {
-        this.fetchUserData();
-        this.fetchBankData();
+        this.fetchData();
     },
 
     computed:{
@@ -69,9 +63,21 @@ const app = new Vue({
 
     methods: {
 
-        fetchUserData () {
-            var vm = this;
+        setColor(title) {
+            title = title.toLowerCase();
+            if (title == 'current_year') return 'green';
+            if (title == 'last_year') return 'blue';
+            if (title == 'extras') return 'purple';
+            if (title == 'national') return 'red';
+            if (title == 'regional') return 'orange';
+            if (title == 'local') return 'pink';
+            return 'black';
+        },
 
+        fetchData () {
+            var vm = this;
+            vm.holidays = [];
+      
             axios.get('api/calendar', {
                     params: {
                         user: vm.user,
@@ -79,55 +85,34 @@ const app = new Vue({
                     }
                 })
                 .then(function (response) {
-                    console.log(response.data);
-                    vm.holidays = response.data;
+
+                    response.data.forEach( (item) => {
+                        let Event = {
+                            title: item.type,
+                            start: item.date,
+                            color: vm.setColor(item.type),
+                            allDay: true,
+                        };
+                        vm.holidays.push(Event);
+                        $('#calendar').fullCalendar( 'renderEvent', Event);
+
+                    });
+                    /*
+                    $('#calendar').fullCalendar({
+                        events: vm.holidays,
+                    });
+                    */
                 })
                 .catch(function (error) {
-                   console.log(error.response.data)
+                   console.log(error.response)
                 });
+                     
         },
-
-        fetchBankData () {
-            var vm = this;
-
-            axios.get('api/calendar/bank', {
-                    params: {
-                        user: vm.user,
-                        year: vm.year,
-                    }
-                })
-                .then(function (response) {
-                    console.log(response.data);
-                    vm.bankHolidays = response.data;
-                })
-                .catch(function (error) {
-                   console.log(error.response.data)
-                });
-        },
-   
     }
 });
 
 //JQUERY-FULLCALENDAR
 $(document).ready(function() {
-
-    var totalHolidays = 22;
-
-    function getColor(eventTitle){
-        switch(eventTitle){
-            case 'Holiday':
-                return 'green';
-                break;
-            case 'Last Year Holiday':
-                return 'blue';
-                break;
-            case 'Extra Holiday':
-                return 'purple';
-                break;
-            default:
-                return 'black';
-        }
-    }
 
     $('#calendar').fullCalendar({
         theme:true,
@@ -136,7 +121,7 @@ $(document).ready(function() {
             center: 'title',
             right: 'month,listYear'
         },
-        displayEventTime: false, // don't show the time column in list view
+        displayEventTime: true, // don't show the time column in list view
         defaultView: 'month',
         defaultDate: app.today,
         lang: 'es',
@@ -147,15 +132,17 @@ $(document).ready(function() {
         eventLimit: true, // allow "more" link when too many events
         weekNumbers: true,//Show weeknumbers
 
+        //events: app.holidays,
+
         dayClick: function(date, jsEvent, view, resourceObj) {
 
             var eventColor;
-            var eventTitle = "Holiday";
+            var eventTitle = "current_year";
             
             //Selecciona tantos días como vacaciones
-            if (totalHolidays > 0) {
+            if (app.totalHolidays > 0) {
 
-               eventColor = getColor(eventTitle);
+               eventColor = app.setColor(eventTitle);
                 
                 $('#calendar').fullCalendar('renderEvent', { 
                     title: eventTitle, 
@@ -164,39 +151,16 @@ $(document).ready(function() {
                     color: eventColor,
                 }, true );
                 
-
-                totalHolidays--;
-                console.log(totalHolidays);
+                app.totalHolidays--;
             }
            
-         },
+         }
+         /*
+         viewRender: function (view,element){
+            $('#calendar').fullCalendar( 'renderEvent', Event);
+         }
+         */
 
-        events: [
-            {
-                id: 1,
-                title: 'Holiday',
-                start: '2017-07-05',
-                color: 'green',// #257e4a
-            },
-            {
-                id: 2,
-                title: 'Last Year Holiday',
-                start: '2017-07-11',
-                color: 'blue',//#2886F1
-            },
-            {
-                id: 3,
-                title: 'Extra Holiday',
-                start: '2017-07-27',
-                color: 'purple',//#811AC1
-            },
-            {
-                title: 'Bank Holiday',
-                start: '2017-07-25',
-                color: 'red',//#C11A1A
-            },
-
-        ]
     });
     
 });

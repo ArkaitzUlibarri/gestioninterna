@@ -97,7 +97,7 @@ class ConfigTableSeeder extends Seeder
 			['type' =>'local','name'=>'Bilbao','code'=>'bi'],
 			['type' =>'local','name'=>'Madrid','code'=>'mad'],
 			['type' =>'local','name'=>'Barcelona','code'=>'ba'],
-			['type' =>'others','name'=>'adjustment','code'=>'adjustment'],
+			['type' =>'others','name'=>'Adjustment','code'=>'adjustment'],
 		];
 
 		/*
