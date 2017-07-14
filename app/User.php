@@ -124,9 +124,6 @@ class User extends Authenticatable
 
 
 
-
-
-
     /**
      * Check the role of the user
 

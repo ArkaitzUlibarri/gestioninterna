@@ -155,6 +155,7 @@ class CreateUsersTable extends Migration
          * Tabla con el registro de los días de vacaciones solicitados y su validación
          */
         Schema::create('calendar_holidays', function (Blueprint $table) {
+            $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->date('date');
             $table->enum('type', config('options.holidays'));
@@ -166,7 +167,7 @@ class CreateUsersTable extends Migration
                   ->on('users')
                   ->onDelete('cascade'); 
 
-            $table->primary(['user_id','date']);      
+            $table->unique(['user_id','date']);      
         });
 
         /**
