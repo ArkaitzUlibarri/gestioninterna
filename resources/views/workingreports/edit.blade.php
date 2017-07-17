@@ -15,7 +15,7 @@
 
 	@include('workingreports.partials.task')
 </span>
-<span v-else="contract">
+<span v-else>
 	<div class="panel panel-danger">
 		  <div class="panel-heading">
 		    	<span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Error

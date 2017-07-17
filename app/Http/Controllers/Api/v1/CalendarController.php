@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
-use App\User;
 use App\CalendarHoliday;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Auth;
 
 class CalendarController extends ApiController
 {
@@ -28,9 +28,10 @@ class CalendarController extends ApiController
 			return $this->respondNotAcceptable($validator->errors()->all());
 		}
 
-		return $this->respond(
-			$this->getHolidays($request['user'],$request['year'])
-		);
+		return $this->getHolidays($request['user'],$request['year']) == null
+			?	$this->respondNotFound('Holidays and Bank Holidays not found')
+			:	$this->respond($this->getHolidays($request['user'],$request['year']));
+			  
 	}
 
 	/**
@@ -48,13 +49,17 @@ class CalendarController extends ApiController
 			'comments' => 'nullable|string',
 			'validated' => 'required|boolean'
 		]);
-
 		$array = $request->all();
+
+		$active_contract = Auth::user()->contracts->where('end_date',null)->first();
+		if($active_contract == null) {
+			return $this->respondNotFound('Contract does not exist');
+		}
 
 		DB::beginTransaction();
 		try{
 			$id = DB::table('calendar_holidays')->insertGetId($array);//Insertar dia de vacaciones
-			DB::table('user_holidays')->where('contract_id',70)->increment('used_'. strval($request['type']));//Actualizar contador en usuarios
+			DB::table('user_holidays')->where('contract_id',$active_contract->id)->increment('used_'. strval($request['type']));//Actualizar contador en usuarios
 			DB::commit();
 		}
 		catch (\Exception $e) {
@@ -73,15 +78,16 @@ class CalendarController extends ApiController
 	public function destroy($id)
 	{
 		$calendar = CalendarHoliday:: find($id);
+		$active_contract = Auth::user()->contracts->where('end_date',null)->first();
 
-		if($calendar == null) {
-			return $this->respondNotFound();
+		if($calendar == null || $active_contract == null) {
+			return $this->respondNotFound('Calendar or active contract does not exist');
 		}
 
 		DB::beginTransaction();
 		try{
 			$answer = DB::table('calendar_holidays')->where('id',$id)->delete();//Borrar dia de vacaciones
-			DB::table('user_holidays')->where('contract_id',70)->decrement('used_'. strval($calendar->type));//Actualizar contador en usuarios
+			DB::table('user_holidays')->where('contract_id',$active_contract->id)->decrement('used_'. strval($calendar->type));//Actualizar contador en usuarios
 			DB::commit();
 		}
 		catch (\Exception $e) {
@@ -109,14 +115,14 @@ class CalendarController extends ApiController
 			return $this->respondNotAcceptable($validator->errors()->all());
 		}
 
-		return $this->respond(
-			$this->leftHolidays($request['user'], $request['year'])
-		);
+		return $this->leftHolidays($request['user'],$request['year']) == null
+			?	$this->respondNotFound('User Holidays not found')
+			:	$this->respond($this->leftHolidays($request['user'], $request['year']));
 	}
 
 	private function getHolidays($user_id, $year)
 	{
-		//DATE,TYPE,NAME,COMMENTS,VALIDATED
+		//SELECT DATE,TYPE,NAME,COMMENTS,VALIDATED
 		$first = DB::table('bank_holidays as b')
 			->LeftJoin('bank_holidays_codes as bc','b.code_id','bc.id')
 			->LeftJoin('contracts as c','b.code_id','c.national_days_id')
@@ -132,20 +138,20 @@ class CalendarController extends ApiController
 			->where(DB::raw('YEAR(b.date)'),$year)
 			->where('c.user_id',$user_id)
 			->where('c.end_date',null);
-
-		$third = DB::table('bank_holidays as b')
-			->LeftJoin('bank_holidays_codes as bc','b.code_id','bc.id')
-			->select(DB::raw('null as id'),'b.date as date','bc.type as type','bc.name as name',DB::raw('null as comments'),DB::raw('null as validated'))
-			->where(DB::raw('YEAR(b.date)'),$year)
-			->where('bc.name','Adjustment');
 			
-	 	$data = DB::table('bank_holidays as b')
+	 	$third = DB::table('bank_holidays as b')
 			->LeftJoin('bank_holidays_codes as bc','b.code_id','bc.id')
 			->LeftJoin('contracts as c','b.code_id','c.local_days_id')
 			->select(DB::raw('null as id'),'b.date as date','bc.type as type','bc.name as name',DB::raw('null as comments'),DB::raw('null as validated'))
 			->where(DB::raw('YEAR(b.date)'),$year)
 			->where('c.user_id',$user_id)
 			->where('c.end_date',null);
+
+		$data = DB::table('bank_holidays as b')
+			->LeftJoin('bank_holidays_codes as bc','b.code_id','bc.id')
+			->select(DB::raw('null as id'),'b.date as date','bc.type as type','bc.name as name',DB::raw('null as comments'),DB::raw('null as validated'))
+			->where(DB::raw('YEAR(b.date)'),$year)
+			->where('bc.name','Adjustment');
 
 
 		return DB::table('calendar_holidays')
@@ -176,6 +182,8 @@ class CalendarController extends ApiController
 			)
 			->where(DB::raw('u.year'),$year)
 			->where('c.user_id',$user_id)
+			->where('c.end_date',null)//Contrato activo
+			->orderBy('c.start_date','desc')
 			->first();
 	}
 }

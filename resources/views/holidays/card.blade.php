@@ -1,25 +1,33 @@
-<div class="col-sm-12">
+<div class="col-sm-2 col-sm-offset-2">
     <div class="panel panel-primary">
         <div class="panel-heading"> <strong>{{ucwords(Auth::user()->full_name)}} - @{{year}}</strong></div>
         <div class="panel-body">
 
+            <table class="table table-condensed table-borderless">
 
-                 <div class="col-sm-6">
-                    <p><strong>Holidays</strong></p>
-                    <p>Current Year: @{{ userCard.current_year }}</p>
-                    <p>Last Year: @{{ userCard.last_year }}</p>
-                    <p>Extras: @{{ userCard.extras }}</p>
-                    <p>Total: @{{ userCard.total }}</p>
-                </div>
+            
+                <thead>
+                    <th>Type</th>
+                    <th title="Consumed/Holidays">C/H</th>
+                </thead>
+            
 
-                <div class="col-sm-6">
-                    <p><strong>Consumed</strong></p>
-                    <p>Current Year: @{{ userCard.used_current_year }}</p>
-                    <p>Last Year: @{{ userCard.used_last_year }}</p>
-                    <p>Extras: @{{ userCard.used_extras }}</p>
-                    <p>Total: @{{ userCard.used_total }}</p>
-                </div>
-
+                <tbody>
+                     <tr>
+                        <td>Holidays</td> <td>@{{ userCard.used_current_year }} / @{{ userCard.current_year }}</td>
+                    </tr>
+                     <tr>
+                        <td>Last Year Holidays</td> <td>@{{ userCard.used_last_year }} / @{{ userCard.last_year }}</td>
+                    </tr>   
+                     <tr>
+                        <td>Extra Holidays</td> <td>@{{ userCard.used_extras }} / @{{ userCard.extras }}</td>
+                    </tr>   
+                     <tr>
+                        <td>Total</td> <td>@{{ userCard.used_total }} / @{{ userCard.total }}</td>
+                    </tr>
+                </tbody>
+                                   
+            </table>
 
         </div>
     </div>

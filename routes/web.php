@@ -65,4 +65,3 @@ Route::get('api/calendar','Api\v1\CalendarController@index');
 Route::get('api/calendar/userHolidays','Api\v1\CalendarController@userHolidays');
 Route::post('api/calendar', 'Api\v1\CalendarController@store');
 Route::delete('api/calendar/{id}', 'Api\v1\CalendarController@destroy');
-
