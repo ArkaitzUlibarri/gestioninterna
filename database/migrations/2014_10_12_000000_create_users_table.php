@@ -104,6 +104,8 @@ class CreateUsersTable extends Migration
 
             $table->tinyInteger('extras')->unsigned()->default(0);
             $table->tinyInteger('used_extras')->unsigned()->default(0);
+
+            //$table->tinyInteger('used_next_year')->unsigned()->default(0);
                
             $table->foreign('contract_id')
                   ->references('id')

@@ -1,17 +1,15 @@
-<div class="col-sm-2 col-sm-offset-2">
+<div class="col-sm-2 col-sm-offset-1">
     <div class="panel panel-primary">
         <div class="panel-heading"> <strong>{{ucwords(Auth::user()->full_name)}} - @{{year}}</strong></div>
         <div class="panel-body">
 
             <table class="table table-condensed table-borderless">
-
-            
+      
                 <thead>
                     <th>Type</th>
                     <th title="Consumed/Holidays">C/H</th>
                 </thead>
             
-
                 <tbody>
                      <tr>
                         <td>Holidays</td> <td>@{{ userCard.used_current_year }} / @{{ userCard.current_year }}</td>
