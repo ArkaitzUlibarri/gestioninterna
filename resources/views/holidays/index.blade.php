@@ -13,6 +13,9 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css' />
+
 <style>
 
     body {
@@ -47,32 +50,22 @@
         background-color: yellow;
     }
 
-    .cyan{
-        background-color: cyan;
-    }
-
     .blue{
         background-color: blue;
-    }
-
-    .purple{
-        background-color: purple;
     }
 
     .red{
         background-color: red;
     }
 
-    .chartreuse{
-        background-color: chartreuse;
-    }
-
-    .darkgreen{
-        background-color: darkgreen;
-    }
-
     .black{
         background-color: black;
+    }
+
+    .validated{
+        border-color: black;
+        border-style: solid;
+        border-width: 3px;
     }
 
 </style>
@@ -123,38 +116,51 @@ const app = new Vue({
 
     methods: {
         
-        eventRender(event, element, view){
-            var evStart = moment(view.intervalStart).subtract(1, 'days');
-            var evEnd = moment(view.intervalEnd).subtract(1, 'days');
-            let rendering;
-
-            rendering = this.getRendering(view.name);//Tipo de renderizacion en función de la vista
-            event.rendering = rendering;//Cambio de renderización
-
-            if (!event.start.isAfter(evStart) || event.start.isAfter(evEnd)){ 
-                return false; 
-            }
-        },
-
-        getRendering(viewName){
-            if(viewName == 'month'){
-                return "background";
-            }
-            return "";
-        },
-
-        viewRender(view){
-
+        viewRender(view, element){
             $(".fc-other-month .fc-day-number").hide();//Ocultar next and previous month
             this.year = view.intervalStart.year();//Actualizar año al cambiar de vista  //app.year = $('#calendar').fullCalendar('getDate').year();
             $('#calendar').fullCalendar('removeEvents');//Borrar eventos
 
             this.fetchData(view.name);//BankHolidays and HolidaysRequested
-            this.userHolidays();//UserCard
-            
+            this.userHolidays();//UserCard         
         },
 
-        dayClick(date,view){
+        dayRender(date,cell){
+        },
+
+        eventRender(event, element, view){
+
+            var evStart = moment(view.intervalStart).subtract(1, 'days');
+            var evEnd = moment(view.intervalEnd).subtract(1, 'days');
+            let rendering;
+            
+            //----------------------------------------------------
+            var eventDate = moment(event.start).format('YYYY-MM-DD');
+            let day = '<span class="pull-right">'+ moment(event.start).format('DD') + '</span> ';
+            let title = '<div style="position:relative;margin-top:20%;text-align:center;font-size:12px;">' + event.title + '</div>';
+            let icon = '<div style="position:relative;left:25%;" class="glyphicon glyphicon-ok btn-lg" aria-hidden="true"></div>';
+
+            //Si tiene una clase CSS asociada - ESTÁ VALIDADO
+            if(event.className[0]){
+                //$("td[data-date='"+eventDate+"']").addClass(event.className[0]);
+                $("td[data-date='"+eventDate+"']").html(day + title + icon);
+            }else{
+                $("td[data-date='"+eventDate+"']").html(day + title);
+            }
+            //----------------------------------------------------
+        
+            //Cambio de renderización
+            rendering = this.getRendering(view.name);//Tipo de renderizacion en función de la vista
+            event.rendering = rendering;
+            
+            //Cancelar renderización del evento
+            if (!event.start.isAfter(evStart) || event.start.isAfter(evEnd)){ 
+                return false; 
+            }  
+
+        },
+
+        dayClick(date, jsEvent, view, resourceObj){
             var eventTitle;
             var exist = false;
             var allEvents = [];
@@ -163,12 +169,14 @@ const app = new Vue({
             //Validacion de la fecha - Respecto al mes que se esta visualizando
             if(view.intervalStart.format('MM') != date.format('MM')){
                 console.log('Fuera de rango del mes');
+                toastr.error("Fuera de rango del mes");
                 return;
             }
 
             //Validacion de la fecha - Respecto a hoy        
             if(date.format('YYYY MM DD') <= moment().format('YYYY MM DD') ){
                 console.log("Fecha menor o igual que hoy");
+                toastr.error("Fecha menor o igual que hoy");
                 return;
             }
             
@@ -184,38 +192,51 @@ const app = new Vue({
             }
             else{
                 console.log("No te quedan días de vacaciones");
+                toastr.error("No te quedan días de vacaciones");
                 exist = true;
             }
 
             //Obtener y recorrer eventos para ver si existe el mismo día//MISMO DIA Y TITULO => BORRAR
             allEvents = $('#calendar').fullCalendar('clientEvents');
             allEvents.forEach( (item) => {
-                /*
-                if( (this.setTitle("last_year") == item.title || this.setTitle("extras") == item.title || this.setTitle("current_year") == item.title) 
-                    && date.format('YYYY MM DD') == item.start.format('YYYY MM DD') && item.id != 0 ){
-                */
-                if( date.format('YYYY MM DD') == item.start.format('YYYY MM DD') && item.id != 0 ){
+
+               if(date.format('YYYY MM DD') == item.start.format('YYYY MM DD') && item.className == 'validated'){
+                    exist = true;
+                    console.log("Día de vacaciones validado");
+                    toastr.warning("Día de vacaciones validado");
+                    return;
+               }
+                else if( date.format('YYYY MM DD') == item.start.format('YYYY MM DD') && item.id != 0 ){
                     exist = true;//No festivos
                     this.delete(item);
                 }
                 else if(date.format('YYYY MM DD') == item.start.format('YYYY MM DD') && item.id == 0 ){
                     exist = true;//Festivos
                     console.log("No se puede solicitar vacaciones en un día festivo");
+                    toastr.error("No se puede solicitar vacaciones en un día festivo");
                 }
+
             });
             
+            //Guardar día de vacaciones
             if (exist == false) {
                 newEvent = { 
                     title: eventTitle, 
                     start: date, 
                     allDay: true, 
                     color: this.setColor(eventTitle),
-                    editable: true,
                     description: null,
                     rendering: this.getRendering(view.name),
                 };
                 this.save(newEvent);
             }            
+        },
+
+        getRendering(viewName){
+            if(viewName == 'month'){
+                return "background";
+            }
+            return "";
         },
 
         setColor(title) {
@@ -257,17 +278,19 @@ const app = new Vue({
                             start: item.date,
                             allDay: true,
                             color: vm.setColor(item.type),
-                            editable: item.validated ? 'false': 'true',
                             description: item.comments,
-                            rendering: vm.getRendering(viewName),                   
+                            rendering: vm.getRendering(viewName),    
+                            className:item.validated ? 'validated': null               
                         };
                         vm.holidays.push(Event);
-                        $('#calendar').fullCalendar( 'renderEvent', Event,true);//Pintar eventos
+                        $('#calendar').fullCalendar('renderEvent', Event, true);//Pintar eventos
+
                     });
 
                 })
                 .catch(function (error) {
-                   console.log(error.response)
+                   console.log(error.response);
+                   vm.showErrors(error.response.data)
                 });                
         },
 
@@ -286,6 +309,7 @@ const app = new Vue({
                 })
                 .catch(function (error) {
                    console.log(error.response)
+                   vm.showErrors(error.response.data)
                 });                
         },
 
@@ -305,30 +329,47 @@ const app = new Vue({
                     if(response.data != "Error"){
                         item['id'] = response.data;//Actualizar id de inserción de la BD
                         item['title'] = vm.setTitle(item['title']);//Actualizar titulo
-                        $('#calendar').fullCalendar('renderEvent',item, true);//Pintar evento
+                        $('#calendar').fullCalendar('renderEvent', item, true);//Pintar evento
                         vm.userHolidays();//Recargar contadores
                         console.log("Guardado:"+ response.data);
+                        toastr.success("Guardado:"+ response.data)
                     }
                 })
                 .catch(function (error) {
                     console.log(error.response)
+                    vm.showErrors(error.response.data)
                 }); 
         },
 
         delete(item){
             let vm = this;
+            let day = '<span class="pull-right">'+ item.start.format('DD') + '</span> ';
 
             axios.delete('/api/calendar/' + item.id)
                 .then(function (response) {             
                     if(response.data == true){
                         $('#calendar').fullCalendar('removeEvents',item.id);//Borrar evento
+                        $("td[data-date='"+item.start.format('YYYY-MM-DD')+"']").html(day);//Borrar titulo
                         vm.userHolidays();//Recargar contador
                         console.log("Borrado:"+ item.id)
+                        toastr.success("Borrado:"+ item.id)
                     }
                 })
                 .catch(function (error) {
                     console.log(error.response)
+                    vm.showErrors(error.response.data)
                 }); 
+        },
+
+        showErrors(errors) {
+            if(Array.isArray(errors)) {
+                errors.forEach( (error) => {
+                    toastr.error(error);
+                })
+            }
+            else {
+                toastr.error(errors);
+            }
         },
 
     }
@@ -337,7 +378,7 @@ const app = new Vue({
 //JQUERY-FULLCALENDAR
 $(document).ready(function() {
     $('#calendar').fullCalendar({
-        theme:true,
+        theme: true,
         header: {
             left:'prevYear,prev,today,next,nextYear',
             center: 'title',
@@ -349,7 +390,7 @@ $(document).ready(function() {
         firstDay: 1,//Monday
         navLinks: false, // can click day/week names to navigate views
         editable: false,
-        selectable:true,
+        selectable: true,
         droppable: false,
         eventLimit: true, // allow "more" link when too many events
         weekNumbers: true,//Show weeknumbers
@@ -362,20 +403,25 @@ $(document).ready(function() {
             };
         },
 
-        //Evento al pinchar un día
-        dayClick: function(date, jsEvent, view, resourceObj) {
-            app.dayClick(date,view);         
+        //Evento que pinta la vista
+        viewRender: function(view, element){
+            app.viewRender(view, element);
          },
 
-        //Evento que pinta la vista
-        viewRender: function(view,element){
-            app.viewRender(view);
-         },
+        //Modifica la celda del día
+        dayRender: function (date, cell) {
+            app.dayRender(date,cell);
+        },
 
         //Evento que pinta el evento
-        eventRender: function(event, element, view){
+        eventRender: function(event, element, view) {
             app.eventRender(event, element, view);
         },
+
+        //Evento al pinchar un día
+        dayClick: function(date, jsEvent, view, resourceObj) {
+            app.dayClick(date, jsEvent, view, resourceObj);         
+         },
         
     });
 });
