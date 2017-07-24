@@ -157,7 +157,6 @@ const app = new Vue({
             if (!event.start.isAfter(evStart) || event.start.isAfter(evEnd)){ 
                 return false; 
             }  
-
         },
 
         dayClick(date, jsEvent, view, resourceObj){
