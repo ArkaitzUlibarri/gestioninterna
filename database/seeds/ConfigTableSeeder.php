@@ -41,6 +41,13 @@ class ConfigTableSeeder extends Seeder
 
 		$bank_holidays = [
 
+			//2018
+			['date' => Carbon::createFromDate(2018, 1, 1),'code_id'=>1],//1 de Enero: Año nuevo
+			['date' => Carbon::createFromDate(2018, 1, 6),'code_id'=>1],//6 de Enero: Epifanía del Señor
+			['date' => Carbon::createFromDate(2018, 3, 19),'code_id'=>2],//19 de marzo - San José
+			['date' => Carbon::createFromDate(2018, 3, 29),'code_id'=>2],//29 de marzo - Jueves Santo
+			['date' => Carbon::createFromDate(2018, 3, 30),'code_id'=>1],//30 de marzo - Viernes Santo
+
 			 /**
 			 * Fiestas nacionales
 			 */    

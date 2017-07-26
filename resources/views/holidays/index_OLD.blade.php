@@ -1,46 +1,36 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<link rel='stylesheet' href='https://fullcalendar.io/js/fullcalendar-3.4.0/lib/cupertino/jquery-ui.min.css' />
+<link href='https://fullcalendar.io/js/fullcalendar-3.4.0/fullcalendar.min.css' rel='stylesheet' />
+<link href='https://fullcalendar.io/js/fullcalendar-3.4.0/fullcalendar.print.min.css' rel='stylesheet' media='print' />
+<script src='https://fullcalendar.io/js/fullcalendar-3.4.0/lib/moment.min.js'></script>
+<script src='https://fullcalendar.io/js/fullcalendar-3.4.0/lib/jquery.min.js'></script>
+<script src='https://fullcalendar.io/js/fullcalendar-3.4.0/fullcalendar.min.js'></script>
 
-@section('content')	
+<script src="https://unpkg.com/vue"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-    <span v-if="contract.end_date == null">  
-        <div class="row">
-            
-            <div class="col-xs-12 col-sm-2 col-sm-offset-1">
-                @include('holidays.card')
-                @include('holidays.key')
-            </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css' />
 
-            <div id='calendar' class="col-sm-10"></div>
-
-        </div>
-    </span>
-
-    <span v-else>
-        <div class="panel panel-danger">
-              <div class="panel-heading">
-                    <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Error
-              </div>
-              <div class="panel-body">
-                    User without an active contract
-              </div>
-        </div>
-    </span>
-
-@endsection
-
-@push('script-bottom')
 <style>
 
-	.container {
-    	width: 100%;
-	}
+    body {
+        margin: 40px 10px;
+        padding: 0;
+        font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+        font-size: 14px;
+    }
 
     #calendar {
         max-width: 900px;
         margin: 0 auto;
     }
 
-	.table-borderless > tbody > tr > td,
+    .table-borderless > tbody > tr > td,
     .table-borderless > tbody > tr > th,
     .table-borderless > tfoot > tr > td,
     .table-borderless > tfoot > tr > th,
@@ -53,8 +43,7 @@
         width: 15px; 
         height: 15px; 
         display: inline-block;
-        opacity: 0.3;
-        filter: alpha(opacity=30);
+        opacity: .3;
     }
 
     .yellow{
@@ -80,23 +69,42 @@
     }
 
 </style>
+</head>
+<body>
 
-<link rel='stylesheet' href='https://fullcalendar.io/js/fullcalendar-3.4.0/lib/cupertino/jquery-ui.min.css' />
-<link href='https://fullcalendar.io/js/fullcalendar-3.4.0/fullcalendar.min.css' rel='stylesheet' />
-<script src='https://fullcalendar.io/js/fullcalendar-3.4.0/lib/moment.min.js'></script>
-<script src='https://fullcalendar.io/js/fullcalendar-3.4.0/fullcalendar.min.js'></script>
+<div id="app">
 
+    <span v-if="contract.end_date == null">  
+        <div class="row">
+            @include('holidays.card')
+            @include('holidays.key')
+            <div id='calendar' class="col-sm-10"></div>
+        </div>
+    </span>
+
+    <span v-else>
+        <div class="panel panel-danger">
+              <div class="panel-heading">
+                    <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Error
+              </div>
+              <div class="panel-body">
+                    User without an active contract
+              </div>
+        </div>
+    </span>
+
+</div>
+    
 <script>
-var app = new Vue({
+
+//VUE
+const app = new Vue({
     el: '#app',
 
     data: {
         //Data to do requests
         user: '{!! Auth()->user()->id !!}',
-        calendarYear: 0,
-
-        calendarMonth: 0,
-        actualYear: moment().year(),
+        year: 0,
 
         //Data neccesary to see the view
         contract: <?php echo json_encode(Auth()->user()->contracts->first());?>,
@@ -107,11 +115,10 @@ var app = new Vue({
     },
 
     methods: {
-
-    	viewRender(view, element){
+        
+        viewRender(view, element){
             $(".fc-other-month .fc-day-number").hide();//Ocultar next and previous month
-            this.calendarYear = view.intervalStart.year();//Actualizar año al cambiar de vista  //this.calendarYear = $('#calendar').fullCalendar('getDate').year();
-            this.calendarMonth = $('#calendar').fullCalendar('getDate').month() + 1;
+            this.year = view.intervalStart.year();//Actualizar año al cambiar de vista  //app.year = $('#calendar').fullCalendar('getDate').year();
             $('#calendar').fullCalendar('removeEvents');//Borrar eventos
 
             this.fetchData(view.name);//BankHolidays and HolidaysRequested
@@ -173,10 +180,7 @@ var app = new Vue({
             }
             
             //TIPO DE VACACIONES
-            if(parseInt(date.format('YYYY')) > parseInt(moment().format('YYYY')) ){
-                eventTitle = "next_year";
-            }
-            else if(parseInt(date.format('MM')) < 4 && this.userCard.last_year - this.userCard.used_last_year > 0){
+            if(parseInt(date.format('MM')) < 4 && this.userCard.last_year - this.userCard.used_last_year > 0){
                 eventTitle = "last_year";
             }
             else if(this.userCard.extras - this.userCard.used_extras > 0){
@@ -238,7 +242,6 @@ var app = new Vue({
             title = title.toLowerCase();
             if (title == 'current_year') return 'blue';
             if (title == 'last_year') return 'blue';
-            if (title == 'next_year') return 'blue';
             if (title == 'extras') return 'blue';
             if (title == 'national') return 'red';
             if (title == 'regional') return 'red';
@@ -251,7 +254,6 @@ var app = new Vue({
             title = title.toLowerCase();
             if (title == 'current_year') return 'HOLIDAYS';
             if (title == 'last_year') return 'LAST YEAR HOLIDAYS';
-            if (title == 'next_year') return 'NEXT YEAR HOLIDAYS';
             if (title == 'extras') return 'EXTRA HOLIDAYS';
             if (title == 'adjustment') return '3DB ADJUSTMENT';
             return title.toUpperCase();
@@ -264,7 +266,7 @@ var app = new Vue({
             axios.get('api/calendar', {
                     params: {
                         user: vm.user,
-                        year: vm.calendarYear,
+                        year: vm.year,
                     }
                 })
                 .then(function (response) {
@@ -294,13 +296,12 @@ var app = new Vue({
 
         userHolidays(){
             var vm = this;
-            var fetchYear;
             vm.userCard = {};
       
             axios.get('api/calendar/userHolidays', {
                     params: {
                         user: vm.user,
-                        year: vm.calendarYear > vm.actualYear ? vm.actualYear : vm.calendarYear,
+                        year: vm.year,
                     }
                 })
                 .then(function (response) {
@@ -325,13 +326,13 @@ var app = new Vue({
 
             axios.post('/api/calendar', holiday)
                 .then(function (response) {         
-                    
-                    item['id'] = response.data;//Actualizar id de inserción de la BD
-                    item['title'] = vm.setTitle(item['title']);//Actualizar titulo
-                    $('#calendar').fullCalendar('renderEvent', item, true);//Pintar evento
-                    vm.userHolidays();//Recargar contadores
-                    console.log("Guardado:"+ response.data);
-                    toastr.success("Guardado:"+ response.data)
+
+                        item['id'] = response.data;//Actualizar id de inserción de la BD
+                        item['title'] = vm.setTitle(item['title']);//Actualizar titulo
+                        $('#calendar').fullCalendar('renderEvent', item, true);//Pintar evento
+                        vm.userHolidays();//Recargar contadores
+                        console.log("Guardado:"+ response.data);
+                        toastr.success("Guardado:"+ response.data)
                     
                 })
                 .catch(function (error) {
@@ -373,7 +374,7 @@ var app = new Vue({
 
     }
 });
-    
+
 //JQUERY-FULLCALENDAR
 $(document).ready(function() {
     $('#calendar').fullCalendar({
@@ -424,6 +425,8 @@ $(document).ready(function() {
         
     });
 });
+
 </script>
 
-@endpush
+</body>
+</html>

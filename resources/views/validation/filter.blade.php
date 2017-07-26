@@ -9,6 +9,7 @@
     </a>
 
     <div class="pull-right">
+
         <select name="year" class="form-control input-sm" v-model="filter.year">
             <option value="2018">2018</option>
             <option value="2017">2017</option>
@@ -23,8 +24,8 @@
                class="form-control input-sm"
                placeholder="Week number"
                v-model="filter.week">
-
-    <input type="text"
+               
+        <input type="text"
            class="form-control input-sm"
            name="name"
            placeholder="Activity name"
@@ -36,7 +37,7 @@
                placeholder="Employee name"
                v-model="filter.user">
 
-        <button class="btn btn-default btn-sm custom-btn-width" v-on:click="fetchData">
+        <button class="btn btn-default btn-sm custom-btn-width" v-on:click="fetchData()">
             <span class="glyphicon glyphicon-filter"></span> Filter
         </button>
 

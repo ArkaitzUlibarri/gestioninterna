@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
 use App\CalendarHoliday;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Auth;
 
 class CalendarController extends ApiController
 {
+
 	/**
 	 * Get the bank holidays and the holidays requested by the user in the selected year 
 	 * 
@@ -35,6 +37,28 @@ class CalendarController extends ApiController
 	}
 
 	/**
+	 * Get the holidays and the left for a user in a year
+	 * 
+	 * @param  Request $request
+	 * @return json
+	 */
+	public function userHolidays(Request $request)
+	{
+		$validator = Validator::make($request->all(), [
+			'year' => 'required|numeric|between:2004,2030',
+			'user' => 'required|numeric'
+		]);
+
+		if ($validator->fails()) {
+			return $this->respondNotAcceptable($validator->errors()->all());
+		}
+
+		return $this->leftHolidays($request['user'],$request['year']) == null
+			?	$this->respondNotFound('User Holidays not found')
+			:	$this->respond($this->leftHolidays($request['user'], $request['year']));
+	}
+
+	/**
 	 * Save the holiday selected by the user
 	 * 
 	 * @param  Request $request
@@ -56,15 +80,20 @@ class CalendarController extends ApiController
 			return $this->respondNotFound('Contract does not exist');
 		}
 
+		$year = Carbon::now()->year;
+
 		DB::beginTransaction();
 		try{
 			$id = DB::table('calendar_holidays')->insertGetId($array);//Insertar dia de vacaciones
-			DB::table('user_holidays')->where('contract_id',$active_contract->id)->increment('used_'. strval($request['type']));//Actualizar contador en usuarios
+			DB::table('user_holidays')
+				->where('contract_id',$active_contract->id)
+				->where('year',$year)
+				->increment('used_'. strval($request['type']));//Actualizar contador en usuarios
 			DB::commit();
 		}
 		catch (\Exception $e) {
     		DB::rollback();
-    		return $this->respond("Error");
+    		return $this->respondInternalError();
 		}
 
 		return $this->respond($id);
@@ -84,40 +113,23 @@ class CalendarController extends ApiController
 			return $this->respondNotFound('Calendar or active contract does not exist');
 		}
 
+		$year = Carbon::now()->year;
+
 		DB::beginTransaction();
 		try{
 			$answer = DB::table('calendar_holidays')->where('id',$id)->delete();//Borrar dia de vacaciones
-			DB::table('user_holidays')->where('contract_id',$active_contract->id)->decrement('used_'. strval($calendar->type));//Actualizar contador en usuarios
+			DB::table('user_holidays')
+				->where('contract_id',$active_contract->id)
+				->where('year',$year)
+				->decrement('used_'. strval($calendar->type));//Actualizar contador en usuarios
 			DB::commit();
 		}
 		catch (\Exception $e) {
     		DB::rollback();
-    		return $this->respond("Error");
+    		return $this->respondInternalError();
 		}
 
 		return $this->respond($answer);
-	}
-
-	/**
-	 * Get the holidays and the left for a user in a year
-	 * 
-	 * @param  Request $request
-	 * @return json
-	 */
-	public function userHolidays(Request $request)
-	{
-		$validator = Validator::make($request->all(), [
-			'year' => 'required|numeric|between:2004,2030',
-			'user' => 'required|numeric'
-		]);
-
-		if ($validator->fails()) {
-			return $this->respondNotAcceptable($validator->errors()->all());
-		}
-
-		return $this->leftHolidays($request['user'],$request['year']) == null
-			?	$this->respondNotFound('User Holidays not found')
-			:	$this->respond($this->leftHolidays($request['user'], $request['year']));
 	}
 
 	private function getHolidays($user_id, $year)
@@ -178,7 +190,8 @@ class CalendarController extends ApiController
 				'u.extras',
 				'u.used_extras',
 				DB::raw('(u.current_year + u.last_year + u.extras) as total'),
-				DB::raw('(u.used_current_year + u.used_last_year + u.used_extras) as used_total')
+				DB::raw('(u.used_current_year + u.used_last_year + u.used_extras) as used_total'),
+				'u.used_next_year'
 			)
 			->where(DB::raw('u.year'),$year)
 			->where('c.user_id',$user_id)

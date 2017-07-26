@@ -9,7 +9,6 @@
 
 try {
     window.$ = window.jQuery = require('jquery');
-
     require('bootstrap-sass');
 } catch (e) {}
 
@@ -21,7 +20,7 @@ try {
  */
 
 window.Vue = require('vue');
-Vue.use(require('vue-full-calendar'));
+//Vue.use(require('vue-full-calendar'));
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests

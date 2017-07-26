@@ -17,6 +17,7 @@ return [
 	'holidays' => [
 		'current_year',
 		'last_year',
+		'next_year',
 		'extras'
 	],
 

@@ -23,7 +23,7 @@
             <tbody>
                 <tr v-for="user in users">
                     <td>
-                        <strong>@{{ user['name'] }}</strong>
+                        <strong>@{{ user['name'].toUpperCase() }}</strong>
                         <p>Total Week: @{{ user['total'] }}</p>
                         <!--<p><button class="btn btn-default btn-sm">Validate Week</button></p>-->
                     </td>
@@ -50,7 +50,7 @@
                             </a> 
 
                             <div v-for="item in filtered_reports[user['id']+'|'+day].items">
-                                <p>- @{{ item.name }}, @{{ item.time_slot }}h</p>
+                                <p>- @{{ item.name.toUpperCase() }}, @{{ item.time_slot }}h</p>
                             </div>
 
                             <div style="margin-top: 10px;padding-top: 10px;border-top: 1px solid #9e9e9e;">
@@ -68,32 +68,15 @@
         </div> 
 
     </div>
+
+    <div class="panel-footer">
+        @include('validation.footer')
+        <div class="clearfix"></div>
+    </div>
 </div>
 
 <div class="row front" v-show="upHere">
-    <div class="col-xs-12 col-sm-2">
-       <div class="panel panel-primary ">
-
-            <div class="panel-heading">
-                <strong>Key Colors</strong> 
-            </div>
-
-            <div class="panel-body">
-                <div>
-                    <label class="legend">PM:
-                        <div class="cuadrado validated"></div>
-                    </label>              
-                </div>
-
-                <div>
-                    <label class="legend">Admin:
-                        <div class="cuadrado full-validated"></div>
-                    </label>              
-                </div>
-            </div>
-
-        </div> 
-    </div>
+    @include('validation.key')
 </div>
 
 
@@ -178,7 +161,7 @@ var app = new Vue({
         role: '{!! Auth()->user()->primaryRole() !!}',
 
         // Filter options
-        filter: { activity:'', user: '', year: moment().year(), week: moment().week() },
+        filter: { activity:'', user: '', year: moment().year(), week: moment().week(), all: '' },
 
         // Data for the table of cards
         users: [],
@@ -265,17 +248,21 @@ var app = new Vue({
         /**
          * Fetch reports and initialize users and days arrays.
          */
-        fetchData () {
+        fetchData (week = null) {
             var vm = this;
+            var inputWeek;
             vm.reports = null;
             vm.users = [];
             vm.days = [];
 
+            inputWeek = week != null ? week : vm.filter.week;
+            vm.filter.week = inputWeek;
+            
             axios.get('api/validate', {
                     params: {
                         name: vm.filter.user,
                         year: vm.filter.year,
-                        week: vm.filter.week
+                        week: inputWeek,                    
                     }
                 })
                 .then(function (response) {
