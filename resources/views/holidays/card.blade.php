@@ -10,12 +10,12 @@
             </thead>
         
             <tbody>
+                <tr>
+                    <td>Last Year Holidays</td> <td>@{{ userCard.used_last_year }} / @{{ userCard.last_year }}</td>
+                </tr>   
                  <tr>
                     <td>Holidays</td> <td>@{{ userCard.used_current_year }} / @{{ userCard.current_year }}</td>
                 </tr>
-                 <tr>
-                    <td>Last Year Holidays</td> <td>@{{ userCard.used_last_year }} / @{{ userCard.last_year }}</td>
-                </tr>   
                  <tr>
                     <td>Extra Holidays</td> <td>@{{ userCard.used_extras }} / @{{ userCard.extras }}</td>
                 </tr>   

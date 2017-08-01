@@ -10,5 +10,6 @@
   "/js/weeklyValidation.js": "/js/weeklyValidation.js",
   "/js/validate.js": "/js/validate.js",
   "/js/user.js": "/js/user.js",
+  "/js/calendar.js": "/js/calendar.js",
   "/js/manifest.js": "/js/manifest.js"
 }

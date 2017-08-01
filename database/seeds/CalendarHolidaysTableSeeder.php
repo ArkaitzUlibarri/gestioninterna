@@ -66,7 +66,8 @@ class CalendarHolidaysTableSeeder extends Seeder
                         'validated' => $faker->boolean(80),
                     ];
 
-                    DB::table('calendar_holidays')->insert($array);      
+                    var_dump($array);
+                    //DB::table('calendar_holidays')->insert($array);      
                                    
                     $k++;
                 }
