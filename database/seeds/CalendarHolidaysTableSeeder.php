@@ -62,12 +62,11 @@ class CalendarHolidaysTableSeeder extends Seeder
                         'user_id'   => $user,    
                         'date'      => $date->copy()->addDays($k),
                         'type'      => $type,
-                        'comments'  => $faker->text(20),
+                        //'comments'  => $faker->text(20),
                         'validated' => $faker->boolean(80),
                     ];
 
-                    var_dump($array);
-                    //DB::table('calendar_holidays')->insert($array);      
+                    DB::table('calendar_holidays')->insert($array);      
                                    
                     $k++;
                 }

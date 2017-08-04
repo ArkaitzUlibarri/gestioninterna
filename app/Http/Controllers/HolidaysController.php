@@ -61,55 +61,8 @@ class HolidaysController extends Controller
     public function edit($id)
     {
     	$user = User::find($id);
-    	//$days = $this->getDaysPerUser($id);
-    	//dd($days);
+        
     	return view('holidays.validation.validation',compact('user'));
     }
 
-    private function getDaysPerUser($user_id)
-    {
-    	/*
-    	return DB::table('calendar_holidays')
-    		->select(
-    			'date',
-    			DB::raw('CONCAT("W",week(date)) as weekdate')
-    		)
-    		->where('user_id',$user_id)
-    		->where('validated', 0)//Sin validar
-    		->get();
-    	*/
-    
-		/*
-    	return DB::table('working_report as wr')
-    		->join('users as u','u.id','wr.user_id')
-    		->LeftJoin('users as um','um.id','wr.manager_id')
-    		->select(
-    			'wr.user_id',
-    			DB::raw("CONCAT(u.name, ' ', u.lastname ) as user_name"),
-    			'wr.created_at',
-    			'wr.activity',
-    			DB::raw("(wr.time_slots)*0.25 as hours"),
-    			'wr.pm_validation',
-    			'wr.admin_validation',
-    			'wr.manager_id',
-    			DB::raw("CONCAT(um.name, ' ', um.lastname ) as manager_name")
-    		)
-    		->where('wr.user_id',$user_id)
-    		->where('wr.activity','<>','project')
-    		->get();
-		*/
-		/*
-    	return DB::table('bank_holidays as bh')
-    		->join('bank_holidays_codes as bhc','bh.code_id','bhc.id')
-    		->select(
-    			'bh.date',
-    			DB::raw('CONCAT("W",week(date)) as weekdate'),
-    			'bh.code_id',
-    			'bhc.type'
-    		)
-    		->where(DB::raw("YEAR(bh.date)"),2017)
-    		->orderby('bh.date','asc')
-    		->get();
-    	*/
-    }
 }

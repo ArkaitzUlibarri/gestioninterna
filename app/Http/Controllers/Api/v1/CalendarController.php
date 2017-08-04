@@ -67,10 +67,10 @@ class CalendarController extends ApiController
 	public function store(Request $request)
 	{
 		$validator = Validator::make($request->all(), [
-			'user_id' => 'required|numeric',
-			'type' => 'required|string',
-			'date' => 'required|date|date_format:Y-m-d',
-			'comments' => 'nullable|string',
+			'user_id'   => 'required|numeric',
+			'type'      => 'required|string',
+			'date'      => 'required|date|date_format:Y-m-d',
+			'comments'  => 'nullable|string',
 			'validated' => 'required|boolean'
 		]);
 		$array = $request->all();
@@ -80,20 +80,36 @@ class CalendarController extends ApiController
 			return $this->respondNotFound('Contract does not exist');
 		}
 
-		$year = Carbon::now()->year;
+		$year = Carbon::createFromFormat('Y-m-d', $request['date'])->year;
 
 		DB::beginTransaction();
 		try{
-			$id = DB::table('calendar_holidays')->insertGetId($array);//Insertar dia de vacaciones
+			//Insertar dia de vacaciones
+			$id = DB::table('calendar_holidays')->insertGetId($array);
+
+			//Actualizar contador en usuarios
 			DB::table('user_holidays')
 				->where('contract_id',$active_contract->id)
 				->where('year',$year)
-				->increment('used_'. strval($request['type']));//Actualizar contador en usuarios
+				->increment('used_'. strval($request['type']));
+		
+			//Crear reporte con el dia
+			$report = [
+				'user_id'    => Auth::user()->id,
+				'created_at' => $request['date'],
+				'activity'   => 'absence',
+				'absence_id' => 9,
+				'time_slots' => (($active_contract->week_hours)/5)*4,
+				'comments'	=> 'Holiday report generated automatically',
+			];
+
+			$id2 = DB::table('working_report')->insertGetId($report);
+		
 			DB::commit();
 		}
 		catch (\Exception $e) {
     		DB::rollback();
-    		return $this->respondInternalError();
+    		return $this->respondInternalError($e->errorInfo);
 		}
 
 		return $this->respond($id);
@@ -113,15 +129,28 @@ class CalendarController extends ApiController
 			return $this->respondNotFound('Calendar or active contract does not exist');
 		}
 
-		$year = Carbon::now()->year;
+		$year = Carbon::createFromFormat('Y-m-d', $calendar->date)->year;
 
 		DB::beginTransaction();
 		try{
-			$answer = DB::table('calendar_holidays')->where('id',$id)->delete();//Borrar dia de vacaciones
+			//Borrar dia de vacaciones
+			$answer = DB::table('calendar_holidays')->where('id',$id)->delete();
+
+			//Actualizar contador en usuarios
 			DB::table('user_holidays')
 				->where('contract_id',$active_contract->id)
 				->where('year',$year)
-				->decrement('used_'. strval($calendar->type));//Actualizar contador en usuarios
+				->decrement('used_'. strval($calendar->type));
+
+			//Borrar reporte
+			DB::table('working_report as w')
+				->join('absences as a','w.absence_id','a.id')
+				->where('a.name','holidays')//Vacaciones
+				->where('w.user_id', $calendar->user_id)//Usuario
+				->where('w.created_at', $calendar->date)//Fecha
+				->where('w.activity', config('options.activities')[0])//'absence'
+				->delete();
+				
 			DB::commit();
 		}
 		catch (\Exception $e) {

@@ -6,6 +6,7 @@ use App\Category;
 use App\User;
 use App\UserRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UsersController extends Controller
 {
@@ -62,7 +63,9 @@ class UsersController extends Controller
         $categories = $user->categories;
         $groups = $user->groups->where('enabled', 1);
         $contracts = $user->contracts;
+        $holidays = $user->holidays;
+        $usercard = $contracts->where('end_date',null)->first()->holidaysCard->first();
         
-        return view('users.show', compact('user', 'categories', 'groups', 'contracts'));
+        return view('users.show', compact('user', 'categories', 'groups', 'contracts','holidays','usercard'));
     }
 }

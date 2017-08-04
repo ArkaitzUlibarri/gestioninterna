@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
@@ -52,7 +53,7 @@ class User extends Authenticatable
     }
 
     /**
-     * The categories that belong to the user.
+     * The groups that belong to the user.
      */
     public function groups()
     {
@@ -65,6 +66,14 @@ class User extends Authenticatable
     public function projects()
     {
         return $this->hasMany('App\Project', 'pm_id');
+    }
+
+    /**
+     * Return the holidays requested by the user
+     */
+    public function holidays()
+    {
+        return $this->hasMany('App\CalendarHoliday')->whereYear('date','>=',Carbon::now()->year)->orderBy('date','desc');
     }
 
     /**

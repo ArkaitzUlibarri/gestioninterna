@@ -32,6 +32,14 @@
     </div>
 @endif
 
+@if (count($holidays) > 0)
+    <div class="row">
+        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+            @include('users.holidays')
+        </div>
+    </div>
+@endif
+
 @if(Auth::user()->primaryRole() == 'admin')
     <div class="row">
         <div class="col-xs-12 col-sm-offset-1 col-sm-10">

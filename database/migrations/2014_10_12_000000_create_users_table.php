@@ -161,7 +161,7 @@ class CreateUsersTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->date('date');
             $table->enum('type', config('options.holidays'));
-            $table->text('comments')->nullable();
+            //$table->text('comments')->nullable();
             $table->boolean('validated');
 
             $table->foreign('user_id')

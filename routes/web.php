@@ -61,7 +61,10 @@ Route::get('holidays_validation/{id}','HolidaysController@edit');//Validacion
 /**
  * API, mirar autenticacion token o passport en el api.php
  */
-Route::get('api/holidaysValidate','Api\v1\HolidaysValidationController@index');
+Route::get('api/load','Api\v1\HolidaysValidationController@index');
+Route::get('api/holidays','Api\v1\HolidaysValidationController@loadholidays');
+Route::get('api/weeks','Api\v1\HolidaysValidationController@loadweeks');
+Route::get('api/filters','Api\v1\HolidaysValidationController@loadfilters');
 
 Route::get('api/validate','Api\v1\ValidationController@index');
 Route::patch('api/validate','Api\v1\ValidationController@update');

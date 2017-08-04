@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Contract extends Model
 {
@@ -69,6 +70,14 @@ class Contract extends Model
     public function user()
     {
         return $this->belongsTo('App\User');
+    }
+
+    /**
+     * Return the user holidays card
+     */
+    public function holidaysCard()
+    {
+        return $this->hasMany('App\UserHoliday','contract_id')->where('year','=',Carbon::now()->year);
     }
 
 	 /**

@@ -141,7 +141,7 @@ trait SeederHelpers
 			->select('id','start_date','end_date','hours')
 			->get();
 
-		$courseGroups=array();
+		$courseGroups = array();
 		
 		foreach ($array as $courseGroup) {
              $courseGroups[$courseGroup->id] = [

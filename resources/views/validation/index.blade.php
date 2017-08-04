@@ -161,7 +161,7 @@ var app = new Vue({
         role: '{!! Auth()->user()->primaryRole() !!}',
 
         // Filter options
-        filter: { activity:'', user: '', year: moment().year(), week: moment().week(), all: '' },
+        filter: { activity:'', user: '', year: moment().year(), week: moment().week() , project: '' , group: '' },
 
         // Data for the table of cards
         users: [],

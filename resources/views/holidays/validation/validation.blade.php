@@ -9,6 +9,7 @@
 		</div>
 
 		<div class="panel-body">
+			@include('holidays.validation.table')
 		</div>
 
 		<div class="panel-footer">
@@ -43,21 +44,31 @@ var app = new Vue({
     	//Filter options
     	filter:{
     		year: moment().year(),
-    		week_type: 'all',
     		week: moment().week(),
+    		week_type: 'all',
     		project: '',
     		group: '',
     	},
 
+    	//Filtro Proyectos y grupos
+    	groupsProjects: [],
+    	projectList: [] ,
+		groupList:[] ,
+		weekList:[] ,
+
     	// Data for the table of cards
     	weekdaysShort : ['Mon.', 'Tues.', 'Wed.', 'Thurs.', 'Fri.', 'Sat.', 'Sun.'],
-    	users: [],
-        days: [],
+    	days: [],
+    	//users: [],
+    	holidays: [],
         reports: null
     },
 
     mounted(){
-    	this.fetchData();
+    	this.loadWeeks();//Holidays Weeks filter
+    	this.loadFilters();//Groups and Projects
+    	this.loadHolidays();//Bank Holidays
+    	this.fetchData();//Holidays for the group of users
     },
 
     computed:{
@@ -73,12 +84,51 @@ var app = new Vue({
         },
 
         /**
-         * Fetch reports and initialize users and days arrays.
+         * Get days form given week number an year (optional).
+         * If year not given, it use the current one.
+         * 
+         * @param  week
+         * @param  year
+         * @return array
          */
-        fetchData (week = null) {
-            var vm = this;
+        getWeekDays(week, year = moment().year()) {
+            let days = [];
+            let begin = moment().year(year).week(week);
+
+            for (let i = 0; i < 7; i++) {
+                days.push(begin.weekday(i).format('YYYY-MM-DD'));
+            }
+
+            return days;
+        },
+
+        projectsLoad() {
+			let setList = new Set();
+
+			this.groupsProjects.forEach(function(item) {
+				setList.add(item.project_name);
+			});
+
+			this.projectList = [...setList];				
+		},
+
+        groupsRefresh(){
+			let vm = this;
+			let setList = new Set();
+			
+			vm.groupsProjects.forEach(function(item) {						
+				if( vm.filter.project == item.project_name){
+					 setList.add(item.group_name);
+				}				
+			});
+
+			this.groupList = [...setList];
+		},
+
+		fetchData () {
+			var vm = this;
             
-            axios.get(vm.url + '/api/holidaysValidate', {
+            axios.get(vm.url + '/api/load', {
                     params: {
                         user_id: vm.user.id,
                         year: vm.filter.year,
@@ -87,11 +137,69 @@ var app = new Vue({
                 })
                 .then(function (response) {
                     console.log(response.data);
+                    vm.reports = response.data;        
+                })
+                .catch(function (error) {
+                   console.log(error.response);
+                });
+		},
+
+        loadWeeks () {
+            var vm = this;
+            
+            axios.get(vm.url + '/api/weeks', {
+                    params: {
+                        user_id: vm.user.id,
+                        year: vm.filter.year,                   
+                    }
+                })
+                .then(function (response) {
+                    console.log(response.data);
+                    vm.weekList = response.data;
+                    vm.days = vm.getWeekDays(vm.filter.week, vm.filter.year);
                 })
                 .catch(function (error) {
                    console.log(error.response);
                 });
         },
+
+        loadFilters(){
+        	var vm = this;
+            
+            axios.get(vm.url + '/api/filters', {
+                    params: {
+                        user_id: vm.user.id,                   
+                    }
+                })
+                .then(function (response) {
+                    console.log(response.data);
+                   vm.groupsProjects = response.data;
+                   vm.projectsLoad();
+                })
+                .catch(function (error) {
+                   console.log(error.response);
+                });
+        },
+
+        loadHolidays() {
+        	var vm = this;
+            
+            axios.get(vm.url + '/api/holidays', {
+                    params: {
+                        user_id: vm.user.id,
+                        year: vm.filter.year,
+                        week: vm.filter.week,                    
+                    }
+                })
+                .then(function (response) {
+                    console.log(response.data);
+                    vm.holidays = response.data;        
+                })
+                .catch(function (error) {
+                   console.log(error.response);
+                });
+        },
+
     }
 });
 </script>
