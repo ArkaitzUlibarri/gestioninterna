@@ -120,6 +120,31 @@ class WorkingreportRepository
     }
 
     /**
+     * Get the users with active contracts to a requested group and/or project
+     * 
+     * @param  array  $projects
+     * @return array
+     */
+    protected function usersByGroupProject( $project , $group = "")
+    {
+        $type = $group == "" ? '<>' : '=';
+
+        $users = DB::table('group_user as gu')
+                    ->join('groups as g','gu.group_id','g.id')
+                    ->join('projects as p','g.project_id','p.id')
+                    ->join('users as u', 'gu.user_id','=','u.id')
+                    ->join('contracts as c', 'u.id','=','c.user_id')
+                    ->select('gu.user_id')
+                    ->where('g.name',$type ,$group)//Nombre del grupo
+                    ->where('p.name',$project)//Nombre del proyecto
+                    ->where('g.enabled', true)//Grupos habilitadps
+                    ->whereNull('c.end_date')//Contrato de los usuarios activo
+                    ->get();
+
+        return array_pluck($users, 'user_id'); 
+    }
+
+    /**
      * Filtro por User
      * 
      * @param  $q
@@ -148,8 +173,7 @@ class WorkingreportRepository
      * @param  $value
      */
     public function filterByValidation($q, $value)
-    {
-        
+    {    
         if ($value == config('options.validations')[0]){
             $q->having('horas_validadas_admin','=', 0);// validated
         } 
@@ -223,13 +247,14 @@ class WorkingreportRepository
      */
     public function fetchData($data = [])
     {
-        $data = array_only($data, ['year', 'week', 'name']);
-        $data = array_filter($data, 'strlen');
+        $data = array_only($data, ['year', 'week', 'name','group','project']);
+        $data = array_filter($data, 'strlen');//Removes null,false and empty strings
 
         $q = DB::table('working_report as wr')
             ->join('users as users', 'wr.user_id','=','users.id')
             ->leftJoin('users as manager', 'wr.manager_id','=','manager.id')
             ->leftJoin('projects', 'wr.project_id','=','projects.id')
+            ->leftJoin('groups', 'wr.group_id','=','groups.id')
             ->leftJoin('absences', 'wr.absence_id','=','absences.id')
             ->select(
                 'wr.user_id',
@@ -247,16 +272,28 @@ class WorkingreportRepository
             ->orderBy('wr.created_at', 'ASC')
             ->orderBy('wr.user_id', 'ASC');
 
-        if (Auth::user()->primaryRole() == 'manager') {
-            $q->whereIn('wr.user_id', $this->usersByProjects(
-                array_keys(Auth::user()->activeProjects())
-            ));
+        //Group-Project
+        if(isset($data['group']) && isset($data['project'])) {
+            $users = $this->usersByGroupProject($data['project'],$data['group']);
+            $q->whereIn('wr.user_id',$users);
         }
-        else if (Auth::user()->primaryRole() == 'user' || 
-                 Auth::user()->primaryRole() == 'tools') {
-            $q->where('wr.user_id', Auth::user()->id);
+        else if (isset($data['project'])) {
+            $users = $this->usersByGroupProject($data['project']);
+            $q->whereIn('wr.user_id',$users);
+        }
+        else{
+            if (Auth::user()->primaryRole() == 'manager') {
+                $q->whereIn('wr.user_id', $this->usersByProjects(
+                    array_keys(Auth::user()->activeProjects())
+                ));
+            }
+            else if (Auth::user()->primaryRole() == 'user' || 
+                     Auth::user()->primaryRole() == 'tools') {
+                $q->where('wr.user_id', Auth::user()->id);
+            }
         }
 
+        //Year - Week
         if (isset($data['year'])) {
              $q->whereRaw("YEAR(wr.created_at) = {$data['year']}");
              $q->whereRaw("WEEK(wr.created_at, 1) = {$data['week']}");
@@ -264,6 +301,7 @@ class WorkingreportRepository
             $q->where('wr.created_at', '>=', Carbon::now('Europe/Madrid')->subMonth(2));
         }
 
+        //Name
         if (isset($data['name'])) {
             $q->whereRaw("CONCAT(users.name, ' ', users.lastname ) LIKE '%{$data['name']}%'");
         }
@@ -292,7 +330,7 @@ class WorkingreportRepository
                 $response[$key] = [
                     'user_id' => $value->user_id,
                     'user_name' => $value->user_name,
-                    'manager' => $value->manager,
+                    'manager' => ucfirst($value->manager),
                     'created_at' => $value->created_at,
                     'total' => 0,
                     'pm_validation' => $value->pm_validation,

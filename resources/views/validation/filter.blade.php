@@ -34,13 +34,21 @@
                placeholder="Week number"
                v-model="filter.week">
 
-        <select title="Project" name="project" class="form-control input-sm" v-model= 'filter.project'>
-            <option selected value="">Project</option>
-        </select>
+        @if (Auth::user()->primaryRole() == 'manager' || Auth::user()->primaryRole() == 'admin')
+          <select title="Project" name="project" class="form-control input-sm" v-model= 'filter.project' v-on:change="groupsRefresh()">
+              <option selected value="">Project</option>
+              <template v-for="(project, index) in projectList">
+                  <option :project="project" :index="index">@{{project}}</option>
+              </template> 
+          </select>
 
-        <select title="Group" name="group" class="form-control input-sm" v-model= 'filter.group'>
-            <option selected value="">Group</option>
-        </select>
+          <select title="Group" name="group" class="form-control input-sm" v-model= 'filter.group'>
+              <option selected value="">Group</option>
+              <template v-for="(group, index) in groupList">
+                  <option :group="group" :index="index">@{{group}}</option>
+              </template> 
+          </select>
+        @endif
 
         <input title="Employee"
                 type="text"

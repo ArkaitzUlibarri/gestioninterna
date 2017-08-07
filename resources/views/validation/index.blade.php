@@ -160,6 +160,10 @@ var app = new Vue({
         //user_id: {!! Auth()->user()->id !!},
         role: '{!! Auth()->user()->primaryRole() !!}',
 
+        groupsProjects: <?php echo json_encode($groupsProjects);?>,
+        projectList: [] ,
+        groupList:[] ,
+
         // Filter options
         filter: { activity:'', user: '', year: moment().year(), week: moment().week() , project: '' , group: '' },
 
@@ -175,6 +179,7 @@ var app = new Vue({
 
     mounted() {
         this.fetchData();
+        this.projectsLoad();
     },
 
     computed:{
@@ -207,6 +212,30 @@ var app = new Vue({
                 return url + '/' + data.join('/');
             }
             return url;
+        },
+
+        projectsLoad() {
+            let setList = new Set();
+
+            this.groupsProjects.forEach(function(item) {
+                setList.add(item.project);
+            });
+
+            this.projectList = [...setList];                
+        },
+
+        groupsRefresh(){
+            let vm = this;
+            let setList = new Set();
+            
+            vm.groupsProjects.forEach(function(item) {      
+                if( vm.filter.project.toLowerCase() == item.project.toLowerCase()){
+                     setList.add(item.group);
+                } 
+
+            });
+
+            this.groupList = [...setList];
         },
 
         /**
@@ -260,6 +289,8 @@ var app = new Vue({
             
             axios.get('api/validate', {
                     params: {
+                        project: vm.filter.project,
+                        group: vm.filter.group,
                         name: vm.filter.user,
                         year: vm.filter.year,
                         week: inputWeek,                    

@@ -6,6 +6,8 @@ use App\WorkingreportRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\DB;
+use Auth;
 
 class ValidationController extends Controller
 {
@@ -29,7 +31,31 @@ class ValidationController extends Controller
      */
     public function index()
     {
-    	return view('validation.index');
+        $groupsProjects = $this->getGroupsProjects();
+
+    	return view('validation.index',compact('groupsProjects'));
+    }
+
+    private function getGroupsProjects()
+    {        
+        $q =  DB::table('groups as g')
+            ->join('projects as p','g.project_id','p.id')
+            ->LeftJoin('group_user as gu','g.id','gu.group_id')
+            ->select(
+                'g.id as group_id',
+                'g.name as group',
+                'p.id as project_id',
+                'p.name as project'
+            );
+
+        if (Auth::user()->primaryRole() == 'manager'){
+            $q = $q->whereIn('p.id',array_keys(Auth::user()->activeProjects()));
+            return $q = $q->get();
+        }
+        elseif (Auth::user()->primaryRole() == 'admin'){
+            return $q = $q->get();
+        }
+            
     }
 
     /**

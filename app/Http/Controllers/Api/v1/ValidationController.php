@@ -37,7 +37,7 @@ class ValidationController extends ApiController
 			'year' => 'required|numeric|between:2017,2030',
 			'week' => 'required|numeric|between:1,53'
 		]);
-
+		
 		if ($validator->fails()) {
 			return $this->respondNotAcceptable($validator->errors()->all());
 		}
@@ -99,7 +99,7 @@ class ValidationController extends ApiController
 	            ->where('created_at', $request->get('day'))
 	            ->update($newValues);
 
-	        $newValues['manager_id'] = $this->getManager($newValues, $currentValues->manager);
+	        $newValues['manager_id'] = ucfirst($this->getManager($newValues, $currentValues->manager));
 
 	        return $this->respond($newValues);
 		}
