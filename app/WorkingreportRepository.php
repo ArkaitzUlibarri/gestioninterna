@@ -329,8 +329,8 @@ class WorkingreportRepository
             if(! isset($response[$key])) {
                 $response[$key] = [
                     'user_id' => $value->user_id,
-                    'user_name' => $value->user_name,
-                    'manager' => ucfirst($value->manager),
+                    'user_name' =>ucwords($value->user_name),
+                    'manager' => ucwords($value->manager),
                     'created_at' => $value->created_at,
                     'total' => 0,
                     'pm_validation' => $value->pm_validation,
@@ -342,7 +342,7 @@ class WorkingreportRepository
             $response[$key]['total'] += $value->time_slot;
 
             $response[$key]['items'][] = [
-                'name' => $this->activity($value),
+                'name' => strtoupper($this->activity($value)),
                 'time_slot' => $value->time_slot
             ];
         }

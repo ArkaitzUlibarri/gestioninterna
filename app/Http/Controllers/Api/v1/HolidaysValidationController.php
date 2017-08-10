@@ -44,8 +44,8 @@ class HolidaysValidationController extends ApiController
 	{
 		$validator = Validator::make($request->all(), [
 			'year'    => 'required|numeric|between:2017,2030',
-			'week'    => 'required|numeric|between:1,53',
-			'user_id' => 'required|numeric',
+			//'week'    => 'required|numeric|between:1,53',
+			//'user_id' => 'required|numeric',
 		]);
 
 		if ($validator->fails()) {
@@ -53,7 +53,8 @@ class HolidaysValidationController extends ApiController
 		}
 
 		return $this->respond(
-			$this->bankHolidays($request['user_id'],$request['year'],$request['week'])
+			//$this->bankHolidays($request['year'], $request['week'], $request['user_id'])
+			$this->bankHolidays($request['year'])
 		);
 	}
 
@@ -131,34 +132,37 @@ class HolidaysValidationController extends ApiController
      * @param  [int] $year [description]
      * @return [array]       [description]
      */
-    private function bankHolidays($user_id, $year, $week)
+    private function bankHolidays($year, $week = 0, $user_id = 0 )
     {	
-    	$codes =  DB::select(	    		
-			"select national_days_id as codes
-			from contracts
-			WHERE end_date is null and user_id= :a1
+    	if ($user_id != 0){
 
-			union all
+    		$codes =  DB::select(	    		
+				"select national_days_id as codes
+				from contracts
+				WHERE end_date is null and user_id= :a1
 
-		    select regional_days_id as codes
-		    from contracts
-		    WHERE end_date is null and user_id= :a2
+				union all
 
-		    union all
+			    select regional_days_id as codes
+			    from contracts
+			    WHERE end_date is null and user_id= :a2
 
-		    select local_days_id as codes
-		    from contracts
-		    WHERE end_date is null and user_id= :a3"
-			
-			,array(
-				'a1' => $user_id,
-				'a2' => $user_id,
-				'a3' => $user_id
-			)
-		);
+			    union all
 
-    	$codes = array_pluck($codes,'codes');
-    	
+			    select local_days_id as codes
+			    from contracts
+			    WHERE end_date is null and user_id= :a3"
+				
+				,array(
+					'a1' => $user_id,
+					'a2' => $user_id,
+					'a3' => $user_id
+				)
+			);
+
+    		$codes = array_pluck($codes,'codes');
+    	}
+
     	return DB::table('bank_holidays as bh')
     		->join('bank_holidays_codes as bhc','bh.code_id','bhc.id')
     		->select(
@@ -166,12 +170,12 @@ class HolidaysValidationController extends ApiController
     			DB::raw('week(date) as weekdate'),
     			//'bh.code_id',
     			'bhc.name',
-    			'bhc.type',
-    			DB::raw("null as validated")			
+    			'bhc.type'
+    			//DB::raw("null as validated")			
     		)
     		->where(DB::raw("YEAR(bh.date)"),$year)//Año de los festivos
-    		->where(DB::raw("WEEK(date)"),$week)//Semana de los festivos
-    		->whereIn('bh.code_id', $codes)
+    		//->where(DB::raw("WEEK(date)"),$week)//Semana de los festivos
+    		//->whereIn('bh.code_id', $codes)
     		->orderby('bh.date','asc')
     		->get();
     }

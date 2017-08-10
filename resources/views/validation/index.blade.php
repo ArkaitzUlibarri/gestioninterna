@@ -2,84 +2,89 @@
 
 @section('content')
 
-<div class="panel panel-primary">
+    <div class="panel panel-primary">
 
-    <div class="panel-heading">
-        @include('validation.filter')
-        <div class="clearfix"></div>
-    </div>
+        <div class="panel-heading">
+            @include('validation.filter')
+            <div class="clearfix"></div>
+        </div>
 
-    <div class="panel-body">
+        <div class="panel-body">
 
-        <table v-show="filtered_reports!=null">
-            <thead>
-                <tr>
-                    <th>Employee</th>
-                    <th v-for="(day, index) in days">
-                        @{{ weekdaysShort[index] }}, @{{ day.substr(5, 5) }}
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="user in users">
-                    <td>
-                        <strong>@{{ user['name'].toUpperCase() }}</strong>
-                        <p>Total Week: @{{ user['total'] }}</p>
-                        <!--<p><button class="btn btn-default btn-sm">Validate Week</button></p>-->
-                    </td>
+            <table v-show="filtered_reports!=null">
 
-                    <td v-for="day in days">
+                <thead>
+                    <tr>
+                        <th>Employee</th>
+                        <th v-for="(day, index) in days">
+                            <span v-bind:class ="getDayColor(day)" v-bind:title ="getDayTitle(day)">
+                                @{{ weekdaysShort[index] }}, @{{ day.substr(5, 5) }}
+                            </span>
+                        </th>
+                    </tr>
+                </thead>
 
-                        <div v-if="hasCard(user['id'], day)"
-                             class="card"
-                             v-bind:class="getCardColor(filtered_reports[user['id']+'|'+day].admin_validation, filtered_reports[user['id']+'|'+day].pm_validation)">
+                <tbody>
+                    <tr v-for="user in users">
+                        <td>
+                            <strong>@{{ user['name'].toUpperCase() }}</strong>
+                            <p>Total Week: @{{ user['total'] }}</p>
+                            <!--<p><button class="btn btn-default btn-sm">Validate Week</button></p>-->
+                        </td>
 
-                            <button
-                                style="position:relative; top:-12%; right:-5%;" 
-                                title="(In)validate"
-                                class="btn btn-default btn-xs pull-right"
-                                v-on:click="validate(user['id']+'|'+day)">
-                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                            </button> 
-                            <a type="button"     
-                                style="position:relative; top:-12%; right:-5%;" 
-                                title="See Report"
-                                class="btn btn-default btn-xs pull-right"
-                                v-bind:href="makeUrl('{{ url('workingreports/add/') }}', [user['id'], day])">
-                                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-                            </a> 
+                        <td v-for="day in days">
 
-                            <div v-for="item in filtered_reports[user['id']+'|'+day].items">
-                                <p>- @{{ item.name.toUpperCase() }}, @{{ item.time_slot }}h</p>
+                            <div v-if="hasCard(user['id'], day)"
+                                 class="card"
+                                 v-bind:class="getCardColor(filtered_reports[user['id']+'|'+day].admin_validation, filtered_reports[user['id']+'|'+day].pm_validation)">
+
+                                <button
+                                    style="position:relative; top:-12%; right:-5%;" 
+                                    title="(In)validate"
+                                    class="btn btn-default btn-xs pull-right"
+                                    v-on:click="validate(user['id']+'|'+day)">
+                                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                </button> 
+                                <a type="button"     
+                                    style="position:relative; top:-12%; right:-5%;" 
+                                    title="See Report"
+                                    class="btn btn-default btn-xs pull-right"
+                                    v-bind:href="makeUrl('{{ url('workingreports/add/') }}', [user['id'], day])">
+                                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                                </a> 
+
+                                <div v-for="item in filtered_reports[user['id']+'|'+day].items">
+                                    <p>- @{{ item.name.toUpperCase() }}, @{{ item.time_slot }}h</p>
+                                </div>
+
+                                <div style="margin-top: 10px;padding-top: 10px;border-top: 1px solid #9e9e9e;">
+                                    <strong>Total Hours:</strong> @{{ filtered_reports[user['id']+'|'+day].total }}   
+                                    <span><div class="pull-right">@{{ filtered_reports[user['id']+'|'+day].manager }}</div></span>                                             
+                                </div>
+
                             </div>
+                        </td>
+                    </tr>
+                </tbody>
 
-                            <div style="margin-top: 10px;padding-top: 10px;border-top: 1px solid #9e9e9e;">
-                                <strong>Total Hours:</strong> @{{ filtered_reports[user['id']+'|'+day].total }}   
-                                <span><div class="pull-right">@{{ filtered_reports[user['id']+'|'+day].manager }}</div></span>                                             
-                            </div>
+            </table>
 
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div  style="text-align: center; margin-top: 50px; margin-bottom: 50px" v-show="filtered_reports==null">
-            No data available...
-        </div> 
+            <div  style="text-align: center; margin-top: 50px; margin-bottom: 50px" v-show="filtered_reports==null">
+                No data available...
+            </div> 
+
+        </div>
+
+        <div class="panel-footer">
+            @include('validation.footer')
+            <div class="clearfix"></div>
+        </div>
 
     </div>
 
-    <div class="panel-footer">
-        @include('validation.footer')
-        <div class="clearfix"></div>
+    <div class="row front" v-show="upHere">
+        @include('validation.key')
     </div>
-</div>
-
-<div class="row front" v-show="upHere">
-    @include('validation.key')
-</div>
-
-
 
 @endsection
 
@@ -143,6 +148,10 @@ table .card {
     display: inline-block;
 }
 
+.bank-holiday{
+    color: red;
+}
+
 /*
 .card p {
     margin-bottom: 2px;
@@ -157,29 +166,34 @@ var app = new Vue({
 
     data: {
         // User's data
-        //user_id: {!! Auth()->user()->id !!},
+        user_id: '{!! Auth()->user()->id !!}',
         role: '{!! Auth()->user()->primaryRole() !!}',
 
+        //Group-Project
         groupsProjects: <?php echo json_encode($groupsProjects);?>,
         projectList: [] ,
         groupList:[] ,
 
         // Filter options
-        filter: { activity:'', user: '', year: moment().year(), week: moment().week() , project: '' , group: '' },
+        filter: { activity:'', user: '', year: moment().year(), week: moment().week() , project: '' , group: '' , weekType: 'reports'},
 
         // Data for the table of cards
         users: [],
         days: [],
         reports: null,
-        weekdaysShort : ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
+        weekdaysShort : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
 
-        //Hover variable
+        //Data to indicate the bank holidays
+        bankHolidays: [],
+
+        //Hover variable for Key info
         upHere : false
     },
 
     mounted() {
         this.fetchData();
         this.projectsLoad();
+        this.loadHolidays();
     },
 
     computed:{
@@ -238,6 +252,26 @@ var app = new Vue({
             this.groupList = [...setList];
         },
 
+        loadHolidays() {
+            var vm = this;
+
+            vm.bankHolidays = [];
+
+            axios.get('/api/holidays', {
+                    params: {
+                        //user_id: vm.user_id,
+                        year: vm.filter.year,
+                        //week: vm.filter.week,                    
+                    }
+                })
+                .then(function (response) {
+                    vm.bankHolidays = response.data;        
+                })
+                .catch(function (error) {
+                   vm.showErrors(error.response.data)
+                });
+        },
+
         /**
          * Validate a single day tasks.
          */
@@ -255,8 +289,8 @@ var app = new Vue({
             }
 
             axios.patch('api/validate', {
-                    user_id: this.reports[key].user_id,
-                    day: this.reports[key].created_at,
+                    user_id: vm.reports[key].user_id,
+                    day: vm.reports[key].created_at,
                     admin_validation: vm.reports[key].admin_validation,
                     pm_validation: vm.reports[key].pm_validation,
                 }).then(function (response) {
@@ -319,6 +353,30 @@ var app = new Vue({
             if (pm) {
                 return 'validated';
             }
+        },
+
+        /**
+         * Get the days's color if it is Bank Holiday
+         */
+        getDayColor(day){
+            for (var i = this.bankHolidays.length - 1; i >= 0; i--) {
+                if(this.bankHolidays[i].date == day){
+                    return 'bank-holiday';
+                }
+            }
+            return '';
+        },
+
+        /**
+         * Get the days's color if it is Bank Holiday
+         */
+        getDayTitle(day){
+            for (var i = this.bankHolidays.length - 1; i >= 0; i--) {
+                if(this.bankHolidays[i].date == day){
+                    return "BANK HOLIDAY IN " + this.bankHolidays[i].name.toUpperCase();
+                }
+            }
+            return '';
         },
 
         /**

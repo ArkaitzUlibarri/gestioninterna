@@ -1,24 +1,13 @@
 <div class="form-inline">
 
-    <button title="Key Colors Info" class="btn btn-default btn-sm custom-btn-width" v-on:mouseover="upHere=true" v-on:mouseleave="upHere=false">
-      <span class="glyphicon glyphicon-info-sign"></span> Info
-    </button>
+    <div class="pull-left">
 
-    <a title="Export" href="{{ url('validation/download') }}" class="btn btn-success btn-sm custom-btn-width">
-        <span class="glyphicon glyphicon-download-alt"></span> Export
-    </a>
+        <select title="Week Type" name="weekType" class="form-control input-sm" v-model="filter.weekType">
+          <option value="reports">Reports</option>
+          <option value="holidays">Holidays</option>
+        </select>
 
-    <div class="pull-right">
-
-        <input title="Activity Filter" 
-            type="text"
-           class="form-control input-sm"
-           style="background-color:#ffcc80;"
-           name="name"
-           placeholder="Activity name"
-           v-model="filter.activity">
-
-        <select title="Year" name="year" class="form-control input-sm" v-model="filter.year">
+        <select title="Year" name="year" class="form-control input-sm" v-model="filter.year" v-on:change="loadHolidays()">
             <option value="2018">2018</option>
             <option value="2017">2017</option>
             <option value="2016">2016</option>
@@ -34,6 +23,7 @@
                placeholder="Week number"
                v-model="filter.week">
 
+        <!--No hay para user/tools-->
         @if (Auth::user()->primaryRole() == 'manager' || Auth::user()->primaryRole() == 'admin')
           <select title="Project" name="project" class="form-control input-sm" v-model= 'filter.project' v-on:change="groupsRefresh()">
               <option selected value="">Project</option>
@@ -48,7 +38,6 @@
                   <option :group="group" :index="index">@{{group}}</option>
               </template> 
           </select>
-        @endif
 
         <input title="Employee"
                 type="text"
@@ -56,10 +45,32 @@
                class="form-control input-sm"
                placeholder="Employee name"
                v-model="filter.user">
+        @endif
+        <!--No hay para user/tools-->
 
         <button title="Filter" class="btn btn-default btn-sm custom-btn-width" v-on:click="fetchData()">
-            <span class="glyphicon glyphicon-filter"></span> Filter
+            <span class="glyphicon glyphicon-search"></span> Search
         </button>
+
+    </div>
+
+    <div class="pull-right">
+
+      <div class="input-group">
+        <input title="Activity Filter" 
+            type="text"
+           class="form-control input-sm"
+           name="name"
+           placeholder="Activity name"
+           v-model="filter.activity">
+          <span class="input-group-addon input-sm">
+            <span class="glyphicon glyphicon-filter"></span> Filter
+          </span>
+      </div>
+
+      <a title="Export" href="{{ url('validation/download') }}" class="btn btn-success btn-sm custom-btn-width">
+          <span class="glyphicon glyphicon-download-alt"></span> Export
+      </a>
 
     </div>
 

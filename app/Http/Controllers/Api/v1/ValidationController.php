@@ -72,9 +72,10 @@ class ValidationController extends ApiController
 
 		$currentValues = DB::table('working_report as wr')
 			->leftJoin('users as u', 'wr.manager_id','=','u.id')
+			->leftJoin('absences as a', 'wr.absence_id','=','a.id')
 			->where('wr.user_id', $request->get('user_id'))
 			->where('wr.created_at', $request->get('day'))
-			->select('wr.admin_validation', 'wr.pm_validation', 'wr.manager_id', 'u.name as manager')
+			->select('a.name as absence','wr.admin_validation', 'wr.pm_validation', 'wr.manager_id', 'u.name as manager')
 			->first();
 
 		if (Auth::user()->primaryRole() != 'admin' &&
@@ -94,12 +95,32 @@ class ValidationController extends ApiController
 		);
 
 		if ($newValues != []) {
-			DB::table('working_report')
+			
+			DB::beginTransaction();
+
+			try{
+				//Validar vacaciones
+				if($currentValues->absence ="holidays"){
+					DB::table('calendar_holidays')
+		            ->where('user_id', $request->get('user_id'))
+		            ->where('date', $request->get('day'))
+		            ->update(array('validated' => $newValues['pm_validation']));
+				}
+				
+				//Validar reportes
+				DB::table('working_report')
 	            ->where('user_id', $request->get('user_id'))
 	            ->where('created_at', $request->get('day'))
 	            ->update($newValues);
 
-	        $newValues['manager_id'] = ucfirst($this->getManager($newValues, $currentValues->manager));
+	        	$newValues['manager_id'] = ucfirst($this->getManager($newValues, $currentValues->manager));
+
+	        	DB::commit();
+			}
+			catch(\Exception $e){
+	    		DB::rollback();
+    			return $this->respondInternalError($e->errorInfo);
+			}
 
 	        return $this->respond($newValues);
 		}
