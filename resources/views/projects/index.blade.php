@@ -50,19 +50,38 @@
             </tbody>
         </table>
 
-        {{ $projects->links() }}
-
         <hr>
         
-        <div align="right" class="form-group">
-            <a type="button" class="btn btn-default btn-sm" href="{{ url('groups') }}">
-                <span class="glyphicon glyphicon-list-alt"></span> Group List
-            </a>
+        <div class="btn-toolbar"> 
+            
+            <div class="btn-group">
+                {{ $projects->links() }}
+            </div>
 
-            <a type="button" class="btn btn-success btn-sm" href="{{ url('/projects/create') }}">
-                <span class="glyphicon glyphicon-plus"></span> Add Project
-            </a>
+            <div class="btn-group pull-right">
+                <a type="button" class="btn btn-default btn-sm" href="{{ url('groups') }}">
+                    <span class="glyphicon glyphicon-list-alt"></span> Group List
+                </a>
+
+                <a type="button" class="btn btn-success btn-sm" href="{{ url('/projects/create') }}">
+                    <span class="glyphicon glyphicon-plus"></span> Add Project
+                </a>
+            </div>
+
         </div>
+
     </div>
 
 @endsection
+
+@push('script-bottom')
+
+    <style>
+        .pagination{
+            display: inline;
+            margin-left: 0.5em;
+            margin-right: 0.5em;
+        }
+    </style>
+
+@endpush

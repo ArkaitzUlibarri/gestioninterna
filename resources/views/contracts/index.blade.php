@@ -45,19 +45,38 @@
             </tbody>
         </table>
 
-        {{ $contracts->links() }}
-
         <hr>
-
+        
         @include('layouts.flash')
         @include('layouts.errors')
 
-        <div align="right" class="form-group">  
-            <a type="button" class="btn btn-success btn-sm" href="{{ url('/contracts/create') }}">
-                <span class="glyphicon glyphicon-plus"></span> Add Contract
-            </a>
+        <div class="btn-toolbar"> 
+            
+            <div class="btn-group">
+                {{ $contracts->links() }}
+            </div>
+
+            <div class="btn-group pull-right">
+                <a type="button" class="btn btn-success btn-sm" href="{{ url('/contracts/create') }}">
+                    <span class="glyphicon glyphicon-plus"></span> Add Contract
+                </a>
+            </div>
+
         </div>
+        
     </div>
         
 </div>
 @endsection
+
+@push('script-bottom')
+
+    <style>
+        .pagination{
+            display: inline;
+            margin-left: 0.5em;
+            margin-right: 0.5em;
+        }
+    </style>
+
+@endpush

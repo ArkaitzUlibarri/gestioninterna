@@ -321,6 +321,13 @@ var app = new Vue({
             inputWeek = week != null ? week : vm.filter.week;
             vm.filter.week = inputWeek;
             
+            if(inputWeek < 1 || inputWeek > 53){
+                toastr.error("Week value out of range");
+                vm.filter.week = moment().week();
+                vm.filter.year = moment().year();
+                return;
+            }
+
             axios.get('api/validate', {
                     params: {
                         project: vm.filter.project,

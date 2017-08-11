@@ -43,8 +43,9 @@ class WorkingreportRepository
                 DB::raw("SUM(case when pm_validation = 0 then time_slots else 0 end)*0.25 as horas_validadas_pm"),
                 DB::raw("SUM(case when admin_validation = 0 then time_slots else 0 end)*0.25 as horas_validadas_admin")
             )
-            ->groupBy('user_id','created_at')
-            ->orderBy('created_at','desc')
+            ->where('working_report.created_at','<',Carbon::tomorrow('Europe/London'))//Fecha menor que mañana
+            ->groupBy('working_report.user_id','working_report.created_at')
+            ->orderBy('working_report.created_at','desc')
             ->orderBy('fullname','asc');
 
         foreach ($data as $field => $value) {
@@ -60,8 +61,7 @@ class WorkingreportRepository
 
                 if (isset($data['project'])) {
                     if($data['project'] =="user"){
-                        //My user
-                        return $q->where('user_id', $user_id)->get();
+                        return $paginate ? $q->where('user_id', $user_id)->paginate(20)->appends($data) : $q->where('user_id', $user_id)->get();
                     }
                     else{
                         if (Auth::user()->primaryRole() == 'manager') {
@@ -77,7 +77,7 @@ class WorkingreportRepository
                                 : $this->usersByProjects([$data['project']]);
                         }
 
-                        return $q->whereIn('user_id', $users)->get();
+                        return $paginate ? $q->whereIn('user_id', $users)->paginate(20)->appends($data) : $q->whereIn('user_id', $users)->get();
                     }
                 }
 
@@ -88,11 +88,11 @@ class WorkingreportRepository
                     ? $this->usersByProjects(array_keys($projects))
                     : $this->usersByProjects(array_pluck($projects, ['id']));
 
-                return $q->whereIn('user_id', $users)->get();
+                return $paginate ? $q->whereIn('user_id', $users)->paginate(20)->appends($data) : $q->whereIn('user_id', $users)->get();
             }
         }
         
-        return $q->where('user_id', $user_id)->get();
+        return $paginate ? $q->where('user_id', $user_id)->paginate(20)->appends($data) : $q->where('user_id', $user_id)->get();
     }
 
     /**

@@ -8,9 +8,9 @@
         </select>
 
         <select title="Year" name="year" class="form-control input-sm" v-model="filter.year" v-on:change="loadHolidays()">
-            <option value="2018">2018</option>
-            <option value="2017">2017</option>
-            <option value="2016">2016</option>
+            <option value="{{date('Y') + 1}}">{{ date('Y') + 1 }}</option>
+            <option value="{{date('Y')}}">{{ date('Y') }}</option>
+            <option value="{{date('Y') - 1}}">{{ date('Y') - 1 }}</option>
         </select>
 
         <input title="Week number"
