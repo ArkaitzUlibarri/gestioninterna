@@ -91,7 +91,9 @@
 
 						<div class="form-group">	
 							<button title="Save Group" class="btn btn-primary" :disabled="newGroup.name==''" v-on:click="saveGroup">
-								<span class="glyphicon glyphicon-floppy-disk"></span> Save
+								<span class="glyphicon glyphicon-floppy-disk"></span> 
+								<span v-if="editIndex!=-1">Update</span>
+								<span v-if="editIndex==-1">Save</span>
 							</button>
 							<button title="New Group" class="btn btn-primary" v-show="editIndex!=-1" v-on:click="initializeGroup">
 								New Group

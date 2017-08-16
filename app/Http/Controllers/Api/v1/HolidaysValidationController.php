@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Api\ApiController;
 use App\Project;
 use App\User;
+use App\WorkingreportRepository;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,17 +13,59 @@ use Illuminate\Support\Facades\Validator;
 
 class HolidaysValidationController extends ApiController
 {
-	/**
-	 * [index description]
-	 * @param  Request $request [description]
-	 * @return [type]           [description]
-	 */
-	public function index(Request $request)
+    protected $reportRepository;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(WorkingreportRepository $reportRepository)
+    {
+        $this->reportRepository = $reportRepository;
+    }
+
+    /**
+     * [loadconflicts description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function loadconflicts(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'year'    => 'required|numeric|between:2017,2030',
+            'week'    => 'required|numeric|between:1,53',
+            'user_id' => 'required|numeric'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondNotAcceptable($validator->errors()->all());
+        }
+
+        return $this->respond(
+            $this->reportRepository->formatOutput(
+
+                $this->getConflicts(
+                    $request['year'],
+                    $request['week'],
+                    $this->getUsersInGroups($this->getGroups($request['user_id'] , true))
+                )
+
+            )
+        );
+    }
+
+    /**
+     * [loadusers description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+	public function loadusers(Request $request)
 	{
 		$validator = Validator::make($request->all(), [
 			'year'    => 'required|numeric|between:2017,2030',
-			'week'    => 'required|numeric|between:1,53',
-			'user_id' => 'required|numeric'
+			//'week'    => 'required|numeric|between:1,53',
+			//'user_id' => 'required|numeric'
 		]);
 
 		if ($validator->fails()) {
@@ -30,16 +73,16 @@ class HolidaysValidationController extends ApiController
 		}
 
 		return $this->respond(
-			$this->getDaysPerUser($request['user_id'],$request['year'],$request['week'])//Holidays
-			//$this->getConflicts($this->getUsersInGroups($this->getGroups($request['user_id'] , true)))//Reports and planification for users in the same project
+			//$this->getDaysPerUser($request['year'], $request['user_id'], $request['week'])//Holidays
+            $this->getDaysPerUser($request['year'])//Holidays
 		);
 	}
 
-	/**
-	 * [index description]
-	 * @param  Request $request [description]
-	 * @return [type]           [description]
-	 */
+    /**
+     * [loadholidays description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
 	public function loadholidays(Request $request)
 	{
 		$validator = Validator::make($request->all(), [
@@ -59,55 +102,20 @@ class HolidaysValidationController extends ApiController
 	}
 
 	/**
-	 * [index description]
-	 * @param  Request $request [description]
-	 * @return [type]           [description]
-	 */
-	public function loadweeks(Request $request)
-	{
-		$validator = Validator::make($request->all(), [
-			'year' => 'required|numeric|between:2017,2030',
-			'user_id' => 'required|numeric'
-		]);
-
-		if ($validator->fails()) {
-			return $this->respondNotAcceptable($validator->errors()->all());
-		}
-
-		return $this->respond(
-			$this->getHolidaysWeeks($request['user_id'],$request['year'])
-		);
-	}
-
-	public function loadfilters(Request $request)
-	{
-		$validator = Validator::make($request->all(), [
-			'user_id' => 'required|numeric'
-		]);
-
-		if ($validator->fails()) {
-			return $this->respondNotAcceptable($validator->errors()->all());
-		}
-
-		return $this->respond(
-			$this->getGroups($request['user_id'],false)
-		);
-	}
-
-	/**
 	 * Get requested holidays in a concrete week and year
 	 * @param  [int] $user_id [description]
 	 * @param  [int] $year    [description]
 	 * @param  [int] $week    [description]
 	 * @return [array]          [description]
 	 */
-	private function getDaysPerUser($user_id, $year, $week)
+	private function getDaysPerUser($year, $user_id = 0, $week = 0)
     {
-
+        /*
     	$users = $this->getUsersInGroups(
     		$this->getGroups($user_id , true)
     	);
-
+        */
+       /*
     	return DB::table('calendar_holidays as c')
     		->join('users as u','u.id','c.user_id')
     		->select(
@@ -120,11 +128,26 @@ class HolidaysValidationController extends ApiController
     			'c.validated'
     		)
     		//->where('user_id',$user_id)//Días relativos al usuario
-    		->whereIn('c.user_id',$users)
+    		//->whereIn('c.user_id',$users)
     		->where(DB::raw("YEAR(c.date)"),$year)
-    		->where(DB::raw("WEEK(c.date)"),$week)
-    		//->where('validated', 0)//Sin validar
-    		->get();		 	
+    		//->where(DB::raw("WEEK(c.date)"),$week)
+    		->where('validated', 0)//Sin validar
+    		->get();		 
+        */
+       
+        return DB::table('calendar_holidays as c')
+            ->select(
+                'u.id as user_id',
+                DB::raw("CONCAT(u.name, ' ', u.lastname ) as user_name"),
+                DB::raw('GROUP_CONCAT(DISTINCT week(date) SEPARATOR "-") as weekdate'),
+                DB::raw('count(validated) as count')
+            )
+            ->join('users as u','u.id','c.user_id')
+            ->where('validated', 0)//Sin validar
+            ->where(DB::raw("YEAR(c.date)"),$year)//Año seleccionado
+            ->groupby('user_id')
+            ->orderby('u.name')
+            ->get();   	
     }
 
     /**
@@ -185,43 +208,33 @@ class HolidaysValidationController extends ApiController
      * @param  [array] $users [description]
      * @return [array]        [description]
      */
-    private function getConflicts($users)
+    private function getConflicts($year, $week, $users)
     {
     	return DB::table('working_report as wr')
     		->join('users as u','u.id','wr.user_id')
-    		->LeftJoin('users as um','um.id','wr.manager_id')
+            ->LeftJoin('users as manager', 'wr.manager_id','=','manager.id')
+            ->leftJoin('absences', 'wr.absence_id','=','absences.id')
     		->select(
     			'wr.user_id',
     			DB::raw("CONCAT(u.name, ' ', u.lastname ) as user_name"),
+                DB::raw("manager.name as manager"),
     			'wr.created_at',
-    			'wr.activity',
-    			DB::raw("(wr.time_slots)*0.25 as hours"),
+                DB::raw("null as project"),
+                DB::raw('wr.training_type as training_type'),
+                DB::raw('absences.name as absence'),
+    			DB::raw('SUM(wr.time_slots* 0.25) as time_slot'),
+    			//DB::raw("(wr.time_slots)*0.25 as hours"),
     			'wr.pm_validation',
-    			'wr.admin_validation',
-    			'wr.manager_id',
-    			DB::raw("CONCAT(um.name, ' ', um.lastname ) as manager_name")
+    			'wr.admin_validation'          
     		)
     		->whereIn('wr.user_id',$users)//Usuarios del mismo grupo/proyecto
     		->where('wr.activity','<>','project')//Ausencias o Cursos
+            ->where(DB::raw("YEAR(wr.created_at)"),$year)//Año
+            ->where(DB::raw("WEEK(wr.created_at)"),$week)//Semana
+            ->groupBy(['user_id', 'created_at', 'training_type', 'absence_id', 'wr.pm_validation', 'wr.admin_validation', 'manager.name'])
+            ->orderBy('wr.created_at', 'ASC')
+            ->orderBy('wr.user_id', 'ASC')
     		->get();
-    }
-
-    /**
-     * Get the user holidays weeks
-     * @param  [int] $year [description]
-     * @return [array]       [description]
-     */
-    private function getHolidaysWeeks($user_id, $year)
-    {
-    	return DB::table('calendar_holidays')
-    		->select(
-    			DB::raw('week(date) as weekdate')
-    		)
-    		->where('user_id',$user_id)//Días relativos al usuario
-    		->where(DB::raw("YEAR(date)"),$year)
-    		->where('validated', 0)//Sin validar
-    		->distinct()
-    		->get();	
     }
 
 	/**
@@ -231,7 +244,7 @@ class HolidaysValidationController extends ApiController
 	 * @param  boolean $groups
 	 * @return array / object
 	 */
-    private function getGroups($user_id , $group)
+    private function getGroups($user_id , $ids)
     {
     	$q = DB::table('group_user as gu')
     		->join('groups as g','g.id','gu.group_id')
@@ -247,7 +260,7 @@ class HolidaysValidationController extends ApiController
     		->where('p.end_date',null)//Proyecto abierto
     		->get();
 
-    		if($group == true){
+    		if($ids == true){
     			return array_pluck($q, 'group_id');
     		}
 
@@ -272,28 +285,68 @@ class HolidaysValidationController extends ApiController
     }
 
     /**
-	 * Get users holidays information
-	 * 
-	 * @param  array $users
-	 * @return array
-	 */
-	/*
-    private function getUsersCards($users)
+     * [loadweeks description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    /*
+    public function loadweeks(Request $request)
     {
-    	return DB::table('user_holidays as uh')
-    		->join('contracts as c','c.id','uh.contract_id')
-    		->select(
-    			'current_year',
-    			'used_current_year',
-    			'last_year',
-    			'used_last_year',
-    			'extras',
-    			'used_extras',
-    			'used_next_year'
-    		)
-    		->whereIn('c.user_id',$users)
-    		->where('c.end_date',null)
-    		->get();
+        $validator = Validator::make($request->all(), [
+            'year' => 'required|numeric|between:2017,2030',
+            'user_id' => 'required|numeric'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondNotAcceptable($validator->errors()->all());
+        }
+
+        return $this->respond(
+            $this->getHolidaysWeeks($request['user_id'],$request['year'])
+        );
     }
     */
+
+    /**
+     * [loadfilters description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    /*
+    public function loadfilters(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|numeric'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondNotAcceptable($validator->errors()->all());
+        }
+
+        return $this->respond(
+            $this->getGroups($request['user_id'],false)
+        );
+    }
+    */
+       
+    /**
+     * Get the user holidays weeks
+     * @param  [int] $year [description]
+     * @return [array]       [description]
+     */
+    /*
+    private function getHolidaysWeeks($user_id, $year)
+    {
+        return DB::table('calendar_holidays')
+            ->select(
+                DB::raw('week(date) as weekdate')
+            )
+            ->where('user_id',$user_id)//Días relativos al usuario
+            ->where(DB::raw("YEAR(date)"),$year)
+            ->where('validated', 0)//Sin validar
+            ->distinct()
+            ->get();    
+    }
+    */
+
 }

@@ -50,10 +50,23 @@ class GroupController extends ApiController
 
 		unset($array['id']);
 
-		$id = DB::table('groups')
-			->insertGetId($array);
+		try{
 
-		return $this->respond($id);
+	    	DB::beginTransaction();
+			//******************************************************************************
+		    $group_id = DB::table('groups')->insertGetId($array);//Insertar Grupo Nuevo
+			$group = Group::find($group_id);
+			$pm_id = $group->project->pm_id;	
+			DB::table('group_user')->insert(['group_id' => $group_id, 'user_id' => $pm_id]);//Añadir Grupo al PM
+			//******************************************************************************
+			DB::commit();/* Transaction successful. */
+		
+		}catch(\Exception $e){       
+		    DB::rollback(); /* Transaction failed. */ 
+		    return $this->respondInternalError($e->errorInfo);
+		}
+
+		return $this->respond($group_id);
 	}
 
 	/**
@@ -73,9 +86,7 @@ class GroupController extends ApiController
 			return $this->respondNotFound();
 		}
 
-		$confirmation = DB::table('groups')
-			->where('id',$id)
-			->update($array);
+		$confirmation = DB::table('groups')->where('id',$id)->update($array);
 
 		return $this->respond($confirmation);
 	}
@@ -94,15 +105,23 @@ class GroupController extends ApiController
 		}
 		
 		if($group->name !='Default'){
-			$reports = DB::table('working_report')
-				->where('group_id',$id)
-				->get()
-				->toArray();
+			$reports = DB::table('working_report')->where('group_id',$id)->get()->toArray();
 
 			if($reports == []) {
-				$group = DB::table('groups')
-					->where('id',$id)
-					->delete();
+
+				try{
+
+			    	DB::beginTransaction();
+					//******************************************************************************
+					DB::table('groups')->where('id',$id)->delete();//Borrar Grupo
+					DB::table('group_user')->where('group_id',$id)->delete();//Borrar relación con usuarios
+					//******************************************************************************
+					DB::commit();/* Transaction successful. */
+				
+				}catch(\Exception $e){       
+				    DB::rollback(); /* Transaction failed. */ 
+				    return $this->respondInternalError($e->errorInfo);
+				}
 
 				return $this->respond(true);
 			}

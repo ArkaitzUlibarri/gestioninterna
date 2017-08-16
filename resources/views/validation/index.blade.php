@@ -69,7 +69,7 @@
 
             </table>
 
-            <div  style="text-align: center; margin-top: 50px; margin-bottom: 50px" v-show="filtered_reports==null">
+            <div style="text-align: center; margin-top: 50px; margin-bottom: 50px" v-show="filtered_reports==null">
                 No data available...
             </div> 
 
@@ -175,7 +175,9 @@ var app = new Vue({
         groupList:[] ,
 
         // Filter options
-        filter: { activity:'', user: '', year: moment().year(), week: moment().week() , project: '' , group: '' , weekType: 'reports'},
+        filter: { activity:'', user: '', year: moment().year(), week: moment().week() , project: '' , group: '' , weekType: 'reports' , pendingUser: ''},
+        userList: [],
+        weekList: [],
 
         // Data for the table of cards
         users: [],
@@ -252,6 +254,15 @@ var app = new Vue({
             this.groupList = [...setList];
         },
 
+        loadData(){
+            if(this.filter.weekType == 'reports'){
+                this.fetchData();
+            }
+            else if(this.filter.weekType == 'holidays'){
+                this.fetchHolidays();
+            }
+        },
+
         loadHolidays() {
             var vm = this;
 
@@ -270,6 +281,48 @@ var app = new Vue({
                 .catch(function (error) {
                    vm.showErrors(error.response.data)
                 });
+        },
+
+        loadPendingUsers(){
+            
+            if(this.filter.weekType == 'reports'){
+                this.filter.pendingUser = '';
+                this.filter.week = moment().week();
+                return;
+            }
+
+            var vm = this;
+            vm.users = [];
+            vm.days = [];
+            vm.reports = null;
+            vm.filter.week ='';
+            vm.userList = [];
+
+            axios.get('/api/users', {
+                    params: {
+                        //user_id: vm.user_id,
+                        year: vm.filter.year,
+                        //week: vm.filter.week,                    
+                    }
+                })
+                .then(function (response) {
+                    vm.userList = response.data;        
+                })
+                .catch(function (error) {
+                   vm.showErrors(error.response.data)
+                });
+            
+        },
+
+        getWeeksUser(){
+            var vm = this;
+
+            vm.userList.forEach(function(item){
+                if(item.user_id == vm.filter.pendingUser){
+                    vm.weekList = item.weekdate.split("-");
+                }              
+            });
+            
         },
 
         /**
@@ -335,6 +388,49 @@ var app = new Vue({
                         name: vm.filter.user,
                         year: vm.filter.year,
                         week: inputWeek,                    
+                    }
+                })
+                .then(function (response) {
+                    if(Object.keys(response.data).length > 0) {
+                        vm.reports = response.data;
+                        vm.getListOfUsers(response.data);
+                        vm.days = vm.getWeekDays(vm.filter.week, vm.filter.year);
+                    }
+                })
+                .catch(function (error) {
+                   vm.showErrors(error.response.data)
+                });
+        },
+
+        /**
+         * Fetch reports and initialize users and days arrays.
+         */
+        fetchHolidays () {
+            var vm = this;
+
+            vm.reports = null;
+            vm.users = [];
+            vm.days = [];
+
+            /*
+            inputWeek = week != null ? week : vm.filter.week;
+            vm.filter.week = inputWeek;
+            
+            if(inputWeek < 1 || inputWeek > 53){
+                toastr.error("Week value out of range");
+                vm.filter.week = moment().week();
+                vm.filter.year = moment().year();
+                return;
+            }
+            */
+            
+            axios.get('api/conflicts', {
+                    params: {
+                        project: vm.filter.project,
+                        group: vm.filter.group,
+                        user_id: vm.filter.pendingUser,
+                        year: vm.filter.year,
+                        week: vm.filter.week,                    
                     }
                 })
                 .then(function (response) {

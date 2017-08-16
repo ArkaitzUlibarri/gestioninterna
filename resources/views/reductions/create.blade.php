@@ -5,7 +5,7 @@
 <div id="reduction" class ="container">
 
 	<div class="row">
-		<div class ="form-group col-xs-12 col-sm-4">
+		<div class ="form-group col-xs-12 col-sm-6">
 			<h2>{{ ucwords($contract->user->full_name) }}</h2>				
 		</div>
 	</div>
@@ -101,7 +101,9 @@
 
 						<div class="form-group col-xs-12 col-sm-3">	
 							<button title="Save" class="btn btn-primary" :disabled="formFilled==false" v-on:click.prevent="save">
-								<span class="glyphicon glyphicon-floppy-disk"></span> Save
+								<span class="glyphicon glyphicon-floppy-disk"></span>
+								<span v-if="editIndex!=-1">Update</span>
+								<span v-if="editIndex==-1">Save</span>
 							</button>
 							<button title="New" class="btn btn-primary" v-show="editIndex!=-1" v-on:click.prevent="initialize">
 								<span class="glyphicon glyphicon-plus-sign"></span> New

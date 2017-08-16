@@ -60,22 +60,16 @@ class ProjectsController extends Controller
     }
 
     public function store(ProjectFormRequest $request)
-	{		
-		/*
-		$project = new Project;
-	    $project->fill($request->all());
-	    $project->save();
-	    */
-	   
+	{			   
     	try{
 	    	DB::beginTransaction();
 			//******************************************************************************
 		    $array = $request->all();
 		    unset($array['_token']);
 
-		    $id = DB::table('projects')->insertGetId($array);
-
-			DB::table('groups')->insert(['project_id' =>$id, 'name' => 'Default','enabled'=> 1]);
+		    $project_id = DB::table('projects')->insertGetId($array);//Insertar Proyecto
+			$group_id = DB::table('groups')->insertGetId(['project_id' => $project_id, 'name' => 'Default','enabled'=> 1]);//Crear Grupo por Defecto
+			DB::table('group_user')->insert(['user_id' => $array['pm_id'], 'group_id' => $group_id]);//Asignarle el grupo por defecto al PM
 			//******************************************************************************
 			DB::commit();/* Transaction successful. */
 		
@@ -93,28 +87,52 @@ class ProjectsController extends Controller
 	    	DB::beginTransaction();
 			//******************************************************************************
 			$project = Project::find($id);
-			$end = $project->end_date;//Anterior
+
+			$end = $project->end_date;//Anterior Fecha fin de proyecto
+			$pm_id = $project->pm_id;//Anterior PM
+			$groups_id = array_pluck($project->groups,'id');//Grupos del proyecto
+			$pm_groups = array_pluck(DB::table('group_user')->select('group_id')->where('user_id',$request->get('pm_id'))->get(),'group_id');
+
 			$project->update($request->all());
-	        //**************************************************************
+	        //******************************************************************************
+	        //Cambio de fecha fin de proyecto
 	        if($end != $request->get('end_date')){
 		       	//Cierre de proyecto->Deshabilitar grupos
 		        if($request->get('end_date') != null){
 					$groups  = $project->groups->where('enabled','1');
 					if($groups){
 						foreach ($groups as $group) {
-							DB::table('groups')
-								->where('id',$group->id)
-								->update(['enabled' => '0']);
+							DB::table('groups')->where('id',$group->id)->update(['enabled' => '0']);
 						}
 					}
 				}
 				else{
-					//Proyecto Abierto->Habilitar Grupos
-					DB::table('groups')
-						->where('project_id',$id)
-						->update(['enabled' => '1']);
+					//Abrir Proyecto->Habilitar Grupos
+					DB::table('groups')->where('project_id',$id)->update(['enabled' => '1']);
 				}
 	        }
+			//******************************************************************************
+			//Cambio de PM
+			if($pm_id != $request->get('pm_id')){
+
+				$array = [];
+
+				//Array de grupos al que añadir el PM
+				foreach ($groups_id as $group) {
+					array_push($array, ['group_id' => $group, 'user_id' => $request->get('pm_id')]);
+				}
+
+				//Filtrar por aquellos en los que esta ya
+				$array = array_filter($array, function($item) use($pm_groups){
+					if(! in_array($item['group_id'], $pm_groups)){
+						return true;
+					}
+				});
+				
+				if(count($array)){
+					DB::table('group_user')->insert($array);//Asignarle los grupos de este proyecto al PM nuevo
+				}	
+			}
 			//******************************************************************************
 			DB::commit();/* Transaction successful. */
 		

@@ -55,14 +55,17 @@ Route::get('validation/download', 'ValidationController@download');
 //Holidays
 Route::get('holidays','CalendarHolidaysController@index');//Solicitar vacaciones
 
+/*
 Route::get('holidays_validation','HolidaysController@index');//Menu dias pendientes de vacaciones por validar por usuario
 Route::get('holidays_validation/{id}','HolidaysController@edit');//Validacion
+*/
 
 /**
  * API, mirar autenticacion token o passport en el api.php
  */
-//Route::get('api/load','Api\v1\HolidaysValidationController@index');
+Route::get('api/users','Api\v1\HolidaysValidationController@loadusers');
 Route::get('api/holidays','Api\v1\HolidaysValidationController@loadholidays');
+Route::get('api/conflicts','Api\v1\HolidaysValidationController@loadconflicts');
 //Route::get('api/weeks','Api\v1\HolidaysValidationController@loadweeks');
 //Route::get('api/filters','Api\v1\HolidaysValidationController@loadfilters');
 

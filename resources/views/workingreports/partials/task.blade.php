@@ -100,7 +100,9 @@
 		
 		<div class="form-group" v-if="! validatedTasks">	
 			<button class="btn btn-primary btn-sm" v-on:click="addUpdateTask" :disabled="formTaskFilled==false">
-				<span class="glyphicon glyphicon-floppy-disk"></span> Save
+				<span class="glyphicon glyphicon-floppy-disk"></span>
+				<span v-if="editIndex!=-1">Update</span>
+				<span v-if="editIndex==-1">Save</span>
 			</button>
 			<button title="New Task" class="btn btn-primary btn-sm" v-on:click="initializeTask" v-show="editIndex!=-1">
 				New Task

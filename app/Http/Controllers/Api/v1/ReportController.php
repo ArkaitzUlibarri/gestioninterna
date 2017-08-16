@@ -84,6 +84,11 @@ class ReportController extends ApiController
 		unset($array['project']);
 		unset($array['time']);
 
+		//No poder reportar ausencia en días festivos
+		if(count($this->getBankHolidays($request['user_id'],$request['created_at'])) && $request['activity'] !='project'){
+			return $this->respondNotAcceptable("You cannot report absence on a Bank Holiday");
+		}
+
 		$id = DB::table('working_report')
 			->insertGetId($array);
 
@@ -113,6 +118,11 @@ class ReportController extends ApiController
 
 		if($report == null) {
 			return $this->respondNotFound();
+		}
+
+		//No poder reportar ausencia en días festivos
+		if(count($this->getBankHolidays($request['user_id'],$request['created_at'])) && $request['activity'] !='project'){
+			return $this->respondNotAcceptable("You cannot report absence on a Bank Holiday");
 		}
 
 		$confirmation = DB::table('working_report')
@@ -163,7 +173,7 @@ class ReportController extends ApiController
 		$teleworking = $this->teleworking( $request['created_at'],$request['user_id']);
 		$reportableGroups = $this->reportingGroups($request['user_id']);
 		$date = $this-> lastReportDate($request['created_at'], $request['user_id']);
-		
+
 		//Seleccion de los datos
 		$results = DB::table('working_report')
 			->select(
@@ -205,10 +215,18 @@ class ReportController extends ApiController
 				'job_type'        => $row->job_type
 			];
 		}
+	
+		//Filtrar reportes por aquellos que estan dentro de mi grupo actual
+		$filtered_once = array_filter($dataset, function($item) use ($reportableGroups){
+			if( (in_array($item['group_id'], $reportableGroups) || ($item['activity'] == 'training') || ($item['activity'] == 'absence'))){
+				return true;
+			}
+		});
 
-		
-		$filtered = array_filter($dataset, function($item) use ($reportableGroups){
-			if(in_array($item['group_id'], $reportableGroups) || ($item['activity'] == 'training') || ($item['activity'] == 'absence')){
+		//Filtrar para no poder reportar ausencia o curso en festivos
+		$filtered = array_filter($filtered_once, function($item) use ($request){
+			if(count($this->getBankHolidays($request['user_id'],$request['created_at'])) == 0 || 
+				count($this->getBankHolidays($request['user_id'],$request['created_at'])) > 0 && $item['activity'] =='project'){
 				return true;
 			}
 		});
@@ -271,5 +289,63 @@ class ReportController extends ApiController
 		}
 		
 		return $q->first()->created_at;
+	}
+
+	/**
+	 * Get the bankholidays for a user and filter by the report date
+	 * @param  [type] $year    [description]
+	 * @param  [type] $user_id [description]
+	 * @return [type]          [description]
+	 */
+	private function getBankHolidays($user_id, $date)
+	{
+		$codes = $this->getCodes($user_id);
+
+		return DB::table('bank_holidays as bh')
+    		->join('bank_holidays_codes as bhc','bh.code_id','bhc.id')
+    		->select(
+    			'bh.date',
+    			DB::raw('week(date) as weekdate'),
+    			'bhc.name',
+    			'bhc.type'		
+    		)
+    		->whereDate('bh.date',$date)
+    		->whereIn('bh.code_id',$codes)
+    		->orderby('bh.date','asc')
+    		->get();
+	}
+
+	/**
+	 * BankHolidays Codes asociated to a user
+	 * @param  [type] $user_id [description]
+	 * @return [type]          [description]
+	 */
+	private function getCodes($user_id)
+	{
+		$codes =  DB::select(	    		
+				"select national_days_id as codes
+				from contracts
+				WHERE end_date is null and user_id= :a1
+
+				union all
+
+			    select regional_days_id as codes
+			    from contracts
+			    WHERE end_date is null and user_id= :a2
+
+			    union all
+
+			    select local_days_id as codes
+			    from contracts
+			    WHERE end_date is null and user_id= :a3"
+				
+				,array(
+					'a1' => $user_id,
+					'a2' => $user_id,
+					'a3' => $user_id
+				)
+			);
+
+    	return array_pluck($codes,'codes');
 	}
 }
