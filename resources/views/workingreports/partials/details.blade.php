@@ -20,9 +20,11 @@
 			W@{{ week }}-@{{ reportDayWeek.toUpperCase() }}
 
 			<button class="btn btn-primary btn-sm pull-right"
+					title="Copy Last Report" 
 					v-on:click="copyTasks"
 					v-bind:disabled="tasks.length != 0">
-				Copy last report
+					<span class="glyphicon glyphicon-copy"></span>
+					Copy Last
 			</button>
 
 		</div>

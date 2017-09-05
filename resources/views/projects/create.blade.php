@@ -33,7 +33,7 @@
 							<select class="form-control" name="pm_id">	
 								<option value="">-</option>	
 								@foreach ($PM_Users as $user)
-									<option value="{{ $user->id }}" {{ (old('pm_id') == $user->id ? "selected":"") }} >{{ ucwords($user->fullname) }}</option>
+									<option value="{{ $user->id }}" {{ (old('pm_id') == $user->id ? "selected":"") }} >{{ ucwords($user->fullname) }} ({{ $user->code}})</option>
 								@endforeach	  
 							</select>
 						</div>	

@@ -12,7 +12,7 @@
 			<input type=hidden name="project_id" type="text" value="{{ $project->id }}">
 
 			<div class="panel panel-primary">
-				<div class="panel-heading">EDIT PROJECT</div>
+				<div class="panel-heading">Editing a Project</div>
 
 			 	<div class="panel-body">
 
@@ -35,7 +35,7 @@
 							<label>Project Manager:</label>
 							<select name="pm_id" class="form-control">	
 								@foreach ($PM_Users as $user)
-									<option {{$user->id==$project->pm_id ? 'selected' : ''}} value="{{ $user->id }}">{{ ucwords($user->fullname) }}</option>
+									<option {{$user->id==$project->pm_id ? 'selected' : ''}} value="{{ $user->id }}">{{ ucwords($user->fullname) }} ({{ $user->code}})</option>
 								@endforeach	  
 							</select>
 						</div>

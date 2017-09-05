@@ -81,6 +81,7 @@ class CalendarController extends ApiController
 		}
 
 		$year = Carbon::createFromFormat('Y-m-d', $request['date'])->year;
+		$year = $request['type'] == 'next_year' ? ($year - 1) : $year;//Pedir vacaciones año que viene
 
 		DB::beginTransaction();
 		try{
@@ -130,6 +131,7 @@ class CalendarController extends ApiController
 		}
 
 		$year = Carbon::createFromFormat('Y-m-d', $calendar->date)->year;
+		$year = $calendar->type == 'next_year' ? ($year - 1) : $year;
 
 		DB::beginTransaction();
 		try{

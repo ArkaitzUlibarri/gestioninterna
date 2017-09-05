@@ -4,6 +4,7 @@ namespace App;
 
 use App\Project;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ProjectRepository
 {
@@ -33,13 +34,15 @@ class ProjectRepository
 
         $q = $this->getModel()
             ->join('customers','projects.customer_id','=','customers.id')
+            ->join('users','projects.pm_id','=','users.id')
             ->select(
                 'projects.id',
                 'projects.name',
                 'projects.description',
                 'customers.name as customer',   
                 'projects.start_date',
-                'projects.end_date'
+                'projects.end_date',
+                DB::raw("concat(users.name, ' ', users.lastname) as pm")
             )
             ->orderBy('name','asc');
 

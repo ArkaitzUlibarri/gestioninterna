@@ -1,21 +1,20 @@
-<div class="panel panel-default">
+<div class="panel panel-primary">
     <div class="panel-heading">
-        <strong>CONTRACT DETAILS</strong>
+        <strong>CONTRACT DETAILS OF <I>{{ ucwords($contract->user->fullname) }}</I></strong>
     </div>
     <div class="panel-body">
 
-        <div class="panel panel-default">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 <strong>Main</strong>
             </div>
             <div class="panel-body">
-                <p class="col-xs-12 col-sm-4"><strong>Employee: </strong> {{ ucwords($contract->user->fullname) }}</p>
                 <p class="col-xs-12 col-sm-4"><strong>Type of contract: </strong> {{ ucfirst($contract->contractType->name) }}</p>
                 <p class="col-xs-12 col-sm-4"><strong>Week working hours: </strong> {{ $contract->week_hours}}</p>
             </div>
         </div>
 
-        <div class="panel panel-default">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 <strong>Dates</strong>
             </div>
@@ -26,7 +25,7 @@
             </div>
         </div>
 
-        <div class="panel panel-default">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 <strong>Location</strong>
             </div>

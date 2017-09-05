@@ -146,23 +146,20 @@ class ProjectsController extends Controller
 
 	private function getPMs()
 	{
-		return DB::table('category_user')
-			->LeftJoin('categories','category_user.category_id','=','categories.id')
-			->LeftJoin('users','category_user.user_id','=','users.id')
+		return DB::table('category_user as cu')
+			->LeftJoin('categories as c','cu.category_id','=','c.id')
+			->RightJoin('users as u','cu.user_id','=','u.id')
 			->select(
-				/*'category_user.category_id as category_id',
-				'categories.name as name',
-				'categories.code as code',
-				'categories.description as description',*/
-				'category_user.user_id as id',
-				'users.name as username',
-				'users.lastname as lastname',
-				'users.role as role',
-				DB::raw("CONCAT(users.name, ' ', users.lastname) as fullname")
+				'cu.user_id as id',
+				'u.name as username',
+				'u.lastname as lastname',
+				'u.role as role',
+				DB::raw("CONCAT(u.name, ' ', u.lastname) as fullname"),
+				'c.code as code'
 			)
-			->where('code','RP')
-			->orWhere('code','RTP')
-			->groupBy('user_id')
+			->where('c.code','RP')//Responsable de Proyecto
+			->orWhere('c.code','RTP')//Responsable Temporal de Proyecto
+			->orWhere('c.code','DI')//Director
 			->get();
 	}
 }

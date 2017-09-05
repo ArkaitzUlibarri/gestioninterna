@@ -118,7 +118,7 @@
 	</div>
 
 	<div class ="form-group pull-right">
-		<a class="btn btn-default custom-btn-width" href="{{ url('contracts') }}">Back</a>
+		<a class="btn btn-default custom-btn-width" href="{{ url('contracts/' . $contract->id . '/edit')  }}" >Back</a>
 	</div>
 
 </div>

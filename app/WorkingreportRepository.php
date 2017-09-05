@@ -297,8 +297,10 @@ class WorkingreportRepository
         if (isset($data['year'])) {
              $q->whereRaw("YEAR(wr.created_at) = {$data['year']}");
              $q->whereRaw("WEEK(wr.created_at, 1) = {$data['week']}");
-        } else {
-            $q->where('wr.created_at', '>=', Carbon::now('Europe/Madrid')->subMonth(2));
+        }
+        else {
+            $q->where('wr.created_at', '>=', Carbon::now('Europe/Madrid')->subMonth(2));//Ultimos dos meses
+            $q->where('wr.created_at', '<', Carbon::tomorrow('Europe/Madrid'));//Menor que mañana
         }
 
         //Name
@@ -363,6 +365,73 @@ class WorkingreportRepository
                 return $data->$activity;
             }
         }
+    }
+
+    /**
+     * Fetch data for validation view.
+     * 
+     * @param  array
+     * @return array
+     */
+    public function fetchMonthlyData()
+    {
+         $q = DB::table('working_report as wr')
+            ->join('users as users', 'wr.user_id','=','users.id')
+            ->leftJoin('projects', 'wr.project_id','=','projects.id')
+            ->leftJoin('groups', 'wr.group_id','=','groups.id')
+            ->leftJoin('absences', 'wr.absence_id','=','absences.id')
+            ->select(
+                'wr.user_id',
+                DB::raw("CONCAT(users.name, ' ', users.lastname ) as user_name"),
+                DB::raw('MONTH(wr.created_at) as month'),
+                DB::raw('projects.name as project'),
+                DB::raw('wr.training_type as training_type'),
+                DB::raw('absences.name as absence'),
+                DB::raw('SUM(wr.time_slots* 0.25) as time_slot')
+            )
+            ->whereYear('wr.created_at', Carbon::today()->year)
+            ->whereDate('wr.created_at', '<=', Carbon::today())
+            ->groupBy(['user_id', 'month', 'wr.project_id', 'training_type', 'absence_id'])
+            ->orderBy('users.name', 'ASC')
+            ->orderBy('month', 'ASC');
+
+        if (Auth::user()->primaryRole() == 'manager') {
+            $q->whereIn('wr.user_id', $this->usersByProjects(
+                array_keys(Auth::user()->activeProjects())
+            ));
+        }
+        else if (Auth::user()->primaryRole() == 'user' || Auth::user()->primaryRole() == 'tools') {
+            $q->where('wr.user_id', Auth::user()->id);
+        }
+
+        return $q->get();
+    }
+
+    /**
+     * Format data.
+     * 
+     * @param  array
+     * @return array
+     */
+    public function formatMonthlyOutput($data)
+    {
+        if (count($data)==0) {
+            return null;
+        }
+
+        $response = array();
+
+        foreach ($data as $value) {
+            $response [] = [
+                'user_id' => $value->user_id,
+                'user_name' =>ucwords($value->user_name),
+                'month' => ucfirst($value->month),
+                'name' => strtoupper($this->activity($value)),
+                'time_slot' => $value->time_slot
+            ];
+        }
+
+        return $response;
     }
 
 }

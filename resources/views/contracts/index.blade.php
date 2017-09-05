@@ -58,7 +58,7 @@
 
             <div class="btn-group pull-right">
                 <a type="button" class="btn btn-success btn-sm" href="{{ url('/contracts/create') }}">
-                    <span class="glyphicon glyphicon-plus"></span> Add Contract
+                    New Contract
                 </a>
             </div>
 

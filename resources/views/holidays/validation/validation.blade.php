@@ -103,6 +103,7 @@ var app = new Vue({
         },
 
         projectsLoad() {
+            console.log("projectsLoad")
 			let setList = new Set();
 
 			this.groupsProjects.forEach(function(item) {
@@ -113,6 +114,7 @@ var app = new Vue({
 		},
 
         groupsRefresh(){
+            console.log("groupsRefresh")
 			let vm = this;
 			let setList = new Set();
 			

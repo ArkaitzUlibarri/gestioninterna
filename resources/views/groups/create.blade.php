@@ -96,7 +96,7 @@
 								<span v-if="editIndex==-1">Save</span>
 							</button>
 							<button title="New Group" class="btn btn-primary" v-show="editIndex!=-1" v-on:click="initializeGroup">
-								New Group
+								<span class="glyphicon glyphicon-plus-sign"></span> New
 							</button>
 						</div>	
 

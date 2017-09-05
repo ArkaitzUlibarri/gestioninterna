@@ -1,4 +1,4 @@
-<div class="col-xs-12 col-sm-2">
+<div class="col-xs-4 col-sm-3 col-md-2 col-lg-2">
    <div class="panel panel-primary ">
 
         <div class="panel-heading">
@@ -8,15 +8,11 @@
         <div class="panel-body">
 
             <div>
-                <label class="legend">PM:
-                    <div class="cuadrado validated"></div>
-                </label>              
+                <div class="cuadrado validated"></div><label class="legend">PM</label>          
             </div>
 
             <div>
-                <label class="legend">Admin:
-                    <div class="cuadrado full-validated"></div>
-                </label>              
+                <div class="cuadrado full-validated"></div><label class="legend">Admin</label>             
             </div>
 
         </div>

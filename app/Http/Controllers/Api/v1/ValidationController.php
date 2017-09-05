@@ -100,7 +100,7 @@ class ValidationController extends ApiController
 
 			try{
 				//Validar vacaciones
-				if($currentValues->absence ="holidays"){
+				if($currentValues->absence =="holidays"){
 					DB::table('calendar_holidays')
 		            ->where('user_id', $request->get('user_id'))
 		            ->where('date', $request->get('day'))
@@ -119,7 +119,7 @@ class ValidationController extends ApiController
 			}
 			catch(\Exception $e){
 	    		DB::rollback();
-    			return $this->respondInternalError($e->errorInfo);
+    			return $this->respondInternalError($e);
 			}
 
 	        return $this->respond($newValues);

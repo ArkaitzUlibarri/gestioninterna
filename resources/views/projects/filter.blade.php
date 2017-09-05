@@ -17,6 +17,6 @@
 	</select>
 
 	<button type="submit" title="Search" class="btn btn-default btn-sm">
-		<span class="glyphicon glyphicon-filter"></span> Filter
+		<span class="glyphicon glyphicon-search"></span> Search
 	</button>
 </form> 

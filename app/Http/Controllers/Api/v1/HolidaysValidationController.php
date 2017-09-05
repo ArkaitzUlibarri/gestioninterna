@@ -42,15 +42,40 @@ class HolidaysValidationController extends ApiController
             return $this->respondNotAcceptable($validator->errors()->all());
         }
 
+        if ($request['project'] != "") {
+            if ($request['group'] != "") {
+                //Proyectos y Grupos
+                return $this->respond(
+                    $this->reportRepository->formatOutput(
+                        $this->getConflicts(
+                            $request['year'],
+                            $request['week'],
+                            $this->getUsersByProjectName($request['project'],$request['group'])
+                        )
+                    )
+                );
+            }
+
+            //Proyectos
+            return $this->respond(
+                $this->reportRepository->formatOutput(
+                    $this->getConflicts(
+                        $request['year'],
+                        $request['week'],
+                        $this->getUsersByProjectName($request['project'])
+                    )
+                )
+            );
+        }
+       
+       //Sin Proyectos o Grupos
         return $this->respond(
             $this->reportRepository->formatOutput(
-
                 $this->getConflicts(
                     $request['year'],
                     $request['week'],
                     $this->getUsersInGroups($this->getGroups($request['user_id'] , true))
                 )
-
             )
         );
     }
@@ -77,6 +102,26 @@ class HolidaysValidationController extends ApiController
             $this->getDaysPerUser($request['year'])//Holidays
 		);
 	}
+
+    /**
+     * [loadgroups description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function loadgroups(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user' => 'required|numeric',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondNotAcceptable($validator->errors()->all());
+        }
+
+        return $this->respond(
+            $this->getGroups($request['user'])
+        );
+    }
 
     /**
      * [loadholidays description]
@@ -109,33 +154,8 @@ class HolidaysValidationController extends ApiController
 	 * @return [array]          [description]
 	 */
 	private function getDaysPerUser($year, $user_id = 0, $week = 0)
-    {
-        /*
-    	$users = $this->getUsersInGroups(
-    		$this->getGroups($user_id , true)
-    	);
-        */
-       /*
-    	return DB::table('calendar_holidays as c')
-    		->join('users as u','u.id','c.user_id')
-    		->select(
-    			'c.user_id',
-    			DB::raw("CONCAT(u.name, ' ', u.lastname ) as user_name"),
-    			'c.date',
-    			DB::raw('week(c.date) as weekdate'),
-    			'c.type as name',
-    			DB::raw("'holidays' as type"),
-    			'c.validated'
-    		)
-    		//->where('user_id',$user_id)//Días relativos al usuario
-    		//->whereIn('c.user_id',$users)
-    		->where(DB::raw("YEAR(c.date)"),$year)
-    		//->where(DB::raw("WEEK(c.date)"),$week)
-    		->where('validated', 0)//Sin validar
-    		->get();		 
-        */
-       
-        return DB::table('calendar_holidays as c')
+    {  
+        $q = DB::table('calendar_holidays as c')
             ->select(
                 'u.id as user_id',
                 DB::raw("CONCAT(u.name, ' ', u.lastname ) as user_name"),
@@ -146,8 +166,16 @@ class HolidaysValidationController extends ApiController
             ->where('validated', 0)//Sin validar
             ->where(DB::raw("YEAR(c.date)"),$year)//Año seleccionado
             ->groupby('user_id')
-            ->orderby('u.name')
-            ->get();   	
+            ->orderby('u.name');
+
+        if (Auth::user()->primaryRole() == 'manager'){
+            $users = $this->getUsersInGroups(
+                $this->getGroups(Auth::user()->id , true)
+            );
+            $q = $q->whereIn('user_id',$users);
+        }
+
+        return $q = $q->get();   	
     }
 
     /**
@@ -158,32 +186,7 @@ class HolidaysValidationController extends ApiController
     private function bankHolidays($year, $week = 0, $user_id = 0 )
     {	
     	if ($user_id != 0){
-
-    		$codes =  DB::select(	    		
-				"select national_days_id as codes
-				from contracts
-				WHERE end_date is null and user_id= :a1
-
-				union all
-
-			    select regional_days_id as codes
-			    from contracts
-			    WHERE end_date is null and user_id= :a2
-
-			    union all
-
-			    select local_days_id as codes
-			    from contracts
-			    WHERE end_date is null and user_id= :a3"
-				
-				,array(
-					'a1' => $user_id,
-					'a2' => $user_id,
-					'a3' => $user_id
-				)
-			);
-
-    		$codes = array_pluck($codes,'codes');
+            $codes = $this->getCodes($user_id);
     	}
 
     	return DB::table('bank_holidays as bh')
@@ -223,7 +226,6 @@ class HolidaysValidationController extends ApiController
                 DB::raw('wr.training_type as training_type'),
                 DB::raw('absences.name as absence'),
     			DB::raw('SUM(wr.time_slots* 0.25) as time_slot'),
-    			//DB::raw("(wr.time_slots)*0.25 as hours"),
     			'wr.pm_validation',
     			'wr.admin_validation'          
     		)
@@ -244,27 +246,31 @@ class HolidaysValidationController extends ApiController
 	 * @param  boolean $groups
 	 * @return array / object
 	 */
-    private function getGroups($user_id , $ids)
+    private function getGroups($user_id = 0 , $ids = false)
     {
     	$q = DB::table('group_user as gu')
     		->join('groups as g','g.id','gu.group_id')
     		->join('projects as p','p.id','g.project_id')
     		->select(
     			'gu.group_id as group_id',
-    			'g.name as group_name',
+    			'g.name as group',
     			'p.id as project_id',
-    			'p.name as project_name'
+    			'p.name as project'
     		)
-    		->where('user_id',$user_id)//Grupos-proyectos del usuario
     		->where('g.enabled',1)//Grupo habilitado
-    		->where('p.end_date',null)//Proyecto abierto
-    		->get();
+    		->where('p.end_date',null);//Proyecto abierto
+    		
+            if($user_id != 0){
+               $q = $q->where('user_id',$user_id);//Grupos-proyectos del usuario
+            }
 
-    		if($ids == true){
-    			return array_pluck($q, 'group_id');
-    		}
+    		$q = $q->get();
 
-    		return $q;
+            if($ids == true){
+                return array_pluck($q, 'group_id');
+            }
+
+            return $q;
     }
 
 	/**
@@ -284,69 +290,55 @@ class HolidaysValidationController extends ApiController
     	return array_pluck($array,'user_id');
     }
 
-    /**
-     * [loadweeks description]
-     * @param  Request $request [description]
-     * @return [type]           [description]
-     */
-    /*
-    public function loadweeks(Request $request)
+    private function getUsersByProjectName($project_name, $group_name = "")
     {
-        $validator = Validator::make($request->all(), [
-            'year' => 'required|numeric|between:2017,2030',
-            'user_id' => 'required|numeric'
-        ]);
+        $q = DB::table('group_user as gu')
+            ->select('user_id')
+            ->LeftJoin('groups as g','gu.group_id','g.id')
+            ->Join('projects as p','g.project_id','p.id')
+            ->where('p.name',$project_name);
 
-        if ($validator->fails()) {
-            return $this->respondNotAcceptable($validator->errors()->all());
-        }
+        if($group_name != ""){
+            $q = $q->where('g.name',$group_name);
+        }   
+        
+        $array = $q->get();
 
-        return $this->respond(
-            $this->getHolidaysWeeks($request['user_id'],$request['year'])
-        );
+        return array_pluck($array,'user_id');
     }
-    */
 
     /**
-     * [loadfilters description]
-     * @param  Request $request [description]
-     * @return [type]           [description]
+     * BankHolidays Codes asociated to a user
+     * @param  [type] $user_id [description]
+     * @return [type]          [description]
      */
-    /*
-    public function loadfilters(Request $request)
+    private function getCodes($user_id)
     {
-        $validator = Validator::make($request->all(), [
-            'user_id' => 'required|numeric'
-        ]);
+        $codes =  DB::select(               
+                "select national_days_id as codes
+                from contracts
+                WHERE end_date is null and user_id= :a1
 
-        if ($validator->fails()) {
-            return $this->respondNotAcceptable($validator->errors()->all());
-        }
+                union all
 
-        return $this->respond(
-            $this->getGroups($request['user_id'],false)
-        );
+                select regional_days_id as codes
+                from contracts
+                WHERE end_date is null and user_id= :a2
+
+                union all
+
+                select local_days_id as codes
+                from contracts
+                WHERE end_date is null and user_id= :a3"
+                
+                ,array(
+                    'a1' => $user_id,
+                    'a2' => $user_id,
+                    'a3' => $user_id
+                )
+            );
+
+        return array_pluck($codes,'codes');
     }
-    */
-       
-    /**
-     * Get the user holidays weeks
-     * @param  [int] $year [description]
-     * @return [array]       [description]
-     */
-    /*
-    private function getHolidaysWeeks($user_id, $year)
-    {
-        return DB::table('calendar_holidays')
-            ->select(
-                DB::raw('week(date) as weekdate')
-            )
-            ->where('user_id',$user_id)//Días relativos al usuario
-            ->where(DB::raw("YEAR(date)"),$year)
-            ->where('validated', 0)//Sin validar
-            ->distinct()
-            ->get();    
-    }
-    */
 
 }

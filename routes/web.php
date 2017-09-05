@@ -18,7 +18,6 @@ Route::get('/', function(){
 		return redirect()->route('workingreports.edit', ['id' => Auth::user()->id, 'date' => Carbon::today()->toDateString()]);
 	}
 	return redirect('login');
-
 });
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -36,7 +35,6 @@ Route::get('contracts/{contract}/teleworking/', 'TeleworkingController@edit');
 Route::get('contracts/{contract}/reductions/', 'ReductionsController@edit');
 Route::resource('contracts', 'ContractsController');
 
-
 //Projects
 Route::get('groups', 'GroupsController@index');
 Route::get('projects/{project}/addgroup/', 'GroupsController@edit');
@@ -48,9 +46,10 @@ Route::resource('projects', 'ProjectsController', ['except' => [
 Route::get('workingreports', ['as'=> 'workingreports.index','uses'=>'WorkingreportController@index']);
 Route::get('workingreports/add/{id}/{date}/',['as'=> 'workingreports.edit','uses'=>'WorkingreportController@edit']);
 
-
+//Validation
 Route::get('validation', 'ValidationController@index');
 Route::get('validation/download', 'ValidationController@download');
+Route::get('validation/year_report', 'ValidationController@yearReport');
 
 //Holidays
 Route::get('holidays','CalendarHolidaysController@index');//Solicitar vacaciones
@@ -66,8 +65,7 @@ Route::get('holidays_validation/{id}','HolidaysController@edit');//Validacion
 Route::get('api/users','Api\v1\HolidaysValidationController@loadusers');
 Route::get('api/holidays','Api\v1\HolidaysValidationController@loadholidays');
 Route::get('api/conflicts','Api\v1\HolidaysValidationController@loadconflicts');
-//Route::get('api/weeks','Api\v1\HolidaysValidationController@loadweeks');
-//Route::get('api/filters','Api\v1\HolidaysValidationController@loadfilters');
+Route::get('api/usergroups','Api\v1\HolidaysValidationController@loadgroups');
 
 Route::get('api/validate','Api\v1\ValidationController@index');
 Route::patch('api/validate','Api\v1\ValidationController@update');
