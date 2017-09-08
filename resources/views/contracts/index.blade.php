@@ -24,9 +24,9 @@
                     <tr>
                         <td><a title="Show" href="{{ url('contracts/' . $contract->id) }}">{{ ucwords($contract->full_name) }}</a></td>
                         <td>{{ ucfirst($contract->contract_types) }}</td>
-                        <td>{{ $contract->start_date}}</td>
-                        <td>{{ empty($contract->estimated_end_date) ? "None" : "$contract->estimated_end_date"}}</td>    
-                        <td>{{ empty($contract->end_date) ? "In progress" : "$contract->end_date"}}</td>          
+                        <td>{{ $contract->start_date }}</td>
+                        <td>{{ empty($contract->estimated_end_date) ? "None" : "$contract->estimated_end_date" }}</td>    
+                        <td>{{ empty($contract->end_date) ? "In progress" : "$contract->end_date" }}</td>          
                         <td>
                             @if (empty($contract->end_date))
                                 <a title="Edit" class="btn btn-default btn-sm" type="button" 

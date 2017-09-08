@@ -54,10 +54,8 @@ Route::get('validation/year_report', 'ValidationController@yearReport');
 //Holidays
 Route::get('holidays','CalendarHolidaysController@index');//Solicitar vacaciones
 
-/*
-Route::get('holidays_validation','HolidaysController@index');//Menu dias pendientes de vacaciones por validar por usuario
-Route::get('holidays_validation/{id}','HolidaysController@edit');//Validacion
-*/
+//Evaluations
+Route::get('evaluations','PerformancesController@index');
 
 /**
  * API, mirar autenticacion token o passport en el api.php
@@ -74,3 +72,5 @@ Route::get('api/calendar','Api\v1\CalendarController@index');
 Route::get('api/calendar/userHolidays','Api\v1\CalendarController@userHolidays');
 Route::post('api/calendar', 'Api\v1\CalendarController@store');
 Route::delete('api/calendar/{id}', 'Api\v1\CalendarController@destroy');
+
+Route::get('api/employees','Api\v1\EvaluationPerformanceController@loadEmployees');

@@ -31,6 +31,7 @@
                          <li><a href="{{ url('projects') }}">Projects</a></li>  
                          <!--<li><a href="{{ url('holidays_validation') }}">Holidays Validation</a></li>-->
                     @elseif(Auth::user()->primaryRole() == 'manager') 
+                        <li><a href="{{ url('evaluations') }}">Evaluations</a></li>
                          <li><a href="{{ url('users') }}">Users</a></li>   
                          <li><a href="{{ url('projects') }}">Projects</a></li>            
                     @endif

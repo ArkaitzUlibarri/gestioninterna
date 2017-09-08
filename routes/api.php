@@ -47,3 +47,5 @@ Route::get('categories', 'Api\v1\CategoryUserController@index');
 Route::delete('categories/{id}', 'Api\v1\CategoryUserController@destroy');
 
 Route::patch('users/{id}', 'Api\v1\UsersController@update');
+
+Route::get('projects','Api\v1\EvaluationPerformanceController@loadMonthReports');

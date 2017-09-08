@@ -115,7 +115,7 @@ class UserRepository
 
     }
 
-    private function getGroupedUsers()
+    public function getGroupedUsers()
     {
         $ids = array();
         $projectIds = array_keys(Auth::user()->activeProjects());
