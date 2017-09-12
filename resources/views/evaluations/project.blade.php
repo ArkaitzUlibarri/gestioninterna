@@ -16,15 +16,14 @@
 						<th :title="key" v-bind:class="monthStyle(value)">@{{key.slice(0,3)}}</th> 
 					</template>  
 					<!--Meses--> 
-	                <th title="Total" class="active">Total</th>
+	                <th title="Total" class="danger">Total</th>
 	            </thead>
 
 	            <tbody>
-	            	@foreach (config('options.performance_evaluation') as $key => $options)
+	            	
+	            	<template v-for="criterion in criteria"> 
 		                <tr>
-		                    <td class="col-md-2">
-		                    	{{ ucwords($key) }}
-		                    </td>
+		                    <td class="col-md-2">@{{capitalizeFirstLetter(criterion.code)}}</td>
 
 		                    <!--Meses-->  
 					        <template v-for="(value, key) in monthList">     
@@ -32,9 +31,10 @@
 							</template>   
 							<!--Meses-->
 
-		                    <td class="col-md-1 active">2</td>     
+		                    <td class="col-md-1 danger">2</td>     
 		                </tr>
-		            @endforeach
+		            </template>    
+		           
 	            </tbody>
 
 	        </table>

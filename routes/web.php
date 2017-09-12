@@ -74,3 +74,4 @@ Route::post('api/calendar', 'Api\v1\CalendarController@store');
 Route::delete('api/calendar/{id}', 'Api\v1\CalendarController@destroy');
 
 Route::get('api/employees','Api\v1\EvaluationPerformanceController@loadEmployees');
+Route::get('api/performance_evaluation','Api\v1\EvaluationPerformanceController@store');

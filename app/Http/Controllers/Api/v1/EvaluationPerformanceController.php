@@ -87,4 +87,20 @@ class EvaluationPerformanceController extends ApiController
 		return $this->respond($data);
 	}
 
+	public function store(Request $request)
+	{
+		$validator = Validator::make($request->all(), [
+			'comments' => 'required',
+			'marks'    => 'required',
+		]);
+
+		if ($validator->fails()) {
+			return $this->respondNotAcceptable($validator->errors()->all());
+		}
+
+		$auth_id = Auth::user()->id;
+
+		return $this->respond($auth_id);
+	}
+
 }

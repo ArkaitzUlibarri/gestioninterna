@@ -20,43 +20,43 @@
 		                <th>Comments</th>
 		            </thead>
 
-		            <tbody>
-		            	@foreach (config('options.performance_evaluation') as $key => $options)
-			                <tr>
+			        <tbody>
+		            	<tr v-for="criterion in criteria">
 
-			                    <td class="col-md-2">
-			                    	<span data-toggle="tooltip" data-placement="top" title="{{$options['description']}}" class="glyphicon glyphicon-info-sign"></span> 
-			                    	<span data-toggle="tooltip" data-placement="top" title="{{$options['name']}} (Peso: {{$options['percentage']}}%)">{{ ucwords($key) }}</span> 
-			                    </td>
+		            		<td class="col-md-2">
+		                    	<span data-toggle="tooltip" data-placement="top" :title="criterion.description" class="glyphicon glyphicon-info-sign"></span> 
+		                    	<span data-toggle="tooltip" data-placement="top" :title="criterion.name + ' (Peso: ' + criterion.percentage +'%)'">@{{ capitalizeFirstLetter(criterion.code) }}</span> 
+		                    </td>
 
-			                    <td class="col-md-1">
-			                    	<select class="form-control input-sm" :disabled="validateFilter"> 
-		                    			<option selected="true" value="">-</option>
-	                    				@foreach ($options['points'] as $point)
-											<option title="{{ $point['description'] }}" value="{{ $point['value'] }}">{{ $point['value'] }}</option>
-										@endforeach
-			                    	</select>
-			                    </td>  
+							<td class="col-md-1">
+		                    	<select class="form-control input-sm" :disabled="validateFilter" v-model="criterion.mark"> 
+	                    			<option selected="true" value="">-</option>
+									<option v-for="point in criterion.points" :title="point.description" :value="point.value">@{{ point.value }}</option>					
+		                    	</select>
+		                    </td>  
 
-			                    <td class="col-md-9">		
-				                    <div class="form-group">
-										<textarea class="form-control input-sm" rows="1" placeholder="Comments" :disabled="validateFilter"></textarea>
-									</div>
-								</td>  
+		                    <td class="col-md-9">		
+			                    <div class="form-group">
+									<textarea class="form-control input-sm" rows="1" placeholder="Comments" v-model="criterion.comment" :disabled="validateFilter"></textarea>
+								</div>
+							</td>   
 
-			                </tr>
-		                @endforeach
+		                </tr>
 		            </tbody>
-
 		        </table>
 
 		    </div>
 
     		<div class="pull-right">		
-				<button title="Save" class="btn btn-primary btn-sm">
+    			<button title="Clear" class="btn btn-primary btn-sm" :disabled="validateClearButton" v-on:click="clear()">
+					<span class="glyphicon glyphicon-erase"></span> Clear
+				</button>
+
+				<button title="Save" class="btn btn-primary btn-sm" :disabled="validateSaveButton" v-on:click="save()">
 					<span class="glyphicon glyphicon-floppy-disk"></span> Save
 				</button>
 			</div>
+
 	    </div>
 
 	</div>
@@ -78,9 +78,12 @@
 			el:'#app',
 
 			data:{
+				//Evaluation					
+				criteria: [],
+				evaluation: <?php echo json_encode(config('options.performance_evaluation'));?>,
 
 				// User's data
-            	user_id: '{!! Auth()->user()->id !!}',
+            	//user_id: '{!! Auth()->user()->id !!}',
             	auth_projects: <?php echo json_encode($projects);?>,
 
             	//List
@@ -96,32 +99,12 @@
 					project:'',
 					year: moment().year(),
 					month: ''//moment().month() + 1
-				},
-
-				//Evaluation
-				/*
-				marks:{
-					quality:'',
-					eficiency:'',
-					knowledge:'',
-					availability:''
-				},
-
-				comments:{
-					quality:'',
-					eficiency:'',
-					knowledge:'',
-					availability:''
 				}
-				*/
-			
-				marks:[],
-				comments:[]
-
+	
 			},
 
 			mounted(){
-
+				this.setForm();
 			},
 
 			computed:{
@@ -132,18 +115,75 @@
 						: false;
 				},
 
-				validateSaveButton() {
+				validateSaveButton() {				
+					let marksCount = 0;
 
+					this.criteria.forEach(function(item){
+						if( !(item.mark === '')){
+							marksCount++;
+						}
+					});	
+
+					return (marksCount == 4) ? false : true;				
+										
+				},
+
+				validateClearButton() {
+
+					let marksCount = 0;
+					let commentsCount = 0;
+
+					this.criteria.forEach(function(item){
+						if( item.mark === ''){
+							marksCount++;
+						}
+						if( item.comment === ''){
+							commentsCount++;
+						}
+					});	
+
+					return (marksCount == 4 && commentsCount == 4) ? true : false;
+					
 				},
 
 			},
 
 			methods: {
 
+				setForm() {
+					for (let i = this.evaluation.length - 1; i >= 0; i--) {
+						this.criteria.push({
+							code: this.evaluation[i]['code'],
+							description : this.evaluation[i]['description'],
+							name: this.evaluation[i]['name'],
+							percentage: this.evaluation[i]['percentage'],
+							points: this.evaluation[i]['points'],
+							comment: '',
+							mark: ''
+						});
+					}
+				},
+
+				save() {
+					var vm = this;
+					
+					axios.post('api/performance_evaluation',vm.form)
+					  .then(function (response) {
+					  	console.log(response.data);
+					  	//Mensaje de Guardado
+					  	//toastr.success("Saved");
+					  	//Actualizar tablas  
+					  })
+					  .catch(function (error) {
+					    console.log(error);
+					    //vm.showErrors(error.response.data)
+					  });
+				},
+
 				/**
 	             * Fetch employees who have reported in pm projects
 	             */
-	            fetchEmployees () {
+	            fetchEmployees() {
 	                var vm = this;
 
 	                this.projectList = [];
@@ -168,7 +208,7 @@
 				/**
 	             * Fetch projects to evaluate for a user
 	             */
-	            fetchProjects () {
+	            fetchProjects() {
 	                var vm = this;
 
 	                if(this.filter.employee == ''){
@@ -194,7 +234,7 @@
 	                    });
 	            },
 
-		        filterReports(){
+		        filterReports() {
 			        let vm = this;
 					let setList = new Set();
 					
@@ -215,6 +255,15 @@
 
 					this.projectList = filtered;
 		        },
+
+		        clear() {
+
+		        	this.criteria.forEach(function(item){
+						item.mark = '';
+						item.comment = '';
+					});
+
+				},
 
 	            monthStyle(value) {
 	            	return this.filter.month == value ? 'danger':'';
@@ -275,6 +324,10 @@
 	            	//Percentage
 	            	return ((amount/total)*100).toFixed(2);
 	            },
+
+				capitalizeFirstLetter(string) {
+    				return string.charAt(0).toUpperCase() + string.slice(1);
+				},
 
 		         /**
 	             * Visualizo mensajes de error
