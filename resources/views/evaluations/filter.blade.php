@@ -20,15 +20,15 @@
         </template> 
 	</select>
 
-	<select title="Project" name="project" class="form-control input-sm" v-model="filter.project">
+	<select title="Project" name="project" class="form-control input-sm" v-model="filter.project" v-on:change="projectChange()">
 		<option selected="true" value="">Project</option>  
 		<template v-for="(project, index) in projectList">
-            <option :value="project[0]" :project="project" :index="project">@{{project[1]}}</option>
+            <option :value="project.id" :project="project" :index="index">@{{project.name}}</option>
         </template>               
 	</select>
 
 	<a title="Export" href="" class="btn btn-success btn-sm custom-btn-width" :disabled="validateFilter">
-          <span class="glyphicon glyphicon-download-alt"></span> Export
+         <span class="glyphicon glyphicon-download-alt"></span> Export
     </a>
 	
 </div>

@@ -1,4 +1,3 @@
-<!--TOTAL PROYETO-->
 <div class="panel panel-primary">
 
    	<div class="panel-heading form-inline">
@@ -10,31 +9,19 @@
 	        <table class="table table-condensed">
 
 	            <thead>
-	                <th>Criteria</th>
-	                <!--Meses-->
-				    <template v-for="(value, key) in monthList">     
-						<th :title="key" v-bind:class="monthStyle(value)">@{{key.slice(0,3)}}</th> 
-					</template>  
-					<!--Meses--> 
+	                <th>Criteria</th>                
+					<th v-for="(value, key) in monthList" :title="key" v-bind:class="monthStyle(value)">@{{key.slice(0,3)}}</th>
 	                <th title="Total" class="danger">Total</th>
 	            </thead>
 
-	            <tbody>
-	            	
-	            	<template v-for="criterion in criteria"> 
-		                <tr>
-		                    <td class="col-md-2">@{{capitalizeFirstLetter(criterion.code)}}</td>
-
-		                    <!--Meses-->  
-					        <template v-for="(value, key) in monthList">     
-								<td v-bind:class="monthStyle(value)">1</td> 
-							</template>   
-							<!--Meses-->
-
-		                    <td class="col-md-1 danger">2</td>     
-		                </tr>
-		            </template>    
-		           
+	            <tbody>    
+	                <tr v-for="criterion in criteria">
+	                    <td class="col-md-2">@{{capitalizeFirstLetter(criterion.code)}}</td> 
+						<td v-for="(value, key) in monthList" v-bind:class="monthStyle(value)" :title="getMarkComment(criterion.code + '|' + value, 'comment')">
+							@{{ getMarkComment(criterion.code + '|' + value, 'mark') }}
+						</td> 
+	                    <td class="col-md-1 danger">@{{ getTotal(criterion.code) }}</td>     
+	                </tr>             
 	            </tbody>
 
 	        </table>
@@ -42,7 +29,7 @@
     </div>
 
    	<div class="panel-footer">
-	  	<b>TOTAL: 5,6</b>
+	  	<b>TOTAL: @{{ getProjectTableTotal() }}</b>
 	</div>
 
 </div>

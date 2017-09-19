@@ -16,6 +16,7 @@ class CreateEvaluationsTable extends Migration
         /**
          * Tabla con la lista de eficiencias disponibles asociadas a los grupos
          */
+        /*
         Schema::create('averages', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('efficiency_id')->unsigned();
@@ -29,10 +30,12 @@ class CreateEvaluationsTable extends Migration
 
             $table->unique(['efficiency_id', 'month']); 
         });
+        */
 
         /**
          * Tabla con la lista de eficiencias disponibles asociadas a los grupos
          */
+        /*
         Schema::create('efficiencies', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('group_id')->unsigned();
@@ -52,20 +55,22 @@ class CreateEvaluationsTable extends Migration
 
             $table->unique(['group_id', 'short_escription']); 
         });
+        */
 
         /**
          * Tabla con la lista de desempeños por persona,proyecto y mes
          */
         Schema::create('performances', function (Blueprint $table) {
             $table->increments('id');
+            $table->smallInteger('year')->unsigned();
+            $table->tinyInteger('month')->unsigned();            
             $table->integer('user_id')->unsigned();
             $table->integer('project_id')->unsigned();
             $table->enum('type',config('options.criterion'));
-            $table->integer('efficiency_id')->unsigned()->nullable();
-            $table->smallInteger('year')->unsigned();
-            $table->tinyInteger('month')->unsigned();
-            $table->string('comments')->nullable();
+            //$table->integer('efficiency_id')->unsigned()->nullable();        
             $table->tinyInteger('mark')->unsigned();
+            $table->string('comment')->nullable();
+            $table->integer('weight')->unsigned();
             $table->integer('pm_id')->unsigned();
 
             $table->foreign('user_id')
@@ -77,16 +82,19 @@ class CreateEvaluationsTable extends Migration
                   ->references('id')
                   ->on('projects')
                   ->onDelete('cascade'); 
-
+            /*
             $table->foreign('efficiency_id')
                   ->references('id')
                   ->on('efficiencies')
                   ->onDelete('cascade'); 
-           
+           */
             $table->foreign('pm_id')
                   ->references('id')
                   ->on('users')
                   ->onDelete('cascade');
+
+            //$table->unique(['user_id', 'project_id','type','efficiency_id','year','month']);
+            $table->unique(['user_id', 'project_id','type','year','month']); 
         });
 
         /**

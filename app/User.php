@@ -77,6 +77,22 @@ class User extends Authenticatable
     }
 
     /**
+     * Return the  projects which a user can reportate
+     */
+    public function reportableProjects()
+    {
+        $groups = $this->groups;
+        
+        $array = [];
+
+        foreach ($groups as $group) {
+            $array[$group->project->id] = $group->project->name;
+        }
+        
+        return $array;
+    }
+
+    /**
      * Return the active projects which a user is manager.
      */
     public function activeProjects()

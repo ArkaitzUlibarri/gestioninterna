@@ -21,8 +21,17 @@ class PerformancesController extends Controller
 
     public function index()
     {
-		$projects = Auth::user()->managerProjects();
-
+        if(Auth::user()->primaryRole() == 'admin'){
+            $projects = Project::all();
+            $projects = array_pluck($projects, 'name', 'id');
+        }
+        elseif (Auth::user()->primaryRole() == 'manager'){
+            $projects = Auth::user()->managerProjects();
+        }
+        else{
+             $projects = Auth::user()->reportableProjects();
+        }
+		
     	return view('evaluations.performance',compact('projects'));
     }
 }

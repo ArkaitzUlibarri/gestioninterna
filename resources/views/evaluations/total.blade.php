@@ -11,30 +11,16 @@
 
 	            <thead>
 	                <th>Criteria</th>
-	                <!--Meses-->
-				    <template v-for="(value, key) in monthList">     
-						<th :title="key" v-bind:class="monthStyle(value)">@{{key.slice(0,3)}}</th> 
-					</template>   
-	                <!--Meses-->
+					<th v-for="(value, key) in monthList" :title="key" v-bind:class="monthStyle(value)">@{{key.slice(0,3)}}</th> 
 	                <th title="Total" class="danger">Total</th>
 	            </thead>
 
 	            <tbody>
-
-	            	<template v-for="criterion in criteria"> 
-		                <tr>
-		                    <td class="col-md-2">@{{capitalizeFirstLetter(criterion.code)}}</td>
-
-		                    <!--Meses-->  
-					        <template v-for="(value, key) in monthList">     
-								<td v-bind:class="monthStyle(value)">1</td> 
-							</template>   
-							<!--Meses-->
-
-		                    <td class="col-md-1 danger">1</td>     
-		                </tr>
-		            </template>  
-
+	                <tr v-for="criterion in criteria">
+	                    <td class="col-md-2">@{{capitalizeFirstLetter(criterion.code)}}</td>    
+						<td v-for="(value, key) in monthList" v-bind:class="monthStyle(value)">1</td> 
+	                    <td class="col-md-1 danger">1</td>     
+	                </tr>
 	            </tbody>
 
 	        </table>

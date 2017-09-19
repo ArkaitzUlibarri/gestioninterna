@@ -11,61 +11,14 @@
 	    </div>
 
 	    <div class="panel-body">
-	    	<div class="table-responsive">
-		        <table class="table table-hover table-condensed">
-
-		            <thead>
-		                <th>Criteria</th>
-		                <th>Mark</th>   
-		                <th>Comments</th>
-		            </thead>
-
-			        <tbody>
-		            	<tr v-for="criterion in criteria">
-
-		            		<td class="col-md-2">
-		                    	<span data-toggle="tooltip" data-placement="top" :title="criterion.description" class="glyphicon glyphicon-info-sign"></span> 
-		                    	<span data-toggle="tooltip" data-placement="top" :title="criterion.name + ' (Peso: ' + criterion.percentage +'%)'">@{{ capitalizeFirstLetter(criterion.code) }}</span> 
-		                    </td>
-
-							<td class="col-md-1">
-		                    	<select class="form-control input-sm" :disabled="validateFilter" v-model="criterion.mark"> 
-	                    			<option selected="true" value="">-</option>
-									<option v-for="point in criterion.points" :title="point.description" :value="point.value">@{{ point.value }}</option>					
-		                    	</select>
-		                    </td>  
-
-		                    <td class="col-md-9">		
-			                    <div class="form-group">
-									<textarea class="form-control input-sm" rows="1" placeholder="Comments" v-model="criterion.comment" :disabled="validateFilter"></textarea>
-								</div>
-							</td>   
-
-		                </tr>
-		            </tbody>
-		        </table>
-
-		    </div>
-
-    		<div class="pull-right">		
-    			<button title="Clear" class="btn btn-primary btn-sm" :disabled="validateClearButton" v-on:click="clear()">
-					<span class="glyphicon glyphicon-erase"></span> Clear
-				</button>
-
-				<button title="Save" class="btn btn-primary btn-sm" :disabled="validateSaveButton" v-on:click="save()">
-					<span class="glyphicon glyphicon-floppy-disk"></span> Save
-				</button>
-			</div>
-
+			@include('evaluations.form')
+			@include('evaluations.footer')
 	    </div>
 
 	</div>
 
 	<span v-show="filter.employee != '' && filter.project != ''">
 		@include('evaluations.project')
-	</span>
-
-	<span v-show="filter.employee != ''">
 		@include('evaluations.total')
 	</span>
 
@@ -78,6 +31,7 @@
 			el:'#app',
 
 			data:{
+
 				//Evaluation					
 				criteria: [],
 				evaluation: <?php echo json_encode(config('options.performance_evaluation'));?>,
@@ -89,7 +43,7 @@
             	//List
 				monthList: <?php echo json_encode(config('options.months'));?>,
 				employeeList: [],
-				projectList: [],
+				projectList: {},
 
 				reports:[],
 
@@ -99,7 +53,16 @@
 					project:'',
 					year: moment().year(),
 					month: ''//moment().month() + 1
-				}
+				},
+
+				//Tables
+				pTable: [],
+				pTableTotal:{},
+				pTotal: 0,
+
+				tTable:[],
+				tTableTotal:[],
+				tTotal: 0
 	
 			},
 
@@ -115,21 +78,35 @@
 						: false;
 				},
 
+				validateDeleteButton() {
+					let idsCount = 0;
+
+					this.criteria.forEach(function(item){
+						if( !(item.id === '')){
+							idsCount++;
+						}
+					});	
+
+					return (idsCount == 4) ? false : true;	
+				},
+
 				validateSaveButton() {				
 					let marksCount = 0;
+					let errorsCount = 0;
 
 					this.criteria.forEach(function(item){
 						if( !(item.mark === '')){
 							marksCount++;
 						}
+						if( item.code != 'knowledge' && item.mark != 2 && item.comment === ''){
+							errorsCount++;
+						}
 					});	
 
-					return (marksCount == 4) ? false : true;				
-										
+					return (marksCount == 4 && errorsCount == 0) ? false : true;													
 				},
 
 				validateClearButton() {
-
 					let marksCount = 0;
 					let commentsCount = 0;
 
@@ -142,8 +119,7 @@
 						}
 					});	
 
-					return (marksCount == 4 && commentsCount == 4) ? true : false;
-					
+					return (marksCount == 4 && commentsCount == 4) ? true : false;				
 				},
 
 			},
@@ -153,32 +129,94 @@
 				setForm() {
 					for (let i = this.evaluation.length - 1; i >= 0; i--) {
 						this.criteria.push({
+							id: '',
 							code: this.evaluation[i]['code'],
 							description : this.evaluation[i]['description'],
 							name: this.evaluation[i]['name'],
 							percentage: this.evaluation[i]['percentage'],
 							points: this.evaluation[i]['points'],
+							mark: '',
 							comment: '',
-							mark: ''
+							weight:'',
 						});
 					}
 				},
 
 				save() {
 					var vm = this;
-					
-					axios.post('api/performance_evaluation',vm.form)
+
+					vm.criteria.forEach(function(item){
+						item.year = vm.filter.year;
+						item.month = vm.filter.month;
+						item.user_id = vm.filter.employee;
+						item.project_id = vm.filter.project;
+					});
+
+					axios.post('/api/performance-evaluation', vm.criteria)
 					  .then(function (response) {
-					  	console.log(response.data);
-					  	//Mensaje de Guardado
-					  	//toastr.success("Saved");
-					  	//Actualizar tablas  
+						  	//Mensaje de Guardado
+						  	toastr.success("SAVED");
+
+						  	//Asignar ids
+						  	for (var i = vm.criteria.length - 1; i >= 0; i--) {
+						  		vm.criteria[i].id = response.data[i];
+						  	}
+
+						  	//Actualizar tablas  
+						  	//TODO
+						  	
+						  	//Limpiar formulario
+						  	//vm.clear();
 					  })
 					  .catch(function (error) {
-					    console.log(error);
-					    //vm.showErrors(error.response.data)
+					    	vm.showErrors(error.response.data)
 					  });
 				},
+
+				erase() {		
+					let vm = this;
+					let ids = [];
+
+					vm.criteria.forEach(function(item){
+						ids.push(item.id);
+					});
+
+		            axios.delete('/api/performance-evaluation/'+ ids)
+		                .then(function (response) {  
+
+		                	//Mensaje de Guardado
+						  	toastr.success(response.data);    
+						  	
+						  	//Limpiar formulario
+		                	//vm.clear();
+		                })
+		                .catch(function (error) {
+		                    vm.showErrors(error.response.data)
+		                }); 
+				},
+
+				/**
+	             * Fetch projects table performance by user,project and year
+	             */
+	            fetchProjectTable() {
+	                var vm = this;
+
+	                axios.get('api/project_table', {
+	                        params: {
+	                        	year: vm.filter.year,
+	                            project: vm.filter.project,
+	                            employee: vm.filter.employee                  
+	                        }
+	                    })
+	                    .then(function (response) {    
+							vm.pTable = response.data;    
+							vm.pTableTotal = vm.calculateProjectTotals();  
+							//vm.pTotal = vm.getProjectTableTotal();    
+	                    })
+	                    .catch(function (error) {	          
+	                       	vm.showErrors(error.response.data)
+	                    });
+	            },
 
 				/**
 	             * Fetch employees who have reported in pm projects
@@ -186,10 +224,11 @@
 	            fetchEmployees() {
 	                var vm = this;
 
-	                this.projectList = [];
+	                this.projectList = {};
 	                this.employeeList = [];
 	                this.filter.project = '';
 	                this.filter.employee = '';
+	                this.clear();
 
 	                axios.get('api/employees', {
 	                        params: {
@@ -211,14 +250,15 @@
 	            fetchProjects() {
 	                var vm = this;
 
-	                if(this.filter.employee == ''){
+	                this.projectList = {};
+	                this.filter.project = '';
+	                this.clear();
+
+	                if(this.filter.employee === ''){
 	                	return;
 	                }
 
-	                this.projectList = [];
-	                this.filter.project = '';
-
-	                axios.get('api/projects', {
+	                axios.get('api/month_reports', {
 	                        params: {
 	                        	year: vm.filter.year,
 	                            month: vm.filter.month,
@@ -226,8 +266,8 @@
 	                        }
 	                    })
 	                    .then(function (response) {   
-	                        vm.reports = response.data
-	                        vm.filterReports();
+	                        vm.reports = response.data;
+	                        vm.filterReports();	              
 	                    })
 	                    .catch(function (error) {
 	                       vm.showErrors(error.response.data)
@@ -242,32 +282,49 @@
 	                    return null;
 	                }
 
-	                this.projectList = [];
-	                filtered = [];
-
+	                this.projectList = {};
+               
 					vm.reports.forEach(function(item) {						
 						for (let key in vm.auth_projects) {				
 							if(key == item.project_id){
-								filtered.push([key,vm.auth_projects[key]]);
+								if(vm.projectList[key] == undefined){
+									vm.projectList[key] = {
+										id: key,
+										name: vm.auth_projects[key]
+									};
+								}						
 							}
 						}
-					});
-
-					this.projectList = filtered;
+					});									
 		        },
 
+		        /**
+		         * Limpia el Formulario
+		         */
 		        clear() {
 
 		        	this.criteria.forEach(function(item){
+		        		item.id = '';
 						item.mark = '';
 						item.comment = '';
+						item.weight = '';
 					});
 
 				},
 
-	            monthStyle(value) {
-	            	return this.filter.month == value ? 'danger':'';
-	            },
+				projectChange(){
+					if(this.filter.project !=""){
+						this.setWeight();
+						this.fetchProjectTable();
+					}	
+				},
+
+				setWeight(){
+					let vm = this;
+					this.criteria.forEach(function(item){
+						item.weight = vm.getHours(false);
+					});
+				},
 
 	            getEmployee() {
 	            	let vm = this;
@@ -302,7 +359,7 @@
 
 	            getHours(hours) {
 	            	let vm = this;
-	            	let amount;
+	            	let amount = 0;
 	            	let total = 0;
 	            
             		if(this.filter.project == ''){
@@ -311,7 +368,7 @@
 
         			this.reports.forEach(function(item){
         				if(vm.filter.project == item.project_id){
-        					amount = item.hours;
+        					amount += parseFloat(item.hours);
         				} 
         				total += parseFloat(item.hours);
         			});	
@@ -325,6 +382,113 @@
 	            	return ((amount/total)*100).toFixed(2);
 	            },
 
+	            getMarkComment(key,description) {
+	            	let output;   	
+
+	            	if(this.pTable.length == 0 || this.pTable[key] == undefined ){
+	            		return description == 'mark' ? '-' : ''; 
+	            	}
+	            	return description == 'mark' ? this.pTable[key].mark : this.pTable[key].comment;
+	            },
+
+	            getTotal(key) {
+	            	let output;   	
+
+	            	if(this.pTableTotal.length == 0 || this.pTableTotal[key] == undefined ){
+	            		return  '-'; 
+	            	}
+	            	return this.pTableTotal[key].total;
+	            },
+
+	            getProjectTableTotal() {
+	            	let vm = this;
+	            	let result = 0;
+            	
+	            	if(this.pTableTotal != undefined){
+		            	this.criteria.forEach(function(item){
+		            		if(vm.pTableTotal[item.code] != undefined){
+		            			let percentage = item.percentage;
+		            			let total = vm.pTableTotal[item.code].total;
+		            			let max_value = item.points.length - 1;
+		            			let partial = total/max_value * percentage;
+		            			//console.log("partial:"+ partial);
+		            			result = parseFloat(result) + parseFloat(partial);
+		            			//console.log("result:" + result.toFixed(2));
+		            		}
+		            	});
+
+		            	return result.toFixed(2);
+	            	}          	
+	            },
+
+	            calculateProjectTotals() {
+  	
+  					let criteria = "";
+  					let index = 0;
+  					let output = {};
+  					let total = {
+  						zeros: 0,
+  						counter: 0,
+  						sum: 0,
+  						name: '',
+  						total: 0
+  					};
+
+		            for(var key in this.pTable) {
+
+		            	index++;
+
+		            	if(criteria == ""){
+		            		criteria = key.split("|")[0];
+		            		total = {
+		            			zeros: 0,
+		  						counter: 0,
+		  						sum: 0,
+		  						name: criteria,
+		  						total: 0
+		  					};	
+		            	}
+
+		            	if(criteria != key.split("|")[0]){
+		            		total.total = ((total.counter * Math.pow(0.66,total.zeros)) / total.sum).toFixed(2);
+		            		//output.push(total);
+		            		output[total.name] = total;
+		            		criteria = key.split("|")[0];
+		            		total = {
+		            			zeros: 0,
+		  						counter: 0,
+		  						sum: 0,
+		  						name: criteria,
+		  						total: 0
+		  					};	            		            		
+		            	}	
+		            	if(this.pTable[key].mark == 0){
+		            		total.zeros += 1;
+		            	}
+		            	total.sum += 1;         
+		            	total.counter += this.pTable[key].mark;
+
+      					if(index == Object.keys(this.pTable).length){
+      						total.total = ((total.counter * Math.pow(0.66,total.zeros)) / total.sum).toFixed(2);
+      						//output.push(total);
+      						output[total.name] = total;
+      					}
+
+		            }
+
+		            return output;
+	            },
+
+				/**
+	             * Marca de otro estilo el mes seleccionado
+	             */
+	            monthStyle(value) {
+	            	return this.filter.month == value ? 'danger':'';
+	            },
+
+		         /**
+	             * Convertir a Mayúsculas primera letra
+	             */
 				capitalizeFirstLetter(string) {
     				return string.charAt(0).toUpperCase() + string.slice(1);
 				},
