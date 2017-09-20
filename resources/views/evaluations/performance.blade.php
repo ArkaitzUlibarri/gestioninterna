@@ -38,6 +38,7 @@
 
 				// User's data
             	//user_id: '{!! Auth()->user()->id !!}',
+            	role: '{!! Auth()->user()->primaryRole() !!}',
             	auth_projects: <?php echo json_encode($projects);?>,
 
             	//List
@@ -403,21 +404,23 @@
 	            getProjectTableTotal() {
 	            	let vm = this;
 	            	let result = 0;
+	            	let error = "";
             	
 	            	if(this.pTableTotal != undefined){
 		            	this.criteria.forEach(function(item){
 		            		if(vm.pTableTotal[item.code] != undefined){
 		            			let percentage = item.percentage;
 		            			let total = vm.pTableTotal[item.code].total;
+		            			if(total < parseFloat(1)){
+		            				error = "error";
+		            			}
 		            			let max_value = item.points.length - 1;
 		            			let partial = total/max_value * percentage;
-		            			//console.log("partial:"+ partial);
 		            			result = parseFloat(result) + parseFloat(partial);
-		            			//console.log("result:" + result.toFixed(2));
 		            		}
 		            	});
 
-		            	return result.toFixed(2);
+		            	return error !="error" ? result.toFixed(2) : 0;
 	            	}          	
 	            },
 
@@ -450,8 +453,9 @@
 		            	}
 
 		            	if(criteria != key.split("|")[0]){
-		            		total.total = ((total.counter * Math.pow(0.66,total.zeros)) / total.sum).toFixed(2);
-		            		//output.push(total);
+		            		total.total = total.name == 'knowledge'
+			            		?(total.counter/ total.sum).toFixed(2)
+			            		:((total.counter * Math.pow(0.66,total.zeros)) / total.sum).toFixed(2);		            		
 		            		output[total.name] = total;
 		            		criteria = key.split("|")[0];
 		            		total = {
@@ -469,8 +473,9 @@
 		            	total.counter += this.pTable[key].mark;
 
       					if(index == Object.keys(this.pTable).length){
-      						total.total = ((total.counter * Math.pow(0.66,total.zeros)) / total.sum).toFixed(2);
-      						//output.push(total);
+		            		total.total = total.name == 'knowledge'
+			            		?(total.counter/ total.sum).toFixed(2)
+			            		:((total.counter * Math.pow(0.66,total.zeros)) / total.sum).toFixed(2);
       						output[total.name] = total;
       					}
 

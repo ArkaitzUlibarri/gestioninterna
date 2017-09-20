@@ -165,11 +165,11 @@ class CalendarController extends ApiController
 
 	private function getHolidays($user_id, $year)
 	{
-		//SELECT DATE,TYPE,NAME,COMMENTS,VALIDATED
+		//SELECT DATE,TYPE,NAME,VALIDATED
 		$first = DB::table('bank_holidays as b')
 			->LeftJoin('bank_holidays_codes as bc','b.code_id','bc.id')
 			->LeftJoin('contracts as c','b.code_id','c.national_days_id')
-			->select(DB::raw('null as id'),'b.date as date','bc.type as type','bc.name as name',DB::raw('null as comments'),DB::raw('null as validated'))
+			->select(DB::raw('null as id'),'b.date as date','bc.type as type','bc.name as name',DB::raw('null as validated'))
 			->where(DB::raw('YEAR(b.date)'),$year)
 			->where('c.user_id',$user_id)
 			->where('c.end_date',null);
@@ -177,7 +177,7 @@ class CalendarController extends ApiController
 		$second = DB::table('bank_holidays as b')
 			->LeftJoin('bank_holidays_codes as bc','b.code_id','bc.id')
 			->LeftJoin('contracts as c','b.code_id','c.regional_days_id')
-			->select(DB::raw('null as id'),'b.date as date','bc.type as type','bc.name as name',DB::raw('null as comments'),DB::raw('null as validated'))
+			->select(DB::raw('null as id'),'b.date as date','bc.type as type','bc.name as name',DB::raw('null as validated'))
 			->where(DB::raw('YEAR(b.date)'),$year)
 			->where('c.user_id',$user_id)
 			->where('c.end_date',null);
@@ -185,20 +185,20 @@ class CalendarController extends ApiController
 	 	$third = DB::table('bank_holidays as b')
 			->LeftJoin('bank_holidays_codes as bc','b.code_id','bc.id')
 			->LeftJoin('contracts as c','b.code_id','c.local_days_id')
-			->select(DB::raw('null as id'),'b.date as date','bc.type as type','bc.name as name',DB::raw('null as comments'),DB::raw('null as validated'))
+			->select(DB::raw('null as id'),'b.date as date','bc.type as type','bc.name as name',DB::raw('null as validated'))
 			->where(DB::raw('YEAR(b.date)'),$year)
 			->where('c.user_id',$user_id)
 			->where('c.end_date',null);
 
 		$data = DB::table('bank_holidays as b')
 			->LeftJoin('bank_holidays_codes as bc','b.code_id','bc.id')
-			->select(DB::raw('null as id'),'b.date as date','bc.type as type','bc.name as name',DB::raw('null as comments'),DB::raw('null as validated'))
+			->select(DB::raw('null as id'),'b.date as date','bc.type as type','bc.name as name',DB::raw('null as validated'))
 			->where(DB::raw('YEAR(b.date)'),$year)
 			->where('bc.name','Adjustment');
 
 
 		return DB::table('calendar_holidays')
-			->select('id','date','type',DB::raw('null as name'),'comments','validated')
+			->select('id','date','type',DB::raw('null as name'),'validated')
 			->where('user_id',$user_id)
 			->where(DB::raw('YEAR(date)'),$year)
 			->union($second)

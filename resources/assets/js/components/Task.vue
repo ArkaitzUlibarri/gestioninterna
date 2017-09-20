@@ -13,7 +13,7 @@
 
         <div class="action" v-on:click="editTask">
             <h5 v-if="task.activity == 'project'">
-                <span><b>{{ time }} {{ task.project.toUpperCase() + ' | ' + task.group.toUpperCase() + ' | ' + task.category.toUpperCase() }}</b> | </span> 
+                <span><b>{{ time }} {{ task.project.toUpperCase() + ' | ' + task.group.toUpperCase() + ' | ' + task.category.split(" - ")[0].toUpperCase() }}</b> | </span> 
                 <span v-if="task.comments">{{ task.comments.substring(0, 75) }}<span v-if="task.comments.length >75">...</span></span>
             </h5>             
             

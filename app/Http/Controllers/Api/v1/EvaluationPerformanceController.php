@@ -63,36 +63,33 @@ class EvaluationPerformanceController extends ApiController
 			return $this->respondNotAcceptable($validator->errors()->all());
 		}
 
+		//Reports by employees in an specific time
+		$q = DB::table('working_report as wr')
+			->Join('users as u','wr.user_id','u.id')
+			->Join('categories as c','wr.category_id','c.id')
+			->select(
+				'wr.user_id as id',
+				'u.name as name',
+				'u.lastname as lastname',
+				DB::raw("CONCAT(u.name, ' ', u.lastname ) as full_name")
+			)
+			->whereYear('wr.created_at',$request->get('year'))
+			->whereMonth('wr.created_at',$request->get('month'))
+			->whereNotNull('wr.group_id')
+			->where('c.name','<>','RP')
+			->where('c.name','<>','DI')
+			->orderBy('name','ASC')
+			->distinct();
+
 		if(Auth::user()->primaryRole() == 'manager'){
 			$projects = array_keys(Auth::user()->managerProjects());
-
-			//Groups reported by the user in this month
-			$data = DB::table('working_report as wr')
-				->Join('users as u','wr.user_id','u.id')
-				->Join('categories as c','wr.category_id','c.id')
-				->select(
-					'wr.user_id as id',
-					'u.name as name',
-					'u.lastname as lastname',
-					DB::raw("CONCAT(u.name, ' ', u.lastname ) as full_name")
-				)
-				->whereYear('wr.created_at',$request->get('year'))
-				->whereMonth('wr.created_at',$request->get('month'))
-				->whereIn('wr.project_id',$projects)
-				->whereNotNull('wr.group_id')
-				->where('c.name','<>','RP')
-				->where('c.name','<>','DI')
-				->orderBy('name','ASC')
-				->distinct()
-				->get()
-				->toArray();
-					
-			return $this->respond($data);
+			$users = $q->whereIn('wr.project_id',$projects)->get()->toArray();	
 		}
 		elseif(Auth::user()->primaryRole() == 'admin'){
-			return $this->respond(User::all());
+			$users = $q->get()->toArray();
 		}
 
+		return $this->respond($users);
 	}
 
 	public function store(Request $request)

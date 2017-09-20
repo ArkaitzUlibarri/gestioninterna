@@ -110,6 +110,7 @@ const app = new Vue({
 						&& this.newTask.job_type != "") {
 						return true;
 					}
+
 				}
 			}		
 
@@ -358,7 +359,7 @@ const app = new Vue({
 			
 			vm.categories.forEach(function(item) {						
 				if( vm.user.id == item.user_id){
-					 setList.add(item.description);
+					 setList.add(item.name + " - " + item.description);
 				}				
 			});
 
@@ -384,7 +385,7 @@ const app = new Vue({
 			//GrupoProyecto
 			if(this.newTask.activity == 'project') {		
 				for (var key = this.categories.length - 1; key >= 0; key--) {
-					if(this.categories[key].description == this.newTask.category){
+					if(this.categories[key].description == this.newTask.category.split(' - ')[1] && this.categories[key].name == this.newTask.category.split(' - ')[0]){
 						this.newTask.category_id = this.categories[key].category_id;
 					}
 				}
@@ -418,7 +419,7 @@ const app = new Vue({
 			if( this.newTask.activity == 'project' ) {		
 				for (let key = this.categories.length - 1; key >= 0; key--) {
 					if( this.newTask.category_id == this.categories[key].category_id ) {	
-						this.newTask.category = this.categories[key].description;
+						this.newTask.category = this.categories[key].name + " - " + this.categories[key].description;
 						break;
 					}
 				}

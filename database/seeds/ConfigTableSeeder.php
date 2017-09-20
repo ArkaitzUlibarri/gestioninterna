@@ -15,7 +15,8 @@ class ConfigTableSeeder extends Seeder
 	{
 		/*
 		$absences=[
-			['code' =>'m','group'=>'baja','name'=>'medico o baja medica'],
+			['code' =>'m','group'=>'baja o enfermedad','name'=>'medico'],
+			['code' =>'m','group'=>'baja o enfermedad','name'=>'baja medica'],
 			['code' =>'b','group'=>'permiso','name'=>'boda'],
 			['code' =>'p','group'=>'permiso','name'=>'dia previo a examen'],
 			['code' =>'e','group'=>'permiso','name'=>'examen'],
@@ -28,7 +29,8 @@ class ConfigTableSeeder extends Seeder
 		*/
 	
 		$absences = [
-			['code' =>'m','group'=>'sick leave','name'=>'medical or sick leave'],
+			['code' =>'m','group'=>'sick leave','name'=>'medical leave'],
+			['code' =>'s','group'=>'sick leave','name'=>'sick absence'],
 			['code' =>'w','group'=>'permission','name'=>'wedding'],
 			['code' =>'ee','group'=>'permission','name'=>'exam eve'],
 			['code' =>'e','group'=>'permission','name'=>'exam'],

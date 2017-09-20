@@ -342,7 +342,7 @@ var app = new Vue({
 
 			vm.categories.forEach(function (item) {
 				if (vm.user.id == item.user_id) {
-					setList.add(item.description);
+					setList.add(item.name + " - " + item.description);
 				}
 			});
 
@@ -367,7 +367,7 @@ var app = new Vue({
 			//GrupoProyecto
 			if (this.newTask.activity == 'project') {
 				for (var key = this.categories.length - 1; key >= 0; key--) {
-					if (this.categories[key].description == this.newTask.category) {
+					if (this.categories[key].description == this.newTask.category.split(' - ')[1] && this.categories[key].name == this.newTask.category.split(' - ')[0]) {
 						this.newTask.category_id = this.categories[key].category_id;
 					}
 				}
@@ -400,7 +400,7 @@ var app = new Vue({
 			if (this.newTask.activity == 'project') {
 				for (var key = this.categories.length - 1; key >= 0; key--) {
 					if (this.newTask.category_id == this.categories[key].category_id) {
-						this.newTask.category = this.categories[key].description;
+						this.newTask.category = this.categories[key].name + " - " + this.categories[key].description;
 						break;
 					}
 				}
@@ -669,7 +669,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "click": _vm.editTask
     }
-  }, [(_vm.task.activity == 'project') ? _c('h5', [_c('span', [_c('b', [_vm._v(_vm._s(_vm.time) + " " + _vm._s(_vm.task.project.toUpperCase() + ' | ' + _vm.task.group.toUpperCase() + ' | ' + _vm.task.category.toUpperCase()))]), _vm._v(" | ")]), _vm._v(" "), (_vm.task.comments) ? _c('span', [_vm._v(_vm._s(_vm.task.comments.substring(0, 75))), (_vm.task.comments.length > 75) ? _c('span', [_vm._v("...")]) : _vm._e()]) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'absence') ? _c('h5', [_c('span', [_c('b', [_vm._v(_vm._s(_vm.time) + " " + _vm._s('ABSENCE | ' + _vm.task.absence.toUpperCase()))]), _vm._v(" | ")]), _vm._v(" "), (_vm.task.comments) ? _c('span', [_vm._v(_vm._s(_vm.task.comments.substring(0, 75))), (_vm.task.comments.length > 75) ? _c('span', [_vm._v("...")]) : _vm._e()]) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'training') ? _c('h5', [_c('span', [_c('b', [_vm._v(_vm._s(_vm.time) + " " + _vm._s('TRAINING | ' + _vm.task.training_type.toUpperCase()))]), _vm._v(" | ")]), _vm._v(" "), (_vm.task.comments) ? _c('span', [_vm._v(_vm._s(_vm.task.comments.substring(0, 75))), (_vm.task.comments.length > 75) ? _c('span', [_vm._v("...")]) : _vm._e()]) : _vm._e()]) : _vm._e()])])
+  }, [(_vm.task.activity == 'project') ? _c('h5', [_c('span', [_c('b', [_vm._v(_vm._s(_vm.time) + " " + _vm._s(_vm.task.project.toUpperCase() + ' | ' + _vm.task.group.toUpperCase() + ' | ' + _vm.task.category.split(" - ")[0].toUpperCase()))]), _vm._v(" | ")]), _vm._v(" "), (_vm.task.comments) ? _c('span', [_vm._v(_vm._s(_vm.task.comments.substring(0, 75))), (_vm.task.comments.length > 75) ? _c('span', [_vm._v("...")]) : _vm._e()]) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'absence') ? _c('h5', [_c('span', [_c('b', [_vm._v(_vm._s(_vm.time) + " " + _vm._s('ABSENCE | ' + _vm.task.absence.toUpperCase()))]), _vm._v(" | ")]), _vm._v(" "), (_vm.task.comments) ? _c('span', [_vm._v(_vm._s(_vm.task.comments.substring(0, 75))), (_vm.task.comments.length > 75) ? _c('span', [_vm._v("...")]) : _vm._e()]) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.task.activity == 'training') ? _c('h5', [_c('span', [_c('b', [_vm._v(_vm._s(_vm.time) + " " + _vm._s('TRAINING | ' + _vm.task.training_type.toUpperCase()))]), _vm._v(" | ")]), _vm._v(" "), (_vm.task.comments) ? _c('span', [_vm._v(_vm._s(_vm.task.comments.substring(0, 75))), (_vm.task.comments.length > 75) ? _c('span', [_vm._v("...")]) : _vm._e()]) : _vm._e()]) : _vm._e()])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

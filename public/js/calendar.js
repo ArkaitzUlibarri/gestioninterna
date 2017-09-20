@@ -12,6 +12,10 @@ module.exports = __webpack_require__(174);
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function($) {
+/**
+ * Registro los componentes necesarios.
+ */
+//
 
 var app = new Vue({
     el: '#app',

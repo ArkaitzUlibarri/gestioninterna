@@ -23,7 +23,7 @@
 				<input type="number" min=0 max=8.25 step="0.25" class="form-control input-sm" placeholder="Time" v-model="newTask.time" v-bind:disabled="validatedTasks">
 			</div>
 
-			<div class="form-group col-xs-12 col-sm-3 ">
+			<div class="form-group col-xs-12 col-sm-3 " v-show="newTask.activity != 'absence'">
 				<label>Type</label>
 				<select class="form-control input-sm" v-model="newTask.job_type" v-bind:disabled="validatedTasks">
 					<option value="">-</option>
@@ -61,7 +61,7 @@
 				<select class="form-control input-sm" v-model="newTask.category" v-bind:disabled="validatedTasks">
 					<option value="">-</option>
 					<template v-for="(element, index) in categoryList">
-						<option :category="element" :index="index">@{{element}}</option>
+						<option :value="element" :category="element" :index="index">@{{element}}</option>
 					</template>	
 				</select>
 			</div>

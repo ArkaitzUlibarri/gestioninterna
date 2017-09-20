@@ -30,12 +30,12 @@
                          <li><a href="{{ url('contracts') }}">Contracts</a></li>
                          <li><a href="{{ url('projects') }}">Projects</a></li>  
                          <!--<li><a href="{{ url('holidays_validation') }}">Holidays Validation</a></li>-->
-                    @elseif(Auth::user()->primaryRole() == 'manager') 
-                        <li><a href="{{ url('evaluations') }}">Evaluations</a></li>
+                    @elseif(Auth::user()->primaryRole() == 'manager')                   
                          <li><a href="{{ url('users') }}">Users</a></li>   
                          <li><a href="{{ url('projects') }}">Projects</a></li>            
                     @endif
-                    <li><a href="{{ url('holidays') }}">Holidays</a></li>
+                    <li><a href="{{ url('evaluations') }}">Evaluations</a></li>
+                    <!--<li><a href="{{ url('holidays') }}">Holidays</a></li>-->
                     <li><a href="{{ url('validation') }}">Validation</a></li>
                      <li><a href="{{ url('workingreports') }}">Working Reports</a></li> 
                     
@@ -61,6 +61,9 @@
                             <li>
                                 <a href  = "{{ url('users' . '/' . Auth::user()->id . '/') }}">
                                     <span class="glyphicon glyphicon-user"></span> Profile
+                                </a>
+                                <a href="{{ url('holidays') }}">
+                                    <span class="glyphicon glyphicon-tent"></span> Holidays
                                 </a>
                                 <a href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
