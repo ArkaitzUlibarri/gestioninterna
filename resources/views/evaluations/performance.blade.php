@@ -18,7 +18,9 @@
 	</div>
 
 	<span v-show="filter.employee != '' && filter.project != ''">
-		@include('evaluations.project')
+		<span v-for="element in reports">	
+			@include('evaluations.project')
+		</span>
 		@include('evaluations.total')
 	</span>
 
@@ -59,12 +61,10 @@
 				//Tables
 				pTable: [],
 				pTableTotal:{},
-				pTotal: 0,
-
+				
 				tTable:[],
 				tTableTotal:[],
-				tTotal: 0
-	
+				
 			},
 
 			mounted(){
@@ -143,6 +143,28 @@
 					}
 				},
 
+				/**
+		         * Limpia el Formulario
+		         */
+		        clear() {
+		        	this.criteria.forEach(function(item){
+						item.mark = '';
+						item.comment = '';
+					});
+				},
+
+				/**
+		         * Limpia el Formulario completo
+		         */
+		        fullclear() {
+		        	this.criteria.forEach(function(item){
+		        		item.id = '';
+						item.mark = '';
+						item.comment = '';
+						item.weight = '';
+					});
+				},
+
 				save() {
 					var vm = this;
 
@@ -151,10 +173,12 @@
 						item.month = vm.filter.month;
 						item.user_id = vm.filter.employee;
 						item.project_id = vm.filter.project;
+						item.weight = vm.getHours(false,item.project_id);
 					});
 
 					axios.post('/api/performance-evaluation', vm.criteria)
 					  .then(function (response) {
+
 						  	//Mensaje de Guardado
 						  	toastr.success("SAVED");
 
@@ -164,13 +188,14 @@
 						  	}
 
 						  	//Actualizar tablas  
-						  	//TODO
+						  	vm.fetchProjectTable();
 						  	
 						  	//Limpiar formulario
 						  	//vm.clear();
+
 					  })
 					  .catch(function (error) {
-					    	vm.showErrors(error.response.data)
+					    	vm.showErrors(error.response.data.errorInfo[2])
 					  });
 				},
 
@@ -201,18 +226,31 @@
 	             */
 	            fetchProjectTable() {
 	                var vm = this;
+	                let key;
+
+	                this.fullclear();
 
 	                axios.get('api/project_table', {
 	                        params: {
 	                        	year: vm.filter.year,
-	                            project: vm.filter.project,
 	                            employee: vm.filter.employee                  
 	                        }
 	                    })
-	                    .then(function (response) {    
-							vm.pTable = response.data;    
-							vm.pTableTotal = vm.calculateProjectTotals();  
-							//vm.pTotal = vm.getProjectTableTotal();    
+	                    .then(function (response) {   
+	                    	//console.log(response.data) 
+	                    	if(response.data.length != 0){
+	                    		vm.criteria.forEach(function(item){
+									key = vm.filter.project +"|"+ item.code +"|"+ vm.filter.month;
+									item.mark = response.data[key].mark;
+									item.comment = response.data[key].comment;
+									item.weight = response.data[key].weight;
+									item.id = response.data[key].id;
+								});
+		                    	vm.pTable = response.data;    
+								vm.pTableTotal = vm.calculateTotalColumn(false);    
+								vm.tTable = vm.getTotalTable();
+								vm.tTableTotal = vm.calculateTotalColumn(true);
+	                    	}                    	
 	                    })
 	                    .catch(function (error) {	          
 	                       	vm.showErrors(error.response.data)
@@ -229,7 +267,7 @@
 	                this.employeeList = [];
 	                this.filter.project = '';
 	                this.filter.employee = '';
-	                this.clear();
+	                this.fullclear();
 
 	                axios.get('api/employees', {
 	                        params: {
@@ -253,7 +291,7 @@
 
 	                this.projectList = {};
 	                this.filter.project = '';
-	                this.clear();
+	                this.fullclear();
 
 	                if(this.filter.employee === ''){
 	                	return;
@@ -285,9 +323,9 @@
 
 	                this.projectList = {};
                
-					vm.reports.forEach(function(item) {						
+					for (let project_id in vm.reports) {						
 						for (let key in vm.auth_projects) {				
-							if(key == item.project_id){
+							if(key == project_id){
 								if(vm.projectList[key] == undefined){
 									vm.projectList[key] = {
 										id: key,
@@ -296,22 +334,8 @@
 								}						
 							}
 						}
-					});									
+					}								
 		        },
-
-		        /**
-		         * Limpia el Formulario
-		         */
-		        clear() {
-
-		        	this.criteria.forEach(function(item){
-		        		item.id = '';
-						item.mark = '';
-						item.comment = '';
-						item.weight = '';
-					});
-
-				},
 
 				projectChange(){
 					if(this.filter.project !=""){
@@ -358,21 +382,20 @@
 	            	}            	
 	            },
 
-	            getHours(hours) {
-	            	let vm = this;
+	            getHours(hours, project_id = '') {
 	            	let amount = 0;
 	            	let total = 0;
 	            
-            		if(this.filter.project == ''){
+            		if(project_id === ''){
             			return '';
             		}
 
-        			this.reports.forEach(function(item){
-        				if(vm.filter.project == item.project_id){
-        					amount += parseFloat(item.hours);
+            		for(var key in this.reports) {
+        				if(project_id == this.reports[key].project_id){
+        					amount += this.reports[key].hours;
         				} 
-        				total += parseFloat(item.hours);
-        			});	
+        				total += parseFloat(this.reports[key].hours);
+            		}
             		
             		//Hours
             		if(hours){
@@ -383,39 +406,56 @@
 	            	return ((amount/total)*100).toFixed(2);
 	            },
 
-	            getMarkComment(key,description) {
-	            	let output;   	
+	            getMarkComment(key,mark,total) {
+	            	let input;   	
+	            	input = total ? this.tTable: this.pTable;
 
-	            	if(this.pTable.length == 0 || this.pTable[key] == undefined ){
-	            		return description == 'mark' ? '-' : ''; 
+	            	if(input.length == 0 || input[key] == undefined ){
+	            		return mark ? '-' : ''; 
 	            	}
-	            	return description == 'mark' ? this.pTable[key].mark : this.pTable[key].comment;
+	            	return mark ? input[key].mark.toFixed(1) : input[key].comment;
 	            },
 
-	            getTotal(key) {
-	            	let output;   	
+	            getTotalColumn(key,total) {	
+	            	let input;   	
+	            	input = total ? this.tTableTotal: this.pTableTotal;
 
-	            	if(this.pTableTotal.length == 0 || this.pTableTotal[key] == undefined ){
+	            	if(input == undefined ){
 	            		return  '-'; 
 	            	}
-	            	return this.pTableTotal[key].total;
+	            	else if(input[key] == undefined ){
+	            		return  '-'; 
+	            	}
+	            	else if(input.length == 0 ){
+	            		return  '-'; 
+	            	}
+	            	return input[key].total;
 	            },
 
-	            getProjectTableTotal() {
+	            getTotalValue(project_id, total_table) {
 	            	let vm = this;
 	            	let result = 0;
 	            	let error = "";
-            	
-	            	if(this.pTableTotal != undefined){
+            		let input; 
+            		let key;
+            		let percentage;
+            		let totalColumn;
+            		let max_value;
+            		let partial;
+
+            		input = total_table ? this.tTableTotal: this.pTableTotal;
+
+	            	if(input != undefined){
 		            	this.criteria.forEach(function(item){
-		            		if(vm.pTableTotal[item.code] != undefined){
-		            			let percentage = item.percentage;
-		            			let total = vm.pTableTotal[item.code].total;
-		            			if(total < parseFloat(1)){
+		            		key = total_table ? item.code : project_id + "|" + item.code;
+		            		if(input[key] != undefined){
+		            			percentage = item.percentage;
+		            			totalColumn = input[key].total;
+		            			if(totalColumn < parseFloat(1)){
 		            				error = "error";
 		            			}
-		            			let max_value = item.points.length - 1;
-		            			let partial = total/max_value * percentage;
+		            			max_value = item.points.length - 1;
+		            			partial = totalColumn/max_value * percentage;
 		            			result = parseFloat(result) + parseFloat(partial);
 		            		}
 		            	});
@@ -424,71 +464,127 @@
 	            	}          	
 	            },
 
-	            calculateProjectTotals() {
+	            calculateTotalColumn(total_table) {
   	
   					let criteria = "";
-  					let index = 0;
+  					let project_id = "";
   					let output = {};
-  					let total = {
+  					let input; 
+  					let shortkey;
+  					let obj = {
   						zeros: 0,
   						counter: 0,
   						sum: 0,
   						name: '',
+  						project_id: 0,
   						total: 0
   					};
 
-		            for(var key in this.pTable) {
+	            	input = total_table ? this.tTable : this.pTable;
 
-		            	index++;
+		            for(var key in input) {
 
-		            	if(criteria == ""){
-		            		criteria = key.split("|")[0];
-		            		total = {
-		            			zeros: 0,
-		  						counter: 0,
-		  						sum: 0,
-		  						name: criteria,
-		  						total: 0
-		  					};	
+            			criteria = total_table ? key.split("|")[0] : key.split("|")[1];
+		            	project_id = total_table ? 0 : key.split("|")[0];
+		            	shortkey = total_table ? criteria : project_id + "|" + criteria;
+
+		            	if(output != undefined){
+
+			            	if(output[shortkey] === undefined){
+			            		obj = {
+			            			zeros: 0,
+			  						counter: 0,
+			  						sum: 0,
+			  						name: criteria,
+			  						project_id: project_id,
+			  						total: 0
+		  						};	
+		  						output[shortkey] = obj;
+			            	}
+
+				           	if(input[key].mark == 0){
+			            		output[shortkey].zeros += 1;
+			            	}
+
+			            	output[shortkey].sum += 1;
+			            	output[shortkey].counter += input[key].mark;
+			            	output[shortkey].total = output[shortkey].name == 'knowledge'
+		            			?(output[shortkey].counter/ output[shortkey].sum).toFixed(2)
+		            			:((output[shortkey].counter * Math.pow((2/3),output[shortkey].zeros)) / output[shortkey].sum).toFixed(2);	
 		            	}
-
-		            	if(criteria != key.split("|")[0]){
-		            		total.total = total.name == 'knowledge'
-			            		?(total.counter/ total.sum).toFixed(2)
-			            		:((total.counter * Math.pow(0.66,total.zeros)) / total.sum).toFixed(2);		            		
-		            		output[total.name] = total;
-		            		criteria = key.split("|")[0];
-		            		total = {
-		            			zeros: 0,
-		  						counter: 0,
-		  						sum: 0,
-		  						name: criteria,
-		  						total: 0
-		  					};	            		            		
-		            	}	
-		            	if(this.pTable[key].mark == 0){
-		            		total.zeros += 1;
-		            	}
-		            	total.sum += 1;         
-		            	total.counter += this.pTable[key].mark;
-
-      					if(index == Object.keys(this.pTable).length){
-		            		total.total = total.name == 'knowledge'
-			            		?(total.counter/ total.sum).toFixed(2)
-			            		:((total.counter * Math.pow(0.66,total.zeros)) / total.sum).toFixed(2);
-      						output[total.name] = total;
-      					}
 
 		            }
 
 		            return output;
+
+	            },
+
+	            getTotalTable() {	            	
+	            	let vm = this;
+  					let criteria;
+  					let project_id
+  					let key;
+  					let shortkey;
+  					let output = {};
+  					let mark;
+  					let weight;
+	
+  					for(let key in this.reports){
+  						project_id = key;	
+
+	  					vm.criteria.forEach(function(item){
+	  						criteria = item.code;
+
+			  				for (let month = 1; month <= 12; month++) {
+			  					key = project_id + "|" + criteria + "|" + month;
+								shortkey = criteria + "|" + month;
+			  					if(vm.pTable[key] != undefined){
+			  						weight = (vm.pTable[key].weight)/100;
+			  						mark = vm.pTable[key].mark;
+			  						if(output[shortkey] === undefined){
+										output[shortkey] = {
+			  								mark: 0 ,
+			  								comment: '',
+			  								weight: 0
+			  							};
+			  						}
+			  						output[shortkey].mark += (parseFloat(mark) * parseFloat(weight));
+			  					}	  
+		  					}
+	  					});	 	  					 					
+  					}
+  					return output;
 	            },
 
 				/**
 	             * Marca de otro estilo el mes seleccionado
 	             */
-	            monthStyle(value) {
-	            	return this.filter.month == value ? 'danger':'';
+	            monthStyle(month_id) {
+	            	return this.filter.month == month_id ? 'info' : '';
+	            },
+
+	            /**
+	             * Marca el estilo de las celdas
+	             */
+	            cellStyle(key, total_column) {
+	            	let input =  total_column ? this.pTableTotal : this.pTable ;
+	            	let color = '';
+	            	let criteria = key.split("|")[1];
+
+	            	if(input[key] === undefined){
+	            		return '';
+	            	}
+	            	if(criteria != 'knowledge'){
+	            		if(total_column === false){
+	            			color = input[key].mark == 3 ? 'success' : color;
+	            			color = input[key].mark == 1 ? 'warning' : color;
+	            			color = input[key].mark == 0 ? 'danger' : color;
+	            		}
+	            		else{
+	            			color = input[key].total < parseFloat(1) ? 'danger' : color;
+	            		}
+	            	}
+	            	return color;
 	            },
 
 		         /**

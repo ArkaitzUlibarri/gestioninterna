@@ -9,7 +9,9 @@
 		<span class="glyphicon glyphicon-trash"></span> Delete
 	</button>	
 
-	<button title="Save" class="btn btn-primary btn-sm" :disabled="validateSaveButton" v-on:click="save()">
-		<span class="glyphicon glyphicon-floppy-disk"></span> Save
+	<button :title="validateDeleteButton ? 'Save' : 'Update'" class="btn btn-primary btn-sm" :disabled="validateSaveButton" v-on:click="save()">	
+		<span class="glyphicon glyphicon-floppy-disk"></span> 	
+			<span v-if="validateDeleteButton"> Save</span>
+			<span v-else> Update</span>
 	</button>
 </div>

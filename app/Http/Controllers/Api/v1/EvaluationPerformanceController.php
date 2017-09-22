@@ -12,7 +12,6 @@ use Auth;
 
 class EvaluationPerformanceController extends ApiController
 {
-
 	/**
 	 * Get projects reported for a user and a manager
 	 * 
@@ -48,8 +47,33 @@ class EvaluationPerformanceController extends ApiController
 			->groupBy('wr.project_id','wr.group_id')
 			->get()
 			->toArray();
+
+		$result = array();
+		
+		foreach ($data as $index => $array) {
+			$key = $array->project_id;
+
+			$group = [
+				'group'    => $array->group,
+				'group_id' => $array->group_id,
+				'hours'    => $array->hours
+			];
+
+			if(! isset($result[$key])) {			
+                $result[$key] = [
+					'project_id' => $array->project_id,
+					'project'    => $array->project,
+					'hours'      => $array->hours
+                ];
+            }
+            else{
+            	$result[$key]['hours'] = $result[$key]['hours'] + $array->hours;
+            }
+
+            $result[$key]['groups'][] = $group;
+		}
 				
-		return $this->respond($data);
+		return $this->respond($result);
 	}
 
 	public function loadEmployees(Request $request)
@@ -120,7 +144,7 @@ class EvaluationPerformanceController extends ApiController
 				//'efficiency_id' => 9,
 				'mark'          => $request[$i]['mark'],
 				'comment'       => $request[$i]['comment'],
-				//'weight'		=> $request[$i]['weight'],
+				'weight'		=> $request[$i]['weight'],
 				'pm_id'         => Auth::user()->id
 			];
 		}
@@ -261,7 +285,6 @@ class EvaluationPerformanceController extends ApiController
 	{
 		$validator = Validator::make($request->all(), [
 			'year'     => 'required|numeric|between:2017,2030',
-			'project'  => 'required|numeric',
 			'employee' => 'required|numeric',
 		]);
 
@@ -270,10 +293,8 @@ class EvaluationPerformanceController extends ApiController
 		}
 
 		$data = DB::table('performances')
-			//->select('type','month','mark','comment','weight')
-			->select('type','month','mark','comment')
+			->select('id','project_id','type','month','mark','comment','weight')
 			->where('user_id', $request->get('employee'))//Usuario
-			->where('project_id', $request->get('project'))//Proyecto
 			->where('year',$request->get('year'))//Año
 			->orderBy('type','ASC')
 			->orderBy('month','ASC')
@@ -282,22 +303,18 @@ class EvaluationPerformanceController extends ApiController
 		$result = array();
 	
 		foreach ($data as $index => $array) {
-			$key = $array->type . '|' . $array->month;
+			$key = $array->project_id . '|' . $array->type . '|' . $array->month;
 
 			if(! isset($result[$key])) {
                 $result[$key] = [
-                    'mark' => $array->mark,
-                    'comment' =>ucfirst($array->comment),
-                    //'weight' => $array->weight
+					'id'      => $array->id,
+					'mark'    => $array->mark,
+					'comment' => ucfirst($array->comment),
+					'weight'  => $array->weight
                 ];
             }
 		}
 		
 		return $this->respond($result);
 	}
-
-	public function loadTotalTable($user_id, $project_id, $year)
-	{		
-	}
-
 }

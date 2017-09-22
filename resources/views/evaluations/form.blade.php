@@ -11,8 +11,8 @@
         	<tr v-for="criterion in criteria">
 
         		<td class="col-md-2">
-                	<span data-toggle="tooltip" data-placement="top" :title="criterion.description" class="glyphicon glyphicon-info-sign"></span> 
-                	<span data-toggle="tooltip" data-placement="top" :title="criterion.name + ' (Peso: ' + criterion.percentage +'%)'">@{{ capitalizeFirstLetter(criterion.code) }}</span> 
+                	<span :title="criterion.description" class="glyphicon glyphicon-info-sign"></span> 
+                	<span :title="criterion.name + ' (Peso: ' + criterion.percentage +'%)'">@{{ capitalizeFirstLetter(criterion.code) }}</span> 
                 </td>
 
 				<td class="col-md-1">
@@ -22,14 +22,12 @@
                 	</select>
                 </td>  
 
-                <td class="col-md-9">		
-                    <div class="form-group">
-						<textarea class="form-control input-sm" rows="1" placeholder="Comments" v-model="criterion.comment" :disabled="validateFilter"></textarea>
-					</div>
+                <td class="col-md-9" v-show="criterion.mark != 2 || criterion.code =='knowledge'">		                  
+					<textarea class="form-control input-sm" rows="1" placeholder="Comments" v-model="criterion.comment" :disabled="validateFilter"></textarea>					
 				</td>   
 
             </tr>
         </tbody>
-    </table>
 
+    </table>
 </div>

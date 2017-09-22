@@ -29,8 +29,8 @@ class ConfigTableSeeder extends Seeder
 		*/
 	
 		$absences = [
-			['code' =>'m','group'=>'sick leave','name'=>'medical leave'],
-			['code' =>'s','group'=>'sick leave','name'=>'sick absence'],
+			['code' =>'m','group'=>'sickness','name'=>'medical leave'],
+			['code' =>'s','group'=>'sickness','name'=>'sick absence'],
 			['code' =>'w','group'=>'permission','name'=>'wedding'],
 			['code' =>'ee','group'=>'permission','name'=>'exam eve'],
 			['code' =>'e','group'=>'permission','name'=>'exam'],
