@@ -56,6 +56,7 @@ Route::get('holidays','CalendarHolidaysController@index');//Solicitar vacaciones
 
 //Evaluations
 Route::get('evaluations','PerformancesController@index');
+Route::get('evaluations/download', 'PerformancesController@download');
 
 /**
  * API, mirar autenticacion token o passport en el api.php

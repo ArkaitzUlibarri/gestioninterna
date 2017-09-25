@@ -13,12 +13,7 @@ use Auth;
 
 class EvaluationPerformanceController extends ApiController
 {
-	/**
-	 * Get projects reported for a user and a manager
-	 * 
-	 * @return json
-	 */
-
+	
 	public function loadEmployees(Request $request)
 	{
 		$validator = Validator::make($request->all(), [
@@ -117,7 +112,7 @@ class EvaluationPerformanceController extends ApiController
 				
 		return $this->respond($result);
 	}
-	
+
 	public function loadProjectTable(Request $request)
 	{
 		$validator = Validator::make($request->all(), [

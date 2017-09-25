@@ -12,7 +12,7 @@
 	            <thead>
 	                <th>Criteria</th>                
 					<th v-for="(month_id, month_name) in monthList" :title="month_name" v-bind:class="monthStyle(month_id)">@{{month_name.slice(0,3)}}</th>
-	                <th title="Total" class="info">Total</th>
+	                <th title="Average" class="info">Average</th>
 	            </thead>
 	            <tbody>    
 	                <tr v-for="criterion in criteria">
@@ -21,8 +21,11 @@
 	                    </td> 
 						<td v-for="(month_id, month_name) in monthList" 
 							:class="cellStyleProject(element.project_id + '|' + criterion.code + '|' + month_id, false)" 
-							:title="getMarkComment(element.project_id + '|' + criterion.code + '|' + month_id, false, false)">
-							@{{ getMarkComment(element.project_id + '|' + criterion.code + '|' + month_id, true, false) }}
+							:title="getMarkComment(element.project_id + '|' + criterion.code + '|' + month_id, 'description', false)">
+							@{{ getMarkComment(element.project_id + '|' + criterion.code + '|' + month_id, 'mark', false) }}
+							<span v-if="getMarkComment(element.project_id + '|' + criterion.code + '|' + month_id, 'weight',false) != ''">
+								(@{{ getMarkComment(element.project_id + '|' + criterion.code + '|' + month_id, 'weight',false) }}%)
+							</span>
 						</td> 
 	                    <td class="col-md-1" :class="cellStyleProject(element.project_id + '|' + criterion.code, true)" 
 	                    	>@{{ getTotalColumn(element.project_id + '|' + criterion.code, false) }}
@@ -32,9 +35,5 @@
 	        </table>
 	    </div>
     </div>
-
-   	<div class="panel-footer">
-	  	<b>TOTAL: @{{ getTotalValue(element.project_id, false) }}</b>
-	</div>
 	
 </div>

@@ -439,14 +439,23 @@
 	            	return ((amount/total)*100).toFixed(2);
 	            },
 
-	            getMarkComment(key,mark,total) {
+	            getMarkComment(key,property,total) {
 	            	let input;   	
 	            	input = total ? this.tTable: this.pTable;
 
 	            	if(input.length == 0 || input[key] == undefined ){
-	            		return mark ? '-' : ''; 
+	            		return property == "mark" ? '-' : ''; 
 	            	}
-	            	return mark ? input[key].mark.toFixed(1) : input[key].comment;
+
+	            	if(property == "mark"){
+	            		return input[key].mark.toFixed(1);
+	            	}
+	            	else if(property == "comment"){
+	            		return input[key].comment;
+	            	}
+	            	else if(property == "weight"){
+	            		return input[key].weight;
+	            	}
 	            },
 
 	            getTotalColumn(key,total) {	
@@ -541,7 +550,7 @@
 
 			            	output[shortkey].sum += 1;
 			            	output[shortkey].counter += input[key].mark;
-			            	output[shortkey].total = output[shortkey].name == 'knowledge'
+			            	output[shortkey].total = (output[shortkey].name == 'knowledge' || !total_table)
 		            			?(output[shortkey].counter/ output[shortkey].sum).toFixed(2)
 		            			:((output[shortkey].counter * Math.pow((2/3),output[shortkey].zeros)) / output[shortkey].sum).toFixed(2);	
 		            	}
