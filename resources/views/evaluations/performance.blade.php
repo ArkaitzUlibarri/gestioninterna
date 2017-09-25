@@ -167,6 +167,7 @@
 
 				save() {
 					var vm = this;
+					let ids = [];
 
 					vm.criteria.forEach(function(item){
 						item.year = vm.filter.year;
@@ -176,27 +177,54 @@
 						item.weight = vm.getHours(false,item.project_id);
 					});
 
-					axios.post('/api/performance-evaluation', vm.criteria)
-					  .then(function (response) {
+					if(this.validateDeleteButton){
 
-						  	//Mensaje de Guardado
-						  	toastr.success("SAVED");
+						axios.post('/api/performance-evaluation', vm.criteria)
+						  .then(function (response) {
 
-						  	//Asignar ids
-						  	for (var i = vm.criteria.length - 1; i >= 0; i--) {
-						  		vm.criteria[i].id = response.data[i];
-						  	}
+							  	//Mensaje de Guardado
+							  	toastr.success("SAVED");
 
-						  	//Actualizar tablas  
-						  	vm.fetchProjectTable();
-						  	
-						  	//Limpiar formulario
-						  	//vm.clear();
+							  	//Asignar ids
+							  	for (var i = vm.criteria.length - 1; i >= 0; i--) {
+							  		vm.criteria[i].id = response.data[i];
+							  	}
 
-					  })
-					  .catch(function (error) {
-					    	vm.showErrors(error.response.data.errorInfo[2])
-					  });
+							  	//Actualizar tablas  
+							  	vm.fetchProjectTable();
+							  	
+							  	//Limpiar formulario
+							  	//vm.clear();
+
+						  })
+						  .catch(function (error) {
+						    	vm.showErrors(error.response.data.errorInfo[2])
+						  });
+
+					}else{
+
+						vm.criteria.forEach(function(item){
+							ids.push(item.id);
+						});
+
+						axios.patch('/api/performance-evaluation/'+ ids, vm.criteria)
+						  .then(function (response) {
+
+							  	//Mensaje de Guardado
+							  	toastr.success(response.data);
+
+							  	//Actualizar tablas  
+							  	vm.fetchProjectTable();
+							  	
+							  	//Limpiar formulario
+							  	//vm.clear();
+
+						  })
+						  .catch(function (error) {
+						    	vm.showErrors(error.response.data.errorInfo[2])
+						  });
+					}
+
 				},
 
 				erase() {		
@@ -211,10 +239,13 @@
 		                .then(function (response) {  
 
 		                	//Mensaje de Guardado
-						  	toastr.success(response.data);    
-						  	
+						  	toastr.success(response.data);   
+
+						  	//Actualizar tablas  
+							vm.fetchProjectTable();
+
 						  	//Limpiar formulario
-		                	//vm.clear();
+		                	vm.fullclear();
 		                })
 		                .catch(function (error) {
 		                    vm.showErrors(error.response.data)
@@ -241,10 +272,12 @@
 	                    	if(response.data.length != 0){
 	                    		vm.criteria.forEach(function(item){
 									key = vm.filter.project +"|"+ item.code +"|"+ vm.filter.month;
-									item.mark = response.data[key].mark;
-									item.comment = response.data[key].comment;
-									item.weight = response.data[key].weight;
-									item.id = response.data[key].id;
+									if(response.data[key] != undefined){
+										item.mark = response.data[key].mark;
+										item.comment = response.data[key].comment;
+										item.weight = response.data[key].weight;
+										item.id = response.data[key].id;
+									}
 								});
 		                    	vm.pTable = response.data;    
 								vm.pTableTotal = vm.calculateTotalColumn(false);    
@@ -566,8 +599,32 @@
 	            /**
 	             * Marca el estilo de las celdas
 	             */
-	            cellStyle(key, total_column) {
+	            cellStyleProject(key, total_column) {
 	            	let input =  total_column ? this.pTableTotal : this.pTable ;
+	            	let color = '';
+	            	let criteria = key.split("|")[1];
+
+	            	if(input[key] === undefined){
+	            		return '';
+	            	}
+	            	if(criteria != 'knowledge'){
+	            		if(total_column === false){
+	            			color = input[key].mark == 3 ? 'success' : color;
+	            			color = input[key].mark == 1 ? 'warning' : color;
+	            			color = input[key].mark == 0 ? 'danger' : color;
+	            		}
+	            		else{
+	            			color = input[key].total < parseFloat(1) ? 'danger' : color;
+	            		}
+	            	}
+	            	return color;
+	            },
+
+	            	            /**
+	             * Marca el estilo de las celdas
+	             */
+	            cellStyleTotal(key, total_column) {
+	            	let input =  total_column ? this.tTableTotal : this.tTable ;
 	            	let color = '';
 	            	let criteria = key.split("|")[1];
 

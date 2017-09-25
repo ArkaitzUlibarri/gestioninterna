@@ -1,7 +1,7 @@
 <div class="panel panel-primary">
 
    	<div class="panel-heading form-inline">
-		<h3 class="panel-title">@{{getEmployee()}} - @{{element.project}} - @{{getHours(true,element.project_id)}} hours (@{{getHours(false,element.project_id)}}%)
+		<h3 class="panel-title">@{{getEmployee()}} - @{{element.project}} - @{{element.hours}} hours (@{{getHours(false,element.project_id)}}%)
 			<span class="panel-title pull-right">@{{filter.year}}</span>
 		</h3> 
     </div>
@@ -16,13 +16,15 @@
 	            </thead>
 	            <tbody>    
 	                <tr v-for="criterion in criteria">
-	                    <td class="col-md-2" :title="criterion.name + ' (Peso: ' + criterion.percentage +'%)'">@{{capitalizeFirstLetter(criterion.code)}}</td> 
+	                    <td class="col-md-2" :title="criterion.name + ' (Peso: ' + criterion.percentage +'%)'">
+	                    	@{{capitalizeFirstLetter(criterion.code)}}
+	                    </td> 
 						<td v-for="(month_id, month_name) in monthList" 
-							:class="cellStyle(element.project_id + '|' + criterion.code + '|' + month_id, false)" 
+							:class="cellStyleProject(element.project_id + '|' + criterion.code + '|' + month_id, false)" 
 							:title="getMarkComment(element.project_id + '|' + criterion.code + '|' + month_id, false, false)">
 							@{{ getMarkComment(element.project_id + '|' + criterion.code + '|' + month_id, true, false) }}
 						</td> 
-	                    <td class="col-md-1" :class="cellStyle(element.project_id + '|' + criterion.code, true)" 
+	                    <td class="col-md-1" :class="cellStyleProject(element.project_id + '|' + criterion.code, true)" 
 	                    	>@{{ getTotalColumn(element.project_id + '|' + criterion.code, false) }}
 	                   	</td>     
 	                </tr>             

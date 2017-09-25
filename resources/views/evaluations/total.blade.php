@@ -20,7 +20,7 @@
 	                <tr v-for="criterion in criteria">
 	                    <td class="col-md-2" :title="criterion.name + ' (Peso: ' + criterion.percentage +'%)'">@{{capitalizeFirstLetter(criterion.code)}}</td>  
 						<td v-for="(month_id, month_name) in monthList">@{{ getMarkComment(criterion.code + '|' + month_id, true,true) }}</td> 
-	                    <td class="col-md-1">@{{ getTotalColumn(criterion.code, true) }}</td>     
+	                    <td class="col-md-1" :class="cellStyleTotal(criterion.code, true)">@{{ getTotalColumn(criterion.code, true) }}</td>     
 	                </tr>
 	            </tbody>
 
