@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use App\User;
+use App\UserHoliday;
 use App\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -64,7 +65,13 @@ class UsersController extends Controller
         $groups = $user->groups->where('enabled', 1);
         $contracts = $user->contracts;
         $holidays = $user->holidays;
-        $usercard = $contracts->where('end_date',null)->first()->holidaysCard->first();
+        
+        if(count($contracts) != 0 ){
+            $usercard = $contracts->where('end_date',null)->first()->holidaysCard->first();
+        }
+        else{
+            $usercard = new UserHoliday;
+        }
         
         return view('users.show', compact('user', 'categories', 'groups', 'contracts','holidays','usercard'));
     }

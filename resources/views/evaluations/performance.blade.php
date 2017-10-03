@@ -55,7 +55,7 @@
 					employee:'',
 					project:'',
 					year: moment().year(),
-					month: ''//moment().month() + 1
+					month: moment().month() + 1//''
 				},
 
 				//Tables
@@ -69,6 +69,7 @@
 
 			mounted(){
 				this.setForm();
+				this.fetchEmployees();//Quitar si filter.month no asignado
 			},
 
 			computed:{
@@ -198,7 +199,8 @@
 
 						  })
 						  .catch(function (error) {
-						    	vm.showErrors(error.response.data.errorInfo[2])
+						    	vm.showErrors(error.response.data)
+						    	vm.clear();
 						  });
 
 					}else{
@@ -221,7 +223,8 @@
 
 						  })
 						  .catch(function (error) {
-						    	vm.showErrors(error.response.data.errorInfo[2])
+						    	vm.showErrors(error.response.data)
+						    	vm.clear();
 						  });
 					}
 
@@ -450,7 +453,7 @@
 	            	if(property == "mark"){
 	            		return input[key].mark.toFixed(1);
 	            	}
-	            	else if(property == "comment"){
+	            	else if(property == "description"){
 	            		return input[key].comment;
 	            	}
 	            	else if(property == "weight"){

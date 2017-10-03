@@ -1,7 +1,7 @@
 <div class="panel panel-primary">
 
    	<div class="panel-heading form-inline">
-		<h3 class="panel-title">@{{getEmployee()}} - @{{element.project}} - @{{element.hours}} hours (@{{getHours(false,element.project_id)}}%)
+		<h3 class="panel-title">@{{getEmployee()}} | @{{element.project}} |
 			<span class="panel-title pull-right">@{{filter.year}}</span>
 		</h3> 
     </div>
@@ -23,14 +23,22 @@
 							:class="cellStyleProject(element.project_id + '|' + criterion.code + '|' + month_id, false)" 
 							:title="getMarkComment(element.project_id + '|' + criterion.code + '|' + month_id, 'description', false)">
 							@{{ getMarkComment(element.project_id + '|' + criterion.code + '|' + month_id, 'mark', false) }}
-							<span v-if="getMarkComment(element.project_id + '|' + criterion.code + '|' + month_id, 'weight',false) != ''">
-								(@{{ getMarkComment(element.project_id + '|' + criterion.code + '|' + month_id, 'weight',false) }}%)
-							</span>
 						</td> 
 	                    <td class="col-md-1" :class="cellStyleProject(element.project_id + '|' + criterion.code, true)" 
 	                    	>@{{ getTotalColumn(element.project_id + '|' + criterion.code, false) }}
 	                   	</td>     
-	                </tr>             
+	                </tr> 
+
+	                <tr>
+	                	<td><b>Weight</b></td>
+	                	<td v-for="(month_id, month_name) in monthList">
+		                	<b v-if="getMarkComment(element.project_id + '|' + 'quality' + '|' + month_id, 'weight',false) != ''">
+								@{{ getMarkComment(element.project_id + '|' + 'quality' + '|' + month_id, 'weight',false) }}%
+							</b>
+						</td>
+						<td></td>
+	                </tr>  
+	                            
 	            </tbody>
 	        </table>
 	    </div>

@@ -1,7 +1,7 @@
 <div class="panel panel-primary">
 
    	<div class="panel-heading form-inline">
-		<h3 class="panel-title">@{{getEmployee()}} - TOTAL 
+		<h3 class="panel-title">@{{getEmployee()}} | TOTAL |
 			<span class="panel-title pull-right">@{{filter.year}}</span>
 		</h3> 
     </div>

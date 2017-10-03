@@ -88,14 +88,14 @@ var app = new Vue({
 
             //Validacion de la fecha - Respecto al mes que se esta visualizando
             if (view.intervalStart.format('MM') != date.format('MM')) {
-                console.log('Fuera de rango del mes');
+                //console.log('Fuera de rango del mes');
                 toastr.error("Fuera de rango del mes");
                 return;
             }
 
             //Validacion de la fecha - Respecto a hoy        
             if (date.format('YYYY MM DD') <= moment().format('YYYY MM DD')) {
-                console.log("Fecha menor o igual que hoy");
+                //console.log("Fecha menor o igual que hoy");
                 toastr.error("Fecha menor o igual que hoy");
                 return;
             }
@@ -110,7 +110,7 @@ var app = new Vue({
             } else if (this.userCard.current_year - this.userCard.used_current_year > 0) {
                 eventTitle = "current_year";
             } else {
-                console.log("No te quedan días de vacaciones");
+                //console.log("No te quedan días de vacaciones");
                 toastr.error("No te quedan días de vacaciones");
                 exist = true;
             }
@@ -121,7 +121,7 @@ var app = new Vue({
 
                 if (date.format('YYYY MM DD') == item.start.format('YYYY MM DD') && item.className == 'validated') {
                     exist = true;
-                    console.log("Día de vacaciones validado");
+                    //console.log("Día de vacaciones validado");
                     toastr.warning("Día de vacaciones validado");
                     return;
                 } else if (date.format('YYYY MM DD') == item.start.format('YYYY MM DD') && item.id != 0) {
@@ -129,7 +129,7 @@ var app = new Vue({
                     _this.delete(item);
                 } else if (date.format('YYYY MM DD') == item.start.format('YYYY MM DD') && item.id == 0) {
                     exist = true; //Festivos
-                    console.log("No se puede solicitar vacaciones en un día festivo");
+                    //console.log("No se puede solicitar vacaciones en un día festivo");
                     toastr.error("No se puede solicitar vacaciones en un día festivo");
                 }
             });
@@ -200,7 +200,7 @@ var app = new Vue({
                     $('#calendar').fullCalendar('renderEvent', Event, true); //Pintar eventos
                 });
             }).catch(function (error) {
-                console.log(error.response);
+                //console.log(error.response);
                 vm.showErrors(error.response.data);
             });
         },
@@ -217,7 +217,7 @@ var app = new Vue({
             }).then(function (response) {
                 vm.userCard = response.data; //Datos de los contadores de vacaciones del usuario
             }).catch(function (error) {
-                console.log(error.response);
+                //console.log(error.response)
                 vm.showErrors(error.response.data);
             });
         },
@@ -238,10 +238,11 @@ var app = new Vue({
                 item['title'] = vm.setTitle(item['title']); //Actualizar titulo
                 $('#calendar').fullCalendar('renderEvent', item, true); //Pintar evento
                 vm.userHolidays(); //Recargar contadores
-                console.log("Guardado:" + response.data);
-                toastr.success("Guardado:" + response.data);
+                //console.log("Guardado:"+ response.data);
+                //toastr.success("Guardado:"+ response.data)
+                toastr.success("SAVED");
             }).catch(function (error) {
-                console.log(error.response);
+                //console.log(error.response)
                 vm.showErrors(error.response.data);
             });
         },
@@ -254,11 +255,12 @@ var app = new Vue({
                     $('#calendar').fullCalendar('removeEvents', item.id); //Borrar evento
                     $("td[data-date='" + item.start.format('YYYY-MM-DD') + "']").html(day); //Borrar titulo
                     vm.userHolidays(); //Recargar contador
-                    console.log("Borrado:" + item.id);
-                    toastr.success("Borrado:" + item.id);
+                    //console.log("Borrado:"+ item.id)
+                    //toastr.success("Borrado:"+ item.id)
+                    toastr.success("DELETED");
                 }
             }).catch(function (error) {
-                console.log(error.response);
+                //console.log(error.response)
                 vm.showErrors(error.response.data);
             });
         },

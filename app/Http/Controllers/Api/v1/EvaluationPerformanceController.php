@@ -50,6 +50,10 @@ class EvaluationPerformanceController extends ApiController
 		elseif(Auth::user()->primaryRole() == 'admin'){
 			$users = $q->get()->toArray();
 		}
+		else{
+			//$projects = array_keys(Auth::user()->reportableProjects());
+			$users = $q->where('wr.user_id',Auth::user()->id)->get()->toArray();	 
+		}
 
 		return $this->respond($users);
 	}
@@ -152,6 +156,10 @@ class EvaluationPerformanceController extends ApiController
 
 	public function store(PerformanceApiRequest $request)
 	{
+		if(Auth::user()->primaryRole() == 'tools' || Auth::user()->primaryRole() == 'user'){
+			return $this->respondInternalError('It is required a higher role');
+		}
+
 		//Array a Insertar
 		for ($i = 0; $i <= count($request->all()) - 1; $i++) { 	
 			$data[$i] = [
@@ -190,6 +198,10 @@ class EvaluationPerformanceController extends ApiController
 
 	public function update(PerformanceApiRequest $request, $ids)
 	{	
+		if(Auth::user()->primaryRole() == 'tools' || Auth::user()->primaryRole() == 'user'){
+			return $this->respondInternalError('It is required a higher role');
+		}
+
 		$index = 0;
 		$ids = explode(',', $ids);
 
@@ -237,6 +249,10 @@ class EvaluationPerformanceController extends ApiController
 
 	public function destroy($ids)
 	{
+		if(Auth::user()->primaryRole() == 'tools' || Auth::user()->primaryRole() == 'user'){
+			return $this->respondInternalError('User does not have the required permissions');
+		}
+
 		$ids = explode(',', $ids);
 
 		$performances = Performance::find($ids);

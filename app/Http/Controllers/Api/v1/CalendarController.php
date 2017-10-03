@@ -99,7 +99,7 @@ class CalendarController extends ApiController
 				'user_id'    => Auth::user()->id,
 				'created_at' => $request['date'],
 				'activity'   => 'absence',
-				'absence_id' => 9,
+				'absence_id' => 10,//Holidays
 				'time_slots' => (($active_contract->week_hours)/5)*4,
 				'comments'	=> 'Holiday report generated automatically',
 			];

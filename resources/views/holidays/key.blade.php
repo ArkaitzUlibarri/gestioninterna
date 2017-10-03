@@ -6,7 +6,7 @@
 
     <div class="panel-body">
 
-        <table class="table table-condensed table-borderless">
+        <table class="table table-condensed table-borderless" style="margin-bottom:0px">
   
             <thead>
                 <th>Type</th>
@@ -15,16 +15,16 @@
         
             <tbody>
                  <tr>
-                    <td>Holidays</td> 
-                    <td><div class="cuadrado blue"></div></td>
+                    <td class="col-md-9">Holidays</td> 
+                    <td class="col-md-3"><div class="cuadrado blue"></div></td>
                 </tr>
                  <tr>
-                    <td>Bank Holidays</td> 
-                    <td><div class="cuadrado red"></div></td>
+                    <td class="col-md-9">Bank Holidays</td> 
+                    <td class="col-md-3"><div class="cuadrado red"></div></td>
                 </tr>
                 <tr>
-                    <td>Today</td> 
-                    <td><div class="cuadrado yellow"></div></td>
+                    <td class="col-md-9">Today</td> 
+                    <td class="col-md-3"><div class="cuadrado yellow"></div></td>
                 </tr>
             </tbody>
                                
