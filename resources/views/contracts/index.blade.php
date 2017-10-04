@@ -4,7 +4,7 @@
 
 <div class="panel panel-primary">
     <div class="panel-heading">
-        @include('contracts.filter')
+        @include('contracts.indexPartials.filter')
         <h3 class="panel-title" style="margin-top: 7px;">CONTRACTS</h3>
         <div class="clearfix"></div>
     </div>

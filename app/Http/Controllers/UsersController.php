@@ -33,6 +33,7 @@ class UsersController extends Controller
         $filter = array(    
             'name' => $request->get('name'),
             'type' => $request->get('type'),
+            //'role' => $request->get('role'),
         );
 
     	return view('users.index', compact('users','filter'));

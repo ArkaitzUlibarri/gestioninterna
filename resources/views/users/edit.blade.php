@@ -2,7 +2,7 @@
 
 @section('content')
 
-@include('users.card')
+@include('users.generalPartials.card')
 
 <div class="panel panel-primary">
 	<div class="panel-heading">Configuration</div>

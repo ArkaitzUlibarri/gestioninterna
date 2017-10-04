@@ -4,14 +4,14 @@
 	
 	<div class="row">
 	    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
-	        @include('contracts.card')
+	        @include('contracts.showPartials.card')
 	    </div>
 	</div>
 
     @if(count($contract->teleworking)>0)
     <div class="row">
         <div class="col-xs-12 col-sm-offset-1 col-sm-10">
-            @include('contracts.teleworking')
+            @include('contracts.showPartials.teleworking')
         </div>
     </div>
 	@endif
@@ -19,7 +19,7 @@
 	@if(count($contract->reductions)>0)
     <div class="row">
         <div class="col-xs-12 col-sm-offset-1 col-sm-10">
-            @include('contracts.reductions')
+            @include('contracts.showPartials.reductions')
         </div>
     </div>
 	@endif

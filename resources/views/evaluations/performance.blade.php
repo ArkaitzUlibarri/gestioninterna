@@ -5,24 +5,24 @@
 	<div class="panel panel-primary">
 
 	   	<div class="panel-heading">
-	   		@include('evaluations.filter')
+	   		@include('evaluations.partials.filter')
 			<h3 class="panel-title" style="margin-top: 7px;">PERFORMANCE EVALUATION</h3>
 	        <div class="clearfix"></div>
 	    </div>
 
 	    <div class="panel-body">
-			@include('evaluations.form')
-			@include('evaluations.footer')
+			@include('evaluations.partials.form')
+			@include('evaluations.partials.footer')
 	    </div>
 
 	</div>
 
-	<span v-show="filter.employee != '' && filter.project != ''">
-		<span v-for="element in reports">	
-			@include('evaluations.project')
-		</span>
-		@include('evaluations.total')
-	</span>
+	<div v-show="filter.employee != '' && filter.project != ''">
+		<div v-for="element in reports">	
+			@include('evaluations.partials.project')
+		</div>
+		@include('evaluations.partials.total')
+	</div>
 
 @endsection
 

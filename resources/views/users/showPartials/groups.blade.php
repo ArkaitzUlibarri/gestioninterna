@@ -10,9 +10,9 @@
             </thead>
             <tbody>
                 @foreach($groups as $group)
-                    <tr class="{{ $group->enabled ? 'success' : 'danger' }}">              
-                        <td>{{ ucwords($group->project->name) }}</td>
-                        <td>{{ ucwords($group->name) }}</td> 
+                    <tr class="{{ $group->enabled ? 'info' : '' }}">              
+                        <td class="col-md-8">{{ ucwords($group->project->name) }}</td>
+                        <td class="col-md-4">{{ ucwords($group->name) }}</td> 
                     </tr>
                 @endforeach
             </tbody>

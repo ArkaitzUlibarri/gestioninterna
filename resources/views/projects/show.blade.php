@@ -4,14 +4,14 @@
 
 <div class="row">
     <div class="col-xs-12 col-sm-offset-1 col-sm-10">
-        @include('projects.card')
+        @include('projects.showPartials.card')
     </div>
 </div>
 
 @if(count($project->groups)>0)
 	<div class="row">
 		<div class="col-xs-12 col-sm-offset-1 col-sm-10">
-			@include('projects.groups')
+			@include('projects.showPartials.groups')
 		</div>
 	</div>
 @endif

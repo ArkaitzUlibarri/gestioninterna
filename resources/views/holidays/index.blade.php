@@ -4,8 +4,8 @@
 
 <div class="row" v-if="contract.end_date == null"> 
     <div class="col-xs-12 col-sm-4 col-md-3 col-md-offset-1 col-lg-2 col-lg-offset-2">
-        @include('holidays.card')
-        @include('holidays.key')
+        @include('holidays.partials.card')
+        @include('holidays.partials.key')
     </div>
 
     <div class="col-xs-12 col-sm-9 col-md-7 col-lg-6">

@@ -12,9 +12,9 @@
             <tbody>
                 @foreach($categories as $category)
                     <tr>
-                        <td>{{$category->name}}</td>
-                        <td>{{$category->code}}</td>
-                        <td>{{$category->description}}</td>
+                        <td class="col-md-4">{{$category->name}}</td>
+                        <td class="col-md-4">{{$category->code}}</td>
+                        <td class="col-md-4">{{$category->description}}</td>
                     </tr>
                 @endforeach
             </tbody>

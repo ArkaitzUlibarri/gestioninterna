@@ -9,11 +9,11 @@
 </div>
 
 <span v-if="contract">	
-	@include('workingreports.partials.details')
+	@include('workingreports.editPartials.details')
 		
-	@include('workingreports.partials.tasks')
+	@include('workingreports.editPartials.tasks')
 
-	@include('workingreports.partials.task')
+	@include('workingreports.editPartials.task')
 </span>
 <span v-else>
 	<div class="panel panel-danger">

@@ -5,7 +5,7 @@
     <div class="panel panel-primary">
 
         <div class="panel-heading">
-            @include('validation.filter')
+            @include('validation.partials.filter')
             <div class="clearfix"></div>
         </div>
 
@@ -78,14 +78,14 @@
         </div>
 
         <div class="panel-footer">
-            @include('validation.footer')
+            @include('validation.partials.footer')
             <div class="clearfix"></div>
         </div>
 
     </div>
 
     <div class="row front" v-show="upHere">
-        @include('validation.key')
+        @include('validation.partials.key')
     </div>
 
 @endsection
@@ -674,7 +674,7 @@
             getDayTitle(day){
                 for (var i = this.bankHolidays.length - 1; i >= 0; i--) {
                     if(this.bankHolidays[i].date == day){
-                        return "BANK HOLIDAY IN " + this.bankHolidays[i].name.toUpperCase();
+                        return "BANK HOLIDAY IN/OF " + this.bankHolidays[i].name.toUpperCase();
                     }
                 }
                 return '';

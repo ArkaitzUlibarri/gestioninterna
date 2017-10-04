@@ -8,9 +8,9 @@
         </thead>    
         <tbody>
             @foreach($project->groups as $group)
-                <tr class="{{ $group->enabled ? 'success' : 'danger' }}">
-                    <td>{{ $loop->iteration}}</td>
-                    <td>{{ ucwords($group->name) }}</td>
+                <tr class="{{ $group->enabled ? 'info' : '' }}">
+                    <td class="col-md-2">{{ $loop->iteration}}</td>
+                    <td class="col-md-10">{{ ucwords($group->name) }}</td>
                 </tr>
             @endforeach
         </tbody>

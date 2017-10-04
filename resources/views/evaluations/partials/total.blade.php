@@ -24,14 +24,15 @@
 						</td> 
 	                    <td class="col-md-1" :class="cellStyleTotal(criterion.code, true)">@{{ getTotalColumn(criterion.code, true) }}</td>     
 	                </tr>
+	                <tr class="active">
+	                    <td class="col-md-2"><b>TOTAL (%)</b></td> 
+	                    <td v-for="(month_id, month_name) in monthList"></td> 
+	                    <td class="col-md-1"><b>@{{ getTotalValue("", true) }}</b></td>
+                	</tr> 
 	            </tbody>
 
 	        </table>
 	    </div>
     </div>
-
-   	<div class="panel-footer">
-	  	<b>TOTAL: @{{ getTotalValue("", true) }}</b>
-	</div>
 
 </div>

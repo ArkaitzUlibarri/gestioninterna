@@ -13,10 +13,10 @@
 
             @foreach($contract->teleworking as $tele)
             <tbody>
-                <tr class="{{ $tele->end_date ? 'danger' : 'success' }}">
-                    <td>{{$tele->start_date}}</td>
-                    <td>{{$tele->end_date}}</td>
-                    <td>
+                <tr class="{{ $tele->end_date ? '' : 'info' }}">
+                    <td class="col-md-4">{{$tele->start_date}}</td>
+                    <td class="col-md-4">{{$tele->end_date}}</td>
+                    <td class="col-md-4">
 	                    {{$tele->monday ? "Monday |" : "" }}
 	                    {{$tele->tuesday ? "Tuesday |" : "" }}
 	                    {{$tele->wednesday ? "Wednesday |" : "" }}

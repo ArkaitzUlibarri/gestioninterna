@@ -12,10 +12,10 @@
 
             @foreach($contract->reductions as $reduction)
             <tbody>
-                <tr class="{{ $reduction->end_date ? 'danger' : 'success' }}">
-                    <td>{{$reduction->start_date}}</td>
-                    <td>{{$reduction->end_date}}</td>
-                    <td>{{$reduction->week_hours}}</td>
+                <tr class="{{ $reduction->end_date ? '' : 'info' }}">
+                    <td class="col-md-4">{{$reduction->start_date}}</td>
+                    <td class="col-md-4">{{$reduction->end_date}}</td>
+                    <td class="col-md-4">{{$reduction->week_hours}}</td>
                 </tr>
             </tbody>
             @endforeach

@@ -15,7 +15,7 @@ class UserRepository
      * @var array
      */
     protected $filters = [
-        'name','type',
+        'name','type',//'role',
     ];
 
 	/**
@@ -112,8 +112,40 @@ class UserRepository
         else{
             return $q;
         }
-
     }
+
+    
+    /**
+     * Filtro por role
+     * 
+     * @param  $q
+     * @param  $value
+     */
+    /*
+    public function filterByRole($q, $value)
+    { 
+        if($value == "admin"){
+            return $q->where('users.role', 'admin');
+        }
+        elseif($value == ""){
+            return $q;
+        }
+        else{
+            $q->Join('category_user as cu','cu.user_id','users.id');
+            $q->Join('categories as c','c.id','cu.category_id');
+
+            if ($value == "manager") {
+                return $q->where('c.code','RP')->orwhere('c.code','RTP');
+            }
+            elseif($value == "tools"){
+                return $q->where('c.code','<>','RP')->where('c.code','<>','RTP');
+            }
+            elseif($value == "user"){
+                return $q->where('users.role', 'user')->where('c.code','<>','RP')->where('c.code','<>','RTP');
+            }
+        }
+    }
+    */
 
     public function getGroupedUsers()
     {

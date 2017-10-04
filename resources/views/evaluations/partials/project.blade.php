@@ -29,11 +29,11 @@
 	                   	</td>     
 	                </tr> 
 
-	                <tr>
-	                	<td><b>Weight</b></td>
+	                <tr class="active">
+	                	<td><b>Weight (%)</b></td>
 	                	<td v-for="(month_id, month_name) in monthList">
 		                	<b v-if="getMarkComment(element.project_id + '|' + 'quality' + '|' + month_id, 'weight',false) != ''">
-								@{{ getMarkComment(element.project_id + '|' + 'quality' + '|' + month_id, 'weight',false) }}%
+								@{{ getMarkComment(element.project_id + '|' + 'quality' + '|' + month_id, 'weight',false) }}
 							</b>
 						</td>
 						<td></td>

@@ -4,7 +4,7 @@
 
 <div class="panel panel-primary">
     <div class="panel-heading">
-        @include('projects.filter')
+        @include('projects.indexPartials.filter')
         <h3 class="panel-title" style="margin-top: 7px;">PROJECTS</h3>
         <div class="clearfix"></div>
     </div>
@@ -15,7 +15,9 @@
                 <th>#</th>
                 <th>Project</th>
                 <th>Customer</th>
-                <th>PM</th>
+                @if(Auth::user()->primaryRole() == 'admin')
+                    <th>PM</th>
+                @endif
                 <th>Start date</th>
                 <th>End date</th>
                 <th class="custom-table-action-th">Actions</th>
@@ -26,7 +28,9 @@
                         <td>{{ $loop->iteration }}</td>
                         <td><a a title="Show" href="{{ url('projects' . '/' . $project->id . '/') }}">{{ strtoupper($project->name) }}</a></td>
                         <td>{{ strtoupper($project->customer) }}</td>
-                        <td>{{ ucwords($project->pm) }}</td>
+                        @if(Auth::user()->primaryRole() == 'admin')
+                            <td>{{ ucwords($project->pm) }}</td>
+                        @endif
                         <td>{{ $project->start_date }}</td>
                         <td>{{ empty($project->end_date) ? "In progress" : $project->end_date }}</td>
                         <td>
