@@ -3,21 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\UserRepository;
 use Carbon\Carbon;
 use App\User;
 use App\Project;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
 
 class PerformancesController extends Controller
 {
 	protected $userRepository;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct()
     {
         $this->middleware('auth');
         //$this->middleware('checkrole');
-        $this->userRepository = $userRepository;
     }
 
     public function index()
@@ -38,14 +37,9 @@ class PerformancesController extends Controller
 
     public function download()
     {   
-        /*
-        $data = $this->reportRepository->formatOutput(
-            $this->reportRepository->fetchData()
-        );
-        */
+        $data = Project::all();
 
         $fileName =  Carbon::now('Europe/Madrid')->format('Ymd_Hi') . '_performance_evaluation';
-        dd($fileName);
         Excel::create($fileName, function($excel) use ($data) {
             $this->addSheet('performance', $excel, $data);
         })->export('xlsx');
@@ -61,22 +55,27 @@ class PerformancesController extends Controller
      */
     private function addSheet($name, $excel, $data)
     {
+        //Con datos
         if(count($data) > 0) {
             $excel->sheet($name, function($sheet) use ($data) {
                 //Estilos
                 $sheet->freezeFirstRow();
                 $sheet->setHeight(1, 20);
-                $sheet->cells('A1:F1', function($row) {
+                $sheet->setBorder('A1:N1', 'thin');
+                $sheet->cells('A1:N1', function($row) {
                     $row->setBackground('#C6EFD8');
                     $row->setFontColor('#006100');
                     $row->setAlignment('center');
                     $row->setValignment('center');
                 });
 
+                $header = ['Criteria','January','February','March','April','May','June','July','August','September','October','November','December','Total'];
+                
                 //Cabecera
-                $sheet->appendRow(1, array('User', 'Day', 'Task', 'Time', 'Total', 'Validated By'));
+                $sheet->appendRow(1, $header);
 
                 //Filas de datos
+                /*
                 foreach ($data as $entry) {
                     foreach ($entry['items'] as $item) {
                         $sheet->appendRow(array(
@@ -89,14 +88,27 @@ class PerformancesController extends Controller
                         ));
                     }
                 }
+                */
+
             });
 
             return;
         }
 
+        //Sin datos
         $excel->sheet($name, function($sheet) {
             $sheet->row(1, array('No data available'));
         });
+    }
+
+    private function getEvaluations($user_id,$month,$year)
+    {
+        $q = DB::table('performances')
+                ->select('project_id','type','mark','weight')
+                ->where('year',$year)
+                ->where('month',$month)
+                ->where('user_id',$user_id)
+                ->get();
     }
 
 }

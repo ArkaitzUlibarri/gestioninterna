@@ -22,7 +22,7 @@
 			</thead>
    
 			<tbody>
-				<tr v-for="(item, index) in reports">
+				<tr v-for="(item, index) in reports" :class="{success:item.horas_validadas_admin == 0}">
 					<td class="col-md-4">@{{ item.fullname.toUpperCase() }}</td>
 					<td class="col-md-2">@{{ getWeek(1,item.created_at) }} | @{{ getDayWeek(item.created_at) }}</td>
 					<td class="col-md-2">   
@@ -33,18 +33,18 @@
 					<td class="col-md-2">@{{ item.horas_reportadas }}</td>  
 					<td class="col-md-1">
 						<div v-if="item.horas_validadas_pm != 0">
-							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+							<span class="glyphicon glyphicon-remove" style="color:red" aria-hidden="true"></span>
 						</div>
 						<div v-else>
-							<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+							<span class="glyphicon glyphicon-ok" style="color:green" aria-hidden="true"></span>
 						</div>                                  
 					</td>
 					<td class="col-md-1">
 						<div v-if="item.horas_validadas_admin != 0">
-							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+							<span class="glyphicon glyphicon-remove" style="color:red" aria-hidden="true"></span>
 						</div>
 						<div v-else>
-							<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+							<span class="glyphicon glyphicon-ok" style="color:green" aria-hidden="true"></span>
 						</div>  
 					</td>
 				</tr>

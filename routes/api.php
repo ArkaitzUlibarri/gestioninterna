@@ -51,4 +51,3 @@ Route::patch('users/{id}', 'Api\v1\UsersController@update');
 //Performance Evaluation
 Route::get('month_reports','Api\v1\EvaluationPerformanceController@loadMonthReports');
 Route::get('project_table','Api\v1\EvaluationPerformanceController@loadProjectTable');
-Route::delete('performance-evaluation/{ids}','Api\v1\EvaluationPerformanceController@destroy');

@@ -10,10 +10,12 @@
 	        <div class="clearfix"></div>
 	    </div>
 
-	    <div class="panel-body">
-			@include('evaluations.partials.form')
-			@include('evaluations.partials.footer')
-	    </div>
+	    @if (Auth::user()->primaryRole() == 'admin' || Auth::user()->primaryRole() == 'manager')
+		    <div class="panel-body">
+				@include('evaluations.partials.form')
+				@include('evaluations.partials.footer')
+		    </div>
+	    @endif
 
 	</div>
 

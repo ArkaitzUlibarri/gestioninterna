@@ -77,3 +77,4 @@ Route::delete('api/calendar/{id}', 'Api\v1\CalendarController@destroy');
 Route::get('api/employees','Api\v1\EvaluationPerformanceController@loadEmployees');
 Route::post('api/performance-evaluation','Api\v1\EvaluationPerformanceController@store');
 Route::patch('api/performance-evaluation/{ids}','Api\v1\EvaluationPerformanceController@update');
+Route::delete('api/performance-evaluation/{ids}','Api\v1\EvaluationPerformanceController@destroy');

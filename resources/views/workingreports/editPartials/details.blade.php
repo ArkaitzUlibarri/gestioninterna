@@ -6,7 +6,7 @@
 				<strong>{{ ucwords($reportUser->fullname) }}</strong>
 			</span>
 
-			Report Day: 
+			Report Day 
 			<input type ="date"
 				   id="datefield"
 				   name="created_at"
@@ -17,7 +17,7 @@
 				   v-model="reportdate"
 				   v-on:blur="dateValidation">
 
-			W@{{ week }}-@{{ reportDayWeek.toUpperCase() }}
+			W@{{ week }} | @{{ reportDayWeek.toUpperCase() }}
 
 			<button class="btn btn-primary btn-sm pull-right"
 					title="Copy Last Report" 

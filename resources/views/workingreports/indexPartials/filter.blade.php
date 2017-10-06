@@ -32,12 +32,14 @@
 		@endforeach
 	</select>
 
+	<!--
 	<select name="validation" class="form-control input-sm">
 		<option selected="true" value="">Validation</option>
 		@foreach (config('options.validations') as $validation)
 			<option value="{{ $validation }}"  {{ $validation == $filter['validation'] ? 'selected' : '' }}>{{ ucfirst($validation) }}</option>
 		@endforeach
 	</select>
+	-->
 
 	<button type="submit" title="Search" class="btn btn-default btn-sm">
 		<span class="glyphicon glyphicon-search"></span> Search
