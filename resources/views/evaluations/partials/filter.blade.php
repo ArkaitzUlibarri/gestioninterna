@@ -27,7 +27,7 @@
         </template>               
 	</select>
 
-	<a title="Export" href="{{ url('evaluations/download') }}" class="btn btn-success btn-sm custom-btn-width" :disabled="validateFilter">
+	<a title="Export" v-bind:href="makeUrl('{{ url('evaluations/download/') }}', [filter.year, filter.employee])" class="btn btn-success btn-sm custom-btn-width" :disabled="validateExportButton">
          <span class="glyphicon glyphicon-download-alt"></span> Export
     </a>
 	

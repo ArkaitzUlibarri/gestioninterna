@@ -6,7 +6,7 @@
         <table class="table">
             <thead>
                 <th>Type</th>
-                <th>Week working hours</th>
+                <th title="Week working hours">Hours</th>
                 <th>Start date</th>   
                 <th>Estimated end date</th>
                 <th>End date</th>              

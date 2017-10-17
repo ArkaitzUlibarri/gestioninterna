@@ -12,7 +12,7 @@
 	            <thead>
 	                <th>Criteria</th>                
 					<th v-for="(month_id, month_name) in monthList" :title="month_name" v-bind:class="monthStyle(month_id)">@{{month_name.slice(0,3)}}</th>
-	                <th title="Average" class="info">Average</th>
+	                <th title="Average" class="info">Avg.</th>
 	            </thead>
 	            <tbody>    
 	                <tr v-for="criterion in criteria">

@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table table-hover table-condensed" style="margin-bottom: 0px">
+    <table class="table table-hover table-condensed">
 
         <thead>
             <th>Criteria</th>

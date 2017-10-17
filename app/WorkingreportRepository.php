@@ -327,7 +327,7 @@ class WorkingreportRepository
      */
     public function formatOutput($data)
     {
-        if (count($data)==0) {
+        if (count($data) == 0) {
             return null;
         }
 
@@ -423,7 +423,7 @@ class WorkingreportRepository
      */
     public function formatMonthlyOutput($data)
     {
-        if (count($data)==0) {
+        if (count($data) == 0) {
             return null;
         }
 
@@ -440,6 +440,107 @@ class WorkingreportRepository
         }
 
         return $response;
+    }
+
+    /**
+     * Reports by employees in an specific time
+     * @param [type] $year  [description]
+     * @param [type] $month [description]
+     */
+    public function employeesReports($year,$month)
+    {
+        $q = DB::table('working_report as wr')
+            ->Join('users as u','wr.user_id','u.id')
+            ->Join('categories as c','wr.category_id','c.id')
+            ->select(
+                'wr.user_id as id',
+                'u.name as name',
+                'u.lastname as lastname',
+                DB::raw("CONCAT(u.name, ' ', u.lastname ) as full_name")
+            )
+            ->whereYear('wr.created_at',$year)
+            ->whereMonth('wr.created_at',$month)
+            ->whereNotNull('wr.group_id')
+            ->where('c.name','<>','RP')
+            ->where('c.name','<>','DI')
+            ->orderBy('name','ASC')
+            ->distinct();
+
+        if(Auth::user()->primaryRole() == 'manager'){
+            $projects = array_keys(Auth::user()->managerProjects());
+            $users = $q->whereIn('wr.project_id',$projects)->get()->toArray();  
+        }
+        elseif(Auth::user()->primaryRole() == 'admin'){
+            $users = $q->get()->toArray();
+        }
+        else{
+            $users = $q->where('wr.user_id',Auth::user()->id)->get()->toArray();     
+        }
+
+        return $users;
+    }
+
+    /**
+     * Groups reported by the user in this month
+     * @param  [type] $year     [description]
+     * @param  [type] $month    [description]
+     * @param  [type] $employee [description]
+     * @return [type]           [description]
+     */
+    public function employeeMonthReports($year,$month,$employee)
+    {
+        return DB::table('working_report as wr')
+            ->Join('projects as p','wr.project_id','p.id')
+            ->Join('groups as g','wr.group_id','g.id')
+            ->select(
+                'wr.project_id as project_id',
+                'p.name as project',
+                'wr.group_id as group_id',
+                'g.name as group',
+                DB::raw("sum(time_slots)*0.25 as hours")
+            )
+            ->whereYear('wr.created_at',$year)
+            ->whereMonth('wr.created_at',$month)
+            ->where('wr.user_id', $employee)
+            ->whereNotNull('wr.group_id')
+            ->groupBy('wr.project_id','wr.group_id')
+            ->get()
+            ->toArray();
+    }
+
+    /**
+     * Group data
+     * @param  [type] $data [description]
+     * @return [type]       [description]
+     */
+    public function formatReports($data)
+    {
+        $result = array();
+        
+        foreach ($data as $index => $array) {
+            $key = $array->project_id;
+
+            $group = [
+                'group'    => $array->group,
+                'group_id' => $array->group_id,
+                'hours'    => $array->hours
+            ];
+
+            if(! isset($result[$key])) {            
+                $result[$key] = [
+                    'project_id' => $array->project_id,
+                    'project'    => $array->project,
+                    'hours'      => $array->hours
+                ];
+            }
+            else{
+                $result[$key]['hours'] = $result[$key]['hours'] + $array->hours;
+            }
+
+            $result[$key]['groups'][] = $group;
+        }
+
+        return $result;
     }
 
 }

@@ -82,6 +82,12 @@
 						: false;
 				},
 
+				validateExportButton() {
+					return (this.filter.year == '' || this.filter.month == '' || this.filter.employee == '')
+						? true
+						: false;
+				},
+
 				validateDeleteButton() {
 					let idsCount = 0;
 
@@ -265,6 +271,11 @@
 	                let key;
 
 	                this.fullclear();
+
+        		    vm.pTable = [];
+					vm.pTableTotal =  []; 
+					vm.tTable =  [];
+					vm.tTableTotal =  [];
 
 	                axios.get('api/project_table', {
 	                        params: {
