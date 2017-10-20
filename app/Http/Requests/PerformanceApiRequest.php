@@ -15,13 +15,13 @@ class PerformanceApiRequest extends ApiRequest
     public function rules()
     {
         return [
-            '*.user_id'    => 'required|numeric',
-            '*.project_id' => 'required|numeric',
-            '*.code'       => 'required|string',
-            '*.year'       => 'required|numeric|between:2015,2030',
-            '*.month'      => 'required|numeric|between:1,12',
-            '*.comment'    => 'nullable|string',
-            '*.mark'       => 'required|numeric'
+            'user_id'    => 'required|numeric',
+            'project_id' => 'required_unless:code,knowledge|numeric|nullable',
+            'code'       => 'required|string',
+            'year'       => 'required|numeric|between:2015,2030',
+            'month'      => 'required|numeric|between:1,12',
+            'comment'    => 'nullable|string',
+            'mark'       => 'required|numeric'
         ];
     }
 }

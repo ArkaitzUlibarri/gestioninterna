@@ -10,20 +10,68 @@
 	        <div class="clearfix"></div>
 	    </div>
 
-	    @if (Auth::user()->primaryRole() == 'admin' || Auth::user()->primaryRole() == 'manager')
-		    <div class="panel-body">
-				@include('evaluations.partials.form')
-				@include('evaluations.partials.footer')
-		    </div>
-	    @endif
+	    <div class="panel-body" v-show="filter.employee != '' && filter.year != ''">
 
-	</div>
+	    	<!--Formulario-->
 
-	<div v-show="filter.employee != '' && filter.project != ''">
-		<div v-for="element in reports">	
-			@include('evaluations.partials.project')
-		</div>
-		@include('evaluations.partials.total')
+			<!--Resto de Campos-->
+			@if (Auth::user()->primaryRole() == 'admin' || Auth::user()->primaryRole() == 'manager')	 
+				@component('evaluations.partials.forms.component')
+					@slot('filter')
+						@include('evaluations.partials.forms.filters.project')
+					@endslot
+					@slot('body')
+						<tr v-for="criterion in generalform">
+	                        @include('evaluations.partials.forms.row')
+	                    </tr>
+					@endslot
+				@endcomponent
+		    @endif
+
+		    <!--Campo knowledge-->
+		    @if (Auth::user()->primaryRole() == 'admin')	  
+				@component('evaluations.partials.forms.component')
+					@slot('filter')
+					@endslot
+					@slot('body')
+	                    <tr v-for="criterion in knowledgeform">
+	                        @include('evaluations.partials.forms.row')
+	                    </tr>
+					@endslot
+				@endcomponent
+		    @endif
+
+		    <!--Tablas-->
+
+		    <div v-show="reports.length != 0">
+				<div v-for="element in reports">	
+					@component('evaluations.partials.tables.component')
+						@slot('title')
+							@{{ getEmployee() }} | @{{ element.project }} | @{{ parseFloat(element.hours).toFixed(2) }} Hours|
+						@endslot
+						@slot('column')
+							<th title="Average" class="active">Avg.</th>
+						@endslot
+						@slot('body')
+							@include('evaluations.partials.tables.body.project')
+						@endslot
+					@endcomponent
+				</div>
+				@component('evaluations.partials.tables.component')
+						@slot('title')
+							@{{ getEmployee() }} | TOTAL |
+						@endslot
+						@slot('column')
+							<th title="Total" class="info">Total</th>
+						@endslot
+						@slot('body')
+							@include('evaluations.partials.tables.body.total')
+						@endslot
+				@endcomponent
+			</div>
+
+	    </div>
+
 	</div>
 
 @endsection
@@ -38,11 +86,11 @@
 
 				//Evaluation					
 				criteria: [],
-				evaluation: <?php echo json_encode(config('options.performance_evaluation'));?>,
+				configuration: <?php echo json_encode(config('options.performance_evaluation'));?>,
 
 				// User's data
             	//user_id: '{!! Auth()->user()->id !!}',
-            	role: '{!! Auth()->user()->primaryRole() !!}',
+            	//role: '{!! Auth()->user()->primaryRole() !!}',
             	auth_projects: <?php echo json_encode($projects);?>,
 
             	//List
@@ -71,192 +119,86 @@
 
 			mounted(){
 				this.setForm();
-				this.fetchEmployees();//Quitar si filter.month no asignado
+				this.fetchEmployees();
 			},
 
 			computed:{
 
-	            validateFilter() {
-					return (this.filter.year == '' || this.filter.month == '' || this.filter.employee == '' || this.filter.project == '')
-						? true
-						: false;
-				},
-
 				validateExportButton() {
-					return (this.filter.year == '' || this.filter.month == '' || this.filter.employee == '')
-						? true
-						: false;
+					return (this.filter.year == '' || this.filter.employee == '') ? true : false;
 				},
 
-				validateDeleteButton() {
-					let idsCount = 0;
-
+				knowledgeform() {
+					let out = [];
 					this.criteria.forEach(function(item){
-						if( !(item.id === '')){
-							idsCount++;
+						if(item.code == 'knowledge'){
+							out.push(item);
 						}
-					});	
-
-					return (idsCount == 4) ? false : true;	
+					});
+					return out;
 				},
 
-				validateSaveButton() {				
-					let marksCount = 0;
-					let errorsCount = 0;
-
+				generalform() {
+					let out = [];
 					this.criteria.forEach(function(item){
-						if( !(item.mark === '')){
-							marksCount++;
+						if(item.code != 'knowledge'){
+							out.push(item);
 						}
-						if( item.code != 'knowledge' && item.mark != 2 && item.comment === ''){
-							errorsCount++;
-						}
-					});	
-
-					return (marksCount == 4 && errorsCount == 0) ? false : true;													
-				},
-
-				validateClearButton() {
-					let marksCount = 0;
-					let commentsCount = 0;
-
-					this.criteria.forEach(function(item){
-						if( item.mark === ''){
-							marksCount++;
-						}
-						if( item.comment === ''){
-							commentsCount++;
-						}
-					});	
-
-					return (marksCount == 4 && commentsCount == 4) ? true : false;				
+					});
+					return out;
 				},
 
 			},
 
 			methods: {
 
-				setForm() {
-					for (let i = this.evaluation.length - 1; i >= 0; i--) {
-						this.criteria.push({
-							id: '',
-							code: this.evaluation[i]['code'],
-							description : this.evaluation[i]['description'],
-							name: this.evaluation[i]['name'],
-							percentage: this.evaluation[i]['percentage'],
-							points: this.evaluation[i]['points'],
-							mark: '',
-							comment: '',
-							weight:'',
-						});
-					}
-				},
-
+				/** ---------------------------BBDD --------------------------- **/
 				/**
-		         * Limpia el Formulario
-		         */
-		        clear() {
-		        	this.criteria.forEach(function(item){
-						item.mark = '';
-						item.comment = '';
-					});
-				},
-
-				/**
-		         * Limpia el Formulario completo
-		         */
-		        fullclear() {
-		        	this.criteria.forEach(function(item){
-		        		item.id = '';
-						item.mark = '';
-						item.comment = '';
-						item.weight = '';
-					});
-				},
-
-				save() {
+				 * Guardar criterio del formulario
+				 */
+				save(criterion) {
 					var vm = this;
-					let ids = [];
 
-					vm.criteria.forEach(function(item){
-						item.year = vm.filter.year;
-						item.month = vm.filter.month;
-						item.user_id = vm.filter.employee;
-						item.project_id = vm.filter.project;
-						item.weight = vm.getHours(false,item.project_id);
-					});
+					//Assign filter values before save
+					criterion.year = vm.filter.year;
+					criterion.month = vm.filter.month;
+					criterion.user_id = vm.filter.employee;
+					criterion.project_id = criterion.code == 'knowledge' ? '' : vm.filter.project;
+					criterion.weight = criterion.code == 'knowledge' ? '100' : vm.getHours(criterion.month, criterion.project_id);
+					//criterion.comment = criterion.mark == 2 ? '': criterion.comment; 
 
-					if(this.validateDeleteButton){
-
-						axios.post('/api/performance-evaluation', vm.criteria)
+					if(this.validateDeleteButton(criterion)){
+						axios.post('/api/performance-evaluation', criterion)
 						  .then(function (response) {
-
-							  	//Mensaje de Guardado
-							  	toastr.success("SAVED");
-
-							  	//Asignar ids
-							  	for (var i = vm.criteria.length - 1; i >= 0; i--) {
-							  		vm.criteria[i].id = response.data[i];
-							  	}
-
-							  	//Actualizar tablas  
-							  	vm.fetchProjectTable();
-							  	
-							  	//Limpiar formulario
-							  	//vm.clear();
+	  	
+							  	toastr.success("SAVED");//Mensaje de Guardado
+							  	criterion.id = response.data;//Asignar ids	  	 
+							  	vm.fetchPerformance();//Actualizar tablas
+							  	vm.loadFormValues();//Cargar valor
+							  	//vm.clear(criterion);//Limpiar formulario
 
 						  })
 						  .catch(function (error) {
 						    	vm.showErrors(error.response.data)
-						    	vm.clear();
-						  });
-
-					}else{
-
-						vm.criteria.forEach(function(item){
-							ids.push(item.id);
-						});
-
-						axios.patch('/api/performance-evaluation/'+ ids, vm.criteria)
-						  .then(function (response) {
-
-							  	//Mensaje de Guardado
-							  	toastr.success(response.data);
-
-							  	//Actualizar tablas  
-							  	vm.fetchProjectTable();
-							  	
-							  	//Limpiar formulario
-							  	//vm.clear();
-
-						  })
-						  .catch(function (error) {
-						    	vm.showErrors(error.response.data)
-						    	vm.clear();
+						    	vm.clear(criterion);
 						  });
 					}
-
 				},
 
-				erase() {		
+				/**
+				 * Eliminar criterio del formulario
+				 */
+				erase(criterion) {		
 					let vm = this;
 					let ids = [];
 
-					vm.criteria.forEach(function(item){
-						ids.push(item.id);
-					});
-
-		            axios.delete('/api/performance-evaluation/'+ ids)
+		            axios.delete('/api/performance-evaluation/'+ criterion.id)
 		                .then(function (response) {  
+		                	
+						  	toastr.success(response.data);//Mensaje de Guardado
+							vm.fetchPerformance();//Actualizar tablas 
+		                	vm.fullClear(criterion);//Limpiar formulario
 
-		                	//Mensaje de Guardado
-						  	toastr.success(response.data);   
-
-						  	//Actualizar tablas  
-							vm.fetchProjectTable();
-
-						  	//Limpiar formulario
-		                	vm.fullclear();
 		                })
 		                .catch(function (error) {
 		                    vm.showErrors(error.response.data)
@@ -264,20 +206,16 @@
 				},
 
 				/**
-	             * Fetch projects table performance by user,project and year
+	             * Fetch projects table performance by user and year
 	             */
-	            fetchProjectTable() {
+	            fetchPerformance() {
 	                var vm = this;
 	                let key;
 
-	                this.fullclear();
+	                this.fullClear();
+					this.perfomanceClear();
 
-        		    vm.pTable = [];
-					vm.pTableTotal =  []; 
-					vm.tTable =  [];
-					vm.tTableTotal =  [];
-
-	                axios.get('api/project_table', {
+	                axios.get('api/performance', {
 	                        params: {
 	                        	year: vm.filter.year,
 	                            employee: vm.filter.employee                  
@@ -286,19 +224,13 @@
 	                    .then(function (response) {   
 	                    	//console.log(response.data) 
 	                    	if(response.data.length != 0){
-	                    		vm.criteria.forEach(function(item){
-									key = vm.filter.project +"|"+ item.code +"|"+ vm.filter.month;
-									if(response.data[key] != undefined){
-										item.mark = response.data[key].mark;
-										item.comment = response.data[key].comment;
-										item.weight = response.data[key].weight;
-										item.id = response.data[key].id;
-									}
-								});
 		                    	vm.pTable = response.data;    
 								vm.pTableTotal = vm.calculateTotalColumn(false);    
 								vm.tTable = vm.getTotalTable();
 								vm.tTableTotal = vm.calculateTotalColumn(true);
+								if(vm.filter.project != ''){
+									vm.loadFormValues();
+								}						
 	                    	}                    	
 	                    })
 	                    .catch(function (error) {	          
@@ -316,88 +248,128 @@
 	                this.employeeList = [];
 	                this.filter.project = '';
 	                this.filter.employee = '';
-	                this.fullclear();
+	                this.fullClear();
 
 	                axios.get('api/employees', {
 	                        params: {
-	                        	year: vm.filter.year,
-	                            month: vm.filter.month,               
+	                        	year: vm.filter.year,           
 	                        }
 	                    })
 	                    .then(function (response) {   
 	                        vm.employeeList = response.data;
 	                    })
 	                    .catch(function (error) {
-	                       vm.showErrors(error.response.data)
+	                       vm.showErrors(error.response.data);
 	                    });
-	            },
+	 	        },
 
 				/**
-	             * Fetch projects to evaluate for a user
+	             * Fetch reports to evaluate for a user
 	             */
-	            fetchProjects() {
+	            fetchReports() {
 	                var vm = this;
 
 	                this.projectList = {};
 	                this.filter.project = '';
-	                this.fullclear();
+	                this.fullClear();
 
 	                if(this.filter.employee === ''){
 	                	return;
 	                }
 
-	                axios.get('api/month_reports', {
+	                axios.get('api/reports', {
 	                        params: {
 	                        	year: vm.filter.year,
-	                            month: vm.filter.month,
 	                            employee: vm.filter.employee                  
 	                        }
 	                    })
 	                    .then(function (response) {   
 	                        vm.reports = response.data;
-	                        vm.filterReports();	              
+	                        vm.filterProjects();//Filtrar proyectos por mes de reporte
+	                        vm.fetchPerformance();//Cargar evaluaciones                                     
 	                    })
 	                    .catch(function (error) {
 	                       vm.showErrors(error.response.data)
 	                    });
-	            },
+	 	        },
+	            /** ---------------------------BBDD --------------------------- **/
 
-		        filterReports() {
-			        let vm = this;
-					let setList = new Set();
+				yearChange(){
+					this.fullClear();//Limpiar formularios
+					this.perfomanceClear();//Limpiar tablas
+					this.reports = [];//Limpiar reportes
+					this.filter.project = '';//Limpiar proyecto
+					this.filter.month = moment().month() + 1;//Inicializar mes
+
+					this.fetchEmployees();//Cargar empleados
+				},
+
+				employeeChange(){
+					if(this.filter.employee != ''){
+						this.fetchReports();//Cargar reportes
+					}
+					else{
+						this.fullClear();//Limpiar formularios
+						this.perfomanceClear();//Limpiar tablas
+						this.reports = [];//Limpiar reportes
+						this.filter.project = '';//Limpiar proyecto
+						this.filter.month = moment().month() + 1;//Inicializar mes
+					}
+				},
+
+				projectChange(){	
+					if(this.filter.project !=""){
+						this.fullClear();
+						this.loadFormValues();
+					}	
+				},
+
+				loadFormValues(){
+					let vm = this;
+            		vm.criteria.forEach(function(item){
+						key = item.code == 'knowledge' 
+							? "|"+ item.code +"|"+ vm.filter.month 
+							: vm.filter.project +"|"+ item.code +"|"+ vm.filter.month;
+
+						if(vm.pTable[key] != undefined){
+							item.mark = vm.pTable[key].mark;
+							item.comment = vm.pTable[key].comment;
+							item.weight = vm.pTable[key].weight;
+							item.id = vm.pTable[key].id;
+						}
+					});		
+				},
+
+				filterProjects(){
+					let vm = this;
 					
 					if(this.reports == null){
 	                    return null;
 	                }
 
 	                this.projectList = {};
-               
-					for (let project_id in vm.reports) {						
-						for (let key in vm.auth_projects) {				
-							if(key == project_id){
-								if(vm.projectList[key] == undefined){
-									vm.projectList[key] = {
-										id: key,
-										name: vm.auth_projects[key]
-									};
-								}						
+	                this.filter.project = '';
+	                this.fullClear();
+               	
+					for (let project_id in this.reports) {						
+						this.reports[project_id].groups.forEach(function(item){
+							//Reportes/Proyectos del mes actual
+							if(vm.filter.month == item.month){
+								//Filtrar estos reportes en los proyectos que son del auth user
+								for (let key in vm.auth_projects) {				
+									if(key == project_id){
+										if(vm.projectList[key] == undefined){
+											vm.projectList[key] = {
+												id: key,
+												name: vm.auth_projects[key]
+											};
+										}						
+									}
+								}
 							}
-						}
-					}								
-		        },
-
-				projectChange(){
-					if(this.filter.project !=""){
-						this.setWeight();
-						this.fetchProjectTable();
+						});
 					}	
-				},
 
-				setWeight(){
-					let vm = this;
-					this.criteria.forEach(function(item){
-						item.weight = vm.getHours(false);
-					});
 				},
 
 	            getEmployee() {
@@ -415,23 +387,22 @@
 	            	}
 	            },
 
-	           	getProject() {
-	            	let vm = this;
-	            	let name;
-	            	
-	            	if(this.filter.project != ''){
+	            getTotalHours(month){
+					let total = 0;
 
-	            		for (let key in vm.auth_projects) {	
-	            			if(key == vm.filter.project){
-		            			name = vm.auth_projects[key];
-		            		}
-	            		}
+					for(var key in this.reports) {         	
+        				//Todos
+        				this.reports[key].groups.forEach(function(item){
+	            			if(item.month == month){
+	            				total += parseFloat(item.hours);
+	            			}
+	            		});				
+            		}
 
-		            	return name.toUpperCase();
-	            	}            	
+	            	return (total == 0) ? '' : total.toFixed(2);
 	            },
 
-	            getHours(hours, project_id = '') {
+	            getHours(month,project_id,option ='') {
 	            	let amount = 0;
 	            	let total = 0;
 	            
@@ -440,19 +411,30 @@
             		}
 
             		for(var key in this.reports) {
+
+            			//Mismo proyecto
         				if(project_id == this.reports[key].project_id){
-        					amount += this.reports[key].hours;
+	        				this.reports[key].groups.forEach(function(item){
+	            				if(item.month == month){
+	            					amount += item.hours;
+	            				}
+	            			});	
         				} 
-        				total += parseFloat(this.reports[key].hours);
+            	
+        				//Todos
+        				this.reports[key].groups.forEach(function(item){
+	            			if(item.month == month){
+	            				total += parseFloat(item.hours);
+	            			}
+	            		});	
+				
+            		}
+
+            		if(option === ''){
+	            		return (amount == 0 || total == 0) ? '' : ((amount/total)*100).toFixed(2);
             		}
             		
-            		//Hours
-            		if(hours){
-            			return amount;
-	            	}
-
-	            	//Percentage
-	            	return ((amount/total)*100).toFixed(2);
+            		return (amount == 0) ? '' : amount;   		
 	            },
 
 	            getMarkComment(key,property,total) {
@@ -469,9 +451,27 @@
 	            	else if(property == "description"){
 	            		return input[key].comment;
 	            	}
-	            	else if(property == "weight"){
-	            		return input[key].weight;
+	            },
+
+	            getWeight(incompleteKey){
+	            	let key;
+	            	let vm = this;
+	            	let weight;
+
+	            	if(this.pTable.length == 0){
+	            		return "";
 	            	}
+
+	            	this.configuration.forEach(function(item){
+	            		key = incompleteKey.split("|")[0] + "|" + item.code + "|" + incompleteKey.split("|")[1];
+	            		if(vm.pTable[key] != undefined){
+	            			if(vm.pTable[key].weight != ''){
+	            				weight = vm.pTable[key].weight;
+	            			}
+	            		}	       		
+	            	});
+
+	            	return weight;
 	            },
 
 	            getTotalColumn(key,total) {	
@@ -523,7 +523,7 @@
 	            },
 
 	            calculateTotalColumn(total_table) {
-  	
+
   					let criteria = "";
   					let project_id = "";
   					let output = {};
@@ -546,38 +546,40 @@
 		            	project_id = total_table ? 0 : key.split("|")[0];
 		            	shortkey = total_table ? criteria : project_id + "|" + criteria;
 
-		            	if(output != undefined){
+		            	if(! (project_id == '' && criteria == 'knowledge' && total_table == false)){
+			            	if(output != undefined){
 
-			            	if(output[shortkey] === undefined){
-			            		obj = {
-			            			zeros: 0,
-			  						counter: 0,
-			  						sum: 0,
-			  						name: criteria,
-			  						project_id: project_id,
-			  						total: 0
-		  						};	
-		  						output[shortkey] = obj;
+				            	if(output[shortkey] === undefined){
+				            		obj = {
+				            			zeros: 0,
+				  						counter: 0,
+				  						sum: 0,
+				  						name: criteria,
+				  						project_id: project_id,
+				  						total: 0
+			  						};	
+			  						output[shortkey] = obj;
+				            	}
+
+					           	if(input[key].mark == 0){
+				            		output[shortkey].zeros += 1;
+				            	}
+
+				            	output[shortkey].sum += 1;
+				            	output[shortkey].counter += input[key].mark;
+				            	output[shortkey].total = (output[shortkey].name == 'knowledge' || !total_table)
+			            			?(output[shortkey].counter/ output[shortkey].sum).toFixed(2)
+			            			:((output[shortkey].counter * Math.pow((2/3),output[shortkey].zeros)) / output[shortkey].sum).toFixed(2);	
 			            	}
-
-				           	if(input[key].mark == 0){
-			            		output[shortkey].zeros += 1;
-			            	}
-
-			            	output[shortkey].sum += 1;
-			            	output[shortkey].counter += input[key].mark;
-			            	output[shortkey].total = (output[shortkey].name == 'knowledge' || !total_table)
-		            			?(output[shortkey].counter/ output[shortkey].sum).toFixed(2)
-		            			:((output[shortkey].counter * Math.pow((2/3),output[shortkey].zeros)) / output[shortkey].sum).toFixed(2);	
 		            	}
-
 		            }
 
 		            return output;
 
 	            },
 
-	            getTotalTable() {	            	
+	            getTotalTable() {	       
+
 	            	let vm = this;
   					let criteria;
   					let project_id
@@ -586,15 +588,19 @@
   					let output = {};
   					let mark;
   					let weight;
-	
+					
+
   					for(let key in this.reports){
   						project_id = key;	
 
+  						//Recorrer por criterio
 	  					vm.criteria.forEach(function(item){
 	  						criteria = item.code;
 
+	  						//Recorrer por mes
 			  				for (let month = 1; month <= 12; month++) {
 			  					key = project_id + "|" + criteria + "|" + month;
+
 								shortkey = criteria + "|" + month;
 			  					if(vm.pTable[key] != undefined){
 			  						weight = (vm.pTable[key].weight)/100;
@@ -611,15 +617,11 @@
 		  					}
 	  					});	 	  					 					
   					}
+
   					return output;
 	            },
 
-				/**
-	             * Marca de otro estilo el mes seleccionado
-	             */
-	            monthStyle(month_id) {
-	            	return this.filter.month == month_id ? 'info' : '';
-	            },
+	            /** ESTILOS **/
 
 	            /**
 	             * Marca el estilo de las celdas
@@ -645,13 +647,13 @@
 	            	return color;
 	            },
 
-	            	            /**
+	           	/**
 	             * Marca el estilo de las celdas
 	             */
 	            cellStyleTotal(key, total_column) {
 	            	let input =  total_column ? this.tTableTotal : this.tTable ;
 	            	let color = '';
-	            	let criteria = key.split("|")[1];
+	            	let criteria = key.split("|")[0];
 
 	            	if(input[key] === undefined){
 	            		return '';
@@ -675,6 +677,92 @@
 				capitalizeFirstLetter(string) {
     				return string.charAt(0).toUpperCase() + string.slice(1);
 				},
+
+								/** FUNCIONES DEL FORMULARIO **/
+				validateComments(criterion){
+					return criterion.mark != 2 || criterion.code =='knowledge' ? true : false;
+				},
+
+	            validateFilter(criterion) {
+	            	if(criterion.code == 'knowledge'){
+	            		return (this.filter.year == '' || this.filter.month == '' || this.filter.employee == '') ? true : false;
+	            	}
+					return (this.filter.year == '' || this.filter.month == '' || this.filter.employee == '' || this.filter.project == '') ? true : false;
+				},
+
+				/**
+				 * (Des)habilita el botón de guardar
+				 */
+				validateSaveButton(criterion) {	
+					return (criterion.mark === '' || ( criterion.code != 'knowledge' && criterion.mark != 2 && criterion.comment === '') || criterion.id != '') ? true : false;				
+				},
+
+				/**
+				 * (Des)habilita el botón de borrar
+				 */
+				validateDeleteButton(criterion) {
+					return (criterion.id === '') ? true : false;	
+				},
+
+				/**
+				 * Inicializar campos del formulario
+				 */
+				setForm() {
+					for (let i = this.configuration.length - 1; i >= 0; i--) {
+						this.criteria.push({
+							id: '',
+							code: this.configuration[i]['code'],
+							description : this.configuration[i]['description'],
+							name: this.configuration[i]['name'],
+							percentage: this.configuration[i]['percentage'],
+							points: this.configuration[i]['points'],
+							mark: '',
+							comment: '',
+							weight:'',
+						});
+					}
+				},
+
+				/**
+		         * Limpia el Formulario
+		         */
+		        clear(criterion) {
+		        	criterion.mark = '';
+					criterion.comment = '';
+				},
+
+				/**
+		         * Limpia el Formulario completo
+		         */
+		        fullClear(criterion = "") {
+		        	if(criterion === "")
+		        	{
+			     		this.criteria.forEach(function(item){
+			        		item.id = '';
+							item.mark = '';
+							item.comment = '';
+							item.weight = '';
+						});
+		        	}
+		        	else{
+		        		criterion.id = '';
+						criterion.mark = '';
+						criterion.comment = '';
+						criterion.weight = '';
+		        	}
+				},
+
+				/**
+		         * Limpia las tablas de rendimiento
+		         */
+				perfomanceClear(){
+					this.pTable = [];
+					this.pTableTotal =  []; 
+					this.tTable =  [];
+					this.tTableTotal =  [];
+				},
+
+				/** OTRAS FUNCIONES **/
 
 		         /**
 	             * Visualizo mensajes de error

@@ -447,8 +447,10 @@ class WorkingreportRepository
      * @param [type] $year  [description]
      * @param [type] $month [description]
      */
-    public function employeesReports($year,$month)
+    public function employeesReports($year,$month = "")
     {
+        $comparator = ($month == '') ? '<>':'=';
+
         $q = DB::table('working_report as wr')
             ->Join('users as u','wr.user_id','u.id')
             ->Join('categories as c','wr.category_id','c.id')
@@ -459,7 +461,7 @@ class WorkingreportRepository
                 DB::raw("CONCAT(u.name, ' ', u.lastname ) as full_name")
             )
             ->whereYear('wr.created_at',$year)
-            ->whereMonth('wr.created_at',$month)
+            ->whereMonth('wr.created_at',$comparator,$month)
             ->whereNotNull('wr.group_id')
             ->where('c.name','<>','RP')
             ->where('c.name','<>','DI')
@@ -481,13 +483,13 @@ class WorkingreportRepository
     }
 
     /**
-     * Groups reported by the user in this month
+     * Groups reported by the user in this year
      * @param  [type] $year     [description]
      * @param  [type] $month    [description]
      * @param  [type] $employee [description]
      * @return [type]           [description]
      */
-    public function employeeMonthReports($year,$month,$employee)
+    public function employeeYearReports($year,$employee)
     {
         return DB::table('working_report as wr')
             ->Join('projects as p','wr.project_id','p.id')
@@ -497,13 +499,14 @@ class WorkingreportRepository
                 'p.name as project',
                 'wr.group_id as group_id',
                 'g.name as group',
+                DB::raw('MONTH(wr.created_at) as month'),
                 DB::raw("sum(time_slots)*0.25 as hours")
             )
             ->whereYear('wr.created_at',$year)
-            ->whereMonth('wr.created_at',$month)
             ->where('wr.user_id', $employee)
             ->whereNotNull('wr.group_id')
-            ->groupBy('wr.project_id','wr.group_id')
+            ->groupBy('month','wr.project_id','wr.group_id')
+            ->orderBy('month','ASC')
             ->get()
             ->toArray();
     }
@@ -523,7 +526,8 @@ class WorkingreportRepository
             $group = [
                 'group'    => $array->group,
                 'group_id' => $array->group_id,
-                'hours'    => $array->hours
+                'hours'    => $array->hours,
+                'month'    => $array->month
             ];
 
             if(! isset($result[$key])) {            
