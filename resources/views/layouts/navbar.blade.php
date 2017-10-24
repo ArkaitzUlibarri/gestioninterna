@@ -29,15 +29,10 @@
                          <li><a href="{{ url('users') }}">Users</a></li> 
                          <li><a href="{{ url('contracts') }}">Contracts</a></li>
                          <li><a href="{{ url('projects') }}">Projects</a></li>  
-                         <!--<li><a href="{{ url('holidays_validation') }}">Holidays Validation</a></li>-->
                     @elseif(Auth::user()->primaryRole() == 'manager')                   
                          <li><a href="{{ url('users') }}">Users</a></li>   
                          <li><a href="{{ url('projects') }}">Projects</a></li>            
                     @endif
-                    <li><a href="{{ url('evaluations') }}">Evaluations</a></li>
-                    <!--<li><a href="{{ url('holidays') }}">Holidays</a></li>-->
-                    <li><a href="{{ url('validation') }}">Validation</a></li>
-                     <li><a href="{{ url('workingreports') }}">Working Reports</a></li> 
                     
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -64,6 +59,15 @@
                                 </a>
                                 <a href="{{ url('holidays') }}">
                                     <span class="glyphicon glyphicon-tent"></span> Holidays
+                                </a>
+                                <a href="{{ url('evaluations') }}">
+                                    <span class="glyphicon glyphicon-education"></span> Evaluations      
+                                </a>
+                                <a href="{{ url('validation') }}">
+                                    <span class="glyphicon glyphicon-scale"></span> Validation      
+                                </a>
+                                <a href="{{ url('workingreports') }}">
+                                    <span class="glyphicon glyphicon-time"></span> Working Reports    
                                 </a>
                                 <a href="{{ route('logout') }}"
                                     onclick="event.preventDefault();

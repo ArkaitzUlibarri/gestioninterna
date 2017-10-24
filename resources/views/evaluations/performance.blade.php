@@ -47,7 +47,7 @@
 				<div v-for="element in reports">	
 					@component('evaluations.partials.tables.component')
 						@slot('title')
-							@{{ getEmployee() }} | @{{ element.project }} | @{{ parseFloat(element.hours).toFixed(2) }} Hours|
+							@{{ getEmployee() }} | @{{ element.project }} | @{{ parseFloat(element.hours).toFixed(2) }} Hours |
 						@endslot
 						@slot('column')
 							<th title="Average" class="active">Avg.</th>
@@ -59,7 +59,7 @@
 				</div>
 				@component('evaluations.partials.tables.component')
 						@slot('title')
-							@{{ getEmployee() }} | TOTAL |
+							@{{ getEmployee() }} | TOTAL | @{{ getTotalHours() }} Hours |
 						@endslot
 						@slot('column')
 							<th title="Total" class="info">Total</th>
@@ -228,9 +228,7 @@
 								vm.pTableTotal = vm.calculateTotalColumn(false);    
 								vm.tTable = vm.getTotalTable();
 								vm.tTableTotal = vm.calculateTotalColumn(true);
-								if(vm.filter.project != ''){
-									vm.loadFormValues();
-								}						
+								vm.loadFormValues();											
 	                    	}                    	
 	                    })
 	                    .catch(function (error) {	          
@@ -277,7 +275,7 @@
 	                	return;
 	                }
 
-	                axios.get('api/reports', {
+	                axios.get('api/employee_reports', {
 	                        params: {
 	                        	year: vm.filter.year,
 	                            employee: vm.filter.employee                  
@@ -350,6 +348,7 @@
 	                this.projectList = {};
 	                this.filter.project = '';
 	                this.fullClear();
+	                this.loadFormValues();
                	
 					for (let project_id in this.reports) {						
 						this.reports[project_id].groups.forEach(function(item){
@@ -387,19 +386,25 @@
 	            	}
 	            },
 
-	            getTotalHours(month){
+	            getTotalHours(month = ""){
+					let totalMonth = 0;
 					let total = 0;
 
 					for(var key in this.reports) {         	
         				//Todos
         				this.reports[key].groups.forEach(function(item){
 	            			if(item.month == month){
-	            				total += parseFloat(item.hours);
+	            				totalMonth += parseFloat(item.hours);
 	            			}
+	            			total += parseFloat(item.hours);
 	            		});				
             		}
 
-	            	return (total == 0) ? '' : total.toFixed(2);
+            		if(month === ""){
+            			return (total == 0) ? 0.00 : total.toFixed(2);
+            		}
+
+	            	return (totalMonth == 0) ? '-' : totalMonth.toFixed(2);
 	            },
 
 	            getHours(month,project_id,option ='') {
@@ -416,7 +421,7 @@
         				if(project_id == this.reports[key].project_id){
 	        				this.reports[key].groups.forEach(function(item){
 	            				if(item.month == month){
-	            					amount += item.hours;
+	            					amount += parseFloat(item.hours);
 	            				}
 	            			});	
         				} 
@@ -431,10 +436,10 @@
             		}
 
             		if(option === ''){
-	            		return (amount == 0 || total == 0) ? '' : ((amount/total)*100).toFixed(2);
+	            		return (amount == 0 || total == 0) ? '-' : ((amount/total)*100).toFixed(2);
             		}
             		
-            		return (amount == 0) ? '' : amount;   		
+            		return (amount == 0) ? '-' : amount.toFixed(2);   		
 	            },
 
 	            getMarkComment(key,property,total) {
@@ -446,7 +451,7 @@
 	            	}
 
 	            	if(property == "mark"){
-	            		return input[key].mark.toFixed(1);
+	            		return input[key].mark.toFixed(2);
 	            	}
 	            	else if(property == "description"){
 	            		return input[key].comment;
@@ -589,6 +594,7 @@
   					let mark;
   					let weight;
 					
+					let newkey;
 
   					for(let key in this.reports){
   						project_id = key;	
@@ -616,6 +622,21 @@
 			  					}	  
 		  					}
 	  					});	 	  					 					
+  					}
+
+  					//Añadir los knowledge
+  					for(let key in this.pTable){
+  						if(key.indexOf("|") == 0){
+  							newkey = key.slice(1);
+
+							if(output[newkey] === undefined){
+								output[newkey] = {
+	  								mark: this.pTable[key].mark,
+	  								comment: this.pTable[key].comment,
+	  								weight: this.pTable[key].weight
+	  							};
+	  						}
+  						}						
   					}
 
   					return output;

@@ -30,6 +30,7 @@ class PerformanceRepository
 			->select('id','project_id','type','month','mark','comment','weight')
 			->where('user_id', $employee)//Usuario
 			->where('year',$year)//Año
+			->orderBy('project_id','ASC')
 			->orderBy('type','ASC')
 			->orderBy('month','ASC')
 			->get();
@@ -48,7 +49,7 @@ class PerformanceRepository
         }
 
         $result = array();
-	
+
 		foreach ($data as $index => $array) {
 			$key = $array->project_id . '|' . $array->type . '|' . $array->month;
 
@@ -65,4 +66,38 @@ class PerformanceRepository
 		return $result;
 	}
 
+	/**
+     * Format data.
+     * 
+     * @param  array
+     * @return array
+     */
+	public function formatOutputByProject($data)
+	{
+		if (count($data) == 0) {
+            return null;
+        }
+
+        $result = array();
+
+		foreach ($data as $index => $array) {
+
+			$key = $array->project_id === "" 
+				? "Total" 
+				: $array->project_id;
+
+			$key2 = $array->type . '|' . $array->month;
+			
+			if(! isset($result[$key][$key2])) {
+                $result[$key][$key2] = [
+					'id'      => $array->id,
+					'mark'    => $array->mark,
+					'comment' => ucfirst($array->comment),
+					'weight'  => $array->weight
+                ];
+            }
+		}
+		
+		return $result;
+	}
 }

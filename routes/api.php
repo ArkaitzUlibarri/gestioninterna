@@ -49,5 +49,5 @@ Route::delete('categories/{id}', 'Api\v1\CategoryUserController@destroy');
 Route::patch('users/{id}', 'Api\v1\UsersController@update');
 
 //Performance Evaluation
-Route::get('reports','Api\v1\EvaluationPerformanceController@loadReports');
+Route::get('employee_reports','Api\v1\EvaluationPerformanceController@loadReports');
 Route::get('performance','Api\v1\EvaluationPerformanceController@loadPerformance');
