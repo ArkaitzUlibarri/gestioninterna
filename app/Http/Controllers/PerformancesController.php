@@ -76,8 +76,8 @@ class PerformancesController extends Controller
         if(count($data) > 0) {
             $excel->sheet($name, function($sheet) use ($data,$column,$project_id) {
 
-                //Estilos
-                $this->sheetStyle($sheet);
+                //Estilos Cabecera
+                $this->sheetHeaderStyle($sheet, 'A1:N1');
 
                 //Cabecera
                 $header = ['Criteria','January','February','March','April','May','June','July','August','September','October','November','December',$column];
@@ -85,10 +85,10 @@ class PerformancesController extends Controller
 
                 //Crear tablas
                 $writer = ($column == 'Average') 
-                    ? $this->projectTableWriter($data,$project_id,$sheet) 
-                    : $this->totalTableWriter($data,$sheet) ;
+                    ? $this->projectTableWriter($data,$project_id) 
+                    : $this->totalTableWriter($data);
 
-                //Escribir
+                //Escribir filas
                 foreach ($writer as $key => $value) {              
                     $sheet->appendRow(array(
                         $key,$value[1],$value[2],$value[3],$value[4],$value[5],$value[6],$value[7],$value[8],$value[9],$value[10],$value[11],$value[12],$value[$column]
@@ -106,12 +106,18 @@ class PerformancesController extends Controller
         });
     }
 
-    private function sheetStyle($sheet)
+    /**
+     * Cambiar estilo del rango de la hoja
+     * @param  [type] $sheet [description]
+     * @param  [type] $range [description]
+     * @return [type]        [description]
+     */
+    private function sheetHeaderStyle($sheet, $range)
     {
         $sheet->freezeFirstRow();
         $sheet->setHeight(1, 20);
-        $sheet->setBorder('A1:N1', 'thin');
-        $sheet->cells('A1:N1', function($row) {
+        $sheet->setBorder($range, 'thin');
+        $sheet->cells($range, function($row) {
             $row->setBackground('#C6EFD8');
             $row->setFontColor('#006100');
             $row->setAlignment('center');
@@ -119,7 +125,13 @@ class PerformancesController extends Controller
         });
     }
 
-    private function projectTableWriter($data,$project_id,$sheet)
+    /**
+     * Parsea los datos por criterio,mes y proyecto
+     * @param  [type] $data       [description]
+     * @param  [type] $project_id [description]
+     * @return [type]             [description]
+     */
+    private function projectTableWriter($data,$project_id)
     {
         $writer = array();
         
@@ -163,7 +175,12 @@ class PerformancesController extends Controller
         
     }
 
-    private function totalTableWriter($data,$sheet)
+    /**
+     * Parsea los datos para generar la tabla total
+     * @param  [type] $data [description]
+     * @return [type]       [description]
+     */
+    private function totalTableWriter($data)
     {
         $writer = array();
             

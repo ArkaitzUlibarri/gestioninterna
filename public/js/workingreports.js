@@ -569,7 +569,7 @@ if(false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
-exports.push([module.i, "\n.panel-right-corner {\n    position: absolute;\n    right: 2em;\n    top:1em;\n}\n.action {\n    cursor: pointer;\n    //display: block;\n    //margin: auto ;\n}\n.task-panel {\n    position:relative;\n    border-bottom: 1px solid #ccc;\n    padding:.4em\n}\n.validated-task {\n    background-color: #b0f2b8;\n}\n.selected-task {\n    //background-color: lightblue;\n    border-bottom: 1px dashed red;\n    border-top: 1px dashed red;\n}\n.validated-color {\n    color: #21d421;\n}\n\n", ""]);
+exports.push([module.i, "\n.task-panel {\n    position:relative;\n    border-bottom: 1px solid #ccc;\n    padding:.4em\n}\n.panel-right-corner {\n    position: absolute;\n    right: 2em;\n    top:1em;\n}\n.action {\n    cursor: pointer;\n    //display: block;\n    //margin: auto ;\n}\n.validated-task {\n    background-color: #b0f2b8;\n}\n.selected-task {\n    //background-color: lightblue;\n    border-bottom: 1px dashed red;\n    border-top: 1px dashed red;\n}\n.validated-color {\n    color: #21d421;\n}\n\n", ""]);
 
 /***/ }),
 

@@ -13,7 +13,7 @@
 
             @foreach($contract->teleworking as $tele)
             <tbody>
-                <tr class="{{ $tele->end_date ? '' : 'info' }}">
+                <tr class="{{ $tele->end_date ? '' : 'success' }}">
                     <td class="col-md-4">{{$tele->start_date}}</td>
                     <td class="col-md-4">{{$tele->end_date}}</td>
                     <td class="col-md-4">

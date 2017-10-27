@@ -291,21 +291,21 @@ $(document).ready(function () {
             right: 'next,nextYear'
         },
         displayEventTime: true, // don't show the time column in list view
-        defaultView: 'month',
+        defaultView: 'month', //Vista por defecto la de mes
         lang: 'es',
         firstDay: 1, //Monday
         navLinks: false, // can click day/week names to navigate views
         editable: false,
         selectable: true,
-        droppable: false,
+        droppable: false, //Poder soltar eventos en los días
         eventLimit: true, // allow "more" link when too many events
         weekNumbers: true, //Show weeknumbers
 
         //Rango de fechas que veremos
         validRange: function validRange(nowDate) {
             return {
-                start: nowDate.clone().add(-1, 'years').year() + '-01-01', //'2017-01-01'//nowDate.clone().add(-1, 'years')
-                end: nowDate.clone().add(1, 'years').year() + '-04-01' //'2018-04-01'//nowDate.clone().add(1, 'years')
+                start: nowDate.clone().add(-1, 'years').year() + '-01-01', //'2017-01-01'//nowDate.clone().add(-1, 'years') // 1 Enero este año
+                end: nowDate.clone().add(1, 'years').year() + '-04-01' //'2018-04-01'//nowDate.clone().add(1, 'years') //1 Abril año siguiente
             };
         },
 

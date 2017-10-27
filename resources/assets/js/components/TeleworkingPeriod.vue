@@ -68,7 +68,9 @@
     }
 
     .selected-item {
-        background-color: lightblue;
+        //background-color: lightblue;
+        border-bottom: 1px dashed red;
+        border-top: 1px dashed red;
     }
 
 </style>

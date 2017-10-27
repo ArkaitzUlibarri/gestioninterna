@@ -58,6 +58,12 @@
 
 <style>
 
+    .task-panel {
+        position:relative;
+        border-bottom: 1px solid #ccc;
+        padding:.4em
+    }
+
     .panel-right-corner {
         position: absolute;
         right: 2em;
@@ -68,12 +74,6 @@
         cursor: pointer;
         //display: block;
         //margin: auto ;
-    }
-
-    .task-panel {
-        position:relative;
-        border-bottom: 1px solid #ccc;
-        padding:.4em
     }
 
     .validated-task {

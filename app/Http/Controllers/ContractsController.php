@@ -45,14 +45,11 @@ class ContractsController extends Controller
 	public function create()	
 	{
 		$bankHolidaysCodes = $this->getBankHolidaysCodes();
-
 		$nationalDays  = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[0]);
 		$regionalDays  = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[1]);
 		$localDays     = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[2]);
-		
 		$contractTypes = ContractType::all();
-		
-		$users         = $this->getUsers();
+		$users = User::orderBy('name')->get();
 
 		return view('contracts.create', compact('users', 'contractTypes', 'nationalDays', 'regionalDays', 'localDays'));
 	}
@@ -60,9 +57,7 @@ class ContractsController extends Controller
 	public function show($id)
 	{
 		$contract = Contract::find($id);
-
 		$bankHolidaysCodes = $this->getBankHolidaysCodes();
-
 		$nationalDays = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[0]);
 		$regionalDays = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[1]);
 		$localDays    = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[2]);
@@ -96,10 +91,8 @@ class ContractsController extends Controller
 		$nationalDays = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[0]);
 		$regionalDays = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[1]);
 		$localDays    = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[2]);
-
 		$contractTypes = ContractType::all();
-		
-		$users = $this->getUsers();
+		$users = User::orderBy('name')->get();
 
 		return view('contracts.edit', compact('contract', 'users', 'contractTypes', 'nationalDays', 'regionalDays', 'localDays'));
 	}
@@ -119,27 +112,22 @@ class ContractsController extends Controller
 	    	DB::beginTransaction();
 			//******************************************************************************
         	$contract = Contract::find($id);
-
         	$contract->update($request->all());
-
 	        //**************************************************************
 	        //Cierre de contrato->Cerrar Teletrabajo y reduccion
 	        if($request->get('end_date') != null){
+
 				$reduction  = $contract->reductions->where('end_date',null)->first();
 				if($reduction){
-					DB::table('reductions')
-						->where('id',$reduction->id)
-						->update(['end_date' => $request->get('end_date')]);
+					DB::table('reductions')->where('id',$reduction->id)->update(['end_date' => $request->get('end_date')]);
 				}
 
 				$teleworking = $contract->teleworking->where('end_date',null)->first();
 				if($teleworking){
-					DB::table('teleworking')
-						->where('id',$teleworking->id)
-						->update(['end_date' => $request->get('end_date')]);
+					DB::table('teleworking')->where('id',$teleworking->id)->update(['end_date' => $request->get('end_date')]);
 				}
-			}
-			
+
+			}	
 			//******************************************************************************
 			DB::commit();/* Transaction successful. */
 		
@@ -152,7 +140,7 @@ class ContractsController extends Controller
 	}
 
 	/**
-     * Remove the specified resource from storage.
+     * Remove the specified contract from storage and his associated reductions or teleworkings
      *
      * @param  int  $id
      * @return Response
@@ -161,27 +149,59 @@ class ContractsController extends Controller
 	{
 		$contract = Contract::find($id);
 		$user = User::find($contract->user_id);
+
+		//Hay reportes durante el teletrabajo
+		if($this->hasReportsAssociated($contract,$user)){
+			return redirect('contracts')->withErrors(['The contract has reports associated']);
+		}
+
+		try{
+	    	DB::beginTransaction();
+			//******************************************************************************
+			//Borrar tanto el contrato como las reducciones y teletrabajos asociados
+			$contract->delete();
+			DB::table('reductions')->where('contract_id',$id)->delete();
+			DB::table('teleworking')->where('contract_id',$id)->delete();
+
+			Session::flash('message', 'The contract has been successfully deleted!');
+			//******************************************************************************
+			DB::commit();/* Transaction successful. */
 		
+		}catch(\Exception $e){       
+		    DB::rollback(); /* Transaction failed. */ 
+		    throw $e;
+		}
+
+		return redirect('contracts');
+	}
+    
+    /**
+     * Check if a user has reportes within the dates of the contract
+     * @param  [type]  $contract [description]
+     * @param  [type]  $user     [description]
+     * @return boolean           [description]
+     */
+	private function hasReportsAssociated($contract,$user)
+	{
+		//Usuario con reportes
 		if($user->workingReports->count() > 0){
+
+			//Indefinido o Fin de Obra
 			if(is_null($contract->estimated_end_date) && is_null($contract->end_date)){
 				$reports_associated = $user->workingReports->where('created_at','>=',$contract->start_date);
 			}
+			//Con fecha de fin estimada (Temporal)
 			if(! is_null($contract->estimated_end_date)){
 				$reports_associated = $user->workingReports->where('created_at','>=',$contract->start_date)->where('created_at','<=',$contract->estimated_end_date);
 			}
+			//Contrato Finalizado
 			if(! is_null($contract->end_date)){
 				$reports_associated = $user->workingReports->where('created_at','>=',$contract->start_date)->where('created_at','<=',$contract->end_date);
 			}
 			
-			if ($reports_associated->count() > 0) {
-				return redirect('contracts')->withErrors(['The contract has reports associated']);	
-			}
+			return ($reports_associated->count() > 0) ? true: false;
 		}
-
-		$contract->delete();
-		Session::flash('message', 'The contract has been successfully deleted!');
-		return redirect('contracts');
-			
+		return false;
 	}
 
 	private function filterBankHolidaysByType($array,$type)
@@ -189,18 +209,6 @@ class ContractsController extends Controller
 		return array_filter($array, function($item) use($type) {
 			return $item->type == $type;
 		});
-	}
-
-	private function getUsers()
-	{
-		return DB::table('users')
-			->select(
-				'id',
-				'name',
-				DB::raw("CONCAT(name, ' ', lastname) as full_name")
-			)
-			->orderBy('full_name', 'ASC')
-			->get();
 	}
 
 	private function getBankHolidaysCodes()

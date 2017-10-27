@@ -4,11 +4,7 @@
 
 <div id="groups" class ="container">
 
-	<div class="row">
-		<div class ="form-group col-xs-12 col-sm-6">
-			<h2>{{ ucwords($user->fullname) }}</h2>				
-		</div>
-	</div>
+	@include('users.generalPartials.card')
 
 	<div class="panel panel-primary">
 

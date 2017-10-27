@@ -10,7 +10,7 @@
             </thead>
             <tbody>
                 @foreach($holidays as $holiday)
-                    <tr class="{{ $holiday->validated ? 'info' : '' }}">              
+                    <tr class="{{ $holiday->validated ? 'success' : '' }}">              
                         <td class="col-md-8">{{ ucwords($holiday->type) }}</td>
                         <td class="col-md-4">{{ $holiday->date }}</td> 
                     </tr>

@@ -25,15 +25,7 @@
                     <li><a href="{{ route('login') }}">Login</a></li>
                     <!--<li><a href="{{ route('register') }}">Register</a></li>-->
                 @else      
-                    @if(Auth::user()->primaryRole() == 'admin')
-                         <li><a href="{{ url('users') }}">Users</a></li> 
-                         <li><a href="{{ url('contracts') }}">Contracts</a></li>
-                         <li><a href="{{ url('projects') }}">Projects</a></li>  
-                    @elseif(Auth::user()->primaryRole() == 'manager')                   
-                         <li><a href="{{ url('users') }}">Users</a></li>   
-                         <li><a href="{{ url('projects') }}">Projects</a></li>            
-                    @endif
-                    
+                    <!--@include('layouts.links')-->
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
 
@@ -54,27 +46,19 @@
 
                         <ul class="dropdown-menu" role="menu">
                             <li>
-                                <a href  = "{{ url('users' . '/' . Auth::user()->id . '/') }}">
-                                    <span class="glyphicon glyphicon-user"></span> Profile
+                                <a href= "{{ url('users' . '/' . Auth::user()->id . '/') }}" 
+                                    onmouseover="this.className='list-group-item active';"  
+                                    onmouseout="this.className='';" >
+                                    <span class="glyphicon glyphicon-home"></span> Profile
                                 </a>
-                                <a href="{{ url('holidays') }}">
-                                    <span class="glyphicon glyphicon-tent"></span> Holidays
-                                </a>
-                                <a href="{{ url('evaluations') }}">
-                                    <span class="glyphicon glyphicon-education"></span> Evaluations      
-                                </a>
-                                <a href="{{ url('validation') }}">
-                                    <span class="glyphicon glyphicon-scale"></span> Validation      
-                                </a>
-                                <a href="{{ url('workingreports') }}">
-                                    <span class="glyphicon glyphicon-time"></span> Working Reports    
-                                </a>
+                                @include('layouts.menu')
                                 <a href="{{ route('logout') }}"
-                                    onclick="event.preventDefault();
+                                     onmouseover="this.className='list-group-item active';"  
+                                     onmouseout="this.className='';" 
+                                     onclick="event.preventDefault();
                                      document.getElementById('logout-form').submit();">
                                     <span class="glyphicon glyphicon-log-out"></span> Logout
                                 </a>
-
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                     {{ csrf_field() }}
                                 </form>

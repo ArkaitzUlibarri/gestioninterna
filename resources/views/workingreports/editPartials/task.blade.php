@@ -105,7 +105,7 @@
 				<span v-if="editIndex==-1">Save</span>
 			</button>
 			<button title="New Task" class="btn btn-primary btn-sm" v-on:click="initializeTask" v-show="editIndex!=-1">
-				New Task
+				<span class="glyphicon glyphicon-plus-sign"></span> New Task
 			</button>
 		</div>
 		

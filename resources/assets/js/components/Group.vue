@@ -58,14 +58,14 @@
         //margin: auto ;
     }
 
-    .group-enabled{
-        background-color: #b0f2b8;
-    }
-
     .selected-item {
         //background-color: lightblue;
         border-bottom: 1px dashed red;
         border-top: 1px dashed red;
+    }
+
+    .group-enabled{
+        background-color: #b0f2b8;
     }
 
 </style>

@@ -67,12 +67,9 @@ class UsersController extends Controller
         $contracts = $user->contracts;
         $holidays = $user->holidays;
         
-        if(count($contracts) != 0 ){
-            $usercard = $contracts->where('end_date',null)->first()->holidaysCard->first();
-        }
-        else{
-            $usercard = new UserHoliday;
-        }
+        $usercard = (count($contracts) != 0 ) 
+            ? $contracts->where('end_date',null)->first()->holidaysCard->first()
+            : new UserHoliday;
         
         return view('users.show', compact('user', 'categories', 'groups', 'contracts','holidays','usercard'));
     }

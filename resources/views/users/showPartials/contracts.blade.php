@@ -13,7 +13,7 @@
             </thead>
             <tbody>
                 @foreach($contracts as $contract)
-                <tr class="{{ $contract->end_date ? '' : 'info' }}">
+                <tr class="{{ $contract->end_date ? '' : 'success' }}">
                     <td class="col-md-4">{{ucwords($contract->contractType->name)}}</td>
                     <td class="col-md-2">{{$contract->week_hours}}</td>
                     <td class="col-md-2">{{$contract->start_date}}</td>

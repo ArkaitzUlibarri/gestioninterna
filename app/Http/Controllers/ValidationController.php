@@ -75,53 +75,6 @@ class ValidationController extends Controller
     }
 
     /**
-     * Creo una pestaña nueva en el excel.
-     * 
-     * @param $name     Nombre de la pestaña
-     * @param $excel    Excel sobre el que crear la pestaña
-     * @param $data     Datos a insertar en la pestaña
-     */
-    private function addSheet($name, $excel, $data)
-    {
-        if(count($data) > 0) {
-            $excel->sheet($name, function($sheet) use ($data) {
-                //Estilos
-                $sheet->freezeFirstRow();
-                $sheet->setHeight(1, 20);
-                $sheet->cells('A1:F1', function($row) {
-                    $row->setBackground('#C6EFD8');
-                    $row->setFontColor('#006100');
-                    $row->setAlignment('center');
-                    $row->setValignment('center');
-                });
-
-                //Cabecera
-                $sheet->appendRow(1, array('User', 'Day', 'Task', 'Time', 'Total', 'Validated By'));
-
-                //Filas de datos
-                foreach ($data as $entry) {
-                    foreach ($entry['items'] as $item) {
-                        $sheet->appendRow(array(
-                            $entry['user_name'],
-                            $entry['created_at'],
-                            $item['name'],
-                            $item['time_slot'],
-                            $entry['total'],
-                            $entry['manager']
-                        ));
-                    }
-                }
-            });
-
-            return;
-        }
-
-        $excel->sheet($name, function($sheet) {
-            $sheet->row(1, array('No data available'));
-        });
-    }
-
-    /**
      * Download yearly report.
      * 
      * @return Excel
@@ -147,39 +100,89 @@ class ValidationController extends Controller
      * @param $excel    Excel sobre el que crear la pestaña
      * @param $data     Datos a insertar en la pestaña
      */
-    private function addUserSheet($name, $excel, $data)
+    private function addSheet($name, $excel, $data)
     {
         if(count($data) > 0) {
             $excel->sheet($name, function($sheet) use ($data) {
-                //Estilos
-                $sheet->freezeFirstRow();
-                $sheet->setHeight(1, 20);
-                $sheet->cells('A1:D1', function($row) {
-                    $row->setBackground('#C6EFD8');
-                    $row->setFontColor('#006100');
-                    $row->setAlignment('center');
-                    $row->setValignment('center');
-                });
+
+                //Estilos Cabecera
+                $this->sheetHeaderStyle($sheet,'A1:F1');
 
                 //Cabecera
-                $sheet->appendRow(1, array('User', 'Month', 'Task', 'Hours'));
+                $header = ['User', 'Day', 'Task', 'Time', 'Total', 'Validated By'];
+                $sheet->appendRow(1, $header);
 
                 //Filas de datos
                 foreach ($data as $entry) {
-                    $sheet->appendRow(array(
-                        $entry['user_name'],
-                        $entry['month'],
-                        $entry['name'],
-                        $entry['time_slot']
-                    ));
-                }            
+                    foreach ($entry['items'] as $item) {
+                        $sheet->appendRow(array(
+                            $entry['user_name'],
+                            $entry['created_at'],
+                            $item['name'],
+                            $item['time_slot'],
+                            $entry['total'],
+                            $entry['manager']
+                        ));
+                    }
+                }
             });
 
             return;
         }
 
-        $excel->sheet($name, function($sheet) {
-            $sheet->row(1, array('No data available'));
+        $this->outputMessage($excel,$name,'No data available');
+    }
+
+
+
+    /**
+     * Creo una pestaña nueva en el excel.
+     * 
+     * @param $name     Nombre de la pestaña
+     * @param $excel    Excel sobre el que crear la pestaña
+     * @param $data     Datos a insertar en la pestaña
+     */
+    private function addUserSheet($name, $excel, $data)
+    {
+        if(count($data) > 0) {
+            $excel->sheet($name, function($sheet) use ($data) {
+                
+                //Estilos Cabecera
+                $this->sheetHeaderStyle($sheet,'A1:D1');
+
+                //Cabecera
+                $header = ['User', 'Month', 'Task', 'Hours'];
+                $sheet->appendRow(1, $header);
+
+                //Escribir filas
+                foreach ($data as $entry) {
+                    $array = [$entry['user_name'],$entry['month'],$entry['name'],$entry['time_slot']];
+                    $sheet->appendRow($array);
+                }    
+
+            });
+            return;
+        }
+
+        $this->outputMessage($excel,$name,'No data available');
+    }
+
+    private function outputMessage($excel,$name, $message)
+    {
+        $excel->sheet($name, function($sheet) use ($message) {
+            $sheet->row(1, array($message));
+        });
+    }
+
+    private function sheetHeaderStyle($sheet, $range)
+    {
+        $sheet->freezeFirstRow();
+        $sheet->setHeight(1, 20);
+        $sheet->cells($range, function($row) {
+            $row->setBackground('#C6EFD8');
+            $row->setFontColor('#006100');
+            $row->setAlignment('center');
+            $row->setValignment('center');
         });
     }
 }
