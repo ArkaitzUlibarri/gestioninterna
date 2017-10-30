@@ -20,7 +20,7 @@ class GroupsController extends Controller
 
     public function index()
     {  
-    	$groups = $this->getGroups();
+    	$groups = Group::orderBy('project_id','desc')->paginate(20);
 
     	return view('groups.index', compact('groups'));
     }
@@ -40,20 +40,6 @@ class GroupsController extends Controller
         return view('users.addGroups',compact('user','groupProjects'));
     }
     
-    private function getGroups()
-    {
-    	return DB::table('groups')
-    		->join('projects', 'groups.project_id','=','projects.id')
-    		->select(
-    			'projects.name as project',
-    			'groups.id',
-    			'groups.name',
-    			'groups.enabled'
-    		)
-    		->orderBy('project_id','asc')
-    		->get();
-    }
-
     private function getGroupsProjects()
     {
         $q = DB::table('groups')

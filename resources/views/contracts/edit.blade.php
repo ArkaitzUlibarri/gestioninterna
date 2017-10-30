@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-	<div class="container">
+<div class="row">
+	<div class="col-xs-12 col-sm-offset-1 col-sm-10">
 
 		<form method="POST" action="{{ url('contracts', $contract->id) }}">
 			{{ csrf_field() }}
@@ -18,7 +19,7 @@
 			 	<div class="panel-body">
 
 					<div class="row">
-						<div class ="form-group col-xs-12 col-sm-4">
+						<div class ="form-group col-xs-12 col-sm-6 col-md-4">
 							<label>Employee:</label>
 							<select name="user_id" class="form-control">
 								@foreach ($users as $user)
@@ -31,7 +32,7 @@
 					</div>
 
 					<div class="row">
-						<div class ="form-group col-xs-12 col-sm-4">
+						<div class ="form-group col-xs-12 col-sm-6 col-md-4">
 							<label>Type of contract:</label>
 							<select name="contract_type_id" class="form-control">
 								@foreach ($contractTypes as $contractType)		
@@ -44,7 +45,7 @@
 					</div>
 
 					<div class="row">
-						<div class ="form-group col-xs-12 col-sm-2">
+						<div class ="form-group col-xs-12 col-sm-6 col-md-3">
 							<label>Weekly working hours:</label>
 							<input name="week_hours" type ="number" min="0" max="40" class="form-control" placeholder="Hours" value="{{ $contract->week_hours }}">
 						</div>	
@@ -105,23 +106,19 @@
 					<hr>
 
 					<div class ="form-group pull-right">
-
-				        <a class="btn btn-default" href="{{ url('contracts') }}">Cancel</a>
-
-						<button type="submit" title="Save" class="btn btn-primary">
+				        <a class="btn btn-default btn-sm custom-btn-width" href="{{ url('contracts') }}">Cancel</a>
+						<button type="submit" title="Save" class="btn btn-primary btn-sm custom-btn-width">
 							<span class="glyphicon glyphicon-floppy-disk"></span> Save
 						</button>
-
 					</div>
+
 					<div class ="form-group pull-left">
-
-						<a class="btn btn-primary" type="button" 
+						<a class="btn btn-primary btn-sm custom-btn-width" type="button" 
 				           href="{{ url('contracts/' . $contract->id . '/teleworking') }}">Teleworking</a>
-
-				        <a class="btn btn-primary" type="button" 
+				        <a class="btn btn-primary btn-sm custom-btn-width" type="button" 
 				           href="{{ url('contracts/' . $contract->id . '/reductions') }}">Reductions</a>
-
 					</div>
+
 				</div>	
 			</div>
 
@@ -132,9 +129,10 @@
 	        {{ csrf_field() }}
 	        {{ method_field('delete') }}
 
-	      	<button class="btn btn-danger" type="submit"><span class="glyphicon glyphicon-trash"></span> Delete</button>
+	      	<button class="btn btn-danger btn-sm custom-btn-width" type="submit"><span class="glyphicon glyphicon-trash"></span> Delete</button>
 
       	</form>
 
 	</div>
+</div>
 @endsection

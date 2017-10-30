@@ -8,6 +8,7 @@ use App\ProjectRepository;
 use App\Http\Requests\ProjectFormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class ProjectsController extends Controller
 {
@@ -144,6 +145,94 @@ class ProjectsController extends Controller
 		return redirect('projects');
 	}
 
+	/**
+     * Remove the specified project from storage and his associated groups
+     *
+     * @param  int  $id
+     * @return Response
+     */
+	public function destroy($id)
+	{
+		$project = Project::find($id);
+
+		//Hay reportes del proyecto
+		if($this->hasReportsAssociated($project)){
+			return redirect('projects')->withErrors(['The project has reports associated']);
+		}
+
+		//Hay usuarios vinculados al proyecto
+		/*
+		if($this->hasUsersAssociated($project)){
+			return redirect('projects')->withErrors(['The project has users associated to its groups']);
+		}
+		*/
+
+		try{
+	    	DB::beginTransaction();
+			//******************************************************************************
+			//Borrar tanto el proyecto como los grupos y group_user
+			$project->delete();
+			DB::table('group_user')->whereIn('group_id',array_pluck($project->groups,'id'))->delete();
+			DB::table('groups')->where('project_id',$id)->delete();
+
+			Session::flash('message', 'The project has been successfully deleted!');
+			//******************************************************************************
+			DB::commit();	// Transaction successful
+		
+		}catch(\Exception $e){       
+		    DB::rollback();	// Transaction failed 
+		    throw $e;
+		}
+
+		return redirect('projects');
+	}
+
+	/**
+	 * Check if there are reports within the dates of the project
+	 * @param  [type]  $project [description]
+	 * @return boolean          [description]
+	 */
+	private function hasReportsAssociated($project)
+	{	
+		$q = DB::table('working_report')
+				->where('created_at','>=',$project->start_date)
+				->where('project_id',$project->id);
+
+		if(! is_null($project->end_date)){
+			$q = $q->where('created_at','<=',$project->end_date);
+		}
+
+		$q = $q->get();
+		
+		return ($q->count() > 0) ? true: false;
+	}
+
+	/**
+	 * Check if there are users related to the groups of the project
+	 * @param  [type]  $project [description]
+	 * @return boolean          [description]
+	 */
+	/*
+	private function hasUsersAssociated($project)
+	{	
+		$group_ids = array_pluck($project->groups,'id');
+
+		$q = DB::table('group_user as gu')
+			->select('gu.user_id','gu.group_id')
+			->join('users as u','u.id','gu.user_id')
+			->whereIn('gu.group_id',$group_ids)
+			//->where
+			->get();
+		dd($q);
+
+		return ($q->count() > 0) ? true: false;
+	}
+	*/
+
+	/**
+	 * Obtain all the employees who can be PM in a project
+	 * @return [type] [description]
+	 */
 	private function getPMs()
 	{
 		return DB::table('category_user as cu')

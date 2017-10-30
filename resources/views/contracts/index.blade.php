@@ -3,6 +3,7 @@
 @section('content')
 
 <div class="panel panel-primary">
+
     <div class="panel-heading">
         @include('contracts.indexPartials.filter')
         <h3 class="panel-title" style="margin-top: 7px;">CONTRACTS</h3>
@@ -29,13 +30,13 @@
                         <td>{{ empty($contract->end_date) ? "In progress" : "$contract->end_date" }}</td>          
                         <td>
                             @if (empty($contract->end_date))
-                                <a title="Edit" class="btn btn-default btn-sm" type="button" 
+                                <a title="Edit" class="btn btn-default btn-sm custom-btn-width" type="button" 
                                    href="{{ url('contracts/' . $contract->id . '/edit') }}">
                                    <span class="glyphicon glyphicon-edit"></span> Edit
                                 </a>
                             @else
-                                <a class="btn btn-warning btn-sm"
-                                   type="button" href="{{ url('contracts/' . $contract->id . '/edit') }}">
+                                <a title="Reopen" class="btn btn-warning btn-sm custom-btn-width" type="button" 
+                                    href="{{ url('contracts/' . $contract->id . '/edit') }}">
                                    <span class="glyphicon glyphicon-folder-open"></span> Reopen
                                 </a>
                             @endif

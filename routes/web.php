@@ -38,9 +38,7 @@ Route::resource('contracts', 'ContractsController');
 //Projects
 Route::get('groups', 'GroupsController@index');
 Route::get('projects/{project}/addgroup/', 'GroupsController@edit');
-Route::resource('projects', 'ProjectsController', ['except' => [
-    'destroy'
-]]);
+Route::resource('projects', 'ProjectsController');
 
 //Working Reports
 Route::get('workingreports', ['as'=> 'workingreports.index','uses'=>'WorkingreportController@index']);

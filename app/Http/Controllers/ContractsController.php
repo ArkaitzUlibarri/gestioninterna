@@ -150,7 +150,7 @@ class ContractsController extends Controller
 		$contract = Contract::find($id);
 		$user = User::find($contract->user_id);
 
-		//Hay reportes durante el teletrabajo
+		//Hay reportes durante el contrato
 		if($this->hasReportsAssociated($contract,$user)){
 			return redirect('contracts')->withErrors(['The contract has reports associated']);
 		}

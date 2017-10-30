@@ -21,14 +21,14 @@
             <tbody>
                 @foreach($users as $user)
                 <tr>
-                    <td>{{ $user->id }}</td>
-                    <td><a href="{{ url('users'.'/'.$user->id.'/') }}" title="Show"> {{ ucwords($user->fullname) }}</a></td>
-                    <td>{{ $user->email }}</td>
-                    <td>
+                    <td class="col-sm-1">{{ $user->id }}</td>
+                    <td class="col-sm-4"><a href="{{ url('users'.'/'.$user->id.'/') }}" title="Show"> {{ ucwords($user->fullname) }}</a></td>
+                    <td class="col-sm-4">{{ $user->email }}</td>
+                    <td class="col-sm-3">
                         @if (Auth::user()->primaryRole() == 'admin')
                             <a title="Edit"
                                href = "{{ url('users' . '/' . $user->id . '/' . 'edit') }}" 
-                               class="btn btn-default btn-sm"
+                               class="btn btn-default btn-sm custom-btn-width"
                                aria-hidden="true">
                                <span class="glyphicon glyphicon-edit"></span> Edit
                             </a>

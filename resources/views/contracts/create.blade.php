@@ -7,9 +7,10 @@
 			{{ csrf_field() }}
 
 			<div class="panel panel-primary">
-				<div class="panel-heading">NEW CONTRACT</div>
+				<div class="panel-heading">New Contract</div>
 
 			 	<div class="panel-body">
+
 					<div class="row">
 						<div class="form-group col-xs-12 col-sm-6 col-md-4">
 							<label>Employee:</label>
@@ -20,8 +21,10 @@
 								@endforeach	  
 							</select>
 						</div>
+					</div>
 
-						<div class="form-group col-xs-12 col-sm-6 col-md-5">
+					<div class="row">
+						<div class="form-group col-xs-12 col-sm-6 col-md-4">
 							<label>Type of contract:</label>
 							<select name="contract_type_id" class="form-control">
 								<option value="">-</option>	
@@ -30,7 +33,9 @@
 								@endforeach			  
 							</select>
 						</div>
+					</div>
 
+					<div class="row">
 						<div class="form-group col-xs-12 col-sm-6 col-md-3">
 							<label>Weekly working hours:</label>
 							<input name="week_hours" type ="number" min="0" max="40" class="form-control" placeholder="Hours" value="{{old('week_hours')}}">
@@ -91,11 +96,12 @@
 					<hr>
 
 					<div align="right" class="form-group">		
-						<a class="btn btn-default btn-sm" href="{{ url('contracts') }}">Cancel</a>
-						<button type ="submit" class="btn btn-primary btn-sm">
+						<a class="btn btn-default btn-sm custom-btn-width" href="{{ url('contracts') }}">Cancel</a>
+						<button type ="submit" class="btn btn-primary btn-sm custom-btn-width">
 							<span class="glyphicon glyphicon-floppy-disk"></span> Save
 						</button>
 					</div>
+					
 				</div>	
 			</div>		
 		</form>

@@ -62,7 +62,7 @@
 
 					<hr>
 
-					<div align="right" class="form-group">		
+					<div class="form-group pull-right">		
 						<a class="btn btn-default btn-sm custom-btn-width" href="{{ url('projects') }}">Cancel</a>
 						<button type ="submit" class="btn btn-primary btn-sm custom-btn-width">
 							<span class="glyphicon glyphicon-floppy-disk"></span> Save
@@ -72,6 +72,14 @@
 				</div>
 			</div>
 		</form>
+
+		<form method="post" action="{{ url('projects', $project->id) }}">
+	        {{ csrf_field() }}
+	        {{ method_field('delete') }}
+
+	      	<button class="btn btn-danger btn-sm custom-btn-width" type="submit"><span class="glyphicon glyphicon-trash"></span> Delete</button>
+
+      	</form>
 
 	</div>
 </div>

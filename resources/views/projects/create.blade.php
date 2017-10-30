@@ -3,12 +3,11 @@
 @section('content')
 <div class="row">
 	<div class="col-xs-12 col-sm-offset-1 col-sm-10">
-
 		<form method="post" action="{{ url('projects') }}">
 			{{ csrf_field() }}
 
 			<div class="panel panel-primary">
-				<div class="panel-heading">NEW PROJECT</div>
+				<div class="panel-heading">New Project</div>
 
 			 	<div class="panel-body">
 
@@ -60,12 +59,13 @@
 
 					<hr>
 
-					<div align="right" class="form-group">		
-						<a class="btn btn-default" href="{{ url('projects') }}">Cancel</a>
-						<button type ="submit" class="btn btn-primary">
+					<div class="form-group pull-right">		
+						<a class="btn btn-default btn-sm custom-btn-width" href="{{ url('projects') }}">Cancel</a>
+						<button type ="submit" class="btn btn-primary btn-sm custom-btn-width">
 							<span class="glyphicon glyphicon-floppy-disk"></span> Save
 						</button>
 					</div>
+
 				</div>
 			</div>
 		</form>

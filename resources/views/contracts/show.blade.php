@@ -2,34 +2,34 @@
 
 @section('content')
 	
-	<div class="row">
-	    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
-	        @include('contracts.showPartials.card')
-	    </div>
-	</div>
-
-    @if(count($contract->teleworking)>0)
-    <div class="row">
-        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
-            @include('contracts.showPartials.teleworking')
-        </div>
+<div class="row">
+    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+        @include('contracts.showPartials.card')
     </div>
-	@endif
+</div>
 
-	@if(count($contract->reductions)>0)
-    <div class="row">
-        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
-            @include('contracts.showPartials.reductions')
-        </div>
+@if(count($contract->teleworking)>0)
+<div class="row">
+    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+        @include('contracts.showPartials.teleworking')
     </div>
-	@endif
+</div>
+@endif
 
-	<div class="row">
-	    <div class="col-xs-12 col-sm-offset-1 col-sm-10">  
-	    	<div class="pull-right">   
-	        	<a class="btn btn-default custom-btn-width" href="{{ url('contracts') }}">Back</a>   
-	        </div>   
-	    </div>
-	</div>	
+@if(count($contract->reductions)>0)
+<div class="row">
+    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+        @include('contracts.showPartials.reductions')
+    </div>
+</div>
+@endif
+
+<div class="row">
+    <div class="col-xs-12 col-sm-offset-1 col-sm-10">  
+    	<div class="pull-right">   
+        	<a class="btn btn-default btn-sm custom-btn-width" href="{{ url('contracts') }}">Back</a>   
+        </div>   
+    </div>
+</div>	
 
 @endsection
