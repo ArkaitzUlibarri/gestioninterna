@@ -1,5 +1,8 @@
-<td class="col-md-2">
+<td>
     <span :title="criterion.description" class="glyphicon glyphicon-info-sign"></span> 
+</td>
+
+<td class="col-md-1">
     <span :title="criterion.name + ' (Peso: ' + criterion.percentage +'%)'">@{{ capitalizeFirstLetter(criterion.code) }}</span> 
 </td>
 
@@ -10,7 +13,7 @@
     </select>
 </td>  
 
-<td class="col-md-9">                         
+<td class="col-md-10">                         
     <textarea class="form-control input-sm" rows="1" placeholder="Comments" v-model="criterion.comment" :disabled="validateFilter(criterion)" v-show="validateComments(criterion)"></textarea>             
 </td>  
 

@@ -101,6 +101,6 @@
 		var pm = "Auth::user()->primaryRole() == 'manager' ? 1 : 0";
 	</script>
 
-	<script src="{{ asset('js/validate.js') }}"></script>
+	<script src="{{ asset('js/day_validation.js') }}"></script>
 
 @endpush

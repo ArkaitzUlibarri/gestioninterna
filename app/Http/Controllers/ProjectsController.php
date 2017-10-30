@@ -160,18 +160,12 @@ class ProjectsController extends Controller
 			return redirect('projects')->withErrors(['The project has reports associated']);
 		}
 
-		//Hay usuarios vinculados al proyecto
-		/*
-		if($this->hasUsersAssociated($project)){
-			return redirect('projects')->withErrors(['The project has users associated to its groups']);
-		}
-		*/
-
 		try{
 	    	DB::beginTransaction();
 			//******************************************************************************
 			//Borrar tanto el proyecto como los grupos y group_user
 			$project->delete();
+			
 			DB::table('group_user')->whereIn('group_id',array_pluck($project->groups,'id'))->delete();
 			DB::table('groups')->where('project_id',$id)->delete();
 
@@ -206,28 +200,6 @@ class ProjectsController extends Controller
 		
 		return ($q->count() > 0) ? true: false;
 	}
-
-	/**
-	 * Check if there are users related to the groups of the project
-	 * @param  [type]  $project [description]
-	 * @return boolean          [description]
-	 */
-	/*
-	private function hasUsersAssociated($project)
-	{	
-		$group_ids = array_pluck($project->groups,'id');
-
-		$q = DB::table('group_user as gu')
-			->select('gu.user_id','gu.group_id')
-			->join('users as u','u.id','gu.user_id')
-			->whereIn('gu.group_id',$group_ids)
-			//->where
-			->get();
-		dd($q);
-
-		return ($q->count() > 0) ? true: false;
-	}
-	*/
 
 	/**
 	 * Obtain all the employees who can be PM in a project

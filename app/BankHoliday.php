@@ -4,14 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class BankHolidayCode extends Model
+class BankHoliday extends Model
 {
-    /**
+     /**
 	 * The database table used by the model.
 	 *
 	 * @var string
 	 */
-	protected $table = 'bank_holidays_codes';
+	protected $table = 'bank_holidays';
 
 	/**
 	 * Does not have timestamps
@@ -21,6 +21,6 @@ class BankHolidayCode extends Model
 	/**
 	 * Does not have incremental ID
 	 */
-	public $incrementing = true;
+	public $incrementing = false;
 
 }

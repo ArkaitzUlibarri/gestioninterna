@@ -7,9 +7,10 @@
   "/js/workingreports.js": "/js/workingreports.js",
   "/js/reductions.js": "/js/reductions.js",
   "/js/groupsUser.js": "/js/groupsUser.js",
-  "/js/weeklyValidation.js": "/js/weeklyValidation.js",
-  "/js/validate.js": "/js/validate.js",
+  "/js/week_validation.js": "/js/week_validation.js",
   "/js/user.js": "/js/user.js",
+  "/js/performance.js": "/js/performance.js",
+  "/js/day_validation.js": "/js/day_validation.js",
   "/js/calendar.js": "/js/calendar.js",
   "/js/manifest.js": "/js/manifest.js"
 }

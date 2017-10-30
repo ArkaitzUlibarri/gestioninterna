@@ -40,23 +40,23 @@
 
 					<form class="form-inline">	
 
-						<div class="form-group col-xs-12 col-sm-3">
+						<div class="form-group">
 							<label>Week Working Hours</label>
 							<input type="number" min=0 max="{{($contract->week_hours)- 1}}" class="form-control input-sm" placeholder="Time" v-model="newReduction.week_hours" 
 							v-on:blur="hoursValidation" id="hourfield">
 						</div>	
 
-						<div class="form-group col-xs-12 col-sm-3">
+						<div class="form-group">
 							<label>Start date</label>
 							<input id="startdatefield" name="start_date" name="created_at" type ="date" class="form-control input-sm" placeholder="yyyy-mm-dd" v-model="newReduction.start_date">
 						</div>	
 
-						<div class="form-group col-xs-12 col-sm-3">
+						<div class="form-group">
 							<label>End date</label>
 							<input id="enddatefield" name="end_date" type ="date" class="form-control input-sm" placeholder="yyyy-mm-dd" v-model="newReduction.end_date">
 						</div>	
 
-						<div class="form-group col-xs-12 col-sm-3">	
+						<div class="form-group">	
 							<button title="Save" class="btn btn-primary btn-sm" :disabled="formFilled==false" v-on:click.prevent="save">
 								<span class="glyphicon glyphicon-floppy-disk"></span>
 								<span v-if="editIndex!=-1">Update</span>
@@ -75,7 +75,7 @@
 	</div>
 
 	<div class ="form-group pull-right">
-		<a class="btn btn-default custom-btn-width" href="{{ url('contracts/' . $contract->id . '/edit')  }}" >Back</a>
+		<a class="btn btn-default btn-sm custom-btn-width" href="{{ url('contracts/' . $contract->id . '/edit')  }}" >Back</a>
 	</div>
 
 </div>

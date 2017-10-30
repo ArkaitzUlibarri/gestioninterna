@@ -83,12 +83,12 @@
           </span>
       </div>
 
-      <a title="Export" href="{{ url('validation/download') }}" class="btn btn-success btn-sm custom-btn-width">
+      <a title="Detailed Export" href="{{ url('validation/download') }}" class="btn btn-success btn-sm custom-btn-width">
           <span class="glyphicon glyphicon-download-alt"></span> Export
       </a>
 
-      <a title="Yearly Report" href="{{ url('validation/year_report') }}" class="btn btn-success btn-sm custom-btn-width">
-          <span class="glyphicon glyphicon-download-alt"></span> Report
+      <a title="Year Export" href="{{ url('validation/year_report') }}" class="btn btn-success btn-sm custom-btn-width">
+          <span class="glyphicon glyphicon-download-alt"></span> Year Exp.
       </a>
 
     </div>

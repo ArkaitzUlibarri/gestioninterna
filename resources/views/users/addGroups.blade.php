@@ -30,26 +30,32 @@
 					<div class="panel-body">			
 
 						<form class="form-inline">	
-				
-							<label>Project</label>
-							<select class="form-control input-sm" v-on:change="groupsRefresh" v-model="newGroupUser.project">
-								<option value="">-</option>
-								<template v-for="(project, index) in projectList">
-									<option :project="project" :index="index">@{{project}}</option>
-								</template>
-							</select>			
-						
-							<label>Group</label>
-							<select class="form-control input-sm" v-model="newGroupUser.group">
-								<option value="">-</option>
-								<template v-for="(group, index) in groupList">
-									<option :group="group" :index="index">@{{group}}</option>
-								</template>	
-							</select>			
-						
-							<button title="Save" class="btn btn-primary btn-sm" :disabled="formFilled==false" v-on:click.prevent="saveGroup">
-								<span class="glyphicon glyphicon-floppy-disk"></span> Save
-							</button>
+					
+							<div class="form-group">
+								<label>Project</label>
+								<select class="form-control input-sm" v-on:change="groupsRefresh" v-model="newGroupUser.project">
+									<option value="">-</option>
+									<template v-for="(project, index) in projectList">
+										<option :project="project" :index="index">@{{project}}</option>
+									</template>
+								</select>	
+							</div>		
+							
+							<div class="form-group">
+								<label>Group</label>
+								<select class="form-control input-sm" v-model="newGroupUser.group">
+									<option value="">-</option>
+									<template v-for="(group, index) in groupList">
+										<option :group="group" :index="index">@{{group}}</option>
+									</template>	
+								</select>	
+							</div>		
+							
+							<div class="form-group">
+								<button title="Save" class="btn btn-primary btn-sm" :disabled="formFilled==false" v-on:click.prevent="saveGroup">
+									<span class="glyphicon glyphicon-floppy-disk"></span> Save
+								</button>
+							</div>
 								
 						</form>
 						
@@ -59,7 +65,7 @@
 		</div>
 
 		<div class ="form-group pull-right">
-			<a class="btn btn-default custom-btn-width" href="{{ url('users') }}">Back</a>
+			<a class="btn btn-default btn-sm custom-btn-width" href="{{ url('users') }}">Back</a>
 		</div>
 
 	</div>

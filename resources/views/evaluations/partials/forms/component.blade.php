@@ -16,6 +16,7 @@
             <table class="table table-hover table-condensed" style="margin-bottom: 0px">
 
                 <thead>
+                    <th></th>
                     <th>Criteria</th>
                     <th>Marks</th>   
                     <th>Comments</th>     
