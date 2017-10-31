@@ -67,7 +67,7 @@ class CreateCoursesTable extends Migration
         Schema::create('calendar_course', function (Blueprint $table) {
             $table->increments('id');   
             $table->date('date');  
-            $table->integer('group_id')->unsigned();
+            $table->integer('course_group_id')->unsigned();
             $table->time('start_time');
             $table->time('end_time');
 

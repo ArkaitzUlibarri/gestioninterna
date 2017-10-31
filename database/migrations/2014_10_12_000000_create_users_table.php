@@ -26,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+            //Futuros campos:address,genre,mobile,personal_mobile,telephone,personal_email,DNI(ID),birthday,birthplace,numero_SS (NIN)
         });
 
         /**

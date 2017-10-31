@@ -20,8 +20,8 @@ class CreateEvaluationsTable extends Migration
         Schema::create('averages', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('efficiency_id')->unsigned();
-            $table->float('mark', 8, 2)->unsigned();
             $table->tinyInteger('month')->unsigned();
+            $table->float('average', 8, 2)->unsigned();
 
             $table->foreign('efficiency_id')
                   ->references('id')
@@ -70,7 +70,7 @@ class CreateEvaluationsTable extends Migration
             //$table->integer('efficiency_id')->unsigned()->nullable();        
             $table->tinyInteger('mark')->unsigned();
             $table->string('comment')->nullable();
-            $table->integer('weight')->unsigned();
+            $table->float('weight',5,2)->unsigned();
             $table->integer('pm_id')->unsigned();
 
             $table->foreign('user_id')
@@ -97,22 +97,6 @@ class CreateEvaluationsTable extends Migration
             $table->unique(['user_id', 'project_id','type','year','month']); 
         });
 
-        /**
-         * Tabla con la lista de desempeños por persona al año
-         */
-        Schema::create('historical_performances', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id')->unsigned();
-            $table->smallInteger('year')->unsigned();
-            $table->float('mark', 3, 2)->unsigned();
-
-            $table->foreign('user_id')
-                  ->references('id')
-                  ->on('users')
-                  ->onDelete('cascade');
-
-            $table->unique(['user_id', 'year']); 
-        });
     }
 
     /**
@@ -122,7 +106,6 @@ class CreateEvaluationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('historical_performances'); 
         Schema::dropIfExists('performances'); 
         Schema::dropIfExists('efficiencies'); 
         Schema::dropIfExists('averages'); 

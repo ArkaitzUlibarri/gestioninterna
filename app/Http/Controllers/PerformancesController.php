@@ -47,16 +47,24 @@ class PerformancesController extends Controller
         $fileName =  Carbon::now('Europe/Madrid')->format('Ymd_Hi') . '_performance_evaluation_' . str_replace(" ", "_", User::find($user_id)->fullname) . "_" . $year;
 
         Excel::create($fileName, function($excel) use ($data) {
+    
+            if(! is_null($data)){
+                //Hojas por proyecto
+                foreach ($data as $project_id => $array) {
+                    if($project_id != ""){
+                        $this->addSheet(Project::find($project_id)->name,$excel,$data,'Average',$project_id);
+                    }                     
+                }
 
-            //Hojas por proyecto
-            foreach ($data as $project_id => $array) {
-                if($project_id != ""){
-                    $this->addSheet(Project::find($project_id)->name,$excel,$data,'Average',$project_id);
-                }                     
+                //Hoja Total
+                $this->addSheet('Total',$excel,$data,'Total');
             }
-
-            //Hoja Total
-            $this->addSheet('Total',$excel,$data,'Total');
+            else{
+                 //Sin datos
+                $excel->sheet('Performance', function($sheet) {
+                    $sheet->row(1, array('No data available'));
+                });
+            }
 
         })->export('xlsx');
     }
