@@ -2,36 +2,31 @@
 
 @section('content')
 
-<div class="row">
-	<div class ="col-xs-12">
-		<h2>Working Report</h2>
+	<span v-if="contract">	
+
+		<div class="row">
+			<div class ="col-xs-12">
+				<h2>Working Report</h2>
+			</div>
+		</div>
+
+		@include('workingreports.editPartials.details')
+		@include('workingreports.editPartials.tasks')
+		@include('workingreports.editPartials.task')
+		@include('layouts.errors')
+		@include('workingreports.partials.back')
+	</span>
+
+	<div class="col-md-6 col-md-offset-3" v-else>
+		@include('layouts.contractError')
+		@include('layouts.errors')
+		@include('workingreports.partials.back')
 	</div>
-</div>
-
-<span v-if="contract">	
-	@include('workingreports.editPartials.details')
-		
-	@include('workingreports.editPartials.tasks')
-
-	@include('workingreports.editPartials.task')
-</span>
-
-<span v-else>
-	<div class="panel panel-danger ">
-		  <div class="panel-heading"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Error</div>
-		  <div class="panel-body">User without an active contract</div>
-	</div>
-</span>
-
-@include('layouts.errors')
-
-<div class ="form-group pull-right">
-	<a class="btn btn-default btn-sm custom-btn-width" href="{{ url('workingreports') }}">Back</a>
-</div>
 
 @endsection
 
 @push('script-bottom')
+
 	<script type = "text/javascript">
 		var url = "{{ url('/') }}";
 		var reportdate = '{{ $date }}';
@@ -45,4 +40,5 @@
 	</script>
 	
     <script src="{{ asset('js/workingreports.js') }}"></script>
+    
 @endpush

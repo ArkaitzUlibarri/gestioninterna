@@ -6,6 +6,7 @@ use App\User;
 use App\Contract;
 use App\ContractType;
 use App\ContractRepository;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\ContractFormRequest;
 use Illuminate\Support\Facades\DB;
@@ -99,11 +100,68 @@ class ContractsController extends Controller
 
 	public function store(ContractFormRequest $request)
 	{
+		//$daysOfHoliday = $this->daysOfHoliday($request);
 		$contract = new Contract;
 	    $contract->fill($request->all());
 	    $contract->save();
 
 		return redirect('contracts');
+	}
+
+	/**
+	 * Calculo de los días de vacaciones por contrato
+	 * @param  [type] $request [description]
+	 * @return [type]          [description]
+	 */
+	private function daysOfHoliday($request)
+	{
+		//Fechas
+		$endDate = $request->get('end_date');//Fecha de fin
+		$startDate = $request->get('start_date');//Fecha de comienzo
+		$estimatedEndDate = $request->get('estimated_end_date');//Fecha estimada de fin
+
+		//Años
+		$actualYear = intval(date('Y'));//Año actual
+		$startDateYear = Carbon::createFromFormat('Y-m-d',$startDate)->year;//Año Comienzo contrato
+		$estimatedEndDateYear = is_null($estimatedEndDate) ? null : Carbon::createFromFormat('Y-m-d',$estimatedEndDate)->year;//Año Estimado de fin
+
+		//Dias
+		$contractHolidays = ContractType::find($request->get('contract_type_id'))->holidays;//Dias de vacaciones por contrato
+		$daysOfYear = Carbon::createFromDate($actualYear, 12, 31)->dayOfYear;//Dias del año
+
+		if(is_null($endDate)){
+			if(is_null($estimatedEndDate)){
+				if($startDateYear != $actualYear)
+				{
+					//Distinto año de comienzo
+					$current_year = $contractHolidays;//22
+				}
+				else{
+					//Mismo año->Calculo de días
+					$startDay = Carbon::createFromFormat('Y-m-d',$startDate)->dayOfYear;
+					$days = $daysOfYear - $startDay;				
+					$current_year =	round(($days/$daysOfYear) * $contractHolidays);
+				}
+			}
+			else{
+				if($startDateYear != $year && $estimatedEndDateYear == $year){
+					$days = Carbon::createFromFormat('Y-m-d',$estimatedEndDate)->dayOfYear;
+				}	
+				else if($startDateYear == $year && $estimatedEndDateYear == $year){
+					$startDay = Carbon::createFromFormat('Y-m-d',$startDate)->dayOfYear;//Dia de comienzo
+					$estimatedEndDay = Carbon::createFromFormat('Y-m-d',$estimatedEndDate)->dayOfYear;//Dia de Fin
+					$days = $estimatedEndDay - $startDay;
+				}	
+				else if($startDateYear == $year && $estimatedEndDateYear != $year){
+					$startDay = Carbon::createFromFormat('Y-m-d',$startDate)->dayOfYear;//Dia de comienzo
+					$days = $daysOfYear - $startDay;
+				}
+				$current_year =	round(($days / $daysOfYear) * $contractHolidays);
+			}
+
+			return intval($current_year);
+		}
+		return 0;
 	}
 
 	public function update(ContractFormRequest $request, $id)
