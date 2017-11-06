@@ -89,7 +89,7 @@ const app = new Vue({
 			//criterion.comment = criterion.mark == 2 ? '': criterion.comment; 
 
 			if(this.validateDeleteButton(criterion)){
-				axios.post('/api/performance-evaluation', criterion)
+				axios.post('api/performance-evaluation', criterion)
 				  .then(function (response) {
 	
 					  	toastr.success("SAVED");//Mensaje de Guardado
@@ -113,7 +113,7 @@ const app = new Vue({
 			let vm = this;
 			let ids = [];
 
-            axios.delete('/api/performance-evaluation/'+ criterion.id)
+            axios.delete('api/performance-evaluation/'+ criterion.id)
                 .then(function (response) {  
                 	
 				  	toastr.success(response.data);//Mensaje de Guardado
@@ -620,15 +620,21 @@ const app = new Vue({
 			return string.charAt(0).toUpperCase() + string.slice(1);
 		},
 
-						/** FUNCIONES DEL FORMULARIO **/
+		/** FUNCIONES DEL FORMULARIO **/
 		validateComments(criterion){
 			return criterion.mark != 2 || criterion.code =='knowledge' ? true : false;
 		},
 
         validateFilter(criterion) {
+
+            if (criterion.id){
+                return true;
+            }
+
         	if(criterion.code == 'knowledge'){
         		return (this.filter.year == '' || this.filter.month == '' || this.filter.employee == '') ? true : false;
         	}
+            
 			return (this.filter.year == '' || this.filter.month == '' || this.filter.employee == '' || this.filter.project == '') ? true : false;
 		},
 

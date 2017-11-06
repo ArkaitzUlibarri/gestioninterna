@@ -177,7 +177,7 @@ var app = new Vue({
 
             vm.bankHolidays = [];
 
-            axios.get('/api/holidays', {
+            axios.get('api/holidays', {
                 params: {
                     //user_id: vm.user_id,
                     year: vm.filter.year
@@ -220,7 +220,7 @@ var app = new Vue({
             vm.filter.user = '';
             vm.holidaysPendingList = [];
 
-            axios.get('/api/users', {
+            axios.get('api/users', {
                 params: {
                     //user_id: vm.user_id,
                     year: vm.filter.year
