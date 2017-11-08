@@ -4,7 +4,7 @@
 
         <!--No hay para user/tools-->
         @if(Auth::user()->primaryRole() == 'manager' || Auth::user()->primaryRole() == 'admin')
-          <select title="Week Type" name="weekType" class="form-control input-sm" v-model="filter.weekType" v-on:change="fetchPendingUsers()">
+          <select title="Week Type" name="weekType" class="form-control input-sm" v-model="filter.weekType"  style="background-color: gold;" v-on:change="fetchPendingUsers()">
             <option value="reports">Reports</option>
             <option value="holidays">Holidays</option>
           </select>

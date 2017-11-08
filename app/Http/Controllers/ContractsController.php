@@ -16,7 +16,7 @@ class ContractsController extends Controller
 {
 	protected $contractRepository;
 	/**
-	 * Create a new controller instance.
+	 * Create a new controller instance
 	 *
 	 * @return void
 	 */
