@@ -74,11 +74,11 @@ class WorkingReportController extends Controller
 		$categories = $this->getCategories($userId);
 		$contract = $reportUser->contracts->where('end_date', null)->first();
 
+		//Teletrabajo
 		$teleworking = null;
 		if($contract != null ){
             $teleworking = $contract->teleworking->where('end_date', null)->first();
         }
-
         if($teleworking == null){
 			$teleworking = new Teleworking;
 		}  
