@@ -22,9 +22,9 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 		'username'       => strtolower($firstName) . "." . strtolower($lastName),
 		'name'           => $firstName,
 		'lastname'       => $lastName,
-		'email'          => strtolower($firstName) . "." . strtolower($lastName) . "@3dbconsult.com",
+		'email'          => strtolower($firstName) . "." . strtolower($lastName) . "@example.com",
 		'password'       => $password ?: $password = bcrypt('secret'),
-		'role'           => 'user',
+		'role'           => config('options.roles')[$faker->numberBetween(0,2)],
 		'remember_token' => str_random(10),
     ];
 });

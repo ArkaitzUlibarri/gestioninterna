@@ -11,6 +11,8 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
+        factory('App\User',30)->create();
+        /*
         factory(App\User::class)->create([
             'username' => 'ivan.iglesias',
             'name'     => 'Ivan',
@@ -82,5 +84,6 @@ class UsersTableSeeder extends Seeder
             'email'    => 'alvaro.gabilondo@3dbconsult.com',
             'role'     => 'user',
         ]);
+        */
     }
 }
