@@ -66,14 +66,15 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'adldap',
+            'driver' => 'eloquent',
             'model' => App\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        //'users' => [
+        //    'driver' => 'adldap',
+        //    'model' => App\User::class,
+        //],
+
     ],
 
     /*

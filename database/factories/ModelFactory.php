@@ -15,11 +15,14 @@
 $factory->define(App\User::class, function (Faker\Generator $faker) {
     static $password;
 
+    $firstName = $faker->firstName;
+    $lastName = $faker->lastName;
+
     return [
-		'username'       => $faker->unique()->userName,
-		'name'           => $faker->name,
-		'lastname'       => $faker->lastName,
-		'email'          => $faker->safeEmail,
+		'username'       => strtolower($firstName) . "." . strtolower($lastName),
+		'name'           => $firstName,
+		'lastname'       => $lastName,
+		'email'          => strtolower($firstName) . "." . strtolower($lastName) . "@3dbconsult.com",
 		'password'       => $password ?: $password = bcrypt('secret'),
 		'role'           => 'user',
 		'remember_token' => str_random(10),
