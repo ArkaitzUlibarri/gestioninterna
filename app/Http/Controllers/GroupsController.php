@@ -12,12 +12,6 @@ use Illuminate\Support\Facades\DB;
 class GroupsController extends Controller
 {
 
-    public function __construct()
-    {
-        $this->middleware('auth');
-        $this->middleware('checkrole', ['except' => ['index']]);
-    }
-
     public function index()
     {  
     	$groups = Group::orderBy('project_id','desc')->paginate(20);

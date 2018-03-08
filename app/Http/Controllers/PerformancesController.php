@@ -17,8 +17,6 @@ class PerformancesController extends Controller
 
     public function __construct(PerformanceRepository $performanceRepository)
     {
-        $this->middleware('auth');
-        //$this->middleware('checkrole');
         $this->performanceRepository = $performanceRepository;
     }
 

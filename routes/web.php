@@ -20,45 +20,43 @@ Route::get('/', function(){
 	return redirect('login');
 });
 
-Route::get('/home', 'HomeController@index')->name('home');
-
 Route::get('/access', function(){
-	return view('access');
+    return view('access');
 });
 
+Route::get('/home', 'HomeController@index')->name('home')->middleware('auth');
+
 //Users
-Route::get('users/{user}/groups/', 'GroupsController@editUser');
-Route::resource('users', 'UsersController', ['only' => ['index', 'show', 'edit']]);
+Route::get('users/{user}/groups/', 'GroupsController@editUser')->middleware(['auth','checkrole']);
+Route::resource('users', 'UsersController', ['only' => ['index', 'show', 'edit']])->middleware(['auth','checkrole']);
 
 //Contracts
-Route::get('contracts/{contract}/teleworking/', 'TeleworkingController@edit');
-Route::get('contracts/{contract}/reductions/', 'ReductionsController@edit');
-Route::resource('contracts', 'ContractsController');
+Route::get('contracts/{contract}/teleworking/', 'TeleworkingController@edit')->middleware(['auth','checkrole']);
+Route::get('contracts/{contract}/reductions/', 'ReductionsController@edit')->middleware(['auth','checkrole']);
+Route::resource('contracts', 'ContractsController')->middleware(['auth','checkrole']);
 
 //Projects
-Route::get('groups', 'GroupsController@index');
-Route::get('projects/{project}/addgroup/', 'GroupsController@edit');
-Route::resource('projects', 'ProjectsController');
+Route::get('groups', 'GroupsController@index')->middleware('auth');
+Route::get('projects/{project}/addgroup/', 'GroupsController@edit')->middleware(['auth','checkrole']);
+Route::resource('projects', 'ProjectsController')->middleware(['auth','checkrole']);
 
 //Working Reports
-Route::get('workingreports', ['as'=> 'workingreports.index','uses'=>'WorkingreportController@index']);
-Route::get('workingreports/add/{id}/{date}/',['as'=> 'workingreports.edit','uses'=>'WorkingreportController@edit']);
+Route::get('workingreports', ['as'=> 'workingreports.index','uses'=>'WorkingreportController@index'])->middleware('auth');
+Route::get('workingreports/add/{id}/{date}/',['as'=> 'workingreports.edit','uses'=>'WorkingreportController@edit'])->middleware(['auth','checkrole']);
 
 //Validation
-Route::get('validation', 'ValidationController@index');
-Route::get('validation/download', 'ValidationController@download');
-Route::get('validation/year_report', 'ValidationController@yearReport');
+Route::get('validation', 'ValidationController@index')->middleware('auth');
+Route::get('validation/download', 'ValidationController@download')->middleware('auth');
+Route::get('validation/year_report', 'ValidationController@yearReport')->middleware('auth');
 
 //Holidays
-Route::get('holidays','CalendarHolidaysController@index');//Solicitar vacaciones
+Route::get('holidays','CalendarHolidaysController@index')->middleware('auth');//Solicitar vacaciones
 
 //Evaluations
-Route::get('evaluations','PerformancesController@index');
-Route::get('evaluations/download/{year}/{employee}/',['as'=> 'evaluations.download','uses'=> 'PerformancesController@download']);
+Route::get('evaluations','PerformancesController@index')->middleware('auth');
+Route::get('evaluations/download/{year}/{employee}/',['as'=> 'evaluations.download','uses'=> 'PerformancesController@download'])->middleware('auth');
 
-/**
- * API, mirar autenticacion token o passport en el api.php
- */
+//region API, mirar autenticacion token o passport en el api.php
 Route::get('api/users','Api\v1\HolidaysValidationController@loadusers');
 Route::get('api/holidays','Api\v1\HolidaysValidationController@loadholidays');
 Route::get('api/conflicts','Api\v1\HolidaysValidationController@loadconflicts');
@@ -76,3 +74,4 @@ Route::get('api/employees','Api\v1\EvaluationPerformanceController@loadEmployees
 Route::post('api/performance-evaluation','Api\v1\EvaluationPerformanceController@store');
 Route::patch('api/performance-evaluation/{id}','Api\v1\EvaluationPerformanceController@update');
 Route::delete('api/performance-evaluation/{id}','Api\v1\EvaluationPerformanceController@destroy');
+//endregion

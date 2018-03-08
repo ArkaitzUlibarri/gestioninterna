@@ -20,7 +20,6 @@ class ValidationController extends Controller
      */
     public function __construct(WorkingreportRepository $reportRepository)
     {
-        $this->middleware('auth');
         $this->reportRepository = $reportRepository;
     }
 

@@ -23,8 +23,6 @@ class WorkingReportController extends Controller
 	 */
 	public function __construct(WorkingreportRepository $workingreportRepository)
 	{
-		$this->middleware('auth');
-		$this->middleware('checkrole',['only' => ['edit']]);
 		$this->workingreportRepository = $workingreportRepository;
 	}
 

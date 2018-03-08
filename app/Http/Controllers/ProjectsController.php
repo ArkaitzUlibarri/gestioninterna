@@ -16,9 +16,6 @@ class ProjectsController extends Controller
 
 	public function __construct(ProjectRepository $projectRepository)
 	{
-		$this->middleware('auth');
-        //$this->middleware('checkrole',['except' => ['index']]);
-        $this->middleware('checkrole');
 		$this->projectRepository = $projectRepository;
 	}
 

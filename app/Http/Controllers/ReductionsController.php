@@ -7,12 +7,7 @@ use App\Contract;
 
 class ReductionsController extends Controller
 {
-	public function __construct()
-	{
-		$this->middleware('auth');
-		$this->middleware('checkrole');
-	}
-	
+
     public function edit($id)
     {
         $contract  = Contract::find($id);
