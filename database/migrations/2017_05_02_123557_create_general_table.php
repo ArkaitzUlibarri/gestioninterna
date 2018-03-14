@@ -142,7 +142,7 @@ class CreateGeneralTable extends Migration
             $table->increments('id');    
             $table->integer('user_id')->unsigned();
             $table->date('created_at');
-            $table->enum('activity',config('options.activities'));
+            $table->enum('activity',	['absence','project','training']);
 
             //Proyecto
             $table->integer('project_id')->unsigned()->nullable();

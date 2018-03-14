@@ -12,7 +12,7 @@
 				<label>Activity</label>
 				<select class="form-control input-sm" v-model="newTask.activity" v-on:change="refreshForm" v-bind:disabled="validatedTasks">
 					<option value="">-</option>
-					@foreach(config('options.activities') as $activity)				
+					@foreach(\App\WorkingReport::ACTIVITIES as $activity)
 						<option value="{{$activity}}">{{ucfirst($activity)}}</option>
 					@endforeach
 				</select>

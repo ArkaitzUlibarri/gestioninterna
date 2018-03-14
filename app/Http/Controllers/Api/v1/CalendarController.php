@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Api\ApiController;
+use App\WorkingReport;
 use Illuminate\Http\Request;
 use App\CalendarHoliday;
 use Carbon\Carbon;
@@ -150,7 +151,7 @@ class CalendarController extends ApiController
 				->where('a.name','holidays')//Vacaciones
 				->where('w.user_id', $calendar->user_id)//Usuario
 				->where('w.created_at', $calendar->date)//Fecha
-				->where('w.activity', config('options.activities')[0])//'absence'
+				->where('w.activity', WorkingReport::ACTIVITIES[0])//'absence'
 				->delete();
 				
 			DB::commit();

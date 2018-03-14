@@ -6,6 +6,7 @@ use App\User;
 use App\Contract;
 use App\ContractType;
 use App\ContractRepository;
+use App\BankHolidayCode;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\ContractFormRequest;
@@ -44,9 +45,9 @@ class ContractsController extends Controller
 	public function create()	
 	{
 		$bankHolidaysCodes = $this->getBankHolidaysCodes();
-		$nationalDays  = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[0]);
-		$regionalDays  = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[1]);
-		$localDays     = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[2]);
+		$nationalDays  = $this->filterBankHolidaysByType($bankHolidaysCodes,BankHolidayCode::TYPES[0]);
+		$regionalDays  = $this->filterBankHolidaysByType($bankHolidaysCodes,BankHolidayCode::TYPES[1]);
+		$localDays     = $this->filterBankHolidaysByType($bankHolidaysCodes,BankHolidayCode::TYPES[2]);
 		$contractTypes = ContractType::all();
 		$users = User::orderBy('name')->get();
 
@@ -57,9 +58,9 @@ class ContractsController extends Controller
 	{
 		$contract = Contract::find($id);
 		$bankHolidaysCodes = $this->getBankHolidaysCodes();
-		$nationalDays = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[0]);
-		$regionalDays = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[1]);
-		$localDays    = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[2]);
+		$nationalDays = $this->filterBankHolidaysByType($bankHolidaysCodes,BankHolidayCode::TYPES[0]);
+		$regionalDays = $this->filterBankHolidaysByType($bankHolidaysCodes,BankHolidayCode::TYPES[1]);
+		$localDays    = $this->filterBankHolidaysByType($bankHolidaysCodes,BankHolidayCode::TYPES[2]);
 		
 		foreach ($nationalDays as $nationalDay) {
 			if($nationalDay->id == $contract->national_days_id){
@@ -87,9 +88,9 @@ class ContractsController extends Controller
 	{
 		$contract = $this->getContractEdit($id);
 		$bankHolidaysCodes = $this->getBankHolidaysCodes();
-		$nationalDays = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[0]);
-		$regionalDays = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[1]);
-		$localDays    = $this->filterBankHolidaysByType($bankHolidaysCodes,config('options.bank_holidays')[2]);
+		$nationalDays = $this->filterBankHolidaysByType($bankHolidaysCodes,BankHolidayCode::TYPES[0]);
+		$regionalDays = $this->filterBankHolidaysByType($bankHolidaysCodes,BankHolidayCode::TYPES[1]);
+		$localDays    = $this->filterBankHolidaysByType($bankHolidaysCodes,BankHolidayCode::TYPES[2]);
 		$contractTypes = ContractType::all();
 		$users = User::orderBy('name')->get();
 

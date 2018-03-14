@@ -23,4 +23,10 @@ class BankHolidayCode extends Model
 	 */
 	public $incrementing = true;
 
+    const TYPES = [
+        'national',
+        'regional',
+        'local',
+        'others'
+    ];
 }

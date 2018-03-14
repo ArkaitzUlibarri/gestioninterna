@@ -17,7 +17,7 @@
 		/*
 		<select name="role" class="form-control input-sm">
 			<option value="" {{ "" == $filter['role'] ? 'selected' : '' }}>All</option>
-			@foreach (config('options.roles') as $role)
+			@foreach (\App\User::ROLES as $role)
 				<option value="{{ $role }}" {{ $role == $filter['role'] ? 'selected' : '' }}>{{ ucfirst($role) }}</option>	
 			@endforeach	
 			<option value="manager" {{ "manager" == $filter['role'] ? 'selected' : '' }}>Manager</option>	

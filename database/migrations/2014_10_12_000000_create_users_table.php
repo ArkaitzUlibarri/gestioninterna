@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('username')->unique();
-            $table->enum('role', config('options.roles'))->default('user');
+            $table->enum('role', ['admin', 'tools', 'user'])->default('user');
             $table->string('name');
             $table->string('lastname');
             $table->string('email')->nullable();
@@ -45,7 +45,7 @@ class CreateUsersTable extends Migration
          */
         Schema::create('bank_holidays_codes', function (Blueprint $table) {
             $table->increments('id');
-            $table->enum('type', config('options.bank_holidays'));
+            $table->enum('type',['national', 'regional', 'local', 'others']);
             $table->text('name');
             $table->string('code'); 
         });

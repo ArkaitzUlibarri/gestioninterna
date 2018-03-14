@@ -18,7 +18,7 @@
 								v-model="role"
 								v-on:change="updateRole(role)">
 
-							@foreach (config('options.roles') as $role)
+							@foreach (\App\User::ROLES as $role)
 								<option value="{{ $role }}">{{ ucfirst($role) }}</option>				
 							@endforeach
 

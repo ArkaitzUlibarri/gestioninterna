@@ -20,7 +20,7 @@ class WorkingReportTableSeeder extends Seeder
 		$users           = $this->users();
 		$projects        = $this->projects();
 		$absences        = $this->absences();
-		$activities      = config('options.activities');
+		$activities      = \App\WorkingReport::ACTIVITIES;
 		$jobTypes        = config('options.typeOfJob');
 		$trainingOptions = config('options.training');
 		$today           = SeederConfig::TODAY();

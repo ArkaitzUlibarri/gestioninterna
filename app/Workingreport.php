@@ -32,4 +32,9 @@ class WorkingReport extends Model
         return $this->belongsTo('App\User');
     }
 
+    const ACTIVITIES = [
+        'absence',
+        'project',
+        'training'
+    ];
 }

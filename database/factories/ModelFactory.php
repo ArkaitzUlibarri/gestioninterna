@@ -24,7 +24,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 		'lastname'       => $lastName,
 		'email'          => strtolower($firstName) . "." . strtolower($lastName) . "@example.com",
 		'password'       => $password ?: $password = bcrypt('secret'),
-		'role'           => config('options.roles')[$faker->numberBetween(0,2)],
+		'role'           => \App\User::ROLES[$faker->numberBetween(0,2)],
 		'remember_token' => str_random(10),
     ];
 });

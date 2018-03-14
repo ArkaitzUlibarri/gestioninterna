@@ -10,6 +10,12 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    const ROLES = [
+        'admin',
+        'tools',
+        'user'
+    ];
+
     protected $appends = ['full_name'];
     /**
      * The attributes that are mass assignable.
@@ -17,7 +23,12 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'username', 'name', 'email', 'lastname', 'role', 'password'
+        'username',
+        'name',
+        'email',
+        'lastname',
+        'role',
+        'password'
     ];
 
     /**
@@ -146,60 +157,6 @@ class User extends Authenticatable
             ? 'tools'
             : 'user';
     }
-
-
-
-    /**
-     * Check the role of the user
-
-    public function isRole($rolename)
-    {
-        return $this->role == strtolower($rolename) ? 1 : 0;
-    }
- */
-    /**
-     * Check the role of the user
-    
-    public function isAdmin()
-    {
-        return $this->role == config('options.roles')[0] ? 1 : 0;
-    }
- */
-    /**
-     * Check if the user is ProjectManager
-    
-    public function isPM()
-    {
-        foreach ($this->categories as $category) {
-            if($category->code == 'RP' || $category->code == 'RTP'){
-                return 1;
-            }
-        }
-
-        return 0;
-    }
- */
-    /**
-     * Return the active projects in which a User is PM
-
-    public function PMProjects()
-    {
-        $array = array();
-
-        if($this->isPM()){   
-            foreach ($this->groups as $group) {              
-                $pm_id = $group->project->pm_id;
-                $project_end_date = $group->project->end_date;
-
-                if($pm_id == $this->id && $project_end_date == null){
-                     $array[$group->project->id] = $group->project->name;
-                }
-            }
-        }
-        
-        return $array;
-    }
-     */
 
 
     /**

@@ -8,12 +8,6 @@ return [
 		'sick leave'
 	],
 
-	'activities' => [
-		'absence',
-		'project',
-		'training'
-	],
-
 	'holidays' => [
 		'current_year',
 		'last_year',
@@ -21,12 +15,6 @@ return [
 		'extras'
 	],
 
-	'bank_holidays' => [
-		'national',
-		'regional',
-		'local',
-		'others'
-	],
 	'periods' => [
 		'Today',
 		'Yesterday',
@@ -36,12 +24,6 @@ return [
 		'Last month',
 		'This year',
 		'Last year',
-	],
-
-	'roles' => [
-		'admin',
-		'tools',
-		'user'	
 	],
 
 	'training' => [
