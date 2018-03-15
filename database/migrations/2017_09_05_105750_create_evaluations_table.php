@@ -66,8 +66,8 @@ class CreateEvaluationsTable extends Migration
             $table->tinyInteger('month')->unsigned();            
             $table->integer('user_id')->unsigned();
             $table->integer('project_id')->unsigned()->nullable();
-            $table->enum('type',config('options.criterion'));
-            //$table->integer('efficiency_id')->unsigned()->nullable();        
+            $table->enum('type',['quality', 'efficiency', 'knowledge', 'availability']);
+            //$table->integer('efficiency_id')->unsigned()->nullable();
             $table->tinyInteger('mark')->unsigned();
             $table->string('comment')->nullable();
             $table->float('weight',5,2)->unsigned();

@@ -37,4 +37,11 @@ class Performance extends Model
 	 * Does not have incremental ID
 	 */
 	public $incrementing = true;
+
+	const CRITERION = [
+	    'quality',
+        'efficiency',
+        'knowledge',
+        'availability'
+    ];
 }

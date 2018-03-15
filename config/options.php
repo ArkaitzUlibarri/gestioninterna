@@ -77,12 +77,6 @@ return [
 	],
 
 	//Evaluation
-	'criterion' => [
-		'quality',
-		'efficiency',
-		'knowledge',
-		'availability'
-	],
 
 	'months' => [
 		'January'   => 1,

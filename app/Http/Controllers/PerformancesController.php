@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Project;
 use App\User;
+use App\Performance;
 use App\PerformanceRepository;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
@@ -142,7 +143,7 @@ class PerformancesController extends Controller
         $writer = array();
         
         //Criteria
-        foreach (config('options.criterion') as $criteria) {                        
+        foreach (Performance::CRITERION as $criteria) {
             if($criteria != 'knowledge'){
                 //Guardar por cada mes un valor
                 $counter = 0;
@@ -202,7 +203,7 @@ class PerformancesController extends Controller
         }
                  
         //Calculo acumulado meses
-        foreach (config('options.criterion') as $criteria) {  
+        foreach (Performance::CRITERION as $criteria) {
             if($criteria != 'knowledge'){
                 for ($month = 1; $month < 13 ; $month++) {   
                     $key = $criteria . '|' . $month; 
