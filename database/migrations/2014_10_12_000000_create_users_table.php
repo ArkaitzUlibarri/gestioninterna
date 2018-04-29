@@ -19,15 +19,26 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('username')->unique();
-            $table->enum('role', ['admin', 'tools', 'user'])->default('user');
             $table->string('name');
             $table->string('lastname');
-            $table->string('email')->nullable();
             $table->string('password');
             $table->rememberToken();
+            $table->enum('role', ['admin', 'tools', 'user'])->default('user');
+
+            $table->boolean('genre')->nullable();
+            $table->string('email')->nullable();
+            $table->string('personal_email')->nullable();
+            $table->string('mobile',20)->nullable();
+            $table->string('personal_mobile',20)->nullable();
+            $table->string('telephone',20)->nullable();
+            $table->string('address')->nullable();
+            $table->string('birthplace')->nullable();
+            $table->date('birthday')->nullable();
+            $table->string('dni',11)->nullable();
+            $table->string('numero_ss',50)->nullable();
+
             $table->timestamps();
             $table->softDeletes();
-            //Futuros campos:address,genre,mobile,personal_mobile,telephone,personal_email,DNI(ID),birthday,birthplace,numero_SS (NIN)
         });
 
         /**
